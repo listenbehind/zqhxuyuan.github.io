@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   
   <title>Apache Drill源码分析之逻辑计划 | 任何忧伤,都抵不过世界的美丽</title>
-  <meta name="author" content="John cheng">
+  <meta name="author" content="zqhxuyuan">
   
   <meta name="description" content="Drill源码阅读(5) : 逻辑计划是如何产生的在前面说过, Calcite的SQL节点转换为Drill的DrillRel节点,在DefaultSqlHandler.convertToDrel会包装上一个Screen: DrillScreenRel  
 12345protected DrillRe">
@@ -16,25 +16,6 @@
   <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽"/>
 
   
-  
-		<!-- favicon -->
-		<link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
-		<link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
-		<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
-		<link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
-		<link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
-		<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
-		<link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
-		<link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
-		<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
-		<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
-		<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
-		<link rel="manifest" href="/manifest.json">
-		<meta name="msapplication-TileColor" content="#009688">
-		<meta name="msapplication-TileImage" content="/mstile-144x144.png">
-		<meta name="theme-color" content="#009688">
-		<!-- favicon end -->
-    <!-- <link href="/favicon.ico" rel="icon"> -->
   
 
   <!-- toc -->
@@ -54,16 +35,6 @@
   <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
 
   <!-- 百度统计 -->
-  
-  <script>
-  var _hmt = _hmt || [];
-  (function() {
-    var hm = document.createElement("script");
-    hm.src = "//hm.baidu.com/hm.js?392796d51567e848aebf813b65cb8656";
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(hm, s);
-  })();
-  </script>
   
 
   <!-- 谷歌统计 -->
@@ -98,12 +69,6 @@
                 <li>
                     <a href="/archives" title="">
                     <i class="fa fa-list"></i>存档
-                    </a>
-                </li>
-                
-                <li>
-                    <a href="/atom.xml" title="这是一个订阅源">
-                    <i class="fa fa-rss"></i>RSS
                     </a>
                 </li>
                 
@@ -273,7 +238,7 @@
   由 <a href="https://hexo.io">hexo</a> 强力驱动 | 搭载 <a href="https://github.com/wayou/hexo-theme-material">material</a> 主题
 </p>
 <p>
-  &copy; 2015 <a href="http://yoursite.com"> John cheng </a>
+  &copy; 2015 <a href="http://github.com/zqhxuyuan"> zqhxuyuan </a>
 </p>
 <a id="gotop" href="#" title="back to top"><i class="mdi-hardware-keyboard-arrow-up"></i></a>
 
