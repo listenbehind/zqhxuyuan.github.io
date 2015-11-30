@@ -6,8 +6,10 @@
   <title>StreamCQL源码阅读(4) 应用程序执行 | 任何忧伤,都抵不过世界的美丽</title>
   <meta name="author" content="zqhxuyuan">
   
-  <meta name="description" content="submitApplication历经千辛万苦, 终于回到SubmitTask的submitApplication, 创建物理计划Executor,并执行Application.  
-123private void submitApplication() &amp;#123;    new Physical">
+  <meta name="description" content="前戏: CQL代码结构之前我们并没有梳理CQL部分的代码结构, 在分析了差不多的代码之后, 来看看每个部分都一一对应:  
+
+还没有涉及的包括: PhysicalPlan,物理计划/逻辑计划优化器,executors执行器.    
+正文: submitApplication历经千辛万苦, 终于回到">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -86,7 +88,7 @@
 			
 			<div>
 				<i class="fa fa-clock-o"></i>
-				<span class="post-time">2015-11-30 09:22:33</span>
+				<span class="post-time">2015-11-30 10:02:52</span>
 			</div>
 			
 	  
@@ -94,7 +96,10 @@
 		<div class="content">
 			<!-- index -->
 		  
-					<h2 id="submitApplication">submitApplication</h2><p>历经千辛万苦, 终于回到SubmitTask的submitApplication, 创建物理计划Executor,并执行Application.  </p>
+					<h2 id="前戏:_CQL代码结构">前戏: CQL代码结构</h2><p>之前我们并没有梳理CQL部分的代码结构, 在分析了差不多的代码之后, 来看看每个部分都一一对应:  </p>
+<p><img src="http://img.blog.csdn.net/20151130093405880" alt="cql"></p>
+<p>还没有涉及的包括: PhysicalPlan,物理计划/逻辑计划优化器,executors执行器.    </p>
+<h2 id="正文:_submitApplication">正文: submitApplication</h2><p>历经千辛万苦, 终于回到SubmitTask的submitApplication, 创建物理计划Executor,并执行Application.  </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">submitApplication</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">new</span> PhysicalPlanExecutor().execute(context.getApp());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="api-Application_-&gt;_application-Application">api.Application -&gt; application.Application</h3><p>api的Application是流处理执行计划应用程序, 封装的是CQL语句构建而成的应用程序:  </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> </span>&#123;                      </span><br><span class="line">    <span class="keyword">private</span> String applicationId = <span class="keyword">null</span>;                    <span class="comment">//应用id</span></span><br><span class="line">    <span class="keyword">private</span> String applicationName = <span class="keyword">null</span>;                  <span class="comment">//应用名称</span></span><br><span class="line">    <span class="keyword">private</span> TreeMap&lt;String, String&gt; confs;                  <span class="comment">//整个应用程序中用到的配置属性,也包含用户自定义的配置属性</span></span><br><span class="line">    <span class="keyword">private</span> String[] userFiles;                             <span class="comment">//用户自定义添加的一些文件</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;UserFunction&gt; userFunctions;               <span class="comment">//用户自定义的函数,udf和udaf都在这个里面</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;Schema&gt; schemas = <span class="keyword">new</span> ArrayList&lt;Schema&gt;(); <span class="comment">//执行计划中的所有的schema</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;Operator&gt; operators = <span class="keyword">null</span>;                <span class="comment">//执行计划中所有的操作,包含输入、输出和计算操作      </span></span><br><span class="line">    <span class="keyword">private</span> List&lt;OperatorTransition&gt; opTransition = <span class="keyword">null</span>;   <span class="comment">//整个执行计划中所有的连接线，定义了operator之间的连接关系</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -192,15 +197,15 @@
       </li>
     
       <li>
-        <a href="/2015/11/30/2015-11-27-StreamCQL-operator/"  > <i class="mdi-editor-insert-drive-file"></i>StreamCQL源码阅读(3) 拆分组合算子</a>
-      </li>
-    
-      <li>
         <a href="/2015/11/30/2015-11-26-StreamCQL-schema/"  > <i class="mdi-editor-insert-drive-file"></i>StreamCQL源码阅读(2) 语法和语义解析</a>
       </li>
     
       <li>
         <a href="/2015/11/30/2015-11-24-StreamCQL-task/"  > <i class="mdi-editor-insert-drive-file"></i>StreamCQL源码阅读(1) 提交任务</a>
+      </li>
+    
+      <li>
+        <a href="/2015/11/30/2015-11-27-StreamCQL-operator/"  > <i class="mdi-editor-insert-drive-file"></i>StreamCQL源码阅读(3) 拆分组合算子</a>
       </li>
     
       <li>

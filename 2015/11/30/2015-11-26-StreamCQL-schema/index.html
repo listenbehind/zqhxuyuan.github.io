@@ -6,8 +6,7 @@
   <title>StreamCQL源码阅读(2) 语法和语义解析 | 任何忧伤,都抵不过世界的美丽</title>
   <meta name="author" content="zqhxuyuan">
   
-  <meta name="description" content="SchemaparseSchemas解析Schema: 循环每个AnalyzeContext的getCreatedSchemas,最后设置为Application的schemas.  
-1234567private void parseSchemas() &amp;#123;    List&amp;lt;Sche">
+  <meta name="description" content="前戏: SemanticAnalyzer客户端提交的CQL语句经过Application.parse返回StatementContext(语法解析结果),再进入语义解析.如果是SubmitTask会触发之前的LazyTask链条依次进行语义解析. 语义解析结果AnalyzeContext最后用于构建">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -86,7 +85,7 @@
 			
 			<div>
 				<i class="fa fa-clock-o"></i>
-				<span class="post-time">2015-11-30 09:22:26</span>
+				<span class="post-time">2015-11-30 09:51:12</span>
 			</div>
 			
 	  
@@ -94,8 +93,9 @@
 		<div class="content">
 			<!-- index -->
 		  
-					<h2 id="Schema">Schema</h2><p>parseSchemas解析Schema: 循环每个AnalyzeContext的getCreatedSchemas,最后设置为Application的schemas.  </p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">void</span> <span class="title">parseSchemas</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Schema&gt; schemas = Lists.newArrayList();</span><br><span class="line">    <span class="keyword">for</span> (AnalyzeContext context : parseContexts) &#123;</span><br><span class="line">        schemas.addAll(context.getCreatedSchemas());</span><br><span class="line">    &#125;</span><br><span class="line">    app.setSchemas(schemas);    <span class="comment">//设置到Application里 ⬅️</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+					<h2 id="前戏:_SemanticAnalyzer">前戏: SemanticAnalyzer</h2><p>客户端提交的CQL语句经过Application.parse返回StatementContext(语法解析结果),再进入语义解析.<br>如果是SubmitTask会触发之前的LazyTask链条依次进行语义解析. 语义解析结果AnalyzeContext最后用于构建Application.<br>语义解析跟CQL语法相关, 不过首先我们来看下构建Application的第一步是解析schemas.    </p>
+<h2 id="正文一:_Schema">正文一: Schema</h2><p>parseSchemas解析Schema: 循环每个AnalyzeContext的getCreatedSchemas,最后设置为Application的schemas.  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">parseSchemas</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    List&lt;Schema&gt; schemas = Lists.newArrayList();</span><br><span class="line">    <span class="keyword">for</span> (AnalyzeContext context : parseContexts) &#123;</span><br><span class="line">        schemas.addAll(context.getCreatedSchemas());</span><br><span class="line">    &#125;</span><br><span class="line">    app.setSchemas(schemas);    <span class="comment">//设置到Application里 ⬅️</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="create_stream_schema">create stream schema</h3><p>那么每个AnalyzeContext的CreatedSchemas是在什么时候设置进来的? 以AnalyzeContext的一个实现类CreateStreamAnalyzeContext为例:  </p>
 <figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CreateStreamAnalyzeContext.setSchema(Schema)  (com.huawei.streaming.cql.semanticanalyzer.analyzecontext)</span><br><span class="line">    <span class="string">|--CreatePipeStreamAnalyzer.analyze()  </span></span><br><span class="line">    <span class="string">|--ApplicationBuilder.createPipeStreamSplitContext(Schema)  (com.huawei.streaming.cql.builder)</span></span><br><span class="line">    <span class="string">|--CreateOutputStreamAnalyzer.analyze()  </span></span><br><span class="line">    <span class="string">|--FromClauseAnalyzer.createNewStreamContext(String, Schema)  </span></span><br><span class="line">    <span class="string">|--CreateInputStreamAnalyzer.analyze()       ⬅️</span></span><br></pre></td></tr></table></figure>
 <p>AnalyzeContext的setSchema方法会被对应的SemanticAnalyzer实现类的analyze调用,比如CreateInputStreamAnalyzer:  </p>
@@ -111,7 +111,7 @@
 <blockquote>
 <p>对于其他的AnalyzeContext, getCreatedSchemas一般是没有的. 表结构实际上只有输入输出流和insert/select语句才有.  </p>
 </blockquote>
-<h2 id="CQL_Statement_syntax">CQL Statement syntax</h2><p>下面结合官方的CQL语法文档配合上对应的StatementContext,AnalyzeContext一起分析常用的几种语法结构:  </p>
+<h2 id="正文二:_CQL_Statement_syntax">正文二: CQL Statement syntax</h2><p>下面结合官方的CQL语法文档配合上对应的StatementContext,AnalyzeContext一起分析常用的几种语法结构:  </p>
 <h3 id="Create_Input_Stream_Statement_syntax">Create Input Stream Statement syntax</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">INPUT</span> STREAM streamName </span><br><span class="line">columnList [streamComment]      ①数据列</span><br><span class="line">[serdeClause]                   ②反序列化</span><br><span class="line">sourceClause                    ③数据读取/数据源</span><br><span class="line">[parallelClause];</span>               ④可选的算子并行度</span><br></pre></td></tr></table></figure>
 <p>Create Input Stream 语句定义了输入流的<code>①数据列名称,③数据读取方式和②数据反序列化方式</code>。<br>SERDE 定义了数据的反序列化方式,即如何将从inputStream中读取的数据解析成对应的完整的流的Schema。<br>系统配置了默认的序列化和反序列化类,当使用系统默认反序列化类时,SERDE子句可以省略,同时,SERDE 的相关配置属性也可以省略。<br>SOURCE 定义了数据从什么地方读取,比如从MQ消息队列中读取或者文件等其他方式读取。SOURCE 语句一定不能省略。<br>ParallelClause 语句指定了该输入算子的并发数量。</p>
 <p>使用系统内置反序列化类读取算子示例  </p>
@@ -185,15 +185,15 @@
       </li>
     
       <li>
-        <a href="/2015/11/30/2015-11-27-StreamCQL-operator/"  > <i class="mdi-editor-insert-drive-file"></i>StreamCQL源码阅读(3) 拆分组合算子</a>
-      </li>
-    
-      <li>
         <a href="/2015/11/30/2015-11-26-StreamCQL-schema/"  > <i class="mdi-editor-insert-drive-file"></i>StreamCQL源码阅读(2) 语法和语义解析</a>
       </li>
     
       <li>
         <a href="/2015/11/30/2015-11-24-StreamCQL-task/"  > <i class="mdi-editor-insert-drive-file"></i>StreamCQL源码阅读(1) 提交任务</a>
+      </li>
+    
+      <li>
+        <a href="/2015/11/30/2015-11-27-StreamCQL-operator/"  > <i class="mdi-editor-insert-drive-file"></i>StreamCQL源码阅读(3) 拆分组合算子</a>
       </li>
     
       <li>
