@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Apache Drill源码分析之逻辑计划 | 任何忧伤,都抵不过世界的美丽</title>
+  <title>Apache Drill源码阅读(4):逻辑计划 | 任何忧伤,都抵不过世界的美丽</title>
   <meta name="author" content="zqhxuyuan">
   
-  <meta name="description" content="Drill源码阅读(5) : 逻辑计划是如何产生的在前面说过, Calcite的SQL节点转换为Drill的DrillRel节点,在DefaultSqlHandler.convertToDrel会包装上一个Screen: DrillScreenRel  
-12345protected DrillRe">
+  <meta name="description" content="在前面说过, Calcite的SQL节点转换为Drill的DrillRel节点,在DefaultSqlHandler.convertToDrel会包装上一个Screen: DrillScreenRel  
+12345protected DrillRel convertToDrel(RelNode r">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="Apache Drill源码分析之逻辑计划"/>
+  <meta property="og:title" content="Apache Drill源码阅读(4):逻辑计划"/>
   <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽"/>
 
   
@@ -82,11 +82,11 @@
 	<div class="col-md-8">
 	  <!-- index -->
 	  
-			<h1>Apache Drill源码分析之逻辑计划</h1>
+			<h1>Apache Drill源码阅读(4):逻辑计划</h1>
 			
 			<div>
 				<i class="fa fa-clock-o"></i>
-				<span class="post-time">2015-11-29 14:27:47</span>
+				<span class="post-time">2015-11-29 20:41:39</span>
 			</div>
 			
 	  
@@ -94,7 +94,7 @@
 		<div class="content">
 			<!-- index -->
 		  
-					<h2 id="Drill源码阅读(5)_:_逻辑计划是如何产生的">Drill源码阅读(5) : 逻辑计划是如何产生的</h2><p>在前面说过, Calcite的SQL节点转换为Drill的DrillRel节点,在DefaultSqlHandler.convertToDrel会包装上一个Screen: DrillScreenRel  </p>
+					<p>在前面说过, Calcite的SQL节点转换为Drill的DrillRel节点,在DefaultSqlHandler.convertToDrel会包装上一个Screen: DrillScreenRel  </p>
 <figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function">DrillRel <span class="title">convertToDrel</span><span class="params">(RelNode relNode, RelDataType validatedRowType)</span> </span>&#123;</span><br><span class="line">      <span class="comment">// Put a non-trivial topProject to ensure the final output field name is preserved, when necessary.</span></span><br><span class="line">      DrillRel topPreservedNameProj = addRenamedProject((DrillRel) convertedRelNode, validatedRowType);</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> DrillScreenRel(topPreservedNameProj.getCluster(), topPreservedNameProj.getTraitSet(), topPreservedNameProj);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <p>那么convertToDrel中的RelNode以及更早之前的SqlNode到底是个什么样的数据结构? 为了解开这个谜题,我们要debug下drill的源码才能知晓. </p>
 <h3 id="sqlline">sqlline</h3><p>SQL语句: </p>
@@ -185,23 +185,23 @@
   <ul class="entry list-unstyled">
     
       <li>
-        <a href="/2015/11/29/2015-11-29-StreamCQL-application/"  > <i class="mdi-editor-insert-drive-file"></i>StreamCQL源码分析之application</a>
+        <a href="/2015/11/29/2015-07-05-Spark-SQL/"  > <i class="mdi-editor-insert-drive-file"></i>Spark SQL入门</a>
       </li>
     
       <li>
-        <a href="/2015/11/29/2015-11-27-StreamCQL-operator/"  > <i class="mdi-editor-insert-drive-file"></i>StreamCQL源码分析之operator</a>
+        <a href="/2015/11/29/2015-06-20-ElasticSearch/"  > <i class="mdi-editor-insert-drive-file"></i>ElasticSearch入门</a>
       </li>
     
       <li>
-        <a href="/2015/11/29/2015-07-10-drill-log/"  > <i class="mdi-editor-insert-drive-file"></i>Apache Drill源码分析之日志</a>
+        <a href="/2015/11/29/2015-07-07-Spark-HA-YARN/"  > <i class="mdi-editor-insert-drive-file"></i>Spark HA和YARN模式</a>
       </li>
     
       <li>
-        <a href="/2015/11/29/2015-07-26-drill-fragment-execute/"  > <i class="mdi-editor-insert-drive-file"></i>Apache Drill源码分析之execute</a>
+        <a href="/2015/11/29/2015-07-06-Spark-Streamming/"  > <i class="mdi-editor-insert-drive-file"></i>Spark-Stramming入门</a>
       </li>
     
       <li>
-        <a href="/2015/11/29/2015-07-15-drill-fragments/"  > <i class="mdi-editor-insert-drive-file"></i>Apache Drill源码分析之fragment</a>
+        <a href="/2015/11/29/2015-07-05-Apache-Spark/"  > <i class="mdi-editor-insert-drive-file"></i>Apache Spark入门</a>
       </li>
     
   </ul>

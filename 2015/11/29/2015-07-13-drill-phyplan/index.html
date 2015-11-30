@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Apache Drill源码分析之物理计划 | 任何忧伤,都抵不过世界的美丽</title>
+  <title>Apache Drill源码阅读(3):物理计划 | 任何忧伤,都抵不过世界的美丽</title>
   <meta name="author" content="zqhxuyuan">
   
-  <meta name="description" content="Drill源码阅读(3) : 分析DrillBit各个角色UserServer处理RUN_QUERY_VALUE客户端的查询请求,会将任务分派给UserWorker处理, 由worker提交工作:显然worker要在构造UserServer的时候也一起构造出来, 这样在收到任务的时候, 确保立即有工">
+  <meta name="description" content="DrillBit各个角色:UserServer处理RUN_QUERY_VALUE客户端的查询请求,会将任务分派给UserWorker处理, 由worker提交工作:显然worker要在构造UserServer的时候也一起构造出来, 这样在收到任务的时候, 确保立即有工人接手这份工作.UserServ">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="Apache Drill源码分析之物理计划"/>
+  <meta property="og:title" content="Apache Drill源码阅读(3):物理计划"/>
   <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽"/>
 
   
@@ -81,11 +81,11 @@
 	<div class="col-md-8">
 	  <!-- index -->
 	  
-			<h1>Apache Drill源码分析之物理计划</h1>
+			<h1>Apache Drill源码阅读(3):物理计划</h1>
 			
 			<div>
 				<i class="fa fa-clock-o"></i>
-				<span class="post-time">2015-11-29 14:27:47</span>
+				<span class="post-time">2015-11-29 20:39:34</span>
 			</div>
 			
 	  
@@ -93,7 +93,7 @@
 		<div class="content">
 			<!-- index -->
 		  
-					<h2 id="Drill源码阅读(3)_:_分析DrillBit各个角色">Drill源码阅读(3) : 分析DrillBit各个角色</h2><p>UserServer处理RUN_QUERY_VALUE客户端的查询请求,会将任务分派给UserWorker处理, 由worker提交工作:<br>显然worker要在构造UserServer的时候也一起构造出来, 这样在收到任务的时候, 确保立即有工人接手这份工作.<br>UserServer的构造在ServiceEngine,而服务引擎是由DrillBit创建的.<br>UserWorker是由WorkerManager管理的, 而WorkerManager也是由DrillBit创建的.<br>所以启动DrillBit服务后,参与计算的角色都已经准备好了.  </p>
+					<p>DrillBit各个角色:<br>UserServer处理RUN_QUERY_VALUE客户端的查询请求,会将任务分派给UserWorker处理, 由worker提交工作:<br>显然worker要在构造UserServer的时候也一起构造出来, 这样在收到任务的时候, 确保立即有工人接手这份工作.<br>UserServer的构造在ServiceEngine,而服务引擎是由DrillBit创建的.<br>UserWorker是由WorkerManager管理的, 而WorkerManager也是由DrillBit创建的.<br>所以启动DrillBit服务后,参与计算的角色都已经准备好了.  </p>
 <table>
 <thead>
 <tr>
@@ -285,23 +285,23 @@
   <ul class="entry list-unstyled">
     
       <li>
-        <a href="/2015/11/29/2015-11-29-StreamCQL-application/"  > <i class="mdi-editor-insert-drive-file"></i>StreamCQL源码分析之application</a>
+        <a href="/2015/11/29/2015-07-05-Spark-SQL/"  > <i class="mdi-editor-insert-drive-file"></i>Spark SQL入门</a>
       </li>
     
       <li>
-        <a href="/2015/11/29/2015-11-27-StreamCQL-operator/"  > <i class="mdi-editor-insert-drive-file"></i>StreamCQL源码分析之operator</a>
+        <a href="/2015/11/29/2015-06-20-ElasticSearch/"  > <i class="mdi-editor-insert-drive-file"></i>ElasticSearch入门</a>
       </li>
     
       <li>
-        <a href="/2015/11/29/2015-07-10-drill-log/"  > <i class="mdi-editor-insert-drive-file"></i>Apache Drill源码分析之日志</a>
+        <a href="/2015/11/29/2015-07-07-Spark-HA-YARN/"  > <i class="mdi-editor-insert-drive-file"></i>Spark HA和YARN模式</a>
       </li>
     
       <li>
-        <a href="/2015/11/29/2015-07-26-drill-fragment-execute/"  > <i class="mdi-editor-insert-drive-file"></i>Apache Drill源码分析之execute</a>
+        <a href="/2015/11/29/2015-07-06-Spark-Streamming/"  > <i class="mdi-editor-insert-drive-file"></i>Spark-Stramming入门</a>
       </li>
     
       <li>
-        <a href="/2015/11/29/2015-07-15-drill-fragments/"  > <i class="mdi-editor-insert-drive-file"></i>Apache Drill源码分析之fragment</a>
+        <a href="/2015/11/29/2015-07-05-Apache-Spark/"  > <i class="mdi-editor-insert-drive-file"></i>Apache Spark入门</a>
       </li>
     
   </ul>

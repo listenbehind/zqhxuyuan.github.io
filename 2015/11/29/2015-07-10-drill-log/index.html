@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Apache Drill源码分析之日志 | 任何忧伤,都抵不过世界的美丽</title>
+  <title>Apache Drill源码阅读(1):环境准备和查看日志 | 任何忧伤,都抵不过世界的美丽</title>
   <meta name="author" content="zqhxuyuan">
   
-  <meta name="description" content="Drill源码阅读(1) : 环境准备和查看日志准备工作修改logback.xml的日志级别为debug
-1234567891011121314&amp;lt;logger name=&quot;org.apache.drill&quot; additivity=&quot;false&quot;&amp;gt;  &amp;lt;level value=&quot;de">
+  <meta name="description" content="准备工作修改logback.xml的日志级别为debug
+1234567891011121314&amp;lt;logger name=&quot;org.apache.drill&quot; additivity=&quot;false&quot;&amp;gt;  &amp;lt;level value=&quot;debug&quot; /&amp;gt;  &amp;lt;appender">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="Apache Drill源码分析之日志"/>
+  <meta property="og:title" content="Apache Drill源码阅读(1):环境准备和查看日志"/>
   <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽"/>
 
   
@@ -82,11 +82,11 @@
 	<div class="col-md-8">
 	  <!-- index -->
 	  
-			<h1>Apache Drill源码分析之日志</h1>
+			<h1>Apache Drill源码阅读(1):环境准备和查看日志</h1>
 			
 			<div>
 				<i class="fa fa-clock-o"></i>
-				<span class="post-time">2015-11-29 16:29:33</span>
+				<span class="post-time">2015-11-29 20:42:22</span>
 			</div>
 			
 	  
@@ -94,9 +94,9 @@
 		<div class="content">
 			<!-- index -->
 		  
-					<h2 id="Drill源码阅读(1)_:_环境准备和查看日志">Drill源码阅读(1) : 环境准备和查看日志</h2><h3 id="准备工作">准备工作</h3><p>修改logback.xml的日志级别为debug</p>
+					<h3 id="准备工作">准备工作</h3><p>修改logback.xml的日志级别为debug</p>
 <figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;logger name=<span class="string">"org.apache.drill"</span> additivity=<span class="string">"false"</span>&gt;</span><br><span class="line">  &lt;level value=<span class="string">"debug"</span> /&gt;</span><br><span class="line">  &lt;appender-<span class="keyword">ref</span> <span class="keyword">ref</span>=<span class="string">"FILE"</span> /&gt;</span><br><span class="line">&lt;/logger&gt;</span><br><span class="line"></span><br><span class="line">&lt;logger name=<span class="string">"query.logger"</span> additivity=<span class="string">"false"</span>&gt;</span><br><span class="line">  &lt;level value=<span class="string">"debug"</span> /&gt;</span><br><span class="line">  &lt;appender-<span class="keyword">ref</span> <span class="keyword">ref</span>=<span class="string">"QUERY"</span> /&gt;</span><br><span class="line">&lt;/logger&gt;</span><br><span class="line"></span><br><span class="line">&lt;root&gt;</span><br><span class="line">  &lt;level value=<span class="string">"debug"</span> /&gt;</span><br><span class="line">  &lt;appender-<span class="keyword">ref</span> <span class="keyword">ref</span>=<span class="string">"STDOUT"</span> /&gt;</span><br><span class="line">&lt;/root&gt;</span><br></pre></td></tr></table></figure>
-<p>使用单机模式,而不是集群模式. 启动drill-embedded</p>
+<p>使用单机模式,而不是集群模式. 启动<code>drill-embedded</code>  </p>
 <p>除了在上面的drill-embedded观察输出, 还要观察log目录下的sqlline.log文件</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2015</span>-<span class="number">07</span>-<span class="number">10</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">41</span>,<span class="number">636</span> [main] DEBUG o<span class="class">.apache</span><span class="class">.drill</span><span class="class">.exec</span><span class="class">.server</span><span class="class">.Drillbit</span> - Construction started.</span><br><span class="line"><span class="number">2015</span>-<span class="number">07</span>-<span class="number">10</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">42</span>,<span class="number">481</span> [main] INFO  o<span class="class">.apache</span><span class="class">.drill</span><span class="class">.exec</span><span class="class">.server</span><span class="class">.Drillbit</span> - Construction completed (<span class="number">845</span> ms).</span><br><span class="line"><span class="number">2015</span>-<span class="number">07</span>-<span class="number">10</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">42</span>,<span class="number">481</span> [main] DEBUG o<span class="class">.apache</span><span class="class">.drill</span><span class="class">.exec</span><span class="class">.server</span><span class="class">.Drillbit</span> - Startup begun.</span><br><span class="line"><span class="number">2015</span>-<span class="number">07</span>-<span class="number">10</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">42</span>,<span class="number">481</span> [main] DEBUG o<span class="class">.a</span><span class="class">.d</span><span class="class">.e</span><span class="class">.c</span><span class="class">.l</span><span class="class">.LocalClusterCoordinator</span> - Local Cluster Coordinator started.</span><br><span class="line"><span class="number">2015</span>-<span class="number">07</span>-<span class="number">10</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">42</span>,<span class="number">607</span> [main] DEBUG o<span class="class">.a</span><span class="class">.drill</span><span class="class">.exec</span><span class="class">.rpc</span><span class="class">.user</span><span class="class">.UserServer</span> - Server of type UserServer started on port <span class="number">31010</span>.</span><br><span class="line"><span class="number">2015</span>-<span class="number">07</span>-<span class="number">10</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">42</span>,<span class="number">650</span> [main] DEBUG o<span class="class">.a</span><span class="class">.d</span><span class="class">.exec</span><span class="class">.rpc</span><span class="class">.control</span><span class="class">.ControlServer</span> - Server of type ControlServer started on port <span class="number">31011</span>.</span><br><span class="line"><span class="number">2015</span>-<span class="number">07</span>-<span class="number">10</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">42</span>,<span class="number">688</span> [main] DEBUG o<span class="class">.a</span><span class="class">.drill</span><span class="class">.exec</span><span class="class">.rpc</span><span class="class">.data</span><span class="class">.DataServer</span> - Server of type DataServer started on port <span class="number">31012</span>.</span><br><span class="line"><span class="number">2015</span>-<span class="number">07</span>-<span class="number">10</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">42</span>,<span class="number">924</span> [main] DEBUG o<span class="class">.a</span><span class="class">.drill</span><span class="class">.common</span><span class="class">.util</span><span class="class">.PathScanner</span> - Classpath scanning took <span class="number">60ms</span></span><br><span class="line"><span class="number">2015</span>-<span class="number">07</span>-<span class="number">10</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">42</span>,<span class="number">924</span> [main] DEBUG o<span class="class">.a</span><span class="class">.d</span><span class="class">.e</span><span class="class">.p</span><span class="class">.base</span><span class="class">.PhysicalOperatorUtil</span> - Adding Physical Operator sub types: .................</span><br><span class="line"><span class="number">2015</span>-<span class="number">07</span>-<span class="number">10</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">43</span>,<span class="number">047</span> [main] DEBUG org<span class="class">.apache</span><span class="class">.drill</span><span class="class">.common</span><span class="class">.JSONOptions</span> - Creating Deserializer.</span><br><span class="line"><span class="number">2015</span>-<span class="number">07</span>-<span class="number">10</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">43</span>,<span class="number">146</span> [main] DEBUG o<span class="class">.a</span><span class="class">.d</span><span class="class">.e</span><span class="class">.p</span><span class="class">.i</span><span class="class">.OperatorCreatorRegistry</span> - Adding Operator Creator map:..............</span><br><span class="line"><span class="number">2015</span>-<span class="number">07</span>-<span class="number">10</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">43</span>,<span class="number">385</span> [main] DEBUG o<span class="class">.a</span><span class="class">.d</span><span class="class">.e</span><span class="class">.e</span><span class="class">.f</span><span class="class">.FunctionImplementationRegistry</span> - Generating function registry.</span><br><span class="line"><span class="number">2015</span>-<span class="number">07</span>-<span class="number">10</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">48</span>,<span class="number">643</span> [main] DEBUG o<span class="class">.a</span><span class="class">.d</span><span class="class">.e</span><span class="class">.s</span><span class="class">.h</span><span class="class">.HBaseStoragePluginConfig</span> - Initializing HBase StoragePlugin configuration with zookeeper quorum <span class="string">'localhost'</span>, port <span class="string">'2181'</span>.</span><br><span class="line"><span class="number">2015</span>-<span class="number">07</span>-<span class="number">10</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">48</span>,<span class="number">977</span> [main] DEBUG o<span class="class">.a</span><span class="class">.d</span><span class="class">.e</span><span class="class">.c</span><span class="class">.l</span><span class="class">.LocalClusterCoordinator</span> - Endpoint registered <span class="tag">address</span>: <span class="string">"localhost"</span></span><br><span class="line">user_port: <span class="number">31010</span></span><br><span class="line">control_port: <span class="number">31011</span></span><br><span class="line">data_port: <span class="number">31012</span></span><br><span class="line">.</span><br><span class="line"><span class="number">2015</span>-<span class="number">07</span>-<span class="number">10</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">51</span>,<span class="number">700</span> [main] INFO  o<span class="class">.apache</span><span class="class">.drill</span><span class="class">.exec</span><span class="class">.server</span><span class="class">.Drillbit</span> - Startup completed (<span class="number">9218</span> ms).</span><br><span class="line"><span class="number">2015</span>-<span class="number">07</span>-<span class="number">10</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">51</span>,<span class="number">741</span> [main] DEBUG o<span class="class">.a</span><span class="class">.drill</span><span class="class">.exec</span><span class="class">.client</span><span class="class">.DrillClient</span> - Connecting to server localhost:<span class="number">31010</span></span><br></pre></td></tr></table></figure>
 <p>可以看到命令行执行drill-embedded, 会连接到本地的Drill Server上.</p>
@@ -206,23 +206,23 @@
   <ul class="entry list-unstyled">
     
       <li>
-        <a href="/2015/11/29/2015-11-29-StreamCQL-application/"  > <i class="mdi-editor-insert-drive-file"></i>StreamCQL源码分析之application</a>
+        <a href="/2015/11/29/2015-07-05-Spark-SQL/"  > <i class="mdi-editor-insert-drive-file"></i>Spark SQL入门</a>
       </li>
     
       <li>
-        <a href="/2015/11/29/2015-11-27-StreamCQL-operator/"  > <i class="mdi-editor-insert-drive-file"></i>StreamCQL源码分析之operator</a>
+        <a href="/2015/11/29/2015-06-20-ElasticSearch/"  > <i class="mdi-editor-insert-drive-file"></i>ElasticSearch入门</a>
       </li>
     
       <li>
-        <a href="/2015/11/29/2015-07-10-drill-log/"  > <i class="mdi-editor-insert-drive-file"></i>Apache Drill源码分析之日志</a>
+        <a href="/2015/11/29/2015-07-07-Spark-HA-YARN/"  > <i class="mdi-editor-insert-drive-file"></i>Spark HA和YARN模式</a>
       </li>
     
       <li>
-        <a href="/2015/11/29/2015-07-26-drill-fragment-execute/"  > <i class="mdi-editor-insert-drive-file"></i>Apache Drill源码分析之execute</a>
+        <a href="/2015/11/29/2015-07-06-Spark-Streamming/"  > <i class="mdi-editor-insert-drive-file"></i>Spark-Stramming入门</a>
       </li>
     
       <li>
-        <a href="/2015/11/29/2015-07-15-drill-fragments/"  > <i class="mdi-editor-insert-drive-file"></i>Apache Drill源码分析之fragment</a>
+        <a href="/2015/11/29/2015-07-05-Apache-Spark/"  > <i class="mdi-editor-insert-drive-file"></i>Apache Spark入门</a>
       </li>
     
   </ul>
