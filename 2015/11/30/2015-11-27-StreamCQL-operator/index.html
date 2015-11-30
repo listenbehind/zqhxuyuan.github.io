@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   
-  <title>StreamCQL源码分析之operator | 任何忧伤,都抵不过世界的美丽</title>
+  <title>StreamCQL源码阅读(3)_拆分组合算子 | 任何忧伤,都抵不过世界的美丽</title>
   <meta name="author" content="zqhxuyuan">
   
-  <meta name="description" content="上篇在解析Schema的时候顺便分析了一些常用的Statement syntax和对应的语法/语义解析器结果,现在继续ApplicationBuilder.buildApplication中parseSchemas的下一步splitOperators.  
-12345678910private vo">
+  <meta name="description" content="上篇在解析Schema的时候分析了CQL中一些常用的Statement syntax和对应的语法/语义解析器结果,现在继续ApplicationBuilder.buildApplication中parseSchemas的下一步splitOperators.  
+12345678910private ">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="StreamCQL源码分析之operator"/>
+  <meta property="og:title" content="StreamCQL源码阅读(3)_拆分组合算子"/>
   <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽"/>
 
   
@@ -82,11 +82,11 @@
 	<div class="col-md-8">
 	  <!-- index -->
 	  
-			<h1>StreamCQL源码分析之operator</h1>
+			<h1>StreamCQL源码阅读(3)_拆分组合算子</h1>
 			
 			<div>
 				<i class="fa fa-clock-o"></i>
-				<span class="post-time">2015-11-29 20:46:29</span>
+				<span class="post-time">2015-11-30 09:21:10</span>
 			</div>
 			
 	  
@@ -94,7 +94,7 @@
 		<div class="content">
 			<!-- index -->
 		  
-					<p>上篇在解析Schema的时候顺便分析了一些常用的Statement syntax和对应的语法/语义解析器结果,<br>现在继续ApplicationBuilder.buildApplication中parseSchemas的下一步splitOperators.  </p>
+					<p>上篇在解析Schema的时候分析了CQL中一些常用的Statement syntax和对应的语法/语义解析器结果,<br>现在继续ApplicationBuilder.buildApplication中parseSchemas的下一步splitOperators.  </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">buildApplication</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    app = <span class="keyword">new</span> Application(applicationName);</span><br><span class="line">    parseSchemas();</span><br><span class="line">    List&lt;SplitContext&gt; splitContexts = splitOperators();            <span class="comment">//拆分算子</span></span><br><span class="line">    SplitContext splitContext = combineOperators(splitContexts);    <span class="comment">//组合算子, 将拆分算子列表转换为只有一个SplitContext</span></span><br><span class="line">    changeUnionOperators(splitContext);</span><br><span class="line">    changeSchemaAfterAggregate(splitContext);</span><br><span class="line">    app.setOperators(splitContext.getOperators());                  <span class="comment">//拆分结果包含了operatots和transitions</span></span><br><span class="line">    app.setOpTransition(splitContext.getTransitions());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>combineOperators会创建OperatorCombiner, 并调用combine方法将splitContexts合并起来,终于打印了日志中看到的:<code>combine all split contexts</code>(解析submit之后).<br>构建Application的主要工作就是Split和Combine,最后将SplitContext的operators和transitions设置到Application对象中,完成应用程序的构建,在这基础上再进行物理优化.    </p>
 <h2 id="Split_and_Combine_Operators">Split and Combine Operators</h2><p>第一步SplitOperators拆分算子: 创建对应的Splitter,调用其split方法.   </p>
@@ -256,23 +256,23 @@
   <ul class="entry list-unstyled">
     
       <li>
-        <a href="/2015/11/30/2015-11-24-StreamCQL-task/"  > <i class="mdi-editor-insert-drive-file"></i>StreamCQL源码阅读(1)_提交任务</a>
+        <a href="/2015/11/30/2015-11-10-Cassandra-Client/"  > <i class="mdi-editor-insert-drive-file"></i>Cassandra Client查询优化</a>
       </li>
     
       <li>
-        <a href="/2015/11/29/2015-07-05-Spark-SQL/"  > <i class="mdi-editor-insert-drive-file"></i>Spark SQL入门</a>
+        <a href="/2015/11/30/2015-07-26-drill-fragment-execute/"  > <i class="mdi-editor-insert-drive-file"></i>Apache Drill源码阅读(6) execute</a>
       </li>
     
       <li>
-        <a href="/2015/11/29/2015-06-20-ElasticSearch/"  > <i class="mdi-editor-insert-drive-file"></i>ElasticSearch入门</a>
+        <a href="/2015/11/30/2015-07-15-drill-fragments/"  > <i class="mdi-editor-insert-drive-file"></i>Apache Drill源码阅读(5) Fragment</a>
       </li>
     
       <li>
-        <a href="/2015/11/29/2015-07-07-Spark-HA-YARN/"  > <i class="mdi-editor-insert-drive-file"></i>Spark HA和YARN模式</a>
+        <a href="/2015/11/30/2015-07-14-drill-logical/"  > <i class="mdi-editor-insert-drive-file"></i>Apache Drill源码阅读(4) 逻辑计划</a>
       </li>
     
       <li>
-        <a href="/2015/11/29/2015-07-06-Spark-Streamming/"  > <i class="mdi-editor-insert-drive-file"></i>Spark-Stramming入门</a>
+        <a href="/2015/11/30/2015-07-13-drill-phyplan/"  > <i class="mdi-editor-insert-drive-file"></i>Apache Drill源码阅读(3) 物理计划</a>
       </li>
     
   </ul>
