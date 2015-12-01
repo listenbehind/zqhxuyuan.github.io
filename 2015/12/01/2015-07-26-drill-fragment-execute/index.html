@@ -1,0 +1,158 @@
+	<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Apache Drill源码阅读(6) execute | 任何忧伤,都抵不过世界的美丽</title>
+  <meta name="author" content="zqhxuyuan">
+  
+  <meta name="description" content="设置根节点Fragment在前面根据物理计划生成的QueryWorkUnit, 会用于设置根节点和非根节点.对于根节点, 因为现在是在Foreman里, 所以是运行在Foreman节点, 相对来说就是运行在本地了.因为Root Fragment都是在Foreman节点执行的. 
+
+RootFragm">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Apache Drill源码阅读(6) execute"/>
+  <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽"/>
+
+  
+  
+
+  <!-- toc -->
+  <link rel="stylesheet" href="/libs/tocify/jquery.tocify.css" media="screen" type="text/css">
+
+  <!-- <link rel="stylesheet" href="/libs/bs/css/bootstrap.min.css" media="screen" type="text/css"> -->
+  <link rel="stylesheet" href="//apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css" media="screen" type="text/css">
+
+  <!-- material design -->
+	<!-- <link rel="stylesheet" href="/libs/bs-material/css/ripples.min.css" media="screen" type="text/css"> -->
+  <link rel="stylesheet" href="//apps.bdimg.com/libs/bootstrap-material/0.3.0/css/ripples.min.css" media="screen" type="text/css">
+  <!-- <link rel="stylesheet" href="/libs/bs-material/css/material.min.css" media="screen" type="text/css"> -->
+	<link rel="stylesheet" href="//apps.bdimg.com/libs/bootstrap-material/0.3.0/css/material.min.css" media="screen" type="text/css">
+
+  <link rel="stylesheet" href="/css/highlight.light.css" media="screen" type="text/css">
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+  <!-- 百度统计 -->
+  
+
+  <!-- 谷歌统计 -->
+  
+
+  <script src="//apps.bdimg.com/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="/libs/jquery-2.0.3.min.js" type="text/javascript"><\/script>')</script>
+
+</head>
+
+ 	<body>
+	  <nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">菜单</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">任何忧伤,都抵不过世界的美丽</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                
+                <li>
+                    <a href="/" title="">
+                    <i class="fa fa-home"></i>首页
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="/archives" title="">
+                    <i class="fa fa-list"></i>存档
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</nav>
+
+	  <div class="container" >
+	    <div class="row">
+	<div class="col-md-8">
+	  <!-- index -->
+	  
+			<h1>Apache Drill源码阅读(6) execute</h1>
+			
+			<div>
+				<i class="fa fa-clock-o"></i>
+				<span class="post-time">2015-12-01 18:02:40</span>
+			</div>
+			
+	  
+
+		<div class="content">
+			<!-- index -->
+		  
+					<h2 id="设置根节点Fragment">设置根节点Fragment</h2><p>在前面根据物理计划生成的QueryWorkUnit, 会用于设置根节点和非根节点.<br>对于根节点, 因为现在是在Foreman里, 所以是运行在Foreman节点, 相对来说就是运行在本地了.<br>因为Root Fragment都是在Foreman节点执行的. </p>
+<blockquote>
+<p>RootFragment不是Major Fragment, 按照官方的文档Major Fragment并不会执行真正的任务.<br>那么Minor Fragment和Leaf Fragment又有什么区别呢?  </p>
+</blockquote>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Set up the root fragment (which will run locally), and submit it for execution.</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">void</span> <span class="title">setupRootFragment</span><span class="params">(<span class="keyword">final</span> PlanFragment rootFragment, <span class="keyword">final</span> FragmentRoot rootOperator)</span> <span class="keyword">throws</span> ExecutionSetupException </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> FragmentContext rootContext = <span class="keyword">new</span> FragmentContext(drillbitContext, rootFragment, queryContext, initiatingClient, drillbitContext.getFunctionImplementationRegistry());</span><br><span class="line">  <span class="comment">//首先准备好IncomingBuffer</span></span><br><span class="line">  <span class="keyword">final</span> IncomingBuffers buffers = <span class="keyword">new</span> IncomingBuffers(rootFragment, rootContext);</span><br><span class="line">  rootContext.setBuffers(buffers);</span><br><span class="line"></span><br><span class="line">  <span class="comment">//每个Fragment都要加入到QueryManager的监控中,当Fragment的状态发生更新,QM可以知道</span></span><br><span class="line">  queryManager.addFragmentStatusTracker(rootFragment, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">//Fragment的Executor,是真正运行Fragment的线程</span></span><br><span class="line">  rootRunner = <span class="keyword">new</span> FragmentExecutor(rootContext, rootFragment, queryManager.newRootStatusHandler(rootContext, drillbitContext), rootOperator);</span><br><span class="line">  <span class="comment">//Fragment的Manager,除了线程,还有Buffer</span></span><br><span class="line">  <span class="keyword">final</span> RootFragmentManager fragmentManager = <span class="keyword">new</span> RootFragmentManager(rootFragment.getHandle(), buffers, rootRunner);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (buffers.isDone()) &#123;</span><br><span class="line">    <span class="comment">// if we don't have to wait for any incoming data, start the fragment runner. 不需要等待接收数据,启动线程</span></span><br><span class="line">    bee.addFragmentRunner(fragmentManager.getRunnable());</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// if we do, record the fragment manager in the workBus. 如果需要等待,则把管理Executor的Manager放到WorkBus中</span></span><br><span class="line">    <span class="comment">// TODO aren't we managing our own work? What does this do? It looks like this will never get run</span></span><br><span class="line">    drillbitContext.getWorkBus().addFragmentManager(fragmentManager);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在FragmentExecutor线程的run方法里会创建RootExec</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root = ImplCreator.getExec(fragmentContext, rootOperator)<span class="comment">;</span></span><br><span class="line">//<span class="built_in">Run</span> the query <span class="keyword">until</span> root.<span class="keyword">next</span> returns <span class="literal">false</span> <span class="literal">OR</span> we no longer need <span class="keyword">to</span> continue.</span><br><span class="line"><span class="keyword">while</span> (shouldContinue() &amp;&amp; root.<span class="keyword">next</span>()) &#123;</span><br><span class="line">  // loop</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">null</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<p>这里就要涉及到Drill底层读取数据的数据结构了.  对了,前面的IncomingBuffers到底是用来干嘛的?  </p>
+
+			  
+		</div>
+
+		<!-- pagination -->
+	  
+
+		
+  
+
+
+	</div>
+	<div class="col-md-4">
+		
+			<div id="toc" ></div>
+		
+	</div>
+
+</div>
+
+
+			<footer>
+				
+
+<p>
+  由 <a href="https://hexo.io">hexo</a> 强力驱动 | 搭载 <a href="https://github.com/wayou/hexo-theme-material">material</a> 主题
+</p>
+<p>
+  &copy; 2015 <a href="http://github.com/zqhxuyuan"> zqhxuyuan </a>
+</p>
+<a id="gotop" href="#" title="back to top"><i class="mdi-hardware-keyboard-arrow-up"></i></a>
+
+			</footer>
+	  </div>
+
+		<!-- <script src="/libs/bs/js/bootstrap.min.js"></script> -->
+		<script src="//apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		<script>(typeof $().modal == 'function')|| document.write('<script src="/libs/bs/js/bootstrap.min.js" type="text/javascript"><\/script>')</script>
+
+		<!-- material design -->
+		<!-- <script src="/libs/bs-material/js/ripples.min.js"></script> -->
+		<script src="//apps.bdimg.com/libs/bootstrap-material/0.3.0/js/ripples.min.js"></script>
+		<!-- <script src="/libs/bs-material/js/material.min.js"></script> -->
+		<script src="//apps.bdimg.com/libs/bootstrap-material/0.3.0/js/material.min.js"></script>
+		<!-- toc -->
+		<!-- <script src="/libs/tocify/jquery-ui.min.js"></script> -->
+		<script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+		<script src="/libs/tocify/jquery.tocify.custom.js"></script>
+
+		<script src="/js/main.js"></script>
+
+	</body>
+</html>

@@ -1,0 +1,238 @@
+	<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Spark HA和YARN模式 | 任何忧伤,都抵不过世界的美丽</title>
+  <meta name="author" content="zqhxuyuan">
+  
+  <meta name="description" content="SparkStandalone-HASpark Standalone基于ZooKeeper的HA
+
+
+
+node
+host
+
+
+
+
+master
+dp0652,dp0653
+
+
+slaves
+dp0655,dp0656,dp0657
+
+
+
+vi spark-env.sh
+12export SPARK">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Spark HA和YARN模式"/>
+  <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽"/>
+
+  
+  
+
+  <!-- toc -->
+  <link rel="stylesheet" href="/libs/tocify/jquery.tocify.css" media="screen" type="text/css">
+
+  <!-- <link rel="stylesheet" href="/libs/bs/css/bootstrap.min.css" media="screen" type="text/css"> -->
+  <link rel="stylesheet" href="//apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css" media="screen" type="text/css">
+
+  <!-- material design -->
+	<!-- <link rel="stylesheet" href="/libs/bs-material/css/ripples.min.css" media="screen" type="text/css"> -->
+  <link rel="stylesheet" href="//apps.bdimg.com/libs/bootstrap-material/0.3.0/css/ripples.min.css" media="screen" type="text/css">
+  <!-- <link rel="stylesheet" href="/libs/bs-material/css/material.min.css" media="screen" type="text/css"> -->
+	<link rel="stylesheet" href="//apps.bdimg.com/libs/bootstrap-material/0.3.0/css/material.min.css" media="screen" type="text/css">
+
+  <link rel="stylesheet" href="/css/highlight.light.css" media="screen" type="text/css">
+
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+
+  <!-- 百度统计 -->
+  
+
+  <!-- 谷歌统计 -->
+  
+
+  <script src="//apps.bdimg.com/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="/libs/jquery-2.0.3.min.js" type="text/javascript"><\/script>')</script>
+
+</head>
+
+ 	<body>
+	  <nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">菜单</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">任何忧伤,都抵不过世界的美丽</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                
+                <li>
+                    <a href="/" title="">
+                    <i class="fa fa-home"></i>首页
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="/archives" title="">
+                    <i class="fa fa-list"></i>存档
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</nav>
+
+	  <div class="container" >
+	    <div class="row">
+	<div class="col-md-8">
+	  <!-- index -->
+	  
+			<h1>Spark HA和YARN模式</h1>
+			
+			<div>
+				<i class="fa fa-clock-o"></i>
+				<span class="post-time">2015-12-01 18:02:20</span>
+			</div>
+			
+	  
+
+		<div class="content">
+			<!-- index -->
+		  
+					<h2 id="SparkStandalone-HA">SparkStandalone-HA</h2><p><a href="http://taoistwar.gitbooks.io/spark-operationand-maintenance-management/content/spark_install/spark_standalone_with_zookeeper_ha.html" target="_blank" rel="external">Spark Standalone基于ZooKeeper的HA</a></p>
+<table>
+<thead>
+<tr>
+<th>node</th>
+<th>host</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>master</td>
+<td>dp0652,dp0653</td>
+</tr>
+<tr>
+<td>slaves</td>
+<td>dp0655,dp0656,dp0657</td>
+</tr>
+</tbody>
+</table>
+<p>vi spark-env.sh</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> SPARK_MASTER_IP=dp0652</span><br><span class="line"><span class="keyword">export</span> SPARK_DAEMON_J<span class="built_in">AVA_OPTS</span>=<span class="string">"-Dspark.deploy.recoveryMode=ZOOKEEPER -Dspark.deploy.zookeeper.url=dp0655:2181,dp0656:2181,dp0657:2181 -Dspark.deploy.zookeeper.dir=/spark"</span></span><br></pre></td></tr></table></figure>
+<p>vi slaves</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">dp0655</span></span><br><span class="line">dp0656</span><br><span class="line">dp0657</span><br></pre></td></tr></table></figure>
+<p>将配置文件分发到集群所有节点</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">scp spark-env.sh dp0653:/usr/install/spark-<span class="number">1.4</span><span class="number">.0</span>-bin-hadoop2<span class="number">.6</span>/conf</span><br><span class="line">scp spark-env.sh dp0655:/usr/install/spark-<span class="number">1.4</span><span class="number">.0</span>-bin-hadoop2<span class="number">.6</span>/conf</span><br><span class="line">scp spark-env.sh dp0656:/usr/install/spark-<span class="number">1.4</span><span class="number">.0</span>-bin-hadoop2<span class="number">.6</span>/conf</span><br><span class="line">scp spark-env.sh dp0657:/usr/install/spark-<span class="number">1.4</span><span class="number">.0</span>-bin-hadoop2<span class="number">.6</span>/conf</span><br><span class="line">scp slaves dp0653:/usr/install/spark-<span class="number">1.4</span><span class="number">.0</span>-bin-hadoop2<span class="number">.6</span>/conf</span><br><span class="line">scp slaves dp0655:/usr/install/spark-<span class="number">1.4</span><span class="number">.0</span>-bin-hadoop2<span class="number">.6</span>/conf</span><br><span class="line">scp slaves dp0656:/usr/install/spark-<span class="number">1.4</span><span class="number">.0</span>-bin-hadoop2<span class="number">.6</span>/conf</span><br><span class="line">scp slaves dp0657:/usr/install/spark-<span class="number">1.4</span><span class="number">.0</span>-bin-hadoop2<span class="number">.6</span>/conf</span><br></pre></td></tr></table></figure>
+<p>在dp0653上修改spark-env.sh</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> SPARK_MASTER_IP=dp0653</span><br></pre></td></tr></table></figure>
+<p>在dp0652上启动集群: <code>sbin/start-all.sh</code></p>
+<p>在dp0653上启动Master: <code>sbin/start-master.sh</code></p>
+<p>可以看到dp0652是active, dp0653是standby</p>
+<p><img src="http://7xjs7x.com1.z0.glb.clouddn.com/sha1.png" alt=""></p>
+<p><img src="http://7xjs7x.com1.z0.glb.clouddn.com/sha2.png" alt=""></p>
+<p>关闭dp0652的master: <code>sbin/stop-master.sh</code></p>
+<p>观察dp0653是否成为master:</p>
+<p><img src="http://7xjs7x.com1.z0.glb.clouddn.com/sha3.png" alt=""></p>
+<p>执行应用程序. 注意–master现在有多个了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bin/spark-submit --master spark:<span class="comment">//dp0652:7077,dp0653:7077 \</span></span><br><span class="line">  --<span class="keyword">class</span> org.apache.spark.examples.SparkPi \</span><br><span class="line">  --executor-memory <span class="number">4</span>g --total-executor-cores <span class="number">2</span> \</span><br><span class="line">  lib/spark-examples-<span class="number">1.4</span><span class="number">.0</span>-hadoop2<span class="number">.6</span><span class="number">.0</span>.jar <span class="number">10</span></span><br></pre></td></tr></table></figure>
+<p>dp0652的master日志:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">15</span>/<span class="number">07</span>/<span class="number">07</span> <span class="number">14</span>:<span class="number">41</span>:<span class="number">50</span> INFO Master: Registering worker <span class="number">192.168</span><span class="number">.6</span><span class="number">.55</span>:<span class="number">58543</span> with <span class="number">1</span> cores, <span class="number">8.0</span> GB RAM</span><br><span class="line"><span class="number">15</span>/<span class="number">07</span>/<span class="number">07</span> <span class="number">14</span>:<span class="number">41</span>:<span class="number">50</span> INFO Master: Registering worker <span class="number">192.168</span><span class="number">.6</span><span class="number">.56</span>:<span class="number">37859</span> with <span class="number">1</span> cores, <span class="number">8.0</span> GB RAM</span><br><span class="line"><span class="number">15</span>/<span class="number">07</span>/<span class="number">07</span> <span class="number">14</span>:<span class="number">41</span>:<span class="number">50</span> INFO Master: Registering worker <span class="number">192.168</span><span class="number">.6</span><span class="number">.57</span>:<span class="number">34379</span> with <span class="number">1</span> cores, <span class="number">8.0</span> GB RAM</span><br><span class="line"></span><br><span class="line"><span class="number">15</span>/<span class="number">07</span>/<span class="number">07</span> <span class="number">14</span>:<span class="number">45</span>:<span class="number">01</span> ERROR Master: RECEIVED SIGNAL <span class="number">15</span>: SIGTERM</span><br><span class="line"><span class="number">15</span>/<span class="number">07</span>/<span class="number">07</span> <span class="number">14</span>:<span class="number">45</span>:<span class="number">01</span> INFO Utils: Shutdown hook called</span><br></pre></td></tr></table></figure>
+<p>dp0653的master日志:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">15</span>/<span class="number">07</span>/<span class="number">07</span> <span class="number">14</span>:<span class="number">42</span>:<span class="number">03</span> INFO ConnectionStateManager: State change: CONNECTED</span><br><span class="line"></span><br><span class="line"><span class="number">15</span>/<span class="number">07</span>/<span class="number">07</span> <span class="number">14</span>:<span class="number">45</span>:<span class="number">35</span> INFO ZooKeeperLeaderElectionAgent: We have gained leadership</span><br><span class="line"><span class="number">15</span>/<span class="number">07</span>/<span class="number">07</span> <span class="number">14</span>:<span class="number">45</span>:<span class="number">36</span> INFO Master: I have been elected leader! New state: RECOVERING</span><br><span class="line"><span class="number">15</span>/<span class="number">07</span>/<span class="number">07</span> <span class="number">14</span>:<span class="number">45</span>:<span class="number">36</span> INFO Master: Trying to recover worker: worker-<span class="number">20150707144149</span>-<span class="number">192.168</span><span class="number">.6</span><span class="number">.56</span>-<span class="number">37859</span></span><br><span class="line"><span class="number">15</span>/<span class="number">07</span>/<span class="number">07</span> <span class="number">14</span>:<span class="number">45</span>:<span class="number">36</span> INFO Master: Trying to recover worker: worker-<span class="number">20150707144149</span>-<span class="number">192.168</span><span class="number">.6</span><span class="number">.55</span>-<span class="number">58543</span></span><br><span class="line"><span class="number">15</span>/<span class="number">07</span>/<span class="number">07</span> <span class="number">14</span>:<span class="number">45</span>:<span class="number">36</span> INFO Master: Trying to recover worker: worker-<span class="number">20150707144149</span>-<span class="number">192.168</span><span class="number">.6</span><span class="number">.57</span>-<span class="number">34379</span></span><br><span class="line"><span class="number">15</span>/<span class="number">07</span>/<span class="number">07</span> <span class="number">14</span>:<span class="number">45</span>:<span class="number">36</span> INFO Master: Worker has been re-registered: worker-<span class="number">20150707144149</span>-<span class="number">192.168</span><span class="number">.6</span><span class="number">.55</span>-<span class="number">58543</span></span><br><span class="line"><span class="number">15</span>/<span class="number">07</span>/<span class="number">07</span> <span class="number">14</span>:<span class="number">45</span>:<span class="number">36</span> INFO Master: Worker has been re-registered: worker-<span class="number">20150707144149</span>-<span class="number">192.168</span><span class="number">.6</span><span class="number">.56</span>-<span class="number">37859</span></span><br><span class="line"><span class="number">15</span>/<span class="number">07</span>/<span class="number">07</span> <span class="number">14</span>:<span class="number">45</span>:<span class="number">36</span> INFO Master: Worker has been re-registered: worker-<span class="number">20150707144149</span>-<span class="number">192.168</span><span class="number">.6</span><span class="number">.57</span>-<span class="number">34379</span></span><br><span class="line"><span class="number">15</span>/<span class="number">07</span>/<span class="number">07</span> <span class="number">14</span>:<span class="number">45</span>:<span class="number">36</span> INFO Master: Recovery complete - resuming operations!</span><br></pre></td></tr></table></figure>
+<h2 id="SparkHA-Streamming">SparkHA-Streamming</h2><p>如果线上的SparkStreamming程序一直在运行, 而Master发生了切换, 验证下SparkStreamming还能不能正常运行.<br>这个实验的基础是在Spark-Streamming这一节的基础上.  </p>
+<p>还是先启动KafkaProducer[在52上]</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@dp0652 spark-<span class="number">1.4</span><span class="number">.0</span>-bin-hadoop2<span class="number">.6</span>]$ bin/spark-submit --<span class="keyword">class</span> org.apache.spark.examples.streaming.KafkaWordCountProducer /home/qihuang.zheng/spark-intro-<span class="number">1.0</span>-SNAPSHOT-jar-with-dependencies.jar <span class="number">192.168</span><span class="number">.6</span><span class="number">.55</span>:<span class="number">9092</span>,<span class="number">192.168</span><span class="number">.6</span><span class="number">.56</span>:<span class="number">9092</span>,<span class="number">192.168</span><span class="number">.6</span><span class="number">.57</span>:<span class="number">9092</span> kafka-spark-test <span class="number">2000</span> <span class="number">70</span></span><br></pre></td></tr></table></figure>
+<p>然后启动Spark-Streamming程序[也在52上], 注意–master的值  </p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@dp0652 spark-1.4.0-bin-hadoop2.6]$ bin/spark-submit --master spark://dp<span class="number">0652:7077</span>,dp<span class="number">0653:7077</span> --class org.apache.spark.examples.streaming.KafkaWordCount --jars /home/qihuang.zheng/spark-streaming-kafka_<span class="number">2.10-1.4</span>.0.jar /home/qihuang.zheng/spark-intro-1.0-SNAPSHOT-jar-with-dependencies.jar <span class="number">192.168.6.55</span>:<span class="number">2181,192.168</span>.<span class="number">6.56:2181</span>,<span class="number">192.168.6.57</span>:2181 my-consumer-group kafka-spark-test 5</span><br></pre></td></tr></table></figure>
+<p>当前的master是53,我们把53的停掉: <code>sbin/stop-master.sh</code></p>
+<p>可以发现Spark-Streamming的程序并没有受到影响.  也就是说master的变化并不会影响driver程序.<br><strong>只要你的driver指定–master为HA,而不是单点!</strong>  </p>
+<blockquote>
+<p>如果Driver程序比如spark-streamming程序挂掉了怎么办(比如要升级应用程序),那么再起一个streamming程序,这个程序会一直被阻塞住<br>直到旧的程序关掉了, 新的streamming程序就会立马接管过来.  这在<a href="http://zqhxuyuan.github.io/2015/06/28/Spark-Streamming/" target="_blank" rel="external">http://zqhxuyuan.github.io/2015/06/28/Spark-Streamming/</a>中已经做过了  </p>
+</blockquote>
+<p>注意: 不管是dp0652还是dp0653,都无法看到正在运行中的SparkStreamming程序.<br>SparkStreamming程序类似于Driver, 你在那台机器执行,就再这台机器的4040端口查看.<br>比如上面的实验,我们在dp0652上运行了Spark-Streamming程序, 所以在<a href="http://192.168.6.52:4040/streaming/" target="_blank" rel="external">http://192.168.6.52:4040/streaming/</a>查看StreamingUI<br>至于Master的8082端口,则只有主master才可以看到worker, 但是都看不到Running Applications</p>
+<p><img src="http://7xjs7x.com1.z0.glb.clouddn.com/spark9.png" alt="spark-master"></p>
+<p><img src="http://7xjs7x.com1.z0.glb.clouddn.com/spark10.png" alt="spark-stream"></p>
+<h2 id="Spark_on_YARN">Spark on YARN</h2><p>[qihuang.zheng@dp0652 lib]$ /usr/install/hadoop/bin/hadoop fs -mkdir /lib<br>[qihuang.zheng@dp0652 lib]$ /usr/install/hadoop/bin/hadoop fs -put spark-assembly-1.4.0-hadoop2.6.0.jar /lib</p>
+<h3 id="YARN_Cluster">YARN Cluster</h3><p>其实在按照好Hadoop后,Spark on YARN不需要任何配置,只不过spark-submit的时候–master发生了变化</p>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">SPARK_JAR=hdfs://tdhdfs/lib/spark-assembly-1.4.0-hadoop2.6.0.jar \</span><br><span class="line">./bin/spark-submit --class org.apache.spark.examples.SparkPi \</span><br><span class="line">    -<span class="ruby">-master yarn-cluster \</span><br><span class="line"></span>    -<span class="ruby">-num-executors <span class="number">3</span> \</span><br><span class="line"></span>    -<span class="ruby">-driver-memory <span class="number">4</span>g \</span><br><span class="line"></span>    -<span class="ruby">-executor-memory <span class="number">2</span>g \</span><br><span class="line"></span>    -<span class="ruby">-executor-cores <span class="number">1</span> \</span><br><span class="line"></span>    lib/spark-examples*.jar \</span><br><span class="line">    10</span><br></pre></td></tr></table></figure>
+<p>注意: 因为现在是Spark on YARN了,所以spark-submit的Job不会显示在Spark的UI上,而是HadoopYARN的UI上<br>而且, 因为是yarn-cluster模式, 终端并不会输出Pi的值! 相反,下面yarn-client模式会在终端输出Pi的值.</p>
+<h3 id="YARN_Client模式">YARN Client模式</h3><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">SPARK_JAR</span>=<span class="symbol">hdfs:</span>/<span class="regexp">/tdhdfs/lib</span><span class="regexp">/spark-assembly-1.4.0-hadoop2.6.0.jar \</span><br><span class="line">bin/spark</span>-submit --<span class="class"><span class="keyword">class</span> <span class="title">org</span>.<span class="title">apache</span>.<span class="title">spark</span>.<span class="title">examples</span>.<span class="title">SparkPi</span> \</span></span><br><span class="line">    --master yarn-client \</span><br><span class="line">    --num-executors <span class="number">3</span> \</span><br><span class="line">    --driver-memory <span class="number">4</span>g \</span><br><span class="line">    --executor-memory <span class="number">2</span>g \</span><br><span class="line">    --executor-cores <span class="number">1</span> \</span><br><span class="line">    <span class="class"><span class="keyword">lib</span>/<span class="title">spark</span>-<span class="title">examples</span>-1.4.0-<span class="title">hadoop2</span>.6.0.<span class="title">jar</span> \</span></span><br><span class="line">    <span class="number">10</span></span><br></pre></td></tr></table></figure>
+<p>yarn-client的日志输出: client模式也可以在sparkui上查看作业<br>实际上, 虽然4040能访问, 但是并不会在8082(默认8081)上看到这个作业.  </p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">07</span> INFO <span class="string">SparkUI:</span> Started SparkUI at <span class="string">http:</span><span class="comment">//192.168.6.52:4040</span></span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">07</span> INFO <span class="string">SparkContext:</span> Added JAR <span class="string">file:</span><span class="regexp">/usr/</span>install<span class="regexp">/spark-1.4.0-bin-hadoop2.6/</span>lib<span class="regexp">/spark-examples-1.4.0-hadoop2.6.0.jar at http:/</span><span class="regexp">/192.168.6.52:42366/</span>jars/spark-examples-<span class="number">1.4</span><span class="number">.0</span>-hadoop2<span class="number">.6</span><span class="number">.0</span>.jar with timestamp <span class="number">1436254447750</span></span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">08</span> INFO <span class="string">ConfiguredRMFailoverProxyProvider:</span> Failing over to rm2</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">08</span> INFO <span class="string">Client:</span> Requesting a <span class="keyword">new</span> application from cluster with <span class="number">2</span> NodeManagers</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">08</span> INFO <span class="string">Client:</span> Verifying our application has not requested more than the maximum memory capability of the cluster (<span class="number">8192</span> MB per container)</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">08</span> INFO <span class="string">Client:</span> Will allocate AM container, with <span class="number">896</span> MB memory including <span class="number">384</span> MB overhead</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">08</span> INFO <span class="string">Client:</span> Setting up container launch context <span class="keyword">for</span> our AM</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">08</span> INFO <span class="string">Client:</span> Preparing resources <span class="keyword">for</span> our AM container</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">08</span> WARN <span class="string">Client:</span> SPARK_JAR detected <span class="keyword">in</span> the system environment. This variable has been deprecated <span class="keyword">in</span> favor of the spark.yarn.jar configuration variable.</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">08</span> INFO <span class="string">Client:</span> Source and destination file systems are the same. Not copying <span class="string">hdfs:</span><span class="comment">//tdhdfs/lib/spark-assembly-1.4.0-hadoop2.6.0.jar</span></span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">09</span> INFO <span class="string">Client:</span> Uploading resource <span class="string">file:</span><span class="regexp">/tmp/</span>spark-c564fff3-dd94-<span class="number">4</span>b52-<span class="number">81</span>c9-<span class="number">6e6</span>f7e4d4ceb<span class="regexp">/__hadoop_conf__2813971044505707826.zip -&gt; hdfs:/</span><span class="regexp">/tdhdfs/</span>user<span class="regexp">/qihuang.zheng/</span>.sparkStaging<span class="regexp">/application_1436175086022_0003/</span>__hadoop_conf__2813971044505707826.zip</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">09</span> INFO <span class="string">Client:</span> Setting up the launch environment <span class="keyword">for</span> our AM container</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">09</span> WARN <span class="string">Client:</span> SPARK_JAR detected <span class="keyword">in</span> the system environment. This variable has been deprecated <span class="keyword">in</span> favor of the spark.yarn.jar configuration variable.</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">09</span> INFO <span class="string">Client:</span> Submitting application <span class="number">3</span> to ResourceManager</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">09</span> INFO <span class="string">YarnClientImpl:</span> Submitted application application_1436175086022_0003</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">10</span> INFO <span class="string">Client:</span> Application report <span class="keyword">for</span> application_1436175086022_0003 (<span class="string">state:</span> ACCEPTED)</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">11</span> INFO <span class="string">Client:</span> Application report <span class="keyword">for</span> application_1436175086022_0003 (<span class="string">state:</span> ACCEPTED)</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">38</span> INFO <span class="string">SparkContext:</span> Starting <span class="string">job:</span> reduce at SparkPi.<span class="string">scala:</span><span class="number">35</span></span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">38</span> INFO <span class="string">SparkContext:</span> Created broadcast <span class="number">0</span> from broadcast at DAGScheduler.<span class="string">scala:</span><span class="number">874</span></span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">38</span> INFO <span class="string">DAGScheduler:</span> Submitting <span class="number">10</span> missing tasks from ResultStage <span class="number">0</span> (MapPartitionsRDD[<span class="number">1</span>] at map at SparkPi.<span class="string">scala:</span><span class="number">31</span>)</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">38</span> INFO <span class="string">YarnScheduler:</span> Adding task set <span class="number">0.0</span> with <span class="number">10</span> tasks</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">38</span> INFO <span class="string">TaskSetManager:</span> Starting task <span class="number">0.0</span> <span class="keyword">in</span> stage <span class="number">0.0</span> (TID <span class="number">0</span>, dp0653, PROCESS_LOCAL, <span class="number">1446</span> bytes)</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">38</span> INFO <span class="string">TaskSetManager:</span> Starting task <span class="number">1.0</span> <span class="keyword">in</span> stage <span class="number">0.0</span> (TID <span class="number">1</span>, dp0652, PROCESS_LOCAL, <span class="number">1446</span> bytes)</span><br><span class="line">...</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">48</span> INFO <span class="string">BlockManagerInfo:</span> Added broadcast_0_piece0 <span class="keyword">in</span> memory on <span class="string">dp0653:</span><span class="number">43216</span> (<span class="string">size:</span> <span class="number">1202.0</span> B, <span class="string">free:</span> <span class="number">1060.3</span> MB)</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">49</span> INFO <span class="string">TaskSetManager:</span> Finished task <span class="number">0.0</span> <span class="keyword">in</span> stage <span class="number">0.0</span> (TID <span class="number">0</span>) <span class="keyword">in</span> <span class="number">10414</span> ms on dp0653 (<span class="number">10</span>/<span class="number">10</span>)</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">49</span> INFO <span class="string">DAGScheduler:</span> ResultStage <span class="number">0</span> (reduce at SparkPi.<span class="string">scala:</span><span class="number">35</span>) finished <span class="keyword">in</span> <span class="number">10.420</span> s</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">49</span> INFO <span class="string">YarnScheduler:</span> Removed TaskSet <span class="number">0.0</span>, whose tasks have all completed, from pool</span><br><span class="line"><span class="number">15</span><span class="regexp">/07/</span><span class="number">07</span> <span class="number">15</span>:<span class="number">34</span>:<span class="number">49</span> INFO <span class="string">DAGScheduler:</span> Job <span class="number">0</span> <span class="string">finished:</span> reduce at SparkPi.<span class="string">scala:</span><span class="number">35</span>, took <span class="number">10.776165</span> s</span><br><span class="line">Pi is roughly <span class="number">3.144008</span></span><br></pre></td></tr></table></figure>
+<p>下图是YARN的应用程序, 第一个是yarn-client, 第二个是yarn-cluster</p>
+<p><img src="http://7xjs7x.com1.z0.glb.clouddn.com/syarn1.png" alt=""></p>
+<h3 id="YARN客户端和集群模式比较">YARN客户端和集群模式比较</h3><p>关于为什么yarn-client能看到结果,而yarn-cluster无法看到结果,可以参考:<br><a href="http://blog.csdn.net/book_mmicky/article/details/25714287" target="_blank" rel="external">http://blog.csdn.net/book_mmicky/article/details/25714287</a></p>
+<blockquote>
+<p>在YARN上部署Spark应用程序的时候，不需要象Standalone、Mesos一样提供URL作为master参数的值，<br>因为Spark应用程序可以在hadoop的配置文件里面获取相关的信息，<br>所以只需要简单以yarn-cluster或yarn-client指定给master就可以了  </p>
+<p>YARN Client:  Spark driver在客户机上运行，然后向YARN申请运行exeutor以运行Task<br>YARN Cluster: Spark driver将作为一个ApplicationMaster在YARN集群中先启动，<br>              然后再由ApplicationMaster向RM申请资源启动executor以运行Task</p>
+<p>采用yarn-client方式，因为driver在客户端，所以程序的运行结果可以在客户端显示<br>采用yarn-cluster方式，因为driver在YARN中运行，所以程序的运行结果不能在客户端显示，<br>   所以最好将结果保存在hdfs上，客户端的终端显示的是作为YARN的job的运行情况</p>
+</blockquote>
+<h2 id="其他参考文档">其他参考文档</h2><p><a href="http://www.cnblogs.com/byrhuangqiang/p/3937654.html" target="_blank" rel="external">Spark:Master High Availability（HA）高可用配置的2种实现</a></p>
+
+			  
+		</div>
+
+		<!-- pagination -->
+	  
+
+		
+  
+
+
+	</div>
+	<div class="col-md-4">
+		
+			<div id="toc" ></div>
+		
+	</div>
+
+</div>
+
+
+			<footer>
+				
+
+<p>
+  由 <a href="https://hexo.io">hexo</a> 强力驱动 | 搭载 <a href="https://github.com/wayou/hexo-theme-material">material</a> 主题
+</p>
+<p>
+  &copy; 2015 <a href="http://github.com/zqhxuyuan"> zqhxuyuan </a>
+</p>
+<a id="gotop" href="#" title="back to top"><i class="mdi-hardware-keyboard-arrow-up"></i></a>
+
+			</footer>
+	  </div>
+
+		<!-- <script src="/libs/bs/js/bootstrap.min.js"></script> -->
+		<script src="//apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		<script>(typeof $().modal == 'function')|| document.write('<script src="/libs/bs/js/bootstrap.min.js" type="text/javascript"><\/script>')</script>
+
+		<!-- material design -->
+		<!-- <script src="/libs/bs-material/js/ripples.min.js"></script> -->
+		<script src="//apps.bdimg.com/libs/bootstrap-material/0.3.0/js/ripples.min.js"></script>
+		<!-- <script src="/libs/bs-material/js/material.min.js"></script> -->
+		<script src="//apps.bdimg.com/libs/bootstrap-material/0.3.0/js/material.min.js"></script>
+		<!-- toc -->
+		<!-- <script src="/libs/tocify/jquery-ui.min.js"></script> -->
+		<script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+		<script src="/libs/tocify/jquery.tocify.custom.js"></script>
+
+		<script src="/js/main.js"></script>
+
+	</body>
+</html>
