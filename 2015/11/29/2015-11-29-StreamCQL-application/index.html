@@ -5,28 +5,19 @@
   
   <title>StreamCQL源码阅读(4) 应用程序执行 | 任何忧伤,都抵不过世界的美丽</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前戏: CQL代码结构之前我们并没有梳理CQL部分的代码结构, 在分析了差不多的代码之后, 来看看每个部分都一一对应:  
-
-还没有涉及的包括: PhysicalPlan,物理计划/逻辑计划优化器,executors执行器.    
-正文: submitApplication历经千辛万苦, 终于回到SubmitTask的submitApplication, 创建物理计划Executor,并执行Ap">
+  <meta name="description" content="StreamCQL应用程序执行流程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="StreamCQL源码阅读(4) 应用程序执行">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/11/29/2015-11-29-StreamCQL-application/index.html">
 <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽">
-<meta property="og:description" content="前戏: CQL代码结构之前我们并没有梳理CQL部分的代码结构, 在分析了差不多的代码之后, 来看看每个部分都一一对应:  
-
-还没有涉及的包括: PhysicalPlan,物理计划/逻辑计划优化器,executors执行器.    
-正文: submitApplication历经千辛万苦, 终于回到SubmitTask的submitApplication, 创建物理计划Executor,并执行Ap">
+<meta property="og:description" content="StreamCQL应用程序执行流程">
 <meta property="og:image" content="http://img.blog.csdn.net/20151130093405880">
 <meta property="og:image" content="http://img.blog.csdn.net/20151201165952194">
 <meta property="og:image" content="http://img.blog.csdn.net/20151130172800418">
-<meta property="og:updated_time" content="2015-12-02T06:09:00.000Z">
+<meta property="og:updated_time" content="2015-12-02T12:36:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="StreamCQL源码阅读(4) 应用程序执行">
-<meta name="twitter:description" content="前戏: CQL代码结构之前我们并没有梳理CQL部分的代码结构, 在分析了差不多的代码之后, 来看看每个部分都一一对应:  
-
-还没有涉及的包括: PhysicalPlan,物理计划/逻辑计划优化器,executors执行器.    
-正文: submitApplication历经千辛万苦, 终于回到SubmitTask的submitApplication, 创建物理计划Executor,并执行Ap">
+<meta name="twitter:description" content="StreamCQL应用程序执行流程">
   
     <link rel="alternative" href="/atom.xml" title="任何忧伤,都抵不过世界的美丽" type="application/atom+xml">
   
@@ -45,7 +36,7 @@
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
 			
-			<img lazy-src="/img/avatar.png" class="js-avatar">
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			
 		</a>
 
@@ -152,7 +143,7 @@
 				
 				<section class="switch-part switch-part4">
 				
-					<div id="js-aboutme">BIG</div>
+					<div id="js-aboutme">BIG(DATA)</div>
 				</section>
 				
 			</div>
@@ -169,7 +160,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<a href="/" class="profilepic">
-				<img lazy-src="/img/avatar.png" class="js-avatar">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			</a>
 			<hgroup>
 			  <h1 class="header-author"><a href="/" title="回到主页">zqhxuyuan</a></h1>
@@ -243,7 +234,8 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <a id="more"></a>
+        <p>StreamCQL应用程序执行流程</p>
+<a id="more"></a>
 <h2 id="前戏:_CQL代码结构">前戏: CQL代码结构</h2><p>之前我们并没有梳理CQL部分的代码结构, 在分析了差不多的代码之后, 来看看每个部分都一一对应:  </p>
 <p><img src="http://img.blog.csdn.net/20151130093405880" alt="cql"></p>
 <p>还没有涉及的包括: PhysicalPlan,物理计划/逻辑计划优化器,executors执行器.    </p>
@@ -360,7 +352,7 @@
   <p><span>本文标题:</span><a href="/2015/11/29/2015-11-29-StreamCQL-application/">StreamCQL源码阅读(4) 应用程序执行</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 zqhxuyuan 的个人博客">zqhxuyuan</a></p>
   <p><span>发布时间:</span>2015年11月29日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月02日 - 14时09分</p>
+  <p><span>最后更新:</span>2015年12月02日 - 20时36分</p>
   <p>
     <span>原始链接:</span><a href="/2015/11/29/2015-11-29-StreamCQL-application/" title="StreamCQL源码阅读(4) 应用程序执行">http://github.com/zqhxuyuan/2015/11/29/2015-11-29-StreamCQL-application/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/11/29/2015-11-29-StreamCQL-application/　　作者: zqhxuyuan" title="点击复制文章链接">

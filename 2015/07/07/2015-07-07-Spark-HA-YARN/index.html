@@ -5,82 +5,22 @@
   
   <title>Spark HA和YARN模式 | 任何忧伤,都抵不过世界的美丽</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="SparkStandalone-HASpark Standalone基于ZooKeeper的HA
-
-
-
-node
-host
-
-
-
-
-master
-dp0652,dp0653
-
-
-slaves
-dp0655,dp0656,dp0657
-
-
-
-vi spark-env.sh
-12export SPARK_MASTER_IP=dp0652export SPARK_DAEMON_JAVA_OPTS=&quot;-D">
+  <meta name="description" content="Apache Spark的HA实验和SparkOnYarn模式">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spark HA和YARN模式">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/07/07/2015-07-07-Spark-HA-YARN/index.html">
 <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽">
-<meta property="og:description" content="SparkStandalone-HASpark Standalone基于ZooKeeper的HA
-
-
-
-node
-host
-
-
-
-
-master
-dp0652,dp0653
-
-
-slaves
-dp0655,dp0656,dp0657
-
-
-
-vi spark-env.sh
-12export SPARK_MASTER_IP=dp0652export SPARK_DAEMON_JAVA_OPTS=&quot;-D">
+<meta property="og:description" content="Apache Spark的HA实验和SparkOnYarn模式">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/sha1.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/sha2.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/sha3.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/spark9.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/spark10.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/syarn1.png">
-<meta property="og:updated_time" content="2015-12-02T06:13:51.000Z">
+<meta property="og:updated_time" content="2015-12-02T12:38:28.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark HA和YARN模式">
-<meta name="twitter:description" content="SparkStandalone-HASpark Standalone基于ZooKeeper的HA
-
-
-
-node
-host
-
-
-
-
-master
-dp0652,dp0653
-
-
-slaves
-dp0655,dp0656,dp0657
-
-
-
-vi spark-env.sh
-12export SPARK_MASTER_IP=dp0652export SPARK_DAEMON_JAVA_OPTS=&quot;-D">
+<meta name="twitter:description" content="Apache Spark的HA实验和SparkOnYarn模式">
   
     <link rel="alternative" href="/atom.xml" title="任何忧伤,都抵不过世界的美丽" type="application/atom+xml">
   
@@ -99,7 +39,7 @@ vi spark-env.sh
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
 			
-			<img lazy-src="/img/avatar.png" class="js-avatar">
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			
 		</a>
 
@@ -206,7 +146,7 @@ vi spark-env.sh
 				
 				<section class="switch-part switch-part4">
 				
-					<div id="js-aboutme">BIG</div>
+					<div id="js-aboutme">BIG(DATA)</div>
 				</section>
 				
 			</div>
@@ -223,7 +163,7 @@ vi spark-env.sh
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<a href="/" class="profilepic">
-				<img lazy-src="/img/avatar.png" class="js-avatar">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			</a>
 			<hgroup>
 			  <h1 class="header-author"><a href="/" title="回到主页">zqhxuyuan</a></h1>
@@ -297,7 +237,9 @@ vi spark-env.sh
     <div class="article-entry" itemprop="articleBody">
       
         
-        <h2 id="SparkStandalone-HA">SparkStandalone-HA</h2><p><a href="http://taoistwar.gitbooks.io/spark-operationand-maintenance-management/content/spark_install/spark_standalone_with_zookeeper_ha.html" target="_blank" rel="external">Spark Standalone基于ZooKeeper的HA</a></p>
+        <p>Apache Spark的HA实验和SparkOnYarn模式</p>
+<a id="more"></a>
+<h2 id="SparkStandalone-HA">SparkStandalone-HA</h2><p><a href="http://taoistwar.gitbooks.io/spark-operationand-maintenance-management/content/spark_install/spark_standalone_with_zookeeper_ha.html" target="_blank" rel="external">Spark Standalone基于ZooKeeper的HA</a></p>
 <table>
 <thead>
 <tr>
@@ -378,7 +320,7 @@ vi spark-env.sh
   <p><span>本文标题:</span><a href="/2015/07/07/2015-07-07-Spark-HA-YARN/">Spark HA和YARN模式</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 zqhxuyuan 的个人博客">zqhxuyuan</a></p>
   <p><span>发布时间:</span>2015年07月07日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月02日 - 14时13分</p>
+  <p><span>最后更新:</span>2015年12月02日 - 20时38分</p>
   <p>
     <span>原始链接:</span><a href="/2015/07/07/2015-07-07-Spark-HA-YARN/" title="Spark HA和YARN模式">http://github.com/zqhxuyuan/2015/07/07/2015-07-07-Spark-HA-YARN/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/07/07/2015-07-07-Spark-HA-YARN/　　作者: zqhxuyuan" title="点击复制文章链接">

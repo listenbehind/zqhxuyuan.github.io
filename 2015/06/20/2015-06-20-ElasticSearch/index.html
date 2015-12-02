@@ -5,28 +5,16 @@
   
   <title>ElasticSearch入门 | 任何忧伤,都抵不过世界的美丽</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="You Know, For Searchhttp://www.elasticsearch.cn/
-启动ES: 
-1bin/elasticsearch
-Hello CRUD: 
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950//索引. 数据库为twitter,表名为">
+  <meta name="description" content="You Know, For Search">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ElasticSearch入门">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/06/20/2015-06-20-ElasticSearch/index.html">
 <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽">
-<meta property="og:description" content="You Know, For Searchhttp://www.elasticsearch.cn/
-启动ES: 
-1bin/elasticsearch
-Hello CRUD: 
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950//索引. 数据库为twitter,表名为">
-<meta property="og:updated_time" content="2015-12-02T06:11:39.000Z">
+<meta property="og:description" content="You Know, For Search">
+<meta property="og:updated_time" content="2015-12-02T12:37:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ElasticSearch入门">
-<meta name="twitter:description" content="You Know, For Searchhttp://www.elasticsearch.cn/
-启动ES: 
-1bin/elasticsearch
-Hello CRUD: 
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950//索引. 数据库为twitter,表名为">
+<meta name="twitter:description" content="You Know, For Search">
   
     <link rel="alternative" href="/atom.xml" title="任何忧伤,都抵不过世界的美丽" type="application/atom+xml">
   
@@ -45,7 +33,7 @@ Hello CRUD:
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
 			
-			<img lazy-src="/img/avatar.png" class="js-avatar">
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			
 		</a>
 
@@ -152,7 +140,7 @@ Hello CRUD:
 				
 				<section class="switch-part switch-part4">
 				
-					<div id="js-aboutme">BIG</div>
+					<div id="js-aboutme">BIG(DATA)</div>
 				</section>
 				
 			</div>
@@ -169,7 +157,7 @@ Hello CRUD:
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<a href="/" class="profilepic">
-				<img lazy-src="/img/avatar.png" class="js-avatar">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			</a>
 			<hgroup>
 			  <h1 class="header-author"><a href="/" title="回到主页">zqhxuyuan</a></h1>
@@ -243,8 +231,9 @@ Hello CRUD:
     <div class="article-entry" itemprop="articleBody">
       
         
-        <h2 id="You_Know,_For_Search">You Know, For Search</h2><p><a href="http://www.elasticsearch.cn/" target="_blank" rel="external">http://www.elasticsearch.cn/</a></p>
-<p>启动ES: </p>
+        <p>You Know, For Search</p>
+<a id="more"></a>
+<h2 id="You_Know,_For_Search">You Know, For Search</h2><p>启动ES: </p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/elasticsearch</span><br></pre></td></tr></table></figure>
 <p>Hello CRUD: </p>
 <figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//索引. 数据库为twitter,表名为user,主键为kimchy,字段name值为Shay Banon</span></span><br><span class="line">$ curl -XPUT http:<span class="comment">//localhost:9200/twitter/user/kimchy -d '&#123;</span></span><br><span class="line">    <span class="string">"name"</span> : <span class="string">"Shay Banon"</span></span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line"><span class="comment">//索引，多个field. 主键为1,tweet表有三个字段:user,post_date,message</span></span><br><span class="line">$ curl -XPUT http:<span class="comment">//localhost:9200/twitter/tweet/1 -d '&#123;</span></span><br><span class="line">    <span class="string">"user"</span>: <span class="string">"kimchy"</span>,</span><br><span class="line">    <span class="string">"post_date"</span>: <span class="string">"2009-11-15T13:12:00"</span>,</span><br><span class="line">    <span class="string">"message"</span>: <span class="string">"Trying out elasticsearch, so far so good?"</span></span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line"><span class="comment">//索引，注意url里面的id是不一样的哦. 主键为2,另一条记录</span></span><br><span class="line">$ curl -XPUT http:<span class="comment">//localhost:9200/twitter/tweet/2 -d '&#123;</span></span><br><span class="line">    <span class="string">"user"</span>: <span class="string">"kimchy"</span>,</span><br><span class="line">    <span class="string">"post_date"</span>: <span class="string">"2009-11-15T14:12:12"</span>,</span><br><span class="line">    <span class="string">"message"</span>: <span class="string">"You know, for Search"</span></span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line"><span class="comment">//索引, 同一个id再次put相当于更新,version+1</span></span><br><span class="line">$ curl -XPUT http:<span class="comment">//localhost:9200/twitter/tweet/2 -d '&#123;</span></span><br><span class="line">    <span class="string">"user"</span>: <span class="string">"kimchy"</span>,</span><br><span class="line">    <span class="string">"post_date"</span>: <span class="string">"2009-11-15T14:12:12"</span>,</span><br><span class="line">    <span class="string">"message"</span>: <span class="string">"You know, for Search"</span></span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取: 获取twitter数据库中tweet表主键为2的记录</span></span><br><span class="line">$ curl -XGET http:<span class="comment">//localhost:9200/twitter/tweet/2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//lucene语法方式的查询, 查询tweet表中user字段=kimchy的记录</span></span><br><span class="line">$ curl -XGET http:<span class="comment">//localhost:9200/twitter/tweet/_search?q=user:kimchy</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//query DSL方式查询, 同上</span></span><br><span class="line">$ curl -XGET http:<span class="comment">//localhost:9200/twitter/tweet/_search -d '&#123;</span></span><br><span class="line">    <span class="string">"query"</span> : &#123;</span><br><span class="line">        <span class="string">"term"</span> : &#123; <span class="string">"user"</span>: <span class="string">"kimchy"</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line"><span class="comment">//query DSL方式查询, 查询post_date在指定范围内的记录集</span></span><br><span class="line">$ curl -XGET http:<span class="comment">//localhost:9200/twitter/_search?pretty=true -d '&#123;</span></span><br><span class="line">    <span class="string">"query"</span> : &#123;</span><br><span class="line">        <span class="string">"range"</span> : &#123;</span><br><span class="line">            <span class="string">"post_date"</span> : &#123;</span><br><span class="line">                <span class="string">"from"</span> : <span class="string">"2009-11-15T13:00:00"</span>,</span><br><span class="line">                <span class="string">"to"</span> : <span class="string">"2009-11-15T14:30:00"</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;'</span><br></pre></td></tr></table></figure>
@@ -352,7 +341,7 @@ Hello CRUD:
   <p><span>本文标题:</span><a href="/2015/06/20/2015-06-20-ElasticSearch/">ElasticSearch入门</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 zqhxuyuan 的个人博客">zqhxuyuan</a></p>
   <p><span>发布时间:</span>2015年06月20日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月02日 - 14时11分</p>
+  <p><span>最后更新:</span>2015年12月02日 - 20时37分</p>
   <p>
     <span>原始链接:</span><a href="/2015/06/20/2015-06-20-ElasticSearch/" title="ElasticSearch入门">http://github.com/zqhxuyuan/2015/06/20/2015-06-20-ElasticSearch/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/06/20/2015-06-20-ElasticSearch/　　作者: zqhxuyuan" title="点击复制文章链接">
@@ -381,15 +370,15 @@ Hello CRUD:
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2015/06/25/2015-06-25-ES2HDFS/">
-        ES导入数据到HDFS
+      <a href="/2015/06/20/2015-06-20-Apache-Drill/">
+        Apache Drill入门
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/06/20/2015-06-20-Apache-Drill/">
-        Apache Drill入门
+      <a href="/2015/05/01/hello-world/">
+        Hello World
       </a>
     </div>
   
@@ -473,10 +462,10 @@ Hello CRUD:
   
     
     <div  class="post-nav-button">
-    <a href="/2015/06/25/2015-06-25-ES2HDFS/" title="上一篇: ES导入数据到HDFS">
+    <a href="/2015/06/20/2015-06-20-Apache-Drill/" title="上一篇: Apache Drill入门">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/06/20/2015-06-20-Apache-Drill/" title="下一篇: Apache Drill入门">
+    <a href="/2015/05/01/hello-world/" title="下一篇: Hello World">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

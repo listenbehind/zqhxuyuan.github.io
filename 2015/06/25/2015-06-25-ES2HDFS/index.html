@@ -5,20 +5,17 @@
   
   <title>ES导入数据到HDFS | 任何忧伤,都抵不过世界的美丽</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="ES2HDFS in Actionelasticsearch-hadoop 支持Hadoop和Spark，利用elasticsearch-hadoop项目，spark可以较为轻松的从elasticsearch中读取数据。
-项目要求存储于elasticsearch中的数据是以json格式存储，由于历史的原因，其格式不统一。现在要求将这些json串组织成统一的格式，树深最大不超过3.导出的数据以par">
+  <meta name="description" content="从ElasticSearch导入数据到HDFS的一些坑">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ES导入数据到HDFS">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/06/25/2015-06-25-ES2HDFS/index.html">
 <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽">
-<meta property="og:description" content="ES2HDFS in Actionelasticsearch-hadoop 支持Hadoop和Spark，利用elasticsearch-hadoop项目，spark可以较为轻松的从elasticsearch中读取数据。
-项目要求存储于elasticsearch中的数据是以json格式存储，由于历史的原因，其格式不统一。现在要求将这些json串组织成统一的格式，树深最大不超过3.导出的数据以par">
+<meta property="og:description" content="从ElasticSearch导入数据到HDFS的一些坑">
 <meta property="og:image" content="http://img.blog.csdn.net/20150924082457899">
-<meta property="og:updated_time" content="2015-12-02T08:34:59.000Z">
+<meta property="og:updated_time" content="2015-12-02T12:37:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ES导入数据到HDFS">
-<meta name="twitter:description" content="ES2HDFS in Actionelasticsearch-hadoop 支持Hadoop和Spark，利用elasticsearch-hadoop项目，spark可以较为轻松的从elasticsearch中读取数据。
-项目要求存储于elasticsearch中的数据是以json格式存储，由于历史的原因，其格式不统一。现在要求将这些json串组织成统一的格式，树深最大不超过3.导出的数据以par">
+<meta name="twitter:description" content="从ElasticSearch导入数据到HDFS的一些坑">
   
     <link rel="alternative" href="/atom.xml" title="任何忧伤,都抵不过世界的美丽" type="application/atom+xml">
   
@@ -37,7 +34,7 @@
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
 			
-			<img lazy-src="/img/avatar.png" class="js-avatar">
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			
 		</a>
 
@@ -144,7 +141,7 @@
 				
 				<section class="switch-part switch-part4">
 				
-					<div id="js-aboutme">BIG</div>
+					<div id="js-aboutme">BIG(DATA)</div>
 				</section>
 				
 			</div>
@@ -161,7 +158,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<a href="/" class="profilepic">
-				<img lazy-src="/img/avatar.png" class="js-avatar">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			</a>
 			<hgroup>
 			  <h1 class="header-author"><a href="/" title="回到主页">zqhxuyuan</a></h1>
@@ -235,7 +232,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <h2 id="ES2HDFS_in_Action">ES2HDFS in Action</h2><p>elasticsearch-hadoop 支持Hadoop和Spark，利用elasticsearch-hadoop项目，spark可以较为轻松的从elasticsearch中读取数据。</p>
+        <p>从ElasticSearch导入数据到HDFS的一些坑</p>
+<a id="more"></a>
+<h2 id="ES2HDFS_in_Action">ES2HDFS in Action</h2><p>elasticsearch-hadoop 支持Hadoop和Spark，利用elasticsearch-hadoop项目，spark可以较为轻松的从elasticsearch中读取数据。</p>
 <h3 id="项目要求">项目要求</h3><p>存储于elasticsearch中的数据是以json格式存储，由于历史的原因，其格式不统一。<br>现在要求将这些json串组织成统一的格式，树深最大不超过3.<br>导出的数据以parquet格式存储到hdfs中，同时建立外部的hive表。 </p>
 <figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CREATE <span class="keyword">EXTERNAL</span> TABLE activity(</span><br><span class="line">  sequence_id` <span class="keyword">string</span>,</span><br><span class="line">  occur_time bigint,</span><br><span class="line">  activity_map map&lt;<span class="keyword">string</span>,<span class="keyword">string</span>&gt;,</span><br><span class="line">  ...</span><br><span class="line">partitioned by(indice <span class="keyword">string</span>)</span><br><span class="line"><span class="keyword">stored</span> as parquet</span><br><span class="line">location <span class="string">'/user/lab/activity'</span>;</span><br></pre></td></tr></table></figure>
 <h3 id="1-spark-shell">1.spark-shell</h3><p>从mavenrepository.com下载elasticsearch-hadoop的jar包, 将该jar包放到 $SPARK_HOME/lib 目录</p>
@@ -308,7 +307,7 @@
   <p><span>本文标题:</span><a href="/2015/06/25/2015-06-25-ES2HDFS/">ES导入数据到HDFS</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 zqhxuyuan 的个人博客">zqhxuyuan</a></p>
   <p><span>发布时间:</span>2015年06月25日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月02日 - 16时34分</p>
+  <p><span>最后更新:</span>2015年12月02日 - 20时37分</p>
   <p>
     <span>原始链接:</span><a href="/2015/06/25/2015-06-25-ES2HDFS/" title="ES导入数据到HDFS">http://github.com/zqhxuyuan/2015/06/25/2015-06-25-ES2HDFS/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/06/25/2015-06-25-ES2HDFS/　　作者: zqhxuyuan" title="点击复制文章链接">
@@ -337,15 +336,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2015/07/05/2015-07-05-Apache-Spark/">
-        Apache Spark入门
+      <a href="/2015/07/05/2015-07-05-Spark-SQL/">
+        Spark SQL入门
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/06/20/2015-06-20-ElasticSearch/">
-        ElasticSearch入门
+      <a href="/2015/06/20/2015-06-20-Apache-Drill/">
+        Apache Drill入门
       </a>
     </div>
   
@@ -429,10 +428,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2015/07/05/2015-07-05-Apache-Spark/" title="上一篇: Apache Spark入门">
+    <a href="/2015/07/05/2015-07-05-Spark-SQL/" title="上一篇: Spark SQL入门">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/06/20/2015-06-20-ElasticSearch/" title="下一篇: ElasticSearch入门">
+    <a href="/2015/06/20/2015-06-20-Apache-Drill/" title="下一篇: Apache Drill入门">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

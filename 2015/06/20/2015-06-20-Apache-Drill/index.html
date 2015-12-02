@@ -5,12 +5,12 @@
   
   <title>Apache Drill入门 | 任何忧伤,都抵不过世界的美丽</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="单机模式123456789101112[qihuang.zheng@dp0653 ~]$ cd apache-drill-1.0.0[qihuang.zheng@dp0653 apache-drill-1.0.0]$ bin/drill-embeddedapache drill 1.0.0&quot;json ain&apos;t no thang&quot;0: jdbc:drill:zk&amp;gt; select * from">
+  <meta name="description" content="Apache Drill: Schema-free SQL Query Engine for Hadoop, NoSQL and Cloud Storage">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Apache Drill入门">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/06/20/2015-06-20-Apache-Drill/index.html">
 <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽">
-<meta property="og:description" content="单机模式123456789101112[qihuang.zheng@dp0653 ~]$ cd apache-drill-1.0.0[qihuang.zheng@dp0653 apache-drill-1.0.0]$ bin/drill-embeddedapache drill 1.0.0&quot;json ain&apos;t no thang&quot;0: jdbc:drill:zk&amp;gt; select * from">
+<meta property="og:description" content="Apache Drill: Schema-free SQL Query Engine for Hadoop, NoSQL and Cloud Storage">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/QQ20150616-2@2x.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/QQ20150616-17@2x.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/QQ20150616-9@2x.png">
@@ -26,10 +26,10 @@
 <meta property="og:image" content="http://drill.apache.org/docs/img/leaf-frag.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/drill-query.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/drill-ui.png">
-<meta property="og:updated_time" content="2015-12-02T09:16:43.000Z">
+<meta property="og:updated_time" content="2015-12-02T12:37:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Apache Drill入门">
-<meta name="twitter:description" content="单机模式123456789101112[qihuang.zheng@dp0653 ~]$ cd apache-drill-1.0.0[qihuang.zheng@dp0653 apache-drill-1.0.0]$ bin/drill-embeddedapache drill 1.0.0&quot;json ain&apos;t no thang&quot;0: jdbc:drill:zk&amp;gt; select * from">
+<meta name="twitter:description" content="Apache Drill: Schema-free SQL Query Engine for Hadoop, NoSQL and Cloud Storage">
   
     <link rel="alternative" href="/atom.xml" title="任何忧伤,都抵不过世界的美丽" type="application/atom+xml">
   
@@ -48,7 +48,7 @@
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
 			
-			<img lazy-src="/img/avatar.png" class="js-avatar">
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			
 		</a>
 
@@ -155,7 +155,7 @@
 				
 				<section class="switch-part switch-part4">
 				
-					<div id="js-aboutme">BIG</div>
+					<div id="js-aboutme">BIG(DATA)</div>
 				</section>
 				
 			</div>
@@ -172,7 +172,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<a href="/" class="profilepic">
-				<img lazy-src="/img/avatar.png" class="js-avatar">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			</a>
 			<hgroup>
 			  <h1 class="header-author"><a href="/" title="回到主页">zqhxuyuan</a></h1>
@@ -246,7 +246,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <h2 id="单机模式">单机模式</h2><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng<span class="comment">@dp0653 ~]$ cd apache-drill-1.0.0</span></span><br><span class="line">[qihuang.zheng<span class="comment">@dp0653 apache-drill-1.0.0]$ bin/drill-embedded</span></span><br><span class="line">apache drill 1.0.0</span><br><span class="line"><span class="string">"json ain't no thang"</span></span><br><span class="line">0: jdbc:drill:zk&gt; select <span class="keyword">*</span> from cp.`employee.json` limit 2;</span><br><span class="line">+--------------+------------------+-------------+------------+--------------+---------------------+-----------+----------------+-------------+------------------------+----------+----------------+------------------+-----------------+---------+--------------------+</span><br><span class="line">|<span class="string"> employee_id  </span>|<span class="string">    full_name     </span>|<span class="string"> first_name  </span>|<span class="string"> last_name  </span>|<span class="string"> position_id  </span>|<span class="string">   position_title    </span>|<span class="string"> store_id  </span>|<span class="string"> department_id  </span>|<span class="string"> birth_date  </span>|<span class="string">       hire_date        </span>|<span class="string">  salary  </span>|<span class="string"> supervisor_id  </span>|<span class="string"> education_level  </span>|<span class="string"> marital_status  </span>|<span class="string"> gender  </span>|<span class="string">  management_role   </span>|</span><br><span class="line">+--------------+------------------+-------------+------------+--------------+---------------------+-----------+----------------+-------------+------------------------+----------+----------------+------------------+-----------------+---------+--------------------+</span><br><span class="line">|<span class="string"> 1            </span>|<span class="string"> Sheri Nowmer     </span>|<span class="string"> Sheri       </span>|<span class="string"> Nowmer     </span>|<span class="string"> 1            </span>|<span class="string"> President           </span>|<span class="string"> 0         </span>|<span class="string"> 1              </span>|<span class="string"> 1961-08-26  </span>|<span class="string"> 1994-12-01 00:00:00.0  </span>|<span class="string"> 80000.0  </span>|<span class="string"> 0              </span>|<span class="string"> Graduate Degree  </span>|<span class="string"> S               </span>|<span class="string"> F       </span>|<span class="string"> Senior Management  </span>|</span><br><span class="line">|<span class="string"> 2            </span>|<span class="string"> Derrick Whelply  </span>|<span class="string"> Derrick     </span>|<span class="string"> Whelply    </span>|<span class="string"> 2            </span>|<span class="string"> VP Country Manager  </span>|<span class="string"> 0         </span>|<span class="string"> 1              </span>|<span class="string"> 1915-07-03  </span>|<span class="string"> 1994-12-01 00:00:00.0  </span>|<span class="string"> 40000.0  </span>|<span class="string"> 1              </span>|<span class="string"> Graduate Degree  </span>|<span class="string"> M               </span>|<span class="string"> M       </span>|<span class="string"> Senior Management  </span>|</span><br><span class="line">+--------------+------------------+-------------+------------+--------------+---------------------+-----------+----------------+-------------+------------------------+----------+----------------+------------------+-----------------+---------+--------------------+</span><br><span class="line">2 rows selected (1.247 seconds)</span><br></pre></td></tr></table></figure>
+        <p>Apache Drill: Schema-free SQL Query Engine for Hadoop, NoSQL and Cloud Storage</p>
+<a id="more"></a>
+<h2 id="单机模式">单机模式</h2><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng<span class="comment">@dp0653 ~]$ cd apache-drill-1.0.0</span></span><br><span class="line">[qihuang.zheng<span class="comment">@dp0653 apache-drill-1.0.0]$ bin/drill-embedded</span></span><br><span class="line">apache drill 1.0.0</span><br><span class="line"><span class="string">"json ain't no thang"</span></span><br><span class="line">0: jdbc:drill:zk&gt; select <span class="keyword">*</span> from cp.`employee.json` limit 2;</span><br><span class="line">+--------------+------------------+-------------+------------+--------------+---------------------+-----------+----------------+-------------+------------------------+----------+----------------+------------------+-----------------+---------+--------------------+</span><br><span class="line">|<span class="string"> employee_id  </span>|<span class="string">    full_name     </span>|<span class="string"> first_name  </span>|<span class="string"> last_name  </span>|<span class="string"> position_id  </span>|<span class="string">   position_title    </span>|<span class="string"> store_id  </span>|<span class="string"> department_id  </span>|<span class="string"> birth_date  </span>|<span class="string">       hire_date        </span>|<span class="string">  salary  </span>|<span class="string"> supervisor_id  </span>|<span class="string"> education_level  </span>|<span class="string"> marital_status  </span>|<span class="string"> gender  </span>|<span class="string">  management_role   </span>|</span><br><span class="line">+--------------+------------------+-------------+------------+--------------+---------------------+-----------+----------------+-------------+------------------------+----------+----------------+------------------+-----------------+---------+--------------------+</span><br><span class="line">|<span class="string"> 1            </span>|<span class="string"> Sheri Nowmer     </span>|<span class="string"> Sheri       </span>|<span class="string"> Nowmer     </span>|<span class="string"> 1            </span>|<span class="string"> President           </span>|<span class="string"> 0         </span>|<span class="string"> 1              </span>|<span class="string"> 1961-08-26  </span>|<span class="string"> 1994-12-01 00:00:00.0  </span>|<span class="string"> 80000.0  </span>|<span class="string"> 0              </span>|<span class="string"> Graduate Degree  </span>|<span class="string"> S               </span>|<span class="string"> F       </span>|<span class="string"> Senior Management  </span>|</span><br><span class="line">|<span class="string"> 2            </span>|<span class="string"> Derrick Whelply  </span>|<span class="string"> Derrick     </span>|<span class="string"> Whelply    </span>|<span class="string"> 2            </span>|<span class="string"> VP Country Manager  </span>|<span class="string"> 0         </span>|<span class="string"> 1              </span>|<span class="string"> 1915-07-03  </span>|<span class="string"> 1994-12-01 00:00:00.0  </span>|<span class="string"> 40000.0  </span>|<span class="string"> 1              </span>|<span class="string"> Graduate Degree  </span>|<span class="string"> M               </span>|<span class="string"> M       </span>|<span class="string"> Senior Management  </span>|</span><br><span class="line">+--------------+------------------+-------------+------------+--------------+---------------------+-----------+----------------+-------------+------------------------+----------+----------------+------------------+-----------------+---------+--------------------+</span><br><span class="line">2 rows selected (1.247 seconds)</span><br></pre></td></tr></table></figure>
 <p>drill使用zookeeper进行集群. 其中local表示使用本机的zk.</p>
 <p>也可以使用sqlline启动:</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng<span class="annotation">@dp</span>0653 apache-drill-<span class="number">1.0</span><span class="number">.0</span>]$ bin/sqlline -u <span class="string">jdbc:</span><span class="string">drill:</span>zk=local</span><br><span class="line"><span class="string">log4j:</span>WARN No appenders could be found <span class="keyword">for</span> logger (DataNucleus.General).</span><br><span class="line"><span class="string">log4j:</span>WARN Please initialize the log4j system properly.</span><br><span class="line"><span class="string">log4j:</span>WARN See <span class="string">http:</span><span class="comment">//logging.apache.org/log4j/1.2/faq.html#noconfig for more info.</span></span><br><span class="line">六月 <span class="number">15</span>, <span class="number">2015</span> <span class="number">11</span>:<span class="number">11</span>:<span class="number">18</span> 上午 org.glassfish.jersey.server.ApplicationHandler initialize</span><br><span class="line">信息: Initiating Jersey application, version <span class="string">Jersey:</span> <span class="number">2.8</span> <span class="number">2014</span>-<span class="number">04</span>-<span class="number">29</span> <span class="number">01</span>:<span class="number">25</span>:<span class="number">26.</span>..</span><br><span class="line">apache drill <span class="number">1.0</span><span class="number">.0</span></span><br><span class="line"><span class="string">"a drill in the hand is better than two in the bush"</span></span><br><span class="line"><span class="number">0</span>: <span class="string">jdbc:</span><span class="string">drill:</span>zk=local&gt;</span><br></pre></td></tr></table></figure>
@@ -479,7 +481,7 @@
   <p><span>本文标题:</span><a href="/2015/06/20/2015-06-20-Apache-Drill/">Apache Drill入门</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 zqhxuyuan 的个人博客">zqhxuyuan</a></p>
   <p><span>发布时间:</span>2015年06月20日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月02日 - 17时16分</p>
+  <p><span>最后更新:</span>2015年12月02日 - 20时37分</p>
   <p>
     <span>原始链接:</span><a href="/2015/06/20/2015-06-20-Apache-Drill/" title="Apache Drill入门">http://github.com/zqhxuyuan/2015/06/20/2015-06-20-Apache-Drill/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/06/20/2015-06-20-Apache-Drill/　　作者: zqhxuyuan" title="点击复制文章链接">
@@ -508,15 +510,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2015/06/20/2015-06-20-ElasticSearch/">
-        ElasticSearch入门
+      <a href="/2015/06/25/2015-06-25-ES2HDFS/">
+        ES导入数据到HDFS
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/05/01/hello-world/">
-        Hello World
+      <a href="/2015/06/20/2015-06-20-ElasticSearch/">
+        ElasticSearch入门
       </a>
     </div>
   
@@ -600,10 +602,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2015/06/20/2015-06-20-ElasticSearch/" title="上一篇: ElasticSearch入门">
+    <a href="/2015/06/25/2015-06-25-ES2HDFS/" title="上一篇: ES导入数据到HDFS">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/05/01/hello-world/" title="下一篇: Hello World">
+    <a href="/2015/06/20/2015-06-20-ElasticSearch/" title="下一篇: ElasticSearch入门">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

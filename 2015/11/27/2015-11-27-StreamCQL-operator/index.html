@@ -5,21 +5,18 @@
   
   <title>StreamCQL源码阅读(3) 拆分组合算子 | 任何忧伤,都抵不过世界的美丽</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前戏: buildApplication上篇在解析Schema的时候分析了CQL中一些常用的Statement syntax和对应的语法/语义解析器结果,现在继续ApplicationBuilder.buildApplication中parseSchemas的下一步splitOperators.  
-12345678910private void buildApplication() &amp;#123;">
+  <meta name="description" content="StreamCQL的算子组成了Application">
 <meta property="og:type" content="article">
 <meta property="og:title" content="StreamCQL源码阅读(3) 拆分组合算子">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/11/27/2015-11-27-StreamCQL-operator/index.html">
 <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽">
-<meta property="og:description" content="前戏: buildApplication上篇在解析Schema的时候分析了CQL中一些常用的Statement syntax和对应的语法/语义解析器结果,现在继续ApplicationBuilder.buildApplication中parseSchemas的下一步splitOperators.  
-12345678910private void buildApplication() &amp;#123;">
+<meta property="og:description" content="StreamCQL的算子组成了Application">
 <meta property="og:image" content="http://img.blog.csdn.net/20151126173430754">
 <meta property="og:image" content="http://img.blog.csdn.net/20151129160212682">
-<meta property="og:updated_time" content="2015-12-02T06:08:53.000Z">
+<meta property="og:updated_time" content="2015-12-02T12:36:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="StreamCQL源码阅读(3) 拆分组合算子">
-<meta name="twitter:description" content="前戏: buildApplication上篇在解析Schema的时候分析了CQL中一些常用的Statement syntax和对应的语法/语义解析器结果,现在继续ApplicationBuilder.buildApplication中parseSchemas的下一步splitOperators.  
-12345678910private void buildApplication() &amp;#123;">
+<meta name="twitter:description" content="StreamCQL的算子组成了Application">
   
     <link rel="alternative" href="/atom.xml" title="任何忧伤,都抵不过世界的美丽" type="application/atom+xml">
   
@@ -38,7 +35,7 @@
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
 			
-			<img lazy-src="/img/avatar.png" class="js-avatar">
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			
 		</a>
 
@@ -145,7 +142,7 @@
 				
 				<section class="switch-part switch-part4">
 				
-					<div id="js-aboutme">BIG</div>
+					<div id="js-aboutme">BIG(DATA)</div>
 				</section>
 				
 			</div>
@@ -162,7 +159,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<a href="/" class="profilepic">
-				<img lazy-src="/img/avatar.png" class="js-avatar">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			</a>
 			<hgroup>
 			  <h1 class="header-author"><a href="/" title="回到主页">zqhxuyuan</a></h1>
@@ -236,7 +233,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <h2 id="前戏:_buildApplication">前戏: buildApplication</h2><p>上篇在解析Schema的时候分析了CQL中一些常用的Statement syntax和对应的语法/语义解析器结果,<br>现在继续ApplicationBuilder.buildApplication中parseSchemas的下一步splitOperators.  </p>
+        <p>StreamCQL的算子组成了Application</p>
+<a id="more"></a>
+<h2 id="前戏:_buildApplication">前戏: buildApplication</h2><p>上篇在解析Schema的时候分析了CQL中一些常用的Statement syntax和对应的语法/语义解析器结果,<br>现在继续ApplicationBuilder.buildApplication中parseSchemas的下一步splitOperators.  </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">buildApplication</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    app = <span class="keyword">new</span> Application(applicationName);</span><br><span class="line">    parseSchemas();</span><br><span class="line">    List&lt;SplitContext&gt; splitContexts = splitOperators();            <span class="comment">//拆分算子  ⬅️</span></span><br><span class="line">    SplitContext splitContext = combineOperators(splitContexts);    <span class="comment">//组合算子, 将拆分算子列表转换为只有一个SplitContext  ⬅️</span></span><br><span class="line">    changeUnionOperators(splitContext);</span><br><span class="line">    changeSchemaAfterAggregate(splitContext);</span><br><span class="line">    app.setOperators(splitContext.getOperators());                  <span class="comment">//拆分结果包含了operatots和transitions</span></span><br><span class="line">    app.setOpTransition(splitContext.getTransitions());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>combineOperators会创建OperatorCombiner, 并调用combine方法将splitContexts合并起来,终于打印了日志中看到的:<code>combine all split contexts</code>(解析submit之后).<br>构建Application的主要工作就是Split和Combine,最后将SplitContext的operators和transitions设置到Application对象中,完成应用程序的构建,在这基础上再进行物理优化.    </p>
 <p>为什么要先拆分, 后面又要再组合?😖 以下面的CQL为例:  </p>
@@ -398,7 +397,7 @@
   <p><span>本文标题:</span><a href="/2015/11/27/2015-11-27-StreamCQL-operator/">StreamCQL源码阅读(3) 拆分组合算子</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 zqhxuyuan 的个人博客">zqhxuyuan</a></p>
   <p><span>发布时间:</span>2015年11月27日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月02日 - 14时08分</p>
+  <p><span>最后更新:</span>2015年12月02日 - 20时36分</p>
   <p>
     <span>原始链接:</span><a href="/2015/11/27/2015-11-27-StreamCQL-operator/" title="StreamCQL源码阅读(3) 拆分组合算子">http://github.com/zqhxuyuan/2015/11/27/2015-11-27-StreamCQL-operator/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/11/27/2015-11-27-StreamCQL-operator/　　作者: zqhxuyuan" title="点击复制文章链接">

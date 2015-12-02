@@ -5,19 +5,19 @@
   
   <title>Apache Drill源码阅读(2) 分析一次查询过程以及RPC | 任何忧伤,都抵不过世界的美丽</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一次Query的生命周期Foreman线程的run方法中的queryRequest是org.apache.drill.exec.proto.UserProtos的RunQuery可以认为就是用户输入的查询语句,只不过由于是分布式,客户端输入的查询,会通过RPC在Foreman上执行protobuffer文件的定义在drill-protocol/src/main/protobuf下,比如User.p">
+  <meta name="description" content="Apache Drill的RPC流程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Apache Drill源码阅读(2) 分析一次查询过程以及RPC">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/07/12/2015-07-12-drill-rpc/index.html">
 <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽">
-<meta property="og:description" content="一次Query的生命周期Foreman线程的run方法中的queryRequest是org.apache.drill.exec.proto.UserProtos的RunQuery可以认为就是用户输入的查询语句,只不过由于是分布式,客户端输入的查询,会通过RPC在Foreman上执行protobuffer文件的定义在drill-protocol/src/main/protobuf下,比如User.p">
+<meta property="og:description" content="Apache Drill的RPC流程">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/drill6.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/drill10.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/drill11.png">
-<meta property="og:updated_time" content="2015-12-02T06:12:44.000Z">
+<meta property="og:updated_time" content="2015-12-02T12:34:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Apache Drill源码阅读(2) 分析一次查询过程以及RPC">
-<meta name="twitter:description" content="一次Query的生命周期Foreman线程的run方法中的queryRequest是org.apache.drill.exec.proto.UserProtos的RunQuery可以认为就是用户输入的查询语句,只不过由于是分布式,客户端输入的查询,会通过RPC在Foreman上执行protobuffer文件的定义在drill-protocol/src/main/protobuf下,比如User.p">
+<meta name="twitter:description" content="Apache Drill的RPC流程">
   
     <link rel="alternative" href="/atom.xml" title="任何忧伤,都抵不过世界的美丽" type="application/atom+xml">
   
@@ -36,7 +36,7 @@
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
 			
-			<img lazy-src="/img/avatar.png" class="js-avatar">
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			
 		</a>
 
@@ -143,7 +143,7 @@
 				
 				<section class="switch-part switch-part4">
 				
-					<div id="js-aboutme">BIG</div>
+					<div id="js-aboutme">BIG(DATA)</div>
 				</section>
 				
 			</div>
@@ -160,7 +160,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<a href="/" class="profilepic">
-				<img lazy-src="/img/avatar.png" class="js-avatar">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			</a>
 			<hgroup>
 			  <h1 class="header-author"><a href="/" title="回到主页">zqhxuyuan</a></h1>
@@ -234,7 +234,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <h2 id="一次Query的生命周期">一次Query的生命周期</h2><p>Foreman线程的run方法中的queryRequest是org.apache.drill.exec.proto.UserProtos的RunQuery<br>可以认为就是用户输入的查询语句,只不过由于是分布式,客户端输入的查询,会通过RPC在Foreman上执行<br>protobuffer文件的定义在drill-protocol/src/main/protobuf下,比如User.proto对应了UserProtos</p>
+        <p>Apache Drill的RPC流程</p>
+<a id="more"></a>
+<h2 id="一次Query的生命周期">一次Query的生命周期</h2><p>Foreman线程的run方法中的queryRequest是org.apache.drill.exec.proto.UserProtos的RunQuery<br>可以认为就是用户输入的查询语句,只不过由于是分布式,客户端输入的查询,会通过RPC在Foreman上执行<br>protobuffer文件的定义在drill-protocol/src/main/protobuf下,比如User.proto对应了UserProtos</p>
 <p>关键看下run()上面的注释. 什么时候被调用: 在查询建立起来的时候<br>以什么样的方式调用: 执行线程池. 功能是什么: 完成远程执行<br>注意这个方法的结束并不代表查询生命周期的Foreman角色的结束.  </p>
 <blockquote>
 <p>Called by execution pool to do query setup, and kick off remote execution.<br>Note that completion of this function is not the end of the Foreman’s role in the query’s lifecycle.</p>
@@ -432,7 +434,7 @@
   <p><span>本文标题:</span><a href="/2015/07/12/2015-07-12-drill-rpc/">Apache Drill源码阅读(2) 分析一次查询过程以及RPC</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 zqhxuyuan 的个人博客">zqhxuyuan</a></p>
   <p><span>发布时间:</span>2015年07月12日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月02日 - 14时12分</p>
+  <p><span>最后更新:</span>2015年12月02日 - 20时34分</p>
   <p>
     <span>原始链接:</span><a href="/2015/07/12/2015-07-12-drill-rpc/" title="Apache Drill源码阅读(2) 分析一次查询过程以及RPC">http://github.com/zqhxuyuan/2015/07/12/2015-07-12-drill-rpc/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/07/12/2015-07-12-drill-rpc/　　作者: zqhxuyuan" title="点击复制文章链接">

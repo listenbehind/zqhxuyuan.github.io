@@ -5,14 +5,12 @@
   
   <title>Apache Drill源码阅读(4) 逻辑计划 | 任何忧伤,都抵不过世界的美丽</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="在前面说过, Calcite的SQL节点转换为Drill的DrillRel节点,在DefaultSqlHandler.convertToDrel会包装上一个Screen: DrillScreenRel  
-12345protected DrillRel convertToDrel(RelNode relNode, RelDataType validatedRowType) &amp;#123;">
+  <meta name="description" content="Apache Drill的逻辑计划">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Apache Drill源码阅读(4) 逻辑计划">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/07/14/2015-07-14-drill-logical/index.html">
 <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽">
-<meta property="og:description" content="在前面说过, Calcite的SQL节点转换为Drill的DrillRel节点,在DefaultSqlHandler.convertToDrel会包装上一个Screen: DrillScreenRel  
-12345protected DrillRel convertToDrel(RelNode relNode, RelDataType validatedRowType) &amp;#123;">
+<meta property="og:description" content="Apache Drill的逻辑计划">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/drill21.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/drill-sqlnode.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/drill-RelNode.png">
@@ -25,11 +23,10 @@
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/drill-screen.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/drill-go.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/drill-rootLOP.png">
-<meta property="og:updated_time" content="2015-12-02T06:12:59.000Z">
+<meta property="og:updated_time" content="2015-12-02T12:34:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Apache Drill源码阅读(4) 逻辑计划">
-<meta name="twitter:description" content="在前面说过, Calcite的SQL节点转换为Drill的DrillRel节点,在DefaultSqlHandler.convertToDrel会包装上一个Screen: DrillScreenRel  
-12345protected DrillRel convertToDrel(RelNode relNode, RelDataType validatedRowType) &amp;#123;">
+<meta name="twitter:description" content="Apache Drill的逻辑计划">
   
     <link rel="alternative" href="/atom.xml" title="任何忧伤,都抵不过世界的美丽" type="application/atom+xml">
   
@@ -48,7 +45,7 @@
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
 			
-			<img lazy-src="/img/avatar.png" class="js-avatar">
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			
 		</a>
 
@@ -155,7 +152,7 @@
 				
 				<section class="switch-part switch-part4">
 				
-					<div id="js-aboutme">BIG</div>
+					<div id="js-aboutme">BIG(DATA)</div>
 				</section>
 				
 			</div>
@@ -172,7 +169,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<a href="/" class="profilepic">
-				<img lazy-src="/img/avatar.png" class="js-avatar">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			</a>
 			<hgroup>
 			  <h1 class="header-author"><a href="/" title="回到主页">zqhxuyuan</a></h1>
@@ -246,7 +243,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>在前面说过, Calcite的SQL节点转换为Drill的DrillRel节点,在DefaultSqlHandler.convertToDrel会包装上一个Screen: DrillScreenRel  </p>
+        <p>Apache Drill的逻辑计划</p>
+<a id="more"></a>
+<p>在前面说过, Calcite的SQL节点转换为Drill的DrillRel节点,在DefaultSqlHandler.convertToDrel会包装上一个Screen: DrillScreenRel  </p>
 <figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function">DrillRel <span class="title">convertToDrel</span><span class="params">(RelNode relNode, RelDataType validatedRowType)</span> </span>&#123;</span><br><span class="line">      <span class="comment">// Put a non-trivial topProject to ensure the final output field name is preserved, when necessary.</span></span><br><span class="line">      DrillRel topPreservedNameProj = addRenamedProject((DrillRel) convertedRelNode, validatedRowType);</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> DrillScreenRel(topPreservedNameProj.getCluster(), topPreservedNameProj.getTraitSet(), topPreservedNameProj);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <p>那么convertToDrel中的RelNode以及更早之前的SqlNode到底是个什么样的数据结构? 为了解开这个谜题,我们要debug下drill的源码才能知晓. </p>
 <h2 id="sqlline">sqlline</h2><p>SQL语句: </p>
@@ -319,7 +318,7 @@
   <p><span>本文标题:</span><a href="/2015/07/14/2015-07-14-drill-logical/">Apache Drill源码阅读(4) 逻辑计划</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 zqhxuyuan 的个人博客">zqhxuyuan</a></p>
   <p><span>发布时间:</span>2015年07月14日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月02日 - 14时12分</p>
+  <p><span>最后更新:</span>2015年12月02日 - 20时34分</p>
   <p>
     <span>原始链接:</span><a href="/2015/07/14/2015-07-14-drill-logical/" title="Apache Drill源码阅读(4) 逻辑计划">http://github.com/zqhxuyuan/2015/07/14/2015-07-14-drill-logical/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/07/14/2015-07-14-drill-logical/　　作者: zqhxuyuan" title="点击复制文章链接">
