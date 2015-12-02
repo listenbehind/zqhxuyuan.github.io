@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Apache Drill源码阅读(4) 逻辑计划 | 任何忧伤,都抵不过世界的美丽</title>
+  <title>Apache Drill源码阅读(4) 逻辑计划 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="大数据源码阅读系列之ApacheDrill: Apache Drill的逻辑计划">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Apache Drill源码阅读(4) 逻辑计划">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/07/14/2015-07-14-drill-logical/index.html">
-<meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽">
+<meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="大数据源码阅读系列之ApacheDrill: Apache Drill的逻辑计划">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/drill21.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/drill-sqlnode.png">
@@ -28,7 +28,7 @@
 <meta name="twitter:title" content="Apache Drill源码阅读(4) 逻辑计划">
 <meta name="twitter:description" content="大数据源码阅读系列之ApacheDrill: Apache Drill的逻辑计划">
   
-    <link rel="alternative" href="/atom.xml" title="任何忧伤,都抵不过世界的美丽" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -50,7 +50,7 @@
 		</a>
 
 		<hgroup>
-		  <h1 class="header-author"><a href="/">zqhxuyuan</a></h1>
+		  <h1 class="header-author"><a href="/">任何忧伤,都抵不过世界的美丽</a></h1>
 		</hgroup>
 
 		
@@ -138,11 +138,9 @@
 				<section class="switch-part switch-part3">
 					<div id="js-friends">
 					
-			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
-			        
-			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
-			        
 			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://lswyyy.github.io/">LSW_TD</a>
 			        
 			        </div>
 				</section>
@@ -164,7 +162,7 @@
       <nav id="mobile-nav">
   	<div class="overlay">
   		<div class="slider-trigger"></div>
-  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">zqhxuyuan</a></h1>
+  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
   	</div>
 	<div class="intrude-less">
 		<header id="header" class="inner">
@@ -172,7 +170,7 @@
 				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
 			</a>
 			<hgroup>
-			  <h1 class="header-author"><a href="/" title="回到主页">zqhxuyuan</a></h1>
+			  <h1 class="header-author"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
 			</hgroup>
 			
 			<nav class="header-menu">
@@ -316,12 +314,12 @@
     
 <div class="copyright">
   <p><span>本文标题:</span><a href="/2015/07/14/2015-07-14-drill-logical/">Apache Drill源码阅读(4) 逻辑计划</a></p>
-  <p><span>文章作者:</span><a href="/" title="访问 zqhxuyuan 的个人博客">zqhxuyuan</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年07月14日 - 00时00分</p>
   <p><span>最后更新:</span>2015年12月02日 - 20时40分</p>
   <p>
     <span>原始链接:</span><a href="/2015/07/14/2015-07-14-drill-logical/" title="Apache Drill源码阅读(4) 逻辑计划">http://github.com/zqhxuyuan/2015/07/14/2015-07-14-drill-logical/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/07/14/2015-07-14-drill-logical/　　作者: zqhxuyuan" title="点击复制文章链接">
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/07/14/2015-07-14-drill-logical/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -471,7 +469,7 @@
   <div class="outer">
     <div id="footer-info">
       <div class="footer-left">
-        &copy; 2015 zqhxuyuan
+        &copy; 2015 任何忧伤,都抵不过世界的美丽
       </div>
         <div class="footer-right">
           <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
