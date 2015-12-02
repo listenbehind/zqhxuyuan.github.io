@@ -9,7 +9,7 @@
 IntroduceCQL（Continuous Query Language），持续查询语言，用于数据流上的查询语言。相对于传统的SQL，CQL加入了窗口的概念，使得数据可以一直保存在内存中，由此可以快速进行大量内存计算，CQL的输出结果为数据流在某一时刻的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="StreamCQL源码阅读(1) 提交任务">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2015/12/01/2015-11-24-StreamCQL-task/index.html">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2015/11/24/2015-11-24-StreamCQL-task/index.html">
 <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽">
 <meta property="og:description" content="大数据上的流式SQL引擎—StreamCQL: http://www.csdn.net/article/2015-11-13/2826204
 IntroduceCQL（Continuous Query Language），持续查询语言，用于数据流上的查询语言。相对于传统的SQL，CQL加入了窗口的概念，使得数据可以一直保存在内存中，由此可以快速进行大量内存计算，CQL的输出结果为数据流在某一时刻的">
@@ -17,7 +17,7 @@ IntroduceCQL（Continuous Query Language），持续查询语言，用于数据�
 <meta property="og:image" content="http://img.blog.csdn.net/20151125162722310">
 <meta property="og:image" content="http://img.blog.csdn.net/20151126091936179">
 <meta property="og:image" content="http://img.blog.csdn.net/20151125203206771">
-<meta property="og:updated_time" content="2015-12-01T10:02:54.000Z">
+<meta property="og:updated_time" content="2015-12-02T06:08:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="StreamCQL源码阅读(1) 提交任务">
 <meta name="twitter:description" content="大数据上的流式SQL引擎—StreamCQL: http://www.csdn.net/article/2015-11-13/2826204
@@ -199,8 +199,8 @@ IntroduceCQL（Continuous Query Language），持续查询语言，用于数据�
       <div class="body-wrap"><article id="post-2015-11-24-StreamCQL-task" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/12/01/2015-11-24-StreamCQL-task/" class="article-date">
-  	<time datetime="2015-12-01T10:02:54.000Z" itemprop="datePublished">2015-12-01</time>
+      <a href="/2015/11/24/2015-11-24-StreamCQL-task/" class="article-date">
+  	<time datetime="2015-11-23T16:00:00.000Z" itemprop="datePublished">2015-11-24</time>
 </a>
     </div>
   
@@ -347,13 +347,13 @@ IntroduceCQL（Continuous Query Language），持续查询语言，用于数据�
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2015/12/01/2015-11-24-StreamCQL-task/">StreamCQL源码阅读(1) 提交任务</a></p>
+  <p><span>本文标题:</span><a href="/2015/11/24/2015-11-24-StreamCQL-task/">StreamCQL源码阅读(1) 提交任务</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 zqhxuyuan 的个人博客">zqhxuyuan</a></p>
-  <p><span>发布时间:</span>2015年12月01日 - 18时02分</p>
-  <p><span>最后更新:</span>2015年12月01日 - 18时02分</p>
+  <p><span>发布时间:</span>2015年11月24日 - 00时00分</p>
+  <p><span>最后更新:</span>2015年12月02日 - 14时08分</p>
   <p>
-    <span>原始链接:</span><a href="/2015/12/01/2015-11-24-StreamCQL-task/" title="StreamCQL源码阅读(1) 提交任务">http://github.com/zqhxuyuan/2015/12/01/2015-11-24-StreamCQL-task/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/01/2015-11-24-StreamCQL-task/　　作者: zqhxuyuan" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2015/11/24/2015-11-24-StreamCQL-task/" title="StreamCQL源码阅读(1) 提交任务">http://github.com/zqhxuyuan/2015/11/24/2015-11-24-StreamCQL-task/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/11/24/2015-11-24-StreamCQL-task/　　作者: zqhxuyuan" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -379,17 +379,11 @@ IntroduceCQL（Continuous Query Language），持续查询语言，用于数据�
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2015/12/01/2015-11-26-StreamCQL-schema/">
+      <a href="/2015/11/26/2015-11-26-StreamCQL-schema/">
         StreamCQL源码阅读(2) 语法和语义解析
       </a>
     </div>
   
-  
-    <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/12/01/2015-11-20-Cassandra-Stream/">
-        Cassandra源码分析之Stream
-      </a>
-    </div>
   
 </nav>
 
@@ -468,17 +462,15 @@ IntroduceCQL（Continuous Query Language），持续查询语言，用于数据�
 
 
   
-  
-    
     <div  class="post-nav-button">
-    <a href="/2015/12/01/2015-11-26-StreamCQL-schema/" title="上一篇: StreamCQL源码阅读(2) 语法和语义解析">
+    <a href="/2015/11/26/2015-11-26-StreamCQL-schema/" title="上一篇: StreamCQL源码阅读(2) 语法和语义解析">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/12/01/2015-11-20-Cassandra-Stream/" title="下一篇: Cassandra源码分析之Stream">
-    <i class="fa fa-angle-right"></i>
-    </a>
+    <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
     </div>
   
+  
+    
 
 
 
