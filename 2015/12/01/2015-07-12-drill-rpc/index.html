@@ -1,99 +1,244 @@
-	<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   
   <title>Apache Drill源码阅读(2) 分析一次查询过程以及RPC | 任何忧伤,都抵不过世界的美丽</title>
-  <meta name="author" content="zqhxuyuan">
-  
-  <meta name="description" content="一次Query的生命周期Foreman线程的run方法中的queryRequest是org.apache.drill.exec.proto.UserProtos的RunQuery可以认为就是用户输入的查询语句,只不过由于是分布式,客户端输入的查询,会通过RPC在Foreman上执行protobuff">
-  
-  
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-  <meta property="og:title" content="Apache Drill源码阅读(2) 分析一次查询过程以及RPC"/>
-  <meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽"/>
-
+  <meta name="description" content="一次Query的生命周期Foreman线程的run方法中的queryRequest是org.apache.drill.exec.proto.UserProtos的RunQuery可以认为就是用户输入的查询语句,只不过由于是分布式,客户端输入的查询,会通过RPC在Foreman上执行protobuffer文件的定义在drill-protocol/src/main/protobuf下,比如User.p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache Drill源码阅读(2) 分析一次查询过程以及RPC">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2015/12/01/2015-07-12-drill-rpc/index.html">
+<meta property="og:site_name" content="任何忧伤,都抵不过世界的美丽">
+<meta property="og:description" content="一次Query的生命周期Foreman线程的run方法中的queryRequest是org.apache.drill.exec.proto.UserProtos的RunQuery可以认为就是用户输入的查询语句,只不过由于是分布式,客户端输入的查询,会通过RPC在Foreman上执行protobuffer文件的定义在drill-protocol/src/main/protobuf下,比如User.p">
+<meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/drill6.png">
+<meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/drill10.png">
+<meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/drill11.png">
+<meta property="og:updated_time" content="2015-12-01T10:21:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Apache Drill源码阅读(2) 分析一次查询过程以及RPC">
+<meta name="twitter:description" content="一次Query的生命周期Foreman线程的run方法中的queryRequest是org.apache.drill.exec.proto.UserProtos的RunQuery可以认为就是用户输入的查询语句,只不过由于是分布式,客户端输入的查询,会通过RPC在Foreman上执行protobuffer文件的定义在drill-protocol/src/main/protobuf下,比如User.p">
+  
+    <link rel="alternative" href="/atom.xml" title="任何忧伤,都抵不过世界的美丽" type="application/atom+xml">
   
   
-
-  <!-- toc -->
-  <link rel="stylesheet" href="/libs/tocify/jquery.tocify.css" media="screen" type="text/css">
-
-  <!-- <link rel="stylesheet" href="/libs/bs/css/bootstrap.min.css" media="screen" type="text/css"> -->
-  <link rel="stylesheet" href="//apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css" media="screen" type="text/css">
-
-  <!-- material design -->
-	<!-- <link rel="stylesheet" href="/libs/bs-material/css/ripples.min.css" media="screen" type="text/css"> -->
-  <link rel="stylesheet" href="//apps.bdimg.com/libs/bootstrap-material/0.3.0/css/ripples.min.css" media="screen" type="text/css">
-  <!-- <link rel="stylesheet" href="/libs/bs-material/css/material.min.css" media="screen" type="text/css"> -->
-	<link rel="stylesheet" href="//apps.bdimg.com/libs/bootstrap-material/0.3.0/css/material.min.css" media="screen" type="text/css">
-
-  <link rel="stylesheet" href="/css/highlight.light.css" media="screen" type="text/css">
-
-  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
-
-  <!-- 百度统计 -->
+    <link rel="icon" href="/favicon.png">
   
-
-  <!-- 谷歌统计 -->
-  
-
-  <script src="//apps.bdimg.com/libs/jquery/2.0.3/jquery.min.js"></script>
-	<script>window.jQuery || document.write('<script src="/libs/jquery-2.0.3.min.js" type="text/javascript"><\/script>')</script>
-
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
-
- 	<body>
-	  <nav class="navbar navbar-default">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">菜单</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">任何忧伤,都抵不过世界的美丽</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav navbar-right">
-                
-                <li>
-                    <a href="/" title="">
-                    <i class="fa fa-home"></i>首页
-                    </a>
-                </li>
-                
-                <li>
-                    <a href="/archives" title="">
-                    <i class="fa fa-list"></i>存档
-                    </a>
-                </li>
-                
-            </ul>
-        </div>
-    </div>
-</nav>
-
-	  <div class="container" >
-	    <div class="row">
-	<div class="col-md-8">
-	  <!-- index -->
-	  
-			<h1>Apache Drill源码阅读(2) 分析一次查询过程以及RPC</h1>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
 			
-			<div>
-				<i class="fa fa-clock-o"></i>
-				<span class="post-time">2015-12-01 18:21:46</span>
+			<img lazy-src="/img/avatar.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">zqhxuyuan</a></h1>
+		</hgroup>
+
+		
+				
+
+
+		
+			<div id="switch-btn" class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
 			</div>
-			
-	  
+		
 
-		<div class="content">
-			<!-- index -->
-		  
-					<h2 id="一次Query的生命周期">一次Query的生命周期</h2><p>Foreman线程的run方法中的queryRequest是org.apache.drill.exec.proto.UserProtos的RunQuery<br>可以认为就是用户输入的查询语句,只不过由于是分布式,客户端输入的查询,会通过RPC在Foreman上执行<br>protobuffer文件的定义在drill-protocol/src/main/protobuf下,比如User.proto对应了UserProtos</p>
+		<div id="switch-area" class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives/">所有文章</a></li>
+				        
+							<li><a href="/tags/">标签云</a></li>
+				        
+							<li><a href="/about/">关于我</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="Email"><a class="Email" target="_blank" href="mailto:123@123.com" title="Email"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="/#" title="GitHub"></a></li>
+					        
+								<li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+					        
+						</ul>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/cassandra/" style="font-size: 13.33px;">cassandra</a> <a href="/tags/drill/" style="font-size: 20px;">drill</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/spark/" style="font-size: 16.67px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">专注于前端</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">zqhxuyuan</a></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="/" class="profilepic">
+				<img lazy-src="/img/avatar.png" class="js-avatar">
+			</a>
+			<hgroup>
+			  <h1 class="header-author"><a href="/" title="回到主页">zqhxuyuan</a></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives/">所有文章</a></li>
+		        
+					<li><a href="/tags/">标签云</a></li>
+		        
+					<li><a href="/about/">关于我</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="Email"><a class="Email" target="_blank" href="mailto:123@123.com" title="Email"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="/#" title="GitHub"></a></li>
+					        
+								<li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+					        
+						</ul>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-2015-07-12-drill-rpc" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/01/2015-07-12-drill-rpc/" class="article-date">
+  	<time datetime="2015-12-01T10:21:46.000Z" itemprop="datePublished">2015-12-01</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Apache Drill源码阅读(2) 分析一次查询过程以及RPC
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Source/">Source</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/drill/">drill</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <h2 id="一次Query的生命周期">一次Query的生命周期</h2><p>Foreman线程的run方法中的queryRequest是org.apache.drill.exec.proto.UserProtos的RunQuery<br>可以认为就是用户输入的查询语句,只不过由于是分布式,客户端输入的查询,会通过RPC在Foreman上执行<br>protobuffer文件的定义在drill-protocol/src/main/protobuf下,比如User.proto对应了UserProtos</p>
 <p>关键看下run()上面的注释. 什么时候被调用: 在查询建立起来的时候<br>以什么样的方式调用: 执行线程池. 功能是什么: 完成远程执行<br>注意这个方法的结束并不代表查询生命周期的Foreman角色的结束.  </p>
 <blockquote>
 <p>Called by execution pool to do query setup, and kick off remote execution.<br>Note that completion of this function is not the end of the Foreman’s role in the query’s lifecycle.</p>
@@ -281,55 +426,233 @@
 <p>用户的结果集监听器的方法表示了查询的一个过程:<br>1.QueryId到达, 由服务端产生QueryId<br>2.数据到达, 并被监听器成功接收到<br>3.查询完毕, 监听器不会再收到任何数据</p>
 <figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public <span class="keyword">interface</span> <span class="type">UserResultsListener</span> &#123;</span><br><span class="line">  /**</span><br><span class="line">   * <span class="type">QueryId</span> <span class="keyword">is</span> available. <span class="type">Called</span> <span class="keyword">when</span> a query <span class="keyword">is</span> successfully submitted to the server.</span><br><span class="line">   * @param queryId sent by the server along &#123;@link org.apache.drill.exec.rpc.<span class="type">Acks</span>.<span class="type">OK</span> <span class="type">Acks</span>.<span class="type">OK</span>&#125;</span><br><span class="line">   */</span><br><span class="line">  <span class="type">void</span> queryIdArrived(<span class="type">QueryId</span> queryId);</span><br><span class="line"></span><br><span class="line">  <span class="type">void</span> submissionFailed(<span class="type">UserException</span> ex);</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * A &#123;@link org.apache.drill.exec.proto.beans.<span class="type">QueryData</span> <span class="type">QueryData</span>&#125; message was received</span><br><span class="line">   * @param <span class="literal">result</span> data batch received</span><br><span class="line">   */</span><br><span class="line">  <span class="type">void</span> dataArrived(<span class="type">QueryDataBatch</span> <span class="literal">result</span>, <span class="type">ConnectionThrottle</span> throttle);</span><br><span class="line"></span><br><span class="line">  /**</span><br><span class="line">   * <span class="type">The</span> query has completed (successsful completion <span class="keyword">or</span> cancellation). <span class="type">The</span> listener will <span class="keyword">not</span> receive <span class="type">any</span> other</span><br><span class="line">   * data <span class="keyword">or</span> <span class="literal">result</span> message. <span class="type">Called</span> <span class="keyword">when</span> the server returns a terminal-non failing- state (<span class="type">COMPLETED</span> <span class="keyword">or</span> <span class="type">CANCELLED</span>)</span><br><span class="line">   */</span><br><span class="line">  <span class="type">void</span> queryCompleted(<span class="type">QueryState</span> state);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-			  
-		</div>
-
-		<!-- pagination -->
-	  
-
-		
+      
+    </div>
+    
+  </div>
   
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2015/12/01/2015-07-12-drill-rpc/">Apache Drill源码阅读(2) 分析一次查询过程以及RPC</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 zqhxuyuan 的个人博客">zqhxuyuan</a></p>
+  <p><span>发布时间:</span>2015年12月01日 - 18时21分</p>
+  <p><span>最后更新:</span>2015年12月01日 - 18时21分</p>
+  <p>
+    <span>原始链接:</span><a href="/2015/12/01/2015-07-12-drill-rpc/" title="Apache Drill源码阅读(2) 分析一次查询过程以及RPC">http://github.com/zqhxuyuan/2015/12/01/2015-07-12-drill-rpc/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/01/2015-07-12-drill-rpc/　　作者: zqhxuyuan" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
 
 
+
+<nav id="article-nav">
+  
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2015/12/01/2015-07-13-drill-phyplan/">
+        Apache Drill源码阅读(3) 物理计划
+      </a>
+    </div>
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2015/12/01/2015-07-10-drill-log/">
+        Apache Drill源码阅读(1) 环境准备和查看日志
+      </a>
+    </div>
+  
+</nav>
+
+  
+</article>
+
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一次Query的生命周期"><span class="toc-number">1.</span> <span class="toc-text">一次Query的生命周期</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Client"><span class="toc-number">1.1.</span> <span class="toc-text">Client</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Running_Logical_Plan"><span class="toc-number">1.2.</span> <span class="toc-text">Running Logical Plan</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Running_Fragments"><span class="toc-number">1.3.</span> <span class="toc-text">Running Fragments</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Physical_Operator"><span class="toc-number">2.</span> <span class="toc-text">Physical Operator</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查询过程分析"><span class="toc-number">3.</span> <span class="toc-text">查询过程分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端提交查询"><span class="toc-number">3.1.</span> <span class="toc-text">客户端提交查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务端处理Query请求"><span class="toc-number">3.2.</span> <span class="toc-text">服务端处理Query请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端获取查询结果"><span class="toc-number">3.3.</span> <span class="toc-text">客户端获取查询结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Listener_&_Handler"><span class="toc-number">3.4.</span> <span class="toc-text">Listener & Handler</span></a></li></ol></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+</script>
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
 	</div>
-	<div class="col-md-4">
-		
-			<div id="toc" ></div>
-		
-	</div>
-
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
 </div>
 
 
-			<footer>
-				
 
-<p>
-  由 <a href="https://hexo.io">hexo</a> 强力驱动 | 搭载 <a href="https://github.com/wayou/hexo-theme-material">material</a> 主题
-</p>
-<p>
-  &copy; 2015 <a href="http://github.com/zqhxuyuan"> zqhxuyuan </a>
-</p>
-<a id="gotop" href="#" title="back to top"><i class="mdi-hardware-keyboard-arrow-up"></i></a>
 
-			</footer>
-	  </div>
 
-		<!-- <script src="/libs/bs/js/bootstrap.min.js"></script> -->
-		<script src="//apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-		<script>(typeof $().modal == 'function')|| document.write('<script src="/libs/bs/js/bootstrap.min.js" type="text/javascript"><\/script>')</script>
 
-		<!-- material design -->
-		<!-- <script src="/libs/bs-material/js/ripples.min.js"></script> -->
-		<script src="//apps.bdimg.com/libs/bootstrap-material/0.3.0/js/ripples.min.js"></script>
-		<!-- <script src="/libs/bs-material/js/material.min.js"></script> -->
-		<script src="//apps.bdimg.com/libs/bootstrap-material/0.3.0/js/material.min.js"></script>
-		<!-- toc -->
-		<!-- <script src="/libs/tocify/jquery-ui.min.js"></script> -->
-		<script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-		<script src="/libs/tocify/jquery.tocify.custom.js"></script>
 
-		<script src="/js/main.js"></script>
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
 
-	</body>
+
+  
+  
+    
+    <div  class="post-nav-button">
+    <a href="/2015/12/01/2015-07-13-drill-phyplan/" title="上一篇: Apache Drill源码阅读(3) 物理计划">
+    <i class="fa fa-angle-left"></i>
+    </a>
+    <a href="/2015/12/01/2015-07-10-drill-log/" title="下一篇: Apache Drill源码阅读(1) 环境准备和查看日志">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2015 zqhxuyuan
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+        </div>
+    </div>
+    <div class="visit">
+      <span id="busuanzi_container_site_pv" style='display:none'>
+        <span id="site-visit" >本站到访数: 
+        <span id="busuanzi_value_site_uv"></span>
+        </span>
+      </span>
+      <span id="busuanzi_container_page_pv" style='display:none'>
+        <span id="page-visit">, 本页阅读量: 
+        <span id="busuanzi_value_page_pv"></span>
+        </span>
+      </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+<script>
+  var backgroundnum = 5;
+  var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+
+  $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+</script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+<a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+<a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
 </html>
