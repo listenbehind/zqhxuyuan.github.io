@@ -14,7 +14,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20151130093405880">
 <meta property="og:image" content="http://img.blog.csdn.net/20151201165952194">
 <meta property="og:image" content="http://img.blog.csdn.net/20151130172800418">
-<meta property="og:updated_time" content="2015-12-02T12:36:56.000Z">
+<meta property="og:updated_time" content="2015-12-02T15:47:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="StreamCQL源码阅读(4) 应用程序执行">
 <meta name="twitter:description" content="StreamCQL应用程序执行流程">
@@ -120,7 +120,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/cassandra/" style="font-size: 13.33px;">cassandra</a> <a href="/tags/drill/" style="font-size: 20px;">drill</a> <a href="/tags/druid/" style="font-size: 10px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 13.33px;">elasticsearch</a> <a href="/tags/spark/" style="font-size: 16.67px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a>
+						<a href="/tags/cassandra/" style="font-size: 12.5px;">cassandra</a> <a href="/tags/drill/" style="font-size: 20px;">drill</a> <a href="/tags/druid/" style="font-size: 10px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 12.5px;">elasticsearch</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a>
 					</div>
 				</section>
 				
@@ -304,6 +304,7 @@
 <blockquote>
 <p>上一章AggregateSplitter拆分算子的时候解析From子句时就创建了FilterBeforeWindow的FilterOperator和AggregateOperator,<br>这里也有Window和Filter,不过是FilterBeforeAggregate. 这两个对象分别对应了AggregateOperator的Window对象和filterBeforeAggregate字符串.<br>这是因为拆分算子的时候创建的FilterOperator是FilterBeforeWindow, 创建的AggregateOperator本身包含了FilterBeforeAggregate和Window.   </p>
 <p>IAggResultSetMerge表示聚合结果合并. 将IAggResultSetMerge设置给AggFunctionOp, 后面初始化Op的时候会用到这个对象来创建处理视图.<br>A.结合前面的代码阅读体验, 比如第一章创建完Task和SemanticAnalyzer都会初始化.这里创建完Op也会初始化流计算算子.<br>B.实际上对象创建完不就是被使用嘛! 如果有依赖的对象,可以设置到构造函数中,在实际使用对象的时候获取依赖对象进行必要计算,充分体现JAVA的面向对象思想.<br>C.数据的传递:从语法解析结果到语义解析结果到拆分的算子再到这里的流计算算子. 数据都是层层传递并不断更新或添加新的数据结构满足不同阶段的对象构建.     </p>
+<p>那么话说AbsOperator比如AggFunctionOp是在什么时候初始化的? 答案是: 在StormSpout/StormBolt的prepare中初始化.  </p>
 </blockquote>
 <h4 id="combineOperators">combineOperators</h4><blockquote>
 <p>上一篇重点介绍了拆分算子SplitContext(Operator)和组合算子OperatorCombiner(连线). 这里也不例外,在创建完具体的AbsOperator算子后,也需要组合.   </p>
@@ -350,7 +351,7 @@
   <p><span>本文标题:</span><a href="/2015/11/29/2015-11-29-StreamCQL-application/">StreamCQL源码阅读(4) 应用程序执行</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年11月29日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月02日 - 20时36分</p>
+  <p><span>最后更新:</span>2015年12月02日 - 23时47分</p>
   <p>
     <span>原始链接:</span><a href="/2015/11/29/2015-11-29-StreamCQL-application/" title="StreamCQL源码阅读(4) 应用程序执行">http://github.com/zqhxuyuan/2015/11/29/2015-11-29-StreamCQL-application/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/11/29/2015-11-29-StreamCQL-application/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
