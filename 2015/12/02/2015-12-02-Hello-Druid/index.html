@@ -15,7 +15,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20151203155427775">
 <meta property="og:image" content="http://img.blog.csdn.net/20151203115430844">
 <meta property="og:image" content="http://img.blog.csdn.net/20151203165842730">
-<meta property="og:updated_time" content="2015-12-04T02:10:28.000Z">
+<meta property="og:updated_time" content="2015-12-04T05:34:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Druid 分布式OLAP入门">
 <meta name="twitter:description" content="Druid is a fast column-oriented distributed data store. http://druid.io/">
@@ -295,13 +295,13 @@
 <h3 id="All_Things_Up">All Things Up</h3><p>Once the real-time node starts up, it should begin ingesting data and handing that data off to the rest of the Druid cluster.<br>You can use a web UI located at coordinator_ip:port to view the status of data being loaded.<br>Once data is handed off from the real-time nodes to historical nodes, the historical nodes should begin serving segments.<br>一旦启动了实时节点,数据就会流入并转换到Druid的集群中. 当数据从实时节点转换到历史节点,历史节点就可以用其上的segments服务于查询了.<br>当然数据在实时节点的时候是存在于实时节点的内存上, 当然查询也是没有问题的. 数据转换到历史节点是因为这些数据不再是实时数据了而是历史数据.      </p>
 <p><img src="http://img.blog.csdn.net/20151203150756274" alt="druid_arch2"></p>
 <ul>
-<li>① 实时数据写入到实时节点  </li>
-<li>② 实时节点的Segment转存到DeepStorage</li>
-<li>③ 元数据写入MySQL和ZooKeeper中</li>
-<li>④ 协调节点从MySQL获取元数据</li>
-<li>⑤ 协调节点将新分配/要删除的Segment写入ZooKeeper</li>
-<li>⑥ 历史节点从ZooKeeper中得到要执行任务的Segment</li>
-<li>⑦ 历史节点从DeepStorage下载Segment并加载到内存</li>
+<li>① 实时数据写入到实时节点,会创建索引结构的Segment  </li>
+<li>② 实时节点的Segment经过一段时间会转存到DeepStorage</li>
+<li>③ 元数据写入MySQL; 实时节点转存的Segment会在ZooKeeper中新增一条记录</li>
+<li>④ 协调节点从MySQL获取元数据,比如schema信息(维度列和指标列)</li>
+<li>⑤ 协调节点监测ZK中有新分配/要删除的Segment,写入ZooKeeper信息:历史节点需要加载/删除Segment</li>
+<li>⑥ 历史节点监测ZK, 从ZooKeeper中得到要执行任务的Segment</li>
+<li>⑦ 历史节点从DeepStorage下载Segment并加载到内存/或者将已经保存的Segment删除掉</li>
 <li>⑧ 历史节点的Segment可以用于Broker的查询路由</li>
 </ul>
 <h3 id="客户端查询">客户端查询</h3><p>向Broker(8082)发起查询请求, Broker会同时向实时节点和历史节点发起请求.  </p>
@@ -361,7 +361,7 @@
   <p><span>本文标题:</span><a href="/2015/12/02/2015-12-02-Hello-Druid/">Druid 分布式OLAP入门</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月02日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月04日 - 10时10分</p>
+  <p><span>最后更新:</span>2015年12月04日 - 13时34分</p>
   <p>
     <span>原始链接:</span><a href="/2015/12/02/2015-12-02-Hello-Druid/" title="Druid 分布式OLAP入门">http://github.com/zqhxuyuan/2015/12/02/2015-12-02-Hello-Druid/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/02/2015-12-02-Hello-Druid/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">

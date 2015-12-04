@@ -13,8 +13,11 @@
 <meta property="og:description" content="Druid is a fast column-oriented distributed data store. http://druid.io/">
 <meta property="og:image" content="http://img.blog.csdn.net/20151204132233971">
 <meta property="og:image" content="http://druid.io/docs/img/druid-manage-1.png">
+<meta property="og:image" content="http://img.blog.csdn.net/20151203155427775">
+<meta property="og:image" content="http://img.blog.csdn.net/20151203115430844">
+<meta property="og:image" content="http://img.blog.csdn.net/20151203150756274">
 <meta property="og:image" content="http://img.blog.csdn.net/20151204091822676">
-<meta property="og:updated_time" content="2015-12-04T05:23:55.000Z">
+<meta property="og:updated_time" content="2015-12-04T07:29:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Druid OLAP架构设计">
 <meta name="twitter:description" content="Druid is a fast column-oriented distributed data store. http://druid.io/">
@@ -244,7 +247,7 @@
 <blockquote>
 <p>分片和分区都表示将数据进行切分. 分片是将不同时间撮分布在不同的文件中, 而分区是相同时间撮放不下了,分成多个分区.<br>巧合的是Kafka中也有Segment和Partition的概念.Kafka的Partition是topic物理上的分组,一个topic可以分为多个partition.<br>它的partition物理上由多个segment组成.即Partition包含Segment,而Druid是Segment包含Partition.  </p>
 </blockquote>
-<h2 id="The_Druid_Cluster">The Druid Cluster</h2><p><strong>历史节点</strong>:是Druid集群的支柱,它会从DeepStorage下载不可变的Segments文件到本地,并加载Segment服务于查询请求.<br>历史节点是ShareNothing的架构(当掉任何一个节点都没有关系),它会负责加载Segments,删除Segments,并在Segment上查询数据.  </p>
+<h2 id="Design_Overview">Design Overview</h2><h3 id="The_Druid_Cluster">The Druid Cluster</h3><p><strong>历史节点</strong>:是Druid集群的支柱,它会从DeepStorage下载不可变的Segments文件到本地,并加载Segment服务于查询请求.<br>历史节点是ShareNothing的架构(当掉任何一个节点都没有关系),它会负责加载Segments,删除Segments,并在Segment上查询数据.  </p>
 <blockquote>
 <p>历史节点负责存储数据,并且查询历史的数据.历史节点会从DeepStorage下载Segments,对Broker的查询进行响应,返回结果给Broker.<br>历史节点会写入ZooKeeper通知自己(的节点信息)以及自己服务了/保存了哪些Segments.(正如HDFS的DN上保存了哪些Block会向NN通知)<br>历史节点还会从ZooKeeper中得到任务:加载新的Segments(从实时节点转存过来的)或者删除自己已经保存的旧的Segments.  </p>
 </blockquote>
@@ -263,12 +266,45 @@
 <p><img src="http://img.blog.csdn.net/20151204132233971" alt="druid_flow1"></p>
 <blockquote>
 <p>上图的查询路径为红色箭头:①客户端向Broker发起请求,Broker会将请求路由到②实时节点和③历史节点.<br>黑色的箭头是数据在Druid中怎么流转:数据源包括实时流和批量数据. ④实时流经过索引直接写到实时节点.<br>⑤批量数据通过IndexService存储到DeepStorage,⑥再由历史节点加载. ⑦实时节点也可以将数据转存到DeepStorage.   </p>
+<p>Druid的集群依赖了ZooKeeper来维护数据拓扑. 每个组件都会与ZooKeeper交互:<br>1) 实时节点在转存Segment到DeepStorage, 会写入自己转存了什么Segment<br>2) 协调节点管理历史节点,它负责从ZooKeeper中获取要同步/下载的Segment,并指派任务给具体的历史节点去完成<br>3) 历史节点从ZooKeeper中领取任务,任务完成后要将ZooKeeper条目删除表示完成了任务<br>4) Broker节点根据ZooKeeper中的Segment所在的历史节点, 将查询请求路由到指定的历史节点.(实时节点不会写到ZooKeeper)  </p>
 </blockquote>
-<hr>
 <p>Druid依赖了三个外部组件: ZooKeeper, Metadata Storage, Deep Storage.  </p>
-<p>当新创建一个Segments会写入一条数据到元数据存储中(比如MySQL), 协调节点会监测元数据存储得知哪些数据需要被加载或者旧数据需要被删除.<br>创建Segment的服务(实时节点转存或者IndexService)会将Segment上传到DeepStorage.历史节点会从DeepStorage下载Segments并加载它.<br>对于一个查询路由路径,Broker只会将请求分发到实时节点和历史节点, 因此元数据存储和DeepStorage都不会参与查询中(看做是后台的进程).  </p>
+<p>当新创建一个Segments会写入一条数据到元数据存储中(MySQL), 协调节点会监测元数据存储得知哪些数据需要被加载或者旧数据需要被删除.<br>创建Segment的服务(实时节点转存或者IndexService)会将Segment上传到DeepStorage,历史节点会从DeepStorage下载Segments并加载它.<br>对于一个查询路由路径,Broker只会将请求分发到实时节点和历史节点, 因此元数据存储和DeepStorage都不会参与查询中(看做是后台的进程).  </p>
+<blockquote>
+<p>MetaStore和ZooKeeper中保存的信息是不一样的. ZooKeeper中保存的是Segment属于哪些节点. 而MetaStore则是保存Segment的元数据等.<br>为了使得一个Segment存在于集群中,MetaStore存储的记录是关于Segment的自描述元数据: Segment的元数据,大小,所在的DeepStorage.<br>元数据存储的数据会被协调节点用来知道集群中可用的数据应该有哪些(所在的Segment可以通过实时节点转存或者批量数据直接写入).   </p>
+</blockquote>
 <p><img src="http://druid.io/docs/img/druid-manage-1.png" alt="druid-dataflow-2"></p>
-<h2 id="Segments">Segments</h2><p>Druid将索引数据保存到Segment文件中,Segment文件根据时间进行分片. 最基本的设置中, 每一个时间间隔都会创建一个Segment文件.<br>这个时间间隔的长度配置在granularitySpec的segmentGranularity参数.为了Druid工作良好,通常Segment文件大小为300-700M.  </p>
+<h3 id="Fault_Tolerance">Fault Tolerance</h3><p>1.<code>历史节点</code>挂掉,就不会服务这个节点上的Segments. 但是只要这些Segments仍然存在于DeepStorage,其他节点就会下载它们并服务这些Segments.<br>这意味着1)实际上可以从集群中移除所有的历史节点,并且重新发布它们,也不会有任何的数据损失(因为数据最终都保存到DeepStorage中).<br>2)如果DeepStorage不可用,历史节点上已经加载了DeepStorage的Segments,仍然可用于查询. 但是新进来的数据无法进入到集群中(DS挂掉).  </p>
+<p>2.<code>协调节点</code>挂掉,数据的拓扑(data topology)停止服务,就不会有新的数据以及数据的负载均衡. 因为协调节点会通知历史节点下载新数据.<br>如果实时节点将Segment转存到DeepStorage,而没有历史节点去下载这些数据,会导致实时节点最终会丢弃这份过期的数据.虽然因为历史节点没有<br>加载Segment,这份数据会在实时节点中保留一段时间,但是最终还是会丢弃的,因为还有新的实时数据要存,否则都保存的话实时节点内存不撑爆了.  </p>
+<p>3.<code>Broker节点</code>负责分发查询请求,可以有多个节点. 一个Broker挂掉没有关系,还会有其他的Broker接管请求,但是要至少保证有一个Broker.<br>当然如果不向Broker发送请求,而只关心最新的实时数据,可以直接访问实时节点. 不过这种情况是很少见的.   </p>
+<p>4.<code>实时节点</code>根据发送流的语义,可以有多个实时节点同时运行,处理同一个输入流. 每个实时节点分担输入流的一部分数据.  </p>
+<p>5.<code>元数据存储</code>挂掉,协调节点就无法找到集群中新的Segments(因为新的Segment一定会写入记录到元数据存储中).但仍然可以提供当前集群的数据视图.  </p>
+<p>6.<code>ZooKeeper</code>挂掉,数据拓扑不会被更新(同协调节点挂掉),但是Broker仍然可以维护最近的数据拓扑,并继续提供查询的服务.  </p>
+<p>正是由于各个节点和其他节点都是最小化解耦的, 所以下面两张图分别表示实时节点和批量数据的流程:  </p>
+<p><img src="http://img.blog.csdn.net/20151203155427775" alt="druid_real"></p>
+<p>图一: 数据从Kafka导入到实时节点, 客户端直接查询实时节点的数据. </p>
+<p><img src="http://img.blog.csdn.net/20151203115430844" alt="druid_index"></p>
+<p>图二: IndexService(实时流和批量处理都会索引尝试Segment文件),最终用于查询</p>
+<p><img src="http://img.blog.csdn.net/20151203150756274" alt="druid_arch2"></p>
+<p>图三: 论文<a href="http://static.druid.io/docs/druid.pdf" target="_blank" rel="external">http://static.druid.io/docs/druid.pdf</a>中的图例分别表示实时流/批量数据和查询流的交互图  </p>
+<ul>
+<li>① 实时数据写入到实时节点,会创建索引结构的Segment  </li>
+<li>② 实时节点的Segment经过一段时间会转存到DeepStorage</li>
+<li>③ 元数据写入MySQL; 实时节点转存的Segment会在ZooKeeper中新增一条记录</li>
+<li>④ 协调节点从MySQL获取元数据,比如schema信息(维度列和指标列)</li>
+<li>⑤ 协调节点监测ZK中有新分配/要删除的Segment,写入ZooKeeper信息:历史节点需要加载/删除Segment</li>
+<li>⑥ 历史节点监测ZK, 从ZooKeeper中得到要执行任务的Segment</li>
+<li>⑦ 历史节点从DeepStorage下载Segment并加载到内存/或者将已经保存的Segment删除掉</li>
+<li>⑧ 历史节点的Segment可以用于Broker的查询路由</li>
+</ul>
+<h2 id="Segments">Segments</h2><p>数据进入到Druid首先会进行索引, 这给予了Druid一个机会可以进行分析数据,添加索引结构,压缩,为查询优化调整存储结构.   </p>
+<ul>
+<li>转换为列式结构</li>
+<li>使用BitMap索引</li>
+<li>使用不同的压缩算法 </li>
+</ul>
+<p>索引的结果是生成Segment文件,Segment中除了保存不同的维度和指标,还保存了这些列的索引信息.  </p>
+<p>Druid将索引数据保存到Segment文件中,Segment文件根据时间进行分片. 最基本的设置中, 每一个时间间隔都会创建一个Segment文件.<br>这个时间间隔的长度配置在granularitySpec的segmentGranularity参数.为了Druid工作良好,通常Segment文件大小为300-700M.  </p>
 <blockquote>
 <p>前面Roll-up时也有一个时间粒度:queryGranularity指的是在读取时就进行聚合.segmentGranularity则是用于分片进来之后的数据.  </p>
 </blockquote>
@@ -293,6 +329,9 @@
 <li>3.For each distinct value in the column, a bitmap that indicates which rows contain that value. 倒排索引</li>
 </ul>
 <p>为什么要以这种结果来存储? 在第一步中将值映射到ID,这样第二步和第三步中就可以以更紧凑地格式来表示.<br>第三步中的BitMap允许快速过滤并且BitMap对于AND和OR的支持不仅操作快速而且也很方便. 第二步中的列表值对于分组和TopN是必须的.<br>实际上如果仅仅是对指标基于过滤器之上进行聚合操作, 根本不会触碰到第二步中的数据.  </p>
+<blockquote>
+<p>为什么过滤操作不会去查询第二步的数据,或者说并不会真正去查询一条记录,比如查询每条记录,然后判断是否满足过滤条件,并不会发生这样的操作!<br>因为每个Segment内部都有索引结构(即BitMap),这就允许历史节点可以直接找出哪些行匹配了过滤条件,而不需要任何一行的数据.<br>基于多个过滤器条件还可以在BitMap上完成任何的布尔逻辑运算,这些操作都不需要查询原始数据记录(never look directory at a row of data)  </p>
+</blockquote>
 <p>以上面示例中的page列为例, 代表这一维度列的数据结构如下:  </p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>: Dictionary that encodes column values</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="string">"Justin Bieber"</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="string">"Ke$ha"</span>:         <span class="number">1</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="number">2</span>: Column data</span><br><span class="line">  [<span class="number">0</span>,</span><br><span class="line">   <span class="number">0</span>,</span><br><span class="line">   <span class="number">1</span>,</span><br><span class="line">   <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="number">3</span>: Bitmaps - one <span class="keyword">for</span> each unique value of the column</span><br><span class="line">  value=<span class="string">"Justin Bieber"</span>: [<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>]</span><br><span class="line">  value=<span class="string">"Ke$ha"</span>:         [<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
 <p>注意: 在最坏情况下前面两种会随着数据量的大小而线性增长. 而BitMap的大小则等于数据量大小 * 列的个数.  </p>
@@ -325,7 +364,7 @@
 <blockquote>
 <p>上面只是针对page列的BitMap, 对于其他的维度列, 都有自己的BitMap! 即每一个维度列都有一个BitMap.  </p>
 </blockquote>
-<h3 id="Deep_into_Segment">Deep into Segment</h3><p>Segment的数据结构代码在processing子目录的segment包下.  </p>
+<h2 id="Deep_into_Segment">Deep into Segment</h2><p>Segment的数据结构代码在processing子目录的segment包下.  </p>
 <h2 id="More">More</h2><p>LinkedIn Pinot初探: <a href="http://blog.talkingdata.net/?p=3169" target="_blank" rel="external">http://blog.talkingdata.net/?p=3169</a><br>Kafka文件存储机制那些事: <a href="http://tech.meituan.com/kafka-fs-design-theory.html" target="_blank" rel="external">http://tech.meituan.com/kafka-fs-design-theory.html</a>  </p>
 
       
@@ -338,7 +377,7 @@
   <p><span>本文标题:</span><a href="/2015/12/03/2015-12-03-Druid-Design/">Druid OLAP架构设计</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月03日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月04日 - 13时23分</p>
+  <p><span>最后更新:</span>2015年12月04日 - 15时29分</p>
   <p>
     <span>原始链接:</span><a href="/2015/12/03/2015-12-03-Druid-Design/" title="Druid OLAP架构设计">http://github.com/zqhxuyuan/2015/12/03/2015-12-03-Druid-Design/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/03/2015-12-03-Druid-Design/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -382,7 +421,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Concepts"><span class="toc-number">1.</span> <span class="toc-text">Concepts</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#The_Data"><span class="toc-number">1.1.</span> <span class="toc-text">The Data</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Roll_up"><span class="toc-number">1.2.</span> <span class="toc-text">Roll up</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sharding_the_Data"><span class="toc-number">1.3.</span> <span class="toc-text">Sharding the Data</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The_Druid_Cluster"><span class="toc-number">2.</span> <span class="toc-text">The Druid Cluster</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Segments"><span class="toc-number">3.</span> <span class="toc-text">Segments</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Sharding_Data_to_Create_Segments"><span class="toc-number">3.1.</span> <span class="toc-text">Sharding Data to Create Segments</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DataStructure"><span class="toc-number">3.2.</span> <span class="toc-text">DataStructure</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deep_into_Segment"><span class="toc-number">3.3.</span> <span class="toc-text">Deep into Segment</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#More"><span class="toc-number">4.</span> <span class="toc-text">More</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Concepts"><span class="toc-number">1.</span> <span class="toc-text">Concepts</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#The_Data"><span class="toc-number">1.1.</span> <span class="toc-text">The Data</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Roll_up"><span class="toc-number">1.2.</span> <span class="toc-text">Roll up</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sharding_the_Data"><span class="toc-number">1.3.</span> <span class="toc-text">Sharding the Data</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Design_Overview"><span class="toc-number">2.</span> <span class="toc-text">Design Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#The_Druid_Cluster"><span class="toc-number">2.1.</span> <span class="toc-text">The Druid Cluster</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fault_Tolerance"><span class="toc-number">2.2.</span> <span class="toc-text">Fault Tolerance</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Segments"><span class="toc-number">3.</span> <span class="toc-text">Segments</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Sharding_Data_to_Create_Segments"><span class="toc-number">3.1.</span> <span class="toc-text">Sharding Data to Create Segments</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DataStructure"><span class="toc-number">3.2.</span> <span class="toc-text">DataStructure</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Deep_into_Segment"><span class="toc-number">4.</span> <span class="toc-text">Deep into Segment</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#More"><span class="toc-number">5.</span> <span class="toc-text">More</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
