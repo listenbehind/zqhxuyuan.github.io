@@ -17,7 +17,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20151203115430844">
 <meta property="og:image" content="http://img.blog.csdn.net/20151203150756274">
 <meta property="og:image" content="http://img.blog.csdn.net/20151204091822676">
-<meta property="og:updated_time" content="2015-12-04T13:41:53.000Z">
+<meta property="og:updated_time" content="2015-12-05T05:11:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Druid OLAP架构设计">
 <meta name="twitter:description" content="Druid is a fast column-oriented distributed data store. http://druid.io/">
@@ -261,12 +261,12 @@
 </blockquote>
 <p><strong>Broker节点</strong>:负责将查询请求分发到历史节点和实时节点,并聚合这些节点的结果数据.Broker节点知道Segment都存放在哪些节点上.  </p>
 <blockquote>
-<p>Broker如何知道Segment的存放路径? 首先Broker查询实时节点的Segment,这些Segment都在实时节点的内存中,并不会注册到ZK中.<br>只有历史的数据(非实时的数据)在转存到历史节点之后, 历史节点就会通知ZK说自己已经成功地加载了某一个Segment,<br>这样Broker只需要查询ZK就知道Segment都属于哪些节点,从而将请求转发到对应的历史节点,由历史节点去查询需要的数据.    </p>
+<p>Broker如何知道Segment的存放路径? 首先Broker查询实时节点的Segment,这些Segment都在实时节点的内存中,并不会注册到ZK中.<br>只有历史的数据(非实时的数据)在转存到历史节点之后, 历史节点就会通知ZK说自己已经成功地加载了某一个Segment,<br>这样Broker只需要查询ZK就知道Segment都属于哪些节点,从而将请求转发到对应的历史节点,由历史节点去查询需要的数据.<br>Update: 上面以为实时节点不会写入Segment到ZK是错误的, 实际上实时节点和历史节点都会写Segment到ZK中!!!    </p>
 </blockquote>
 <p><img src="http://img.blog.csdn.net/20151204132233971" alt="druid_flow1"></p>
 <blockquote>
 <p>上图的查询路径为红色箭头:①客户端向Broker发起请求,Broker会将请求路由到②实时节点和③历史节点.<br>黑色的箭头是数据在Druid中怎么流转:数据源包括实时流和批量数据. ④实时流经过索引直接写到实时节点.<br>⑤批量数据通过IndexService存储到DeepStorage,⑥再由历史节点加载. ⑦实时节点也可以将数据转存到DeepStorage.   </p>
-<p>Druid的集群依赖了ZooKeeper来维护数据拓扑. 每个组件都会与ZooKeeper交互:<br>1) 实时节点在转存Segment到DeepStorage, 会写入自己转存了什么Segment<br>2) 协调节点管理历史节点,它负责从ZooKeeper中获取要同步/下载的Segment,并指派任务给具体的历史节点去完成<br>3) 历史节点从ZooKeeper中领取任务,任务完成后要将ZooKeeper条目删除表示完成了任务<br>4) Broker节点根据ZooKeeper中的Segment所在的历史节点, 将查询请求路由到指定的历史节点.(实时节点不会写到ZooKeeper)  </p>
+<p>Druid的集群依赖了ZooKeeper来维护数据拓扑. 每个组件都会与ZooKeeper交互:<br>1) 实时节点在转存Segment到DeepStorage, 会写入自己转存了什么Segment<br>2) 协调节点管理历史节点,它负责从ZooKeeper中获取要同步/下载的Segment,并指派任务给具体的历史节点去完成<br>3) 历史节点从ZooKeeper中领取任务,任务完成后要将ZooKeeper条目删除表示完成了任务<br>4) Broker节点根据ZooKeeper中的Segment所在的历史节点, 将查询请求路由到指定的历史节点(实时节点会写到ZK中吗?)  </p>
 </blockquote>
 <p>Druid依赖了三个外部组件: ZooKeeper, Metadata Storage, Deep Storage.  </p>
 <p>当新创建一个Segments会写入一条数据到元数据存储中(MySQL), 协调节点会监测元数据存储得知哪些数据需要被加载或者旧数据需要被删除.<br>创建Segment的服务(实时节点转存或者IndexService)会将Segment上传到DeepStorage,历史节点会从DeepStorage下载Segments并加载它.<br>对于一个查询路由路径,Broker只会将请求分发到实时节点和历史节点, 因此元数据存储和DeepStorage都不会参与查询中(看做是后台的进程).  </p>
@@ -364,9 +364,13 @@
 <blockquote>
 <p>上面只是针对page列的BitMap, 对于其他的维度列, 都有自己的BitMap! 即每一个维度列都有一个BitMap.  </p>
 </blockquote>
-<h3 id="Deep_into_Segment">Deep into Segment</h3><p>Segment的数据结构代码在processing子目录的segment包下.  </p>
-<h2 id="Historical_Node">Historical Node</h2><p>每个历史节点维护和ZooKeeper的持续连接,新到来的Segment信息会写到ZK的节点中,历史节点会监听这个节点的配置.<br>协调节点会负责分配新的Segment给历史节点: 在ZK中为分配到任务的历史节点的load queue path创建一个临时节点.<br>历史节点之间没有相互联系,也不会和协调节点直接联系,而是通过ZK来完成任务的分发和任务的领取.  </p>
-<h2 id="Coordinator_Node">Coordinator Node</h2><p>1.协调节点主要负责Segment的管理和分布. 更具体地来说协调节点通知历史节点加载或删除Segment,都是基于配置完成的(ZooKeeper).<br>2.协调节点负责加载新的Segments,删除过期的Segments,管理Segment的副本分布,对Segment进行负载均衡(都是发送命令让历史节点去工作).<br>3.协调节点维护到ZooKeeper的连接以便获取当前的Druid集群信息(比如它都管理了哪些历史节点,当前集群还有什么任务需要运行,有哪些segments).<br>4.协调节点还连接MetaStore获取当前可用的Segments(保存在segment表,存储集群应该要加载的segments)和规则(segments文件如何处理).  </p>
+<h2 id="Deep_into_Druid">Deep into Druid</h2><h3 id="Segment">Segment</h3><p>Segment的数据结构代码在processing子目录的segment包下.  </p>
+<h3 id="Real-time_Node">Real-time Node</h3><p>实时节点提供了实时的索引.数据在这些实时节点上被索引后可以立即被查询使用.<br>实时节点会隔段时间构建Segments,代表在这段之间之内收集到的数据.<br>创建完Segments后会将他们转存到历史节点.它们使用ZK来监听传输任务,使用元数据存储保存要传输的Segment的元数据.<br>一旦传输完毕,原先在实时节点的segments就会被忘记/即被清除掉,腾出的空间用来接受新的实时流数据.  </p>
+<h3 id="Historical_Node">Historical Node</h3><p>每个历史节点维护和ZooKeeper的持续连接,新到来的Segment信息会写到ZK的节点中,历史节点会监听这个节点的配置.<br>协调节点会负责分配新的Segment给历史节点: 在ZK中为分配到任务的历史节点的load queue path创建一个临时节点.<br>历史节点之间没有相互联系,也不会和协调节点直接联系,而是通过ZK来完成任务的分发和任务的领取.  </p>
+<h3 id="Coordinator_Node">Coordinator Node</h3><p>1.协调节点主要负责Segment的管理和分布. 更具体地来说协调节点通知历史节点加载或删除Segment,都是基于配置完成的(ZooKeeper).<br>2.协调节点负责加载新的Segments,删除过期的Segments,管理Segment的副本分布,对Segment进行负载均衡(都是发送命令让历史节点去工作).<br>3.协调节点维护到ZooKeeper的连接以便获取当前的Druid集群信息(比如它都管理了哪些历史节点,当前集群还有什么任务需要运行,有哪些segments).<br>4.协调节点还连接MetaStore获取当前可用的Segments(保存在segment表,存储集群应该要加载的segments)和规则(segments文件如何处理).  </p>
+<blockquote>
+<p>协调节点类似于Master,Master要负责管理,并指派任务给Worker执行.  </p>
+</blockquote>
 <p>协调节点对Segment的<code>负载均衡</code>(如果某个节点数据量太大不应该分配任务,而把任务分配给数据量小的节点)是如何实现的.<br>当新创建了一个Segment,协调节点还没有分配给历史节点时,它要选择一个适合的历史节点,而不是随便选择一个历史节点.<br>协调节点会将系统中可用的历史节点列表首先按照容量排序,最小容量的服务器将获得最高的优先级(不会让穷人越穷富人越富)  </p>
 <blockquote>
 <p>注意到: MetaStore中保存了集群应该加载的Segments[4], 而协调节点本身也有集群的当前Segments信息[3].<br>在协调节点每次运行的时候会比较这两者数据, 当发现Segment不在元数据存储,但仍然在集群中被服务. 那么这个Segment就会添加到删除列表.<br>因为元数据存储中保存的才是集群应该加载的Segments,如果不在里面,说明这个Segment被更新过.(集群中服务的Segment会比元数据存储要延迟)  </p>
@@ -375,6 +379,10 @@
 <blockquote>
 <p>通常在ShareNothing的架构中,如果一个节点变得不可用了,会有一个服务将下线的这个节点的数据搬迁到其他节点.<br>但是如果这个节点下线后又立即重启,而如果服务在一下线的时候就开始搬迁数据,是会产生跨集群的数据传输,实际上是没有必要的.<br>因为分布式文件系统对同一份数据会有多个副本,搬迁数据实际上是为了满足副本数.而下线又重启的节点上的数据不会有什么丢失的.<br>因此短期的副本不足并不会影响整体的数据健康状况.何况跨机器搬迁数据也需要一定的时间,何不如给定一段时间如果它真的死了,才开始搬迁.  </p>
 </blockquote>
+<h3 id="Broker">Broker</h3><p>在Broker启动的时候, 实时节点会将自己,以及它自己服务了哪些Segments的信息都发布到ZK中.<br>Broker可以从发布到ZK的元数据了解到哪些Segments存在于哪个节点上,并且会路由查询请求,命中到正确的节点.  </p>
+<p>一般的Druid查询会指定包含的时间间隔,表示要请求的数据是在这个时间段之内的. 与此同时,Druid的Segments也是以指定的时间间隔粒度分区存储的.<br>并且这些Segments分布在集群的各个节点. 如果查询的时间跨度比存储的时间粒度要大,则查询会命中不止一个Segment,因此会命中多个节点.  </p>
+<p>为了决定请求分发到哪些节点上,Broker会首先构建一个ZooKeeper的视图信息.在ZK中维护了历史节点和实时节点以及他们服务的Segments.<br>对于ZK中的每个数据源,Broker会构建Segment的时间线,以及服务这些Segment的节点. 当查询指定数据库和时间段,Broker会寻找时间线中<br>符合数据源和时间段的Segment,并获取包含这次查询数据的节点, 最后Broker会将查询分发到这些节点上去.  </p>
+<p>Broker节点对于缓存使用了LRU失效策略. Broker的缓存会保存每个Segment的结果. 缓存可以是本地的(针对Broker节点)或者分布式比如MemCached.<br>Broker接收到每一次查询,首先将本次查询映射到一系列的Segments. 这些Segments集合的子集可能已经存在于缓存中,它们的结果可以直接从缓存中获取.<br>对于没有存在于缓存中的Segments结果,Broker节点会将查询分发到历史节点.当历史节点返回结果,Broker就会结果也缓存到Cache中.<br>注意实时节点的Segments永远不会被缓存,所以实时数据的查询总是会被分发到实时节点.因为实时数据总是在变化,缓存实时数据是不可靠的.    </p>
 <h2 id="More">More</h2><p>LinkedIn Pinot初探: <a href="http://blog.talkingdata.net/?p=3169" target="_blank" rel="external">http://blog.talkingdata.net/?p=3169</a><br>Kafka文件存储机制那些事: <a href="http://tech.meituan.com/kafka-fs-design-theory.html" target="_blank" rel="external">http://tech.meituan.com/kafka-fs-design-theory.html</a>  </p>
 
       
@@ -387,7 +395,7 @@
   <p><span>本文标题:</span><a href="/2015/12/03/2015-12-03-Druid-Design/">Druid OLAP架构设计</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月03日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月04日 - 21时41分</p>
+  <p><span>最后更新:</span>2015年12月05日 - 13时11分</p>
   <p>
     <span>原始链接:</span><a href="/2015/12/03/2015-12-03-Druid-Design/" title="Druid OLAP架构设计">http://github.com/zqhxuyuan/2015/12/03/2015-12-03-Druid-Design/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/03/2015-12-03-Druid-Design/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -431,7 +439,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Concepts"><span class="toc-number">1.</span> <span class="toc-text">Concepts</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#The_Data"><span class="toc-number">1.1.</span> <span class="toc-text">The Data</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Roll_up"><span class="toc-number">1.2.</span> <span class="toc-text">Roll up</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sharding_the_Data"><span class="toc-number">1.3.</span> <span class="toc-text">Sharding the Data</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Design_Overview"><span class="toc-number">2.</span> <span class="toc-text">Design Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#The_Druid_Cluster"><span class="toc-number">2.1.</span> <span class="toc-text">The Druid Cluster</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fault_Tolerance"><span class="toc-number">2.2.</span> <span class="toc-text">Fault Tolerance</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Segments"><span class="toc-number">3.</span> <span class="toc-text">Segments</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Sharding_Data_to_Create_Segments"><span class="toc-number">3.1.</span> <span class="toc-text">Sharding Data to Create Segments</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DataStructure"><span class="toc-number">3.2.</span> <span class="toc-text">DataStructure</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deep_into_Segment"><span class="toc-number">3.3.</span> <span class="toc-text">Deep into Segment</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Historical_Node"><span class="toc-number">4.</span> <span class="toc-text">Historical Node</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Coordinator_Node"><span class="toc-number">5.</span> <span class="toc-text">Coordinator Node</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#More"><span class="toc-number">6.</span> <span class="toc-text">More</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Concepts"><span class="toc-number">1.</span> <span class="toc-text">Concepts</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#The_Data"><span class="toc-number">1.1.</span> <span class="toc-text">The Data</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Roll_up"><span class="toc-number">1.2.</span> <span class="toc-text">Roll up</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sharding_the_Data"><span class="toc-number">1.3.</span> <span class="toc-text">Sharding the Data</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Design_Overview"><span class="toc-number">2.</span> <span class="toc-text">Design Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#The_Druid_Cluster"><span class="toc-number">2.1.</span> <span class="toc-text">The Druid Cluster</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fault_Tolerance"><span class="toc-number">2.2.</span> <span class="toc-text">Fault Tolerance</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Segments"><span class="toc-number">3.</span> <span class="toc-text">Segments</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Sharding_Data_to_Create_Segments"><span class="toc-number">3.1.</span> <span class="toc-text">Sharding Data to Create Segments</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DataStructure"><span class="toc-number">3.2.</span> <span class="toc-text">DataStructure</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Deep_into_Druid"><span class="toc-number">4.</span> <span class="toc-text">Deep into Druid</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Segment"><span class="toc-number">4.1.</span> <span class="toc-text">Segment</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Real-time_Node"><span class="toc-number">4.2.</span> <span class="toc-text">Real-time Node</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Historical_Node"><span class="toc-number">4.3.</span> <span class="toc-text">Historical Node</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Coordinator_Node"><span class="toc-number">4.4.</span> <span class="toc-text">Coordinator Node</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Broker"><span class="toc-number">4.5.</span> <span class="toc-text">Broker</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#More"><span class="toc-number">5.</span> <span class="toc-text">More</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
