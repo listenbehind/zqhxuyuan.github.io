@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Druid White Paper | zqhxuyuan</title>
+  <title>Druid White Paper(大数据实时统计分析数据存储) | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Druid is a fast column-oriented distributed data store. http://druid.io/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Druid White Paper">
+<meta property="og:title" content="Druid White Paper(大数据实时统计分析数据存储)">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/12/07/2015-12-07-Druid-WhitePaper/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Druid is a fast column-oriented distributed data store. http://druid.io/">
@@ -18,9 +18,9 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/QLeelulu/research/master/druid/White_Paper/5.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/QLeelulu/research/master/druid/White_Paper/6.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/QLeelulu/research/master/druid/White_Paper/7.png">
-<meta property="og:updated_time" content="2015-12-07T09:27:55.000Z">
+<meta property="og:updated_time" content="2015-12-08T07:05:21.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Druid White Paper">
+<meta name="twitter:title" content="Druid White Paper(大数据实时统计分析数据存储)">
 <meta name="twitter:description" content="Druid is a fast column-oriented distributed data store. http://druid.io/">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
@@ -194,7 +194,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Druid White Paper
+      Druid White Paper(大数据实时统计分析数据存储)
     </h1>
   
 
@@ -221,7 +221,7 @@
         
         <p>Druid is a fast column-oriented distributed data store. <a href="http://druid.io/" target="_blank" rel="external">http://druid.io/</a></p>
 <a id="more"></a>
-<h1 id="Druid_(大数据实时统计分析数据存储)">Druid (大数据实时统计分析数据存储)</h1><h2 id="摘要">摘要</h2><p><a href="http://druid.io" target="_blank" rel="external">Druid</a>是一个为在大数据集之上做实时统计分析而设计的开源数据存储。这个系统集合了一个面向列存储的层，一个分布式、shared-nothing的架构，和一个高级的索引结构，来达成在秒级以内对十亿行级别的表进行任意的探索分析。在这篇论文里面，我们会描述Druid的架构，和怎样支持快速聚合、灵活的过滤、和低延迟数据导入的一些细节。</p>
+<h2 id="摘要">摘要</h2><p><a href="http://druid.io" target="_blank" rel="external">Druid</a>是一个为在大数据集之上做实时统计分析而设计的开源数据存储。这个系统集合了一个面向列存储的层，一个分布式、shared-nothing的架构，和一个高级的索引结构，来达成在秒级以内对十亿行级别的表进行任意的探索分析。在这篇论文里面，我们会描述Druid的架构，和怎样支持快速聚合、灵活的过滤、和低延迟数据导入的一些细节。</p>
 <h2 id="1-_介绍">1. 介绍</h2><p>在最近几年，互联网技术的快速增长已经产生了大量由机器产生的数据。单独来看，这些数据包含很少的有用信息，价值都是很低的。从这些巨大的数据里面分析出有用的信息需要大量的时间和资源，很多公司都选择了放弃这些数据。虽然已有基础设施来处理这些居于事件的数据（例如IBM的Netezza，惠普的Vertica，EMC的Green-plum），但它们大多以高价售卖，那些负担得起的公司才是他们的目标客户。</p>
 <p>几年前，Google推出了MapReduce，他们利用普通硬件来索引互联网和分析日志的机制。在原始的MapReduce论文公布之后，Hadoop很快就被大量的跟随和作为参考。Hadoop现在被很多组织机构部署来用于存储和分析大规模的日志数据。Hadoop很大的贡献在于帮助企业将他们那些低价值的事件流数据转化为高价值的聚合数据，这适用于各种应用，例如商业智能和AB测试。</p>
 <p>和许多伟大的系统一样，Hadoop开阔了我们处理问题的视野。然而，Hadoop擅长的是存储和获取大规模数据，但是它并不提供任何性能上的保证它能多快获取到数据。此外，虽然Hadoop是一个高可用的系统，但是在高并发负载下性能会下降。最后，Hadoop对于存储数据可以工作得很好，但是并没有对数据导入进行优化，使导入的数据立即可读。</p>
@@ -348,12 +348,12 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2015/12/07/2015-12-07-Druid-WhitePaper/">Druid White Paper</a></p>
+  <p><span>本文标题:</span><a href="/2015/12/07/2015-12-07-Druid-WhitePaper/">Druid White Paper(大数据实时统计分析数据存储)</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月07日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月07日 - 17时27分</p>
+  <p><span>最后更新:</span>2015年12月08日 - 15时05分</p>
   <p>
-    <span>原始链接:</span><a href="/2015/12/07/2015-12-07-Druid-WhitePaper/" title="Druid White Paper">http://github.com/zqhxuyuan/2015/12/07/2015-12-07-Druid-WhitePaper/</a>
+    <span>原始链接:</span><a href="/2015/12/07/2015-12-07-Druid-WhitePaper/" title="Druid White Paper(大数据实时统计分析数据存储)">http://github.com/zqhxuyuan/2015/12/07/2015-12-07-Druid-WhitePaper/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/07/2015-12-07-Druid-WhitePaper/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
@@ -382,7 +382,7 @@
   
     <div id="article-nav-older" class="article-nav-title">
       <a href="/2015/12/05/2015-12-05-Druid-source/">
-        Druid源码解析
+        Druid源码解析(1) Guice和Realtime流程
       </a>
     </div>
   
@@ -395,7 +395,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Druid_(大数据实时统计分析数据存储)"><span class="toc-number">1.</span> <span class="toc-text">Druid (大数据实时统计分析数据存储)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#摘要"><span class="toc-number">1.1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-_介绍"><span class="toc-number">1.2.</span> <span class="toc-text">1. 介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-_问题定义"><span class="toc-number">1.3.</span> <span class="toc-text">2. 问题定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-_架构"><span class="toc-number">1.4.</span> <span class="toc-text">3. 架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1_实时节点"><span class="toc-number">1.5.</span> <span class="toc-text">3.1 实时节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-1_可用性与可扩展性"><span class="toc-number">1.6.</span> <span class="toc-text">3.1.1 可用性与可扩展性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2_历史节点"><span class="toc-number">1.7.</span> <span class="toc-text">3.2 历史节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-1_Tiers"><span class="toc-number">1.8.</span> <span class="toc-text">3.2.1 Tiers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-2_可用性"><span class="toc-number">1.9.</span> <span class="toc-text">3.2.2 可用性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3_Broker节点"><span class="toc-number">1.10.</span> <span class="toc-text">3.3 Broker节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-1_缓存"><span class="toc-number">1.11.</span> <span class="toc-text">3.3.1 缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-2_可用性"><span class="toc-number">1.12.</span> <span class="toc-text">3.3.2 可用性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4_协调节点"><span class="toc-number">1.13.</span> <span class="toc-text">3.4 协调节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-1_Rules"><span class="toc-number">1.14.</span> <span class="toc-text">3.4.1 Rules</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-2_负载均衡"><span class="toc-number">1.15.</span> <span class="toc-text">3.4.2 负载均衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-3_副本/复制（Replication）"><span class="toc-number">1.16.</span> <span class="toc-text">3.4.3 副本/复制（Replication）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-4_可用性"><span class="toc-number">1.17.</span> <span class="toc-text">3.4.4 可用性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-_存储格式"><span class="toc-number">1.18.</span> <span class="toc-text">4. 存储格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1_索引过滤数据"><span class="toc-number">1.19.</span> <span class="toc-text">4.1 索引过滤数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2_Storage_Engine"><span class="toc-number">1.20.</span> <span class="toc-text">4.2 Storage Engine</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-_查询API"><span class="toc-number">1.21.</span> <span class="toc-text">5. 查询API</span></a></li></ol></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#摘要"><span class="toc-number">1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-_介绍"><span class="toc-number">2.</span> <span class="toc-text">1. 介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-_问题定义"><span class="toc-number">3.</span> <span class="toc-text">2. 问题定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-_架构"><span class="toc-number">4.</span> <span class="toc-text">3. 架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1_实时节点"><span class="toc-number">5.</span> <span class="toc-text">3.1 实时节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-1_可用性与可扩展性"><span class="toc-number">6.</span> <span class="toc-text">3.1.1 可用性与可扩展性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2_历史节点"><span class="toc-number">7.</span> <span class="toc-text">3.2 历史节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-1_Tiers"><span class="toc-number">8.</span> <span class="toc-text">3.2.1 Tiers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-2_可用性"><span class="toc-number">9.</span> <span class="toc-text">3.2.2 可用性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3_Broker节点"><span class="toc-number">10.</span> <span class="toc-text">3.3 Broker节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-1_缓存"><span class="toc-number">11.</span> <span class="toc-text">3.3.1 缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-2_可用性"><span class="toc-number">12.</span> <span class="toc-text">3.3.2 可用性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4_协调节点"><span class="toc-number">13.</span> <span class="toc-text">3.4 协调节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-1_Rules"><span class="toc-number">14.</span> <span class="toc-text">3.4.1 Rules</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-2_负载均衡"><span class="toc-number">15.</span> <span class="toc-text">3.4.2 负载均衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-3_副本/复制（Replication）"><span class="toc-number">16.</span> <span class="toc-text">3.4.3 副本/复制（Replication）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-4_可用性"><span class="toc-number">17.</span> <span class="toc-text">3.4.4 可用性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-_存储格式"><span class="toc-number">18.</span> <span class="toc-text">4. 存储格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1_索引过滤数据"><span class="toc-number">19.</span> <span class="toc-text">4.1 索引过滤数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2_Storage_Engine"><span class="toc-number">20.</span> <span class="toc-text">4.2 Storage Engine</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-_查询API"><span class="toc-number">21.</span> <span class="toc-text">5. 查询API</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -466,7 +466,7 @@
   
     <div  class="post-nav-button">
     <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
-    <a href="/2015/12/05/2015-12-05-Druid-source/" title="下一篇: Druid源码解析">
+    <a href="/2015/12/05/2015-12-05-Druid-source/" title="下一篇: Druid源码解析(1) Guice和Realtime流程">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

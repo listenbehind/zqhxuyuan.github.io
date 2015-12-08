@@ -3,24 +3,20 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Druid源码解析 | zqhxuyuan</title>
+  <title>Druid源码解析(1) Guice和Realtime流程 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="当启动Druid的服务,会启动一个java进程,比如run_example_server.sh会启动io.druid.cli.Main example realtime.  
-Guice InjectMain的buidler类包含了多种服务组, 比如server服务包括了Druid的大部分组件: 协调,历史,Broker,实时,Overlord等.  
-injectMembers和toInstan">
+  <meta name="description" content="Druid is a fast column-oriented distributed data store. http://druid.io/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Druid源码解析">
+<meta property="og:title" content="Druid源码解析(1) Guice和Realtime流程">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/12/05/2015-12-05-Druid-source/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="当启动Druid的服务,会启动一个java进程,比如run_example_server.sh会启动io.druid.cli.Main example realtime.  
-Guice InjectMain的buidler类包含了多种服务组, 比如server服务包括了Druid的大部分组件: 协调,历史,Broker,实时,Overlord等.  
-injectMembers和toInstan">
-<meta property="og:updated_time" content="2015-12-07T14:54:09.000Z">
+<meta property="og:description" content="Druid is a fast column-oriented distributed data store. http://druid.io/">
+<meta property="og:image" content="http://img.blog.csdn.net/20151208144543081">
+<meta property="og:image" content="http://img.blog.csdn.net/20151208155730186">
+<meta property="og:updated_time" content="2015-12-08T08:00:10.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Druid源码解析">
-<meta name="twitter:description" content="当启动Druid的服务,会启动一个java进程,比如run_example_server.sh会启动io.druid.cli.Main example realtime.  
-Guice InjectMain的buidler类包含了多种服务组, 比如server服务包括了Druid的大部分组件: 协调,历史,Broker,实时,Overlord等.  
-injectMembers和toInstan">
+<meta name="twitter:title" content="Druid源码解析(1) Guice和Realtime流程">
+<meta name="twitter:description" content="Druid is a fast column-oriented distributed data store. http://druid.io/">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -193,7 +189,7 @@ injectMembers和toInstan">
         
   
     <h1 class="article-title" itemprop="name">
-      Druid源码解析
+      Druid源码解析(1) Guice和Realtime流程
     </h1>
   
 
@@ -218,10 +214,13 @@ injectMembers和toInstan">
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>当启动Druid的服务,会启动一个java进程,比如<code>run_example_server.sh</code>会启动<code>io.druid.cli.Main example realtime</code>.  </p>
+        <p>Druid is a fast column-oriented distributed data store. <a href="http://druid.io/" target="_blank" rel="external">http://druid.io/</a></p>
+<a id="more"></a>
+<p>当启动Druid的服务,会启动一个java进程,比如<code>run_example_server.sh</code>会启动<code>io.druid.cli.Main example realtime</code>.  </p>
 <h2 id="Guice_Inject">Guice Inject</h2><p>Main的buidler类包含了多种服务组, 比如server服务包括了Druid的大部分组件: 协调,历史,Broker,实时,Overlord等.  </p>
 <h3 id="injectMembers和toInstance注入实例化好的对象">injectMembers和toInstance注入实例化好的对象</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> Injector injector = GuiceInjectors.makeStartupInjector();</span><br><span class="line"><span class="keyword">final</span> Cli&lt;Runnable&gt; cli = builder.build();</span><br><span class="line"><span class="keyword">final</span> Runnable command = cli.parse(args);</span><br><span class="line">injector.injectMembers(command);            <span class="comment">//command已经是实例化好的线程类,直接注入</span></span><br><span class="line">command.run();</span><br></pre></td></tr></table></figure>
 <p>Guice是个DI框架.客户端使用对象的流程是: 创建Injector,从Injector中获取实例,调用实例的方法. 客户端解析出来的命令是一个Runnable.<br>CliRealtime继承了ServerRunnable(又继承了GuiceRunnable). 在makeInjector调用的Initialization初始化会添加很多Module.  </p>
+<p><img src="http://img.blog.csdn.net/20151208144543081" alt="guice_client"></p>
 <p>CliRealtime的getModules()主要是RealtimeModule. 每个节点都要注册自己职责范围内的Modules.<br>ReailtimeModule绑定了SegmentPublisher,ChatHandlerProvider,RealtimeManager等.  </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">JsonConfigProvider.bind(binder, <span class="string">"druid.realtime"</span>, RealtimeManagerConfig.class);</span><br><span class="line">binder.bind(<span class="keyword">new</span> TypeLiteral&lt;List&lt;FireDepartment&gt;&gt;()&#123;&#125;).toProvider(FireDepartmentsProvider.class).in(LazySingleton.class);   <span class="comment">//①</span></span><br><span class="line"></span><br><span class="line">JsonConfigProvider.bind(binder, <span class="string">"druid.realtime.cache"</span>, CacheConfig.class);</span><br><span class="line">binder.install(<span class="keyword">new</span> CacheModule());</span><br><span class="line"></span><br><span class="line">binder.bind(QuerySegmentWalker.class).to(RealtimeManager.class).in(ManageLifecycle.class);</span><br><span class="line">binder.bind(NodeTypeConfig.class).toInstance(<span class="keyword">new</span> NodeTypeConfig(<span class="string">"realtime"</span>));</span><br></pre></td></tr></table></figure>
 <p>toInstance也绑定的也是一个实例化对象,而没有接口. 比如NodeTypeConfig并不是一个接口,而是一个正常的类.<br><a href="https://github.com/google/guice/wiki/Injections#on-demand-injection">https://github.com/google/guice/wiki/Injections#on-demand-injection</a></p>
@@ -241,6 +240,9 @@ injectMembers和toInstan">
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QueryRunnerFactoryModule</span> <span class="keyword">extends</span> <span class="title">QueryToolChestModule</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;Class&lt;? extends Query&gt;, Class&lt;? extends QueryRunnerFactory&gt;&gt; mappings =</span><br><span class="line">      ImmutableMap.&lt;Class&lt;? extends Query&gt;, Class&lt;? extends QueryRunnerFactory&gt;&gt;builder()</span><br><span class="line">                  .put(TimeseriesQuery.class, TimeseriesQueryRunnerFactory.class)</span><br><span class="line">                  .put(TimeBoundaryQuery.class, TimeBoundaryQueryRunnerFactory.class)</span><br><span class="line">                  .....build();</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(Binder binder)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.configure(binder);</span><br><span class="line">    binder.bind(QueryWatcher.class).to(QueryManager.class).in(LazySingleton.class);</span><br><span class="line">    binder.bind(QueryManager.class).in(LazySingleton.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> MapBinder&lt;Class&lt;? extends Query&gt;, QueryRunnerFactory&gt; queryFactoryBinder = DruidBinders.queryRunnerFactoryBinder(binder);</span><br><span class="line">    <span class="keyword">for</span> (Map.Entry&lt;Class&lt;? extends Query&gt;, Class&lt;? extends QueryRunnerFactory&gt;&gt; entry : mappings.entrySet()) &#123;</span><br><span class="line">      queryFactoryBinder.addBinding(entry.getKey()).to(entry.getValue());   <span class="comment">//注入Map的key和value,对应factories</span></span><br><span class="line">      binder.bind(entry.getValue()).in(LazySingleton.class);                <span class="comment">//最好还要注入一下value</span></span><br><span class="line">    &#125;</span><br><span class="line">    binder.bind(GroupByQueryEngine.class).in(LazySingleton.class);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>QueryRunnerFactory具体实现类中是查询的具体实现,这里有XXXQuery,XXXQueryRunner,XXXQueryToolChest,XXXResultValue等.<br>以<code>run_example_client.sh</code>为例,它的查询类型是timeBoundary,对应TimeBoundaryQuery.  </p>
 <h2 id="RealtimeManager">RealtimeManager</h2><p>RealtimeManager构造函数需要的List<firedepartment>和QueryRunnerFactoryConglomerate都注入之后,在start方法就可以开工了.<br>fireDepartments的每个FireDepartment会被构造成FireChief,FireDepartment的DataSchema的DataSource都对应了一个FireChief.<br>FireChief包括FireDepartment(数据源),Firehose(怎么读取,迭代器,Source),Plumber(Sink).<br>FireChief线程会initPlumber初始化Plumber, 由Plumber启动作业, initFirehose初始化Firehose连接数据源,最后runFirehose读取数据.  </firedepartment></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  plumber = initPlumber();    <span class="comment">//fireDepartment.findPlumber() 先找到水管(水龙头)</span></span><br><span class="line">  plumber.startJob();         <span class="comment">//准备工作,接上管子</span></span><br><span class="line">  firehose = initFirehose();  <span class="comment">//fireDepartment.connect() 消防带,给消防带接上水龙头</span></span><br><span class="line">  runFirehose(firehose);      <span class="comment">//开始消防工作,水会从源头数据源不断流出来</span></span><br><span class="line">  plumber.finishJob();        <span class="comment">//完成工作,卸掉消防带,关闭水龙头</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.blog.csdn.net/20151208155730186" alt="fire_flow"></p>
+<h3 id="InputRow-&gt;InputRowParser">InputRow-&gt;InputRowParser</h3><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"parser"</span> : &#123;</span><br><span class="line">  <span class="string">"type"</span> : <span class="string">"string"</span>,</span><br><span class="line">  <span class="string">"parseSpec"</span> : &#123;</span><br><span class="line">    <span class="string">"format"</span> : <span class="string">"json"</span>,</span><br><span class="line">    <span class="string">"timestampSpec"</span> : &#123;</span><br><span class="line">      <span class="string">"column"</span> : <span class="string">"timestamp"</span>,</span><br><span class="line">      <span class="string">"format"</span> : <span class="string">"auto"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"dimensionsSpec"</span> : &#123;</span><br><span class="line">      <span class="string">"dimensions"</span>: [<span class="string">"page"</span>,<span class="string">"language"</span>,<span class="string">"user"</span>,<span class="string">"unpatrolled"</span>,<span class="string">"newPage"</span>,<span class="string">"robot"</span>,<span class="string">"anonymous"</span>,<span class="string">"namespace"</span>,<span class="string">"continent"</span>,<span class="string">"country"</span>,<span class="string">"region"</span>,<span class="string">"city"</span>],</span><br><span class="line">      <span class="string">"dimensionExclusions"</span> : [],</span><br><span class="line">      <span class="string">"spatialDimensions"</span> : []</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -249,12 +251,12 @@ injectMembers和toInstan">
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2015/12/05/2015-12-05-Druid-source/">Druid源码解析</a></p>
+  <p><span>本文标题:</span><a href="/2015/12/05/2015-12-05-Druid-source/">Druid源码解析(1) Guice和Realtime流程</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月05日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月07日 - 22时54分</p>
+  <p><span>最后更新:</span>2015年12月08日 - 16时00分</p>
   <p>
-    <span>原始链接:</span><a href="/2015/12/05/2015-12-05-Druid-source/" title="Druid源码解析">http://github.com/zqhxuyuan/2015/12/05/2015-12-05-Druid-source/</a>
+    <span>原始链接:</span><a href="/2015/12/05/2015-12-05-Druid-source/" title="Druid源码解析(1) Guice和Realtime流程">http://github.com/zqhxuyuan/2015/12/05/2015-12-05-Druid-source/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/05/2015-12-05-Druid-source/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
@@ -282,7 +284,7 @@ injectMembers和toInstan">
   
     <div id="article-nav-newer" class="article-nav-title">
       <a href="/2015/12/07/2015-12-07-Druid-WhitePaper/">
-        Druid White Paper
+        Druid White Paper(大数据实时统计分析数据存储)
       </a>
     </div>
   
@@ -302,7 +304,7 @@ injectMembers和toInstan">
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Guice_Inject"><span class="toc-number">1.</span> <span class="toc-text">Guice Inject</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#injectMembers和toInstance注入实例化好的对象"><span class="toc-number">1.1.</span> <span class="toc-text">injectMembers和toInstance注入实例化好的对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Provider的get方法返回值绑定实现类"><span class="toc-number">1.2.</span> <span class="toc-text">Provider的get方法返回值绑定实现类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注解和Provides绑定实现类"><span class="toc-number">1.3.</span> <span class="toc-text">注解和Provides绑定实现类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JSON_Property"><span class="toc-number">1.4.</span> <span class="toc-text">JSON Property</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#别的Module注入同样可用"><span class="toc-number">1.5.</span> <span class="toc-text">别的Module注入同样可用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MapBinder注入Map"><span class="toc-number">1.6.</span> <span class="toc-text">MapBinder注入Map</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RealtimeManager"><span class="toc-number">2.</span> <span class="toc-text">RealtimeManager</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Guice_Inject"><span class="toc-number">1.</span> <span class="toc-text">Guice Inject</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#injectMembers和toInstance注入实例化好的对象"><span class="toc-number">1.1.</span> <span class="toc-text">injectMembers和toInstance注入实例化好的对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Provider的get方法返回值绑定实现类"><span class="toc-number">1.2.</span> <span class="toc-text">Provider的get方法返回值绑定实现类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注解和Provides绑定实现类"><span class="toc-number">1.3.</span> <span class="toc-text">注解和Provides绑定实现类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JSON_Property"><span class="toc-number">1.4.</span> <span class="toc-text">JSON Property</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#别的Module注入同样可用"><span class="toc-number">1.5.</span> <span class="toc-text">别的Module注入同样可用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MapBinder注入Map"><span class="toc-number">1.6.</span> <span class="toc-text">MapBinder注入Map</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RealtimeManager"><span class="toc-number">2.</span> <span class="toc-text">RealtimeManager</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#InputRow->InputRowParser"><span class="toc-number">2.1.</span> <span class="toc-text">InputRow->InputRowParser</span></a></li></ol></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -373,7 +375,7 @@ injectMembers和toInstan">
   
     
     <div  class="post-nav-button">
-    <a href="/2015/12/07/2015-12-07-Druid-WhitePaper/" title="上一篇: Druid White Paper">
+    <a href="/2015/12/07/2015-12-07-Druid-WhitePaper/" title="上一篇: Druid White Paper(大数据实时统计分析数据存储)">
     <i class="fa fa-angle-left"></i>
     </a>
     <a href="/2015/12/03/2015-12-03-Druid-Design/" title="下一篇: Druid OLAP架构设计">
