@@ -14,7 +14,7 @@
 <meta property="og:image" content="http://docs.datatorrent.com/operators/images/dimensions_computation/image000.png">
 <meta property="og:image" content="http://docs.datatorrent.com/images/application_development/ApplicationDeveloperGuide.html-image00.png">
 <meta property="og:image" content="http://docs.datatorrent.com/images/application_development/ApplicationDeveloperGuide.html-image02.png">
-<meta property="og:updated_time" content="2015-12-10T13:15:22.000Z">
+<meta property="og:updated_time" content="2015-12-10T15:23:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Apache Apex 流处理和批处理统一框架">
 <meta name="twitter:description" content="Apache Apex: Industry’s only open source, enterprise-grade unified stream and batch processing engine. http://apex.incubator.apache.org/">
@@ -339,7 +339,7 @@
 <p><strong>4.构造DAG</strong></p>
 <p>Connecting the operators together and constructing the DAG: Now that we know the operators used, we will create the DAG, set the streaming window size, instantiate the operators, and connect the operators together by adding streams that connect the output ports with the input ports among those operators.<br>将所有的算子连接起来构造DAG: 设置流窗口大小,实例化算子,为算子之间添加stream,连接算子之间的输入ports和输出ports.  </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">populateDAG</span><span class="params">(DAG dag, Configuration conf)</span></span>&#123;</span><br><span class="line">  <span class="comment">//实例化各个算子,然后将算子使用stream进行连接</span></span><br><span class="line">  dag.addStream(<span class="string">"price"</span>, tick.price, quoteOperator.in1, highlow.data, priceSMA.data);</span><br><span class="line">  dag.addStream(<span class="string">"vol"</span>, tick.volume, dailyVolume.data, minuteVolume.data);</span><br><span class="line">  dag.addStream(<span class="string">"time"</span>, tick.time, quoteOperator.in3);</span><br><span class="line">  dag.addStream(<span class="string">"daily_vol"</span>, dailyVolume.sum, quoteOperator.in2);</span><br><span class="line"></span><br><span class="line">  dag.addStream(<span class="string">"quote_data"</span>, quoteOperator.out, getConsole(<span class="string">"quoteConsole"</span>, dag, <span class="string">"QUOTE"</span>));</span><br><span class="line"></span><br><span class="line">  dag.addStream(<span class="string">"high_low"</span>, highlow.range, chartOperator.in1);</span><br><span class="line">  dag.addStream(<span class="string">"vol_1min"</span>, minuteVolume.sum, chartOperator.in2);</span><br><span class="line">  dag.addStream(<span class="string">"chart_data"</span>, chartOperator.out, getConsole(<span class="string">"chartConsole"</span>, dag, <span class="string">"CHART"</span>));</span><br><span class="line"></span><br><span class="line">  dag.addStream(<span class="string">"sma_price"</span>, priceSMA.doubleSMA, getConsole(<span class="string">"priceSMAConsole"</span>, dag, <span class="string">"Price SMA"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="Apache_Apex_Platform_Overview">Apache Apex Platform Overview</h2><ul>
+<h2 id="Apache_Apex_Platform_Overview">Apache Apex Platform Overview</h2><h3 id="Streaming_Computational_Model_流计算模型">Streaming Computational Model 流计算模型</h3><ul>
 <li>应用程序运行在Apex平台中, 由operators算子和streams流组成的DAG表示.</li>
 <li>输入数据都会在内存中被计算, 并且可以选择非阻塞地将输出保存到HDFS</li>
 <li>在operators之间流动的数据是原子性的/不可变的, 每个data element和它的类型定义/schema组成一个Tuple</li>
@@ -352,7 +352,13 @@
 <p>计算单元针对的是tuple元组, 但是并不是每一个元组过来了就记录一次, 而是等一个窗口满了之后,一起处理这个窗口内的所有有序tuples.<br>假设一秒中收到了1000个tuples,如果一个tuple就记录一次,需要记录1000次. 而以一秒的窗口为时间单位,则只需要记录一次.  </p>
 </blockquote>
 <p><img src="http://docs.datatorrent.com/images/application_development/ApplicationDeveloperGuide.html-image02.png" alt="micro-batch"></p>
-<h2 id="参考文档">参考文档</h2><p><a href="http://docs.datatorrent.com/application_development/" target="_blank" rel="external">http://docs.datatorrent.com/application_development/</a></p>
+<p>Application Window是应用程序的窗口,比如滑动窗口为5min, 则对于每秒钟的streaming window而言, 会有5*60=300个streaming windows.  </p>
+<p>A streaming window is an abstraction of many tuples into a higher atomic event for easier management.<br>An application window is a group of consecutive streaming windows used for data aggregation on a per operator level.<br>StreamingWindow是将多个tuples抽象成一个更高级的原子事件,为了便于管理. ApplicationWindow是一组连续的StreamingWindow.<br>ApplicationWindow是在每个operator级别上的数据聚合操作. 一个operator的聚合会在多个StreamingWindow上的tuples一批批地计算.   </p>
+<p>上图的每个Window都是以一个begin_window事件开始,以一个end_window事件结束. 由于计算是并行执行的为了流程序最快完成, 每个operator无法<br>精确地预测它发送出去的tuples什么时候会被下游operator处理. 能保证的是: 上游Operator在处理当前或往后的window, 下游Operator处理的则是<br>当前或往前一个Window. 当任意Operator的一个StreamingWindow处理完成时, 所有它的上游算子都必须已经处理完这个Window了(begin并没有这个限制).  </p>
+<blockquote>
+<p>begin和end_window事件用来表示一个StreamingWindow的边界触发条件. 如果当前算子的这个窗口结束了,则当前算子的所有上游算子<br>都已经完全处理完这个窗口的数据,否则如果还有上游算子在这个窗口上的tuple没有处理完, 当前算子是没办法结束这个窗口的.<br>对于同一个StreamingWindow, 多个算子之间是存在关联关系的. 即上游算子在某个窗口的处理结果会发送给下游算子继续在这个窗口处理.   </p>
+</blockquote>
+<h3 id="Streaming_Application_Manager_(STRAM)_流应用程序管理">Streaming Application Manager (STRAM) 流应用程序管理</h3><h2 id="参考文档">参考文档</h2><p><a href="http://docs.datatorrent.com/application_development/" target="_blank" rel="external">http://docs.datatorrent.com/application_development/</a></p>
 
       
     </div>
@@ -364,7 +370,7 @@
   <p><span>本文标题:</span><a href="/2015/12/09/2015-12-09-Apache-Apex/">Apache Apex 流处理和批处理统一框架</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月09日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月10日 - 21时15分</p>
+  <p><span>最后更新:</span>2015年12月10日 - 23时23分</p>
   <p>
     <span>原始链接:</span><a href="/2015/12/09/2015-12-09-Apache-Apex/" title="Apache Apex 流处理和批处理统一框架">http://github.com/zqhxuyuan/2015/12/09/2015-12-09-Apache-Apex/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/09/2015-12-09-Apache-Apex/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -408,7 +414,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hello_Apex"><span class="toc-number">1.</span> <span class="toc-text">Hello Apex</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Key_Concepts"><span class="toc-number">1.1.</span> <span class="toc-text">Key Concepts</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Application_Development"><span class="toc-number">1.2.</span> <span class="toc-text">Application Development</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Apache_Apex_Platform_Overview"><span class="toc-number">2.</span> <span class="toc-text">Apache Apex Platform Overview</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文档"><span class="toc-number">3.</span> <span class="toc-text">参考文档</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hello_Apex"><span class="toc-number">1.</span> <span class="toc-text">Hello Apex</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Key_Concepts"><span class="toc-number">1.1.</span> <span class="toc-text">Key Concepts</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Application_Development"><span class="toc-number">1.2.</span> <span class="toc-text">Application Development</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Apache_Apex_Platform_Overview"><span class="toc-number">2.</span> <span class="toc-text">Apache Apex Platform Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Streaming_Computational_Model_流计算模型"><span class="toc-number">2.1.</span> <span class="toc-text">Streaming Computational Model 流计算模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Streaming_Application_Manager_(STRAM)_流应用程序管理"><span class="toc-number">2.2.</span> <span class="toc-text">Streaming Application Manager (STRAM) 流应用程序管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文档"><span class="toc-number">3.</span> <span class="toc-text">参考文档</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
