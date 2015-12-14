@@ -3,17 +3,24 @@
 <head>
   <meta charset="utf-8">
   
-  <title>zqhxuyuan</title>
+  <title>Apache Cassandra入门 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="zqhxuyuan">
-<meta property="og:url" content="http://github.com/zqhxuyuan/index.html">
+  <meta name="description" content="Hello Cassandra(单机模式)http://wiki.apache.org/cassandra/GettingStarted
+添加环境变量并source生效,使得可以在任意位置执行cassandra/bin安装目录下的命令  
+12export CASSANDRA_HOME=&quot;/Users/zhengqh/Soft/apache-cassandra-2.0.16&quot;export PATH">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache Cassandra入门">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2015/12/14/2015-08-25-Apache-Cassandra/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description">
+<meta property="og:description" content="Hello Cassandra(单机模式)http://wiki.apache.org/cassandra/GettingStarted
+添加环境变量并source生效,使得可以在任意位置执行cassandra/bin安装目录下的命令  
+12export CASSANDRA_HOME=&quot;/Users/zhengqh/Soft/apache-cassandra-2.0.16&quot;export PATH">
+<meta property="og:updated_time" content="2015-12-14T08:35:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="zqhxuyuan">
-<meta name="twitter:description">
+<meta name="twitter:title" content="Apache Cassandra入门">
+<meta name="twitter:description" content="Hello Cassandra(单机模式)http://wiki.apache.org/cassandra/GettingStarted
+添加环境变量并source生效,使得可以在任意位置执行cassandra/bin安装目录下的命令  
+12export CASSANDRA_HOME=&quot;/Users/zhengqh/Soft/apache-cassandra-2.0.16&quot;export PATH">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -169,9 +176,7 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap">
-  
-    <article id="post-2015-08-25-Apache-Cassandra" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-2015-08-25-Apache-Cassandra" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2015/12/14/2015-08-25-Apache-Cassandra/" class="article-date">
@@ -187,12 +192,27 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/14/2015-08-25-Apache-Cassandra/">Apache Cassandra入门</a>
+    <h1 class="article-title" itemprop="name">
+      Apache Cassandra入门
     </h1>
   
 
       </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
       
     
     <div class="article-entry" itemprop="articleBody">
@@ -347,27 +367,105 @@
       
     </div>
     
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
-	</div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
   </div>
+  
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2015/12/14/2015-08-25-Apache-Cassandra/">Apache Cassandra入门</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2015年12月14日 - 16时35分</p>
+  <p><span>最后更新:</span>2015年12月14日 - 16时35分</p>
+  <p>
+    <span>原始链接:</span><a href="/2015/12/14/2015-08-25-Apache-Cassandra/" title="Apache Cassandra入门">http://github.com/zqhxuyuan/2015/12/14/2015-08-25-Apache-Cassandra/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/14/2015-08-25-Apache-Cassandra/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
+
+
+
+<nav id="article-nav">
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2015/12/14/2015-08-25-Cassandra-Architecture/">
+        Apache Cassandra架构
+      </a>
+    </div>
+  
+</nav>
+
   
 </article>
 
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hello_Cassandra(单机模式)"><span class="toc-number">1.</span> <span class="toc-text">Hello Cassandra(单机模式)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置文件默认值"><span class="toc-number">1.1.</span> <span class="toc-text">配置文件默认值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cassandra_Cluster"><span class="toc-number">2.</span> <span class="toc-text">Cassandra Cluster</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PrimaryKey_&_Examples"><span class="toc-number">3.</span> <span class="toc-text">PrimaryKey & Examples</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#单一主键"><span class="toc-number">3.1.</span> <span class="toc-text">单一主键</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复合主键(Composite_Primary_Key)"><span class="toc-number">3.2.</span> <span class="toc-text">复合主键(Composite Primary Key)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复合分区键(Compound_Partition_Key,随机)"><span class="toc-number">3.3.</span> <span class="toc-text">复合分区键(Compound Partition Key,随机)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#根据时间范围组合分区键求TopN"><span class="toc-number">3.4.</span> <span class="toc-text">根据时间范围组合分区键求TopN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考文档"><span class="toc-number">3.5.</span> <span class="toc-text">参考文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#twissandra_:_Twitter_with_Cassandra_Backend_Demo"><span class="toc-number">3.6.</span> <span class="toc-text">twissandra : Twitter with Cassandra Backend Demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TTL_&_Delete"><span class="toc-number">3.7.</span> <span class="toc-text">TTL & Delete</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#List,Set,Map"><span class="toc-number">3.8.</span> <span class="toc-text">List,Set,Map</span></a></li></ol></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+</script>
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+	</div>
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+</div>
 
 
 
@@ -375,6 +473,28 @@
 
 
 
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
+
+
+  
+  
+    <div  class="post-nav-button">
+    <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+    <a href="/2015/12/14/2015-08-25-Cassandra-Architecture/" title="下一篇: Apache Cassandra架构">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+    
 
 
 
@@ -385,8 +505,8 @@
         fancybox: true,
         mathjax: true,
         animate: true,
-        isHome: true,
-        isPost: false,
+        isHome: false,
+        isPost: true,
         isArchive: false,
         isTag: false,
         isCategory: false,
@@ -394,1296 +514,6 @@
         }
         </script>
         
-
-  
-    <article id="post-2015-08-25-Cassandra-Architecture" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/12/14/2015-08-25-Cassandra-Architecture/" class="article-date">
-  	<time datetime="2015-12-14T08:35:02.000Z" itemprop="datePublished">2015-12-14</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/14/2015-08-25-Cassandra-Architecture/">Apache Cassandra架构</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-        <h2 id="架构">架构</h2><p><a href="http://docs.datastax.com/en/cassandra/2.0/cassandra/architecture/architectureTOC.html" target="_blank" rel="external">http://docs.datastax.com/en/cassandra/2.0/cassandra/architecture/architectureTOC.html</a><br><a href="http://yikebocai.com/2014/06/cassandra-principle/" target="_blank" rel="external">http://yikebocai.com/2014/06/cassandra-principle/</a>  </p>
-<p>点对点分布式系统，集群中各节点平等，数据分布于集群中各节点，各节点间每秒交换一次信息。<br>每个节点的<code>commit log提交日志</code>捕获写操作来确保数据持久性。<br>数据先被写入<code>memtable</code>–内存中的数据结构，待该结构满后数据被写入<code>SSTable</code>–硬盘中的数据文件。<br>所有的写内容被自动在集群中<code>partition分区</code>并<code>replicate复制</code>。  </p>
-<p>Cassandra数据库面向行。授权用户可连接至任意数据中心的任意节点，并通过类似SQL的CQL查询数据。集群中，一个应用一般包含一个keyspace，一个keyspace中包含多个表。<br>客户端连接到某一节点发起读或写请求时，该节点充当<code>客户端应用</code>与<code>拥有相应数据的节点</code>间的<code>coordinator协调者</code>以根据集群配置确定<code>环(ring)中的哪个节点</code>应当获取这个请求。</p>
-<p><img src="http://img.blog.csdn.net/20150829183000146" alt="c_write-path">  </p>
-<blockquote>
-<p>图解: 协调节点(10)负责和客户端的交互(这个节点并不一定拥有数据,类似于一个门面). 真正的数据在节点1,4,6上,分别表示数据的三个副本,最终只要节点1上的数据返回即可.  </p>
-</blockquote>
-<p><strong>关键词</strong>  </p>
-<table>
-<thead>
-<tr>
-<th>KeyWord</th>
-<th>Explain</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Gossip</code></td>
-<td>点对点通信协议，用以Cassandra集群中节点间交换位置和状态信息。  </td>
-</tr>
-<tr>
-<td><code>Partitioner</code></td>
-<td>决定如何在集群中的节点间分发数据，即在哪个节点放置数据的第一个replica。  </td>
-</tr>
-<tr>
-<td><code>Replica placement strategy</code></td>
-<td>决定在哪些节点放置每行数据的其他replica。Cassandra在集群中的多个节点存储数据的多份拷贝(replicas)来确保可靠和容错。  </td>
-</tr>
-<tr>
-<td><code>Snitch</code></td>
-<td>定义了复制策略用来放置replicas和路由请求所使用的拓扑信息  </td>
-</tr>
-<tr>
-<td><code>Virtual nodes</code></td>
-<td>虚拟节点, 指定数据与物理节点的所属关系   </td>
-</tr>
-<tr>
-<td><code>Ring</code></td>
-<td>环</td>
-</tr>
-<tr>
-<td><code>Token</code></td>
-<td>令牌</td>
-</tr>
-</tbody>
-</table>
-<p><strong>节点间通信gossip</strong><br>Cassandra使用点对点通讯协议gossip在集群中的节点间交换位置和状态信息。<br>gossip进程每秒运行一次，与至多3个其他节点交换信息，这样所有节点可很快了解集群中的其他节点信息</p>
-<p><strong>失败检测与恢复</strong><br>Ø  gossip可检测其他节点是否正常以避免将请求路由至不可达或者性能差的节点（后者需配置为dynamic snitch方可）。<br>Ø  可通过配置phi_convict_threshold来调整失败检测的敏感度。<br>Ø  对于失败的节点，其他节点会通过gossip定期与之联系以查看是否恢复而非简单将之移除。若需强制添加或移除集群中节点需使用nodetool工具。<br>Ø  一旦某节点被标记为失败，其<code>错过的写操作</code>会有其他replicas存储一段时间<br>     (需开启hinted handoff，若节点失败的时间超过了max_hint_window_in_ms，错过的写不再被存储)<br>     Down掉的节点经过一段时间恢复后需执行repair操作，一般在所有节点运行nodetool repair以确保数据一致。  </p>
-<p><strong>一致性哈希DHT</strong><br><img src="http://img.blog.csdn.net/20150830131517170" alt="hash">  </p>
-<blockquote>
-<p>图解: key的范围是0到2^32形成一个环, 叫做hash空间环, 即hash的值空间. 对集群的服务器(比如ip地址)进行hash,都能确定其在环空间上的位置.<br>定位数据访问到相应服务器的算法:将数据key使用相同的函数H计算出哈希值h，通根据h确定此数据在环上的位置，<br>从此位置沿环顺时针“行走”，第一台遇到的服务器就是其应该定位到的服务器   </p>
-</blockquote>
-<p><img src="http://img.blog.csdn.net/20150830133258811" alt="riak-ring">  </p>
-<blockquote>
-<p>图解: 由于一致性哈希算法在服务节点太少时，容易因为节点分部不均匀而造成数据倾斜问题,所以引入了虚拟节点:<br>把每台server分成v个虚拟节点，再把所有虚拟节点(n*v)随机分配到一致性哈希的圆环上，<br>这样所有的用户从自己圆环上的位置顺时针往下取到第一个vnode就是自己所属节点. 当此节点存在故障时，再顺时针取下一个作为替代节点.  </p>
-</blockquote>
-<p><img src="http://img.blog.csdn.net/20150830135418433" alt="riak-data-distribution">  </p>
-<blockquote>
-<p>图解: key经过hash会定位到hash环上的一个位置, 找到下一个vnode为数据的第一份存储节点. 接下来的两个vnode为另外两个副本.  </p>
-</blockquote>
-<p><strong>hash值空间&amp;token</strong><br>上面在计算key存在在哪个节点上是使用往前游走的方式找到环上的第一个节点. 游走是一个计算的过程.<br>如果能够事先计算好集群中的节点(vnodes)在整个hash环的值空间, 这样对key进行hash后,可以看它是落在哪个hash值空间上,<br>而值空间和节点的关系已经知道了,所以可以直接定位到key落在哪个节点上了. 这就是<code>token</code>的作用.  </p>
-<p>C<em>表中每行数据由<code>primary key</code>标识，C</em>为每个primarykey分配一个<code>hash</code>值，<code>集群中每个节点(vnode)拥有一个或多个hash值区间</code>。<br>这样便可根据<code>primary key对应的hash值</code>将<code>该条数据</code>放在<code>包含该hash值</code>的<code>hash值区间</code>对应的节点(vnode)中</p>
-<p><strong>虚拟节点</strong><br><img src="http://img.blog.csdn.net/20150829184538135" alt="c_vn-token">  </p>
-<blockquote>
-<p>图解: 没有使用虚拟节点, Ring环的tokens数量=集群的机器数量. 比如上面一共有6个节点,所以token数=6.<br>因为副本因子=3,一条记录要在集群中的三个节点存在. 简单地方式是计算rowkey的hash值,落在环中的哪个token上,<br>第一份数据就在那个节点上, 剩余两个副本落在这个节点在token环上的后两个节点.<br>图中的A,B,C,D,E,F是key的范围,真实的值是hash环空间,比如0~2^32区间分成10份.每一段是2^32的1/10.<br>节点1包含A,F,E表示key范围在A,F,E的数据会存储到节点1上.以此类推.  </p>
-</blockquote>
-<p>若不使用虚拟节点则需手工为集群中每个节点<code>计算和分配一个token</code>。<br>每个token决定了<code>节点在环中的位置</code>以及<code>节点应当承担的一段连续的数据hash值的范围</code>。<br>如上图上半部分，每个节点分配了一个单独的token代表环中的一个位置，每个节点存储将row key映射为hash值之后<br>落在该节点应当承担的唯一的一段连续的hash值范围内的数据。每个节点也包含来自其他节点的row的副本。  </p>
-<p>而使用虚拟节点允许每个节点拥有多个较小的不连续的hash值范围。<br>如上图中下半部分，集群中的节点使用了虚拟节点，虚拟节点随机选择且不连续。<br>数据的存放位置也由row key映射而得的hash值确定，但是是落在更小的分区范围内  </p>
-<p>使用虚拟节点的好处<br>Ø  无需为每个节点计算、分配token<br>Ø  添加移除节点后无需重新平衡集群负载<br>Ø  重建死掉的节点更快<br>Ø  改善了在同一集群使用异种机器  </p>
-<p><strong>数据复制</strong><br>当前有两种可用的复制策略：<br>Ø  SimpleStrategy：仅用于单数据中心，将第一个replica放在由partitioner确定的节点中，其余的replicas放在上述节点顺时针方向的后续节点中。<br>Ø  NetworkTopologyStrategy：可用于较复杂的多数据中心。可以指定在每个数据中心分别存储多少份replicas。  </p>
-<p>复制策略在创建keyspace时指定，如<br><code>CREATEKEYSPACE Excelsior WITH REPLICATION = { &#39;class&#39; : &#39;SimpleStrategy&#39;,&#39;replication_factor&#39; : 3 };</code><br><code>CREATEKEYSPACE Excalibur WITH REPLICATION = {&#39;class&#39; :&#39;NetworkTopologyStrategy&#39;, &#39;dc1&#39; : 3, &#39;dc2&#39; : 2};</code><br>其中dc1、dc2这些数据中心名称要与snitch中配置的名称一致.上面的拓扑策略表示在dc1配置3个副本,在dc2配置2个副本</p>
-<p><strong>Partitioners</strong><br>在Cassandra中，table的每行由唯一的primarykey标识，<code>partitioner</code>实际上为<code>一hash函数</code>用以<code>计算primary key的token</code>。Cassandra依据这个token值在集群中放置对应的行<br>注意：若使用虚拟节点(vnodes)则无需手工计算tokens。若不使用虚拟节点则必须手工计算tokens将所得的值指派给cassandra.ymal主配置文件中的initial_token参数  </p>
-<blockquote>
-<p>token和hash值的含义到底有什么区别? </p>
-</blockquote>
-<h3 id="客户端请求">客户端请求</h3><p>client连接至节点并发出read/write请求时，该节点充当client端应用与包含请求数据的节点(或replica)之间的协调者，<br>它利用配置的partitioner和replicaplacement策略确定那个节点当获取请求。</p>
-<p><strong>写请求</strong>  </p>
-<p><img src="http://img.blog.csdn.net/20150830123130980" alt="c_write_access">  </p>
-<ul>
-<li>协调者(coordinator)将write请求发送到拥有对应row的所有replica节点，只要节点可用便获取并执行写请求。  </li>
-<li>写一致性级别(write consistency level)确定要有多少个replica节点必须返回成功的确认信息。成功意味着数据被正确写入了commit log和memtable。  </li>
-<li>上例为单数据中心，11个节点(不是有12个吗?)，复制因子为3，写一致性等级为ONE的写情况(红色的箭头表示只要一个节点成功写入,便可立即返回给客户端)  </li>
-</ul>
-<blockquote>
-<p>客户端连接的那个节点是怎么指定的? 是addContactPoint指定的节点吗? 但是ContactPoint一般设置为种子节点中的一个.  </p>
-</blockquote>
-<p><strong>读请求</strong><br>Ø  直接读请求<br>Ø  后台读修复请求(read repair)  </p>
-<p><img src="http://img.blog.csdn.net/20150830123308292" alt="c_read-path">  </p>
-<p>与直接读请求[1]联系的replica数目由一致性级别确定。后台读修复请求[2]被发送到没有收到直接读请求的额外的replica，以确保请求的row在所有replica上一致。  </p>
-<ul>
-<li>协调者首先与一致性级别确定的所有replica联系，被联系的节点返回请求的数据，  </li>
-<li>若多个节点被联系，则来自各replica的row会在内存中作比较，若不一致，则协调者使用含最新数据的replica向client返回结果。  </li>
-<li>同时，协调者在后台联系和比较来自其余拥有对应row的replica的数据，若不一致，会向过时的replica发写请求用最新的数据进行更新。这一过程叫read repair。  </li>
-<li>上例为单数据中心，11个节点，复制因子为3，一致性级别为QUORUM的读情况  </li>
-</ul>
-<h3 id="读写流程">读写流程</h3><p><img src="http://img.blog.csdn.net/20150830130032129" alt="c_write">  </p>
-<blockquote>
-<p>图解: 上图表示写请求分别到MemTable和CommitLog, 并且MemTable的数据会刷写到磁盘上. 除了写数据,还有索引也会保存到磁盘上.<br>写流程: 先将数据写进内存中的数据结构memtable，同时追加到磁盘中的commitlog中。表使用的越多，对应的memtable应越大，cassandra动态的为memtable分配内存，也可自己手工指定。memtable内容超出指定容量后memtable数据（包括索引）被放进将被刷入磁盘的队列，可通过memtable_flush_queue_size配置队列长度。若将被刷入磁盘的数据超出了队列长度，cassandra会锁定写。memtable表中的数据由连续的I/O刷进磁盘中的SSTable，之后commit log被清空。每个表有独立的memtable和SSTable</p>
-</blockquote>
-<p><img src="http://img.blog.csdn.net/20150830142808484" alt="c_read-flow">  </p>
-<p>读流程: 首先检查Bloom filter，每个SSTable都有一个Bloomfilter，用以在进行任何磁盘I/O前检查请求的partition key对应的数据在SSTable中存在的可能性。<br>若数据很可能存在，则检查Partition key cache(Cassandra表partition index的缓存)，之后根据index条目是否在cache中找到而执行不同步骤：  </p>
-<p>Ø  找到  </p>
-<ul>
-<li>从compression offset map中查找拥有对应数据的压缩快。  </li>
-<li>从磁盘取出压缩的数据，返回结果集。  </li>
-</ul>
-<p>Ø  未找到 </p>
-<ul>
-<li>搜索Partition summary（partition index的样本集）确定index条目在磁盘中的近似位置。  </li>
-<li>从磁盘中SSTable内取出index条目。  </li>
-<li>从compression offset map中查找拥有对应数据的压缩快。  </li>
-<li>从磁盘取出压缩的数据，返回结果集。  </li>
-</ul>
-<p>读写过程的示例:   </p>
-<p><img src="http://img.blog.csdn.net/20150830143325616" alt="c_write-ex">  </p>
-<blockquote>
-<p>第一个SSTable文件是insert, 第二个SSTable是update的数据.  </p>
-</blockquote>
-<p><img src="http://img.blog.csdn.net/20150830142830995" alt="c_read-ex">  </p>
-<p>由insert/update过程可知，read请求到达某一节点后，必须结合所有包含请求的row中的column的SSTable以及memtable来产生请求的数据  </p>
-<p><img src="http://img.blog.csdn.net/20150830142843701" alt="c_read-ex2">  </p>
-<p>例如，要更新包含用户数据的某个row中的email 列，cassandra并不重写整个row到新的数据文件，<br>而仅仅将新的email写进新的数据文件，username等仍处于旧的数据文件中。<br>上图中红线表示Cassandra需要整合的row的片段用以产生用户请求的结果。<br>为节省CPU和磁盘I/O，Cassandra会缓存合并后的结果，且可直接在该cache中更新row而不用重新合并</p>
-<h2 id="参考文档">参考文档</h2><p>一致性哈希算法及其在分布式系统中的应用: <a href="http://blog.codinglabs.org/articles/consistent-hashing.html" target="_blank" rel="external">http://blog.codinglabs.org/articles/consistent-hashing.html</a><br>Riak Clusters: <a href="http://docs.basho.com/riak/latest/theory/concepts/Clusters/" target="_blank" rel="external">http://docs.basho.com/riak/latest/theory/concepts/Clusters/</a>  </p>
-<p>Cassandra研究报告: <a href="http://blog.csdn.net/zyz511919766/article/details/38683219" target="_blank" rel="external">http://blog.csdn.net/zyz511919766/article/details/38683219</a><br>Cassandra 分布式数据库详解，第 1 部分：配置、启动与集群 <a href="https://www.ibm.com/developerworks/cn/opensource/os-cn-cassandraxu1/" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/opensource/os-cn-cassandraxu1/</a><br>Cassandra 分布式数据库详解，第 2 部分：数据结构与数据读写 <a href="https://www.ibm.com/developerworks/cn/opensource/os-cn-cassandraxu2/" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/opensource/os-cn-cassandraxu2/</a>  </p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
-	</div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-12-12-Apache-Geode" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/12/12/2015-12-12-Apache-Geode/" class="article-date">
-  	<time datetime="2015-12-11T16:00:00.000Z" itemprop="datePublished">2015-12-12</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/12/2015-12-12-Apache-Geode/">Apache GEODE 一致性数据库</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Apache Geode provides a database-like consistency model, reliable transaction processing and a shared-nothing architecture to maintain very low latency performance with high concurrency processing. <a href="http://geode.incubator.apache.org/">http://geode.incubator.apache.org/</a></p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/geode/">geode</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/12/12/2015-12-12-Apache-Geode/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-12-11-Apache-Ignite" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/12/11/2015-12-11-Apache-Ignite/" class="article-date">
-  	<time datetime="2015-12-10T16:00:00.000Z" itemprop="datePublished">2015-12-11</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/11/2015-12-11-Apache-Ignite/">Apache Ignite 内存网格数据库</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Apache Ignite In-Memory Data Fabric is a high-performance, integrated and distributed in-memory platform for computing and transacting on large-scale data sets in real-time, orders of magnitude faster than possible with traditional disk-based or flash technologies. <a href="http://ignite.apache.org/">http://ignite.apache.org/</a></p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ignite/">ignite</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/12/11/2015-12-11-Apache-Ignite/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-12-09-Apache-Apex" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/12/09/2015-12-09-Apache-Apex/" class="article-date">
-  	<time datetime="2015-12-08T16:00:00.000Z" itemprop="datePublished">2015-12-09</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/09/2015-12-09-Apache-Apex/">Apache Apex 流处理和批处理统一框架</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Apache Apex: Industry’s only open source, enterprise-grade unified stream and batch processing engine. <a href="http://apex.incubator.apache.org/">http://apex.incubator.apache.org/</a></p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apex/">apex</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/12/09/2015-12-09-Apache-Apex/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-12-08-Druid-source" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/12/08/2015-12-08-Druid-source/" class="article-date">
-  	<time datetime="2015-12-07T16:00:00.000Z" itemprop="datePublished">2015-12-08</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/08/2015-12-08-Druid-source/">Druid源码解析(1) Guice和Realtime流程</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Druid is a fast column-oriented distributed data store. <a href="http://druid.io/">http://druid.io/</a></p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/druid/">druid</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/12/08/2015-12-08-Druid-source/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-12-07-Druid-WhitePaper" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/12/07/2015-12-07-Druid-WhitePaper/" class="article-date">
-  	<time datetime="2015-12-06T16:00:00.000Z" itemprop="datePublished">2015-12-07</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/07/2015-12-07-Druid-WhitePaper/">Druid White Paper(大数据实时统计分析数据存储)</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Druid is a fast column-oriented distributed data store. <a href="http://druid.io/">http://druid.io/</a></p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/druid/">druid</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/12/07/2015-12-07-Druid-WhitePaper/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-12-03-Druid-Design" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/12/03/2015-12-03-Druid-Design/" class="article-date">
-  	<time datetime="2015-12-02T16:00:00.000Z" itemprop="datePublished">2015-12-03</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/03/2015-12-03-Druid-Design/">Druid OLAP架构设计</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Druid is a fast column-oriented distributed data store. <a href="http://druid.io/">http://druid.io/</a></p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/druid/">druid</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/12/03/2015-12-03-Druid-Design/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-12-02-Hello-Druid" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/12/02/2015-12-02-Hello-Druid/" class="article-date">
-  	<time datetime="2015-12-01T16:00:00.000Z" itemprop="datePublished">2015-12-02</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/02/2015-12-02-Hello-Druid/">Druid 分布式OLAP入门</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Druid is a fast column-oriented distributed data store. <a href="http://druid.io/">http://druid.io/</a></p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/druid/">druid</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/12/02/2015-12-02-Hello-Druid/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-11-29-StreamCQL-application" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/29/2015-11-29-StreamCQL-application/" class="article-date">
-  	<time datetime="2015-11-28T16:00:00.000Z" itemprop="datePublished">2015-11-29</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/29/2015-11-29-StreamCQL-application/">StreamCQL源码阅读(4) 应用程序执行</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>StreamCQL应用程序执行流程</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/storm/">storm</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/11/29/2015-11-29-StreamCQL-application/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-11-27-StreamCQL-operator" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/27/2015-11-27-StreamCQL-operator/" class="article-date">
-  	<time datetime="2015-11-26T16:00:00.000Z" itemprop="datePublished">2015-11-27</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/27/2015-11-27-StreamCQL-operator/">StreamCQL源码阅读(3) 拆分组合算子</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>StreamCQL的算子组成了Application</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/storm/">storm</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/11/27/2015-11-27-StreamCQL-operator/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-11-26-StreamCQL-schema" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/26/2015-11-26-StreamCQL-schema/" class="article-date">
-  	<time datetime="2015-11-25T16:00:00.000Z" itemprop="datePublished">2015-11-26</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/26/2015-11-26-StreamCQL-schema/">StreamCQL源码阅读(2) 语法和语义解析</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>StreamCQL的Schema以及语法和语义解析</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/storm/">storm</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/11/26/2015-11-26-StreamCQL-schema/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-11-24-StreamCQL-task" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/24/2015-11-24-StreamCQL-task/" class="article-date">
-  	<time datetime="2015-11-23T16:00:00.000Z" itemprop="datePublished">2015-11-24</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/24/2015-11-24-StreamCQL-task/">StreamCQL源码阅读(1) 提交任务</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>大数据上的流式SQL引擎—StreamCQL: <a href="http://www.csdn.net/article/2015-11-13/2826204">http://www.csdn.net/article/2015-11-13/2826204</a></p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/storm/">storm</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/11/24/2015-11-24-StreamCQL-task/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-11-20-Cassandra-Stream" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/20/2015-11-20-Cassandra-Stream/" class="article-date">
-  	<time datetime="2015-11-19T16:00:00.000Z" itemprop="datePublished">2015-11-20</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/20/2015-11-20-Cassandra-Stream/">Cassandra源码分析之Stream</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>大数据源码阅读系列之ApacheCassandra: sstable的stream流程</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/11/20/2015-11-20-Cassandra-Stream/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-11-10-Cassandra-Client" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/10/2015-11-10-Cassandra-Client/" class="article-date">
-  	<time datetime="2015-11-09T16:00:00.000Z" itemprop="datePublished">2015-11-10</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/10/2015-11-10-Cassandra-Client/">Cassandra Client查询优化</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>大数据源码阅读系列之ApacheCassandra: Cassandra客户端的查询优化</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/11/10/2015-11-10-Cassandra-Client/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-  
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
-    </nav>
-  
 </div>
       <footer id="footer">
   <div class="outer">
@@ -1711,20 +541,6 @@
 </footer>
     </div>
     
-	<script>
-		var yiliaConfig = {
-			fancybox: false,
-			mathjax: true,
-			animate: true,
-			isHome: true,
-			isPost: false,
-			isArchive: false,
-			isTag: false,
-			isCategory: false,
-			open_in_new: false
-		}
-	</script>
-
 
 <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
 <script src="/js/main.js" type="text/javascript"></script>
