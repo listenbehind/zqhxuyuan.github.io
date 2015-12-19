@@ -3,21 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>zqhxuyuan</title>
+  <title>Cassandra日常运维 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Cassandra日常运维线上应急[日志]超过10s的GC:  
-123456789cat /var/log/cassandra/system.log | grep &apos;2015-11-11&apos; | grep &apos;GC for .*: [0-9][0-9][0-9][0-9][0-9]&apos;./pssh.sh ip_all.txt &quot;cat /var/log/cassandra/system.log | g">
+  <meta name="description" content="Cassandra日常运维, OpsCenter">
 <meta property="og:type" content="article">
-<meta property="og:title" content="zqhxuyuan">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2015/12/19/2015-10-15-Cassandra-Daily/index.html">
+<meta property="og:title" content="Cassandra日常运维">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2015/10/15/2015-10-15-Cassandra-Daily/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="Cassandra日常运维线上应急[日志]超过10s的GC:  
-123456789cat /var/log/cassandra/system.log | grep &apos;2015-11-11&apos; | grep &apos;GC for .*: [0-9][0-9][0-9][0-9][0-9]&apos;./pssh.sh ip_all.txt &quot;cat /var/log/cassandra/system.log | g">
-<meta property="og:updated_time" content="2015-12-19T06:29:59.000Z">
+<meta property="og:description" content="Cassandra日常运维, OpsCenter">
+<meta property="og:updated_time" content="2015-12-19T09:06:27.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="zqhxuyuan">
-<meta name="twitter:description" content="Cassandra日常运维线上应急[日志]超过10s的GC:  
-123456789cat /var/log/cassandra/system.log | grep &apos;2015-11-11&apos; | grep &apos;GC for .*: [0-9][0-9][0-9][0-9][0-9]&apos;./pssh.sh ip_all.txt &quot;cat /var/log/cassandra/system.log | g">
+<meta name="twitter:title" content="Cassandra日常运维">
+<meta name="twitter:description" content="Cassandra日常运维, OpsCenter">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -176,8 +173,8 @@
       <div class="body-wrap"><article id="post-2015-10-15-Cassandra-Daily" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/12/19/2015-10-15-Cassandra-Daily/" class="article-date">
-  	<time datetime="2015-12-19T06:29:59.000Z" itemprop="datePublished">2015-12-19</time>
+      <a href="/2015/10/15/2015-10-15-Cassandra-Daily/" class="article-date">
+  	<time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished">2015-10-15</time>
 </a>
     </div>
   
@@ -186,10 +183,37 @@
       <input type="hidden" class="isFancy" />
     
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Cassandra日常运维
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
     <div class="article-entry" itemprop="articleBody">
       
         
-        <a id="more"></a>
+        <p>Cassandra日常运维, OpsCenter</p>
+<a id="more"></a>
 <h2 id="Cassandra日常运维">Cassandra日常运维</h2><h3 id="线上应急">线上应急</h3><p><strong>[日志]超过10s的GC:</strong>  </p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cat /var/log/cassandra/system.log | grep '2015-11-11' | grep 'GC for .*: [<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>]'</span><br><span class="line"></span><br><span class="line">./pssh.sh ip_all.txt "cat /var/log/cassandra/system.log | grep '2015-11-25' | grep 'GC for .*: [<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>]'"</span><br><span class="line"></span><br><span class="line">./pssh.sh ip_forseti.txt "cat /var/log/cassandra/system.log | grep '2015-12-14' | grep 'GC for .*: [<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>]'"</span><br><span class="line"></span><br><span class="line">cat /var/log/cassandra/system.log | grep 'GC for ConcurrentMarkSweep' | grep '2015-11-03'</span><br><span class="line"></span><br><span class="line">tail -f /var/log/cassandra/system.log | grep '2015-11-05' | grep 'GC'</span><br></pre></td></tr></table></figure>
 <p><strong>[JVM]查看GC:</strong>  </p>
@@ -300,13 +324,13 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2015/12/19/2015-10-15-Cassandra-Daily/"></a></p>
+  <p><span>本文标题:</span><a href="/2015/10/15/2015-10-15-Cassandra-Daily/">Cassandra日常运维</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
-  <p><span>发布时间:</span>2015年12月19日 - 14时29分</p>
-  <p><span>最后更新:</span>2015年12月19日 - 14时29分</p>
+  <p><span>发布时间:</span>2015年10月15日 - 00时00分</p>
+  <p><span>最后更新:</span>2015年12月19日 - 17时06分</p>
   <p>
-    <span>原始链接:</span><a href="/2015/12/19/2015-10-15-Cassandra-Daily/" title="">http://github.com/zqhxuyuan/2015/12/19/2015-10-15-Cassandra-Daily/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/19/2015-10-15-Cassandra-Daily/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2015/10/15/2015-10-15-Cassandra-Daily/" title="Cassandra日常运维">http://github.com/zqhxuyuan/2015/10/15/2015-10-15-Cassandra-Daily/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/10/15/2015-10-15-Cassandra-Daily/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -331,10 +355,16 @@
 
 <nav id="article-nav">
   
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2015/11/10/2015-11-10-Cassandra-Client/">
+        Cassandra Client查询优化
+      </a>
+    </div>
+  
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/12/18/2015-12-18-Spark-HBase-RDD/">
-        HBase-RDD
+      <a href="/2015/09/10/2015-09-10-Storm-Window/">
+        Storm的滑动窗口
       </a>
     </div>
   
@@ -416,14 +446,16 @@
 
   
   
+    
     <div  class="post-nav-button">
-    <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
-    <a href="/2015/12/18/2015-12-18-Spark-HBase-RDD/" title="下一篇: HBase-RDD">
+    <a href="/2015/11/10/2015-11-10-Cassandra-Client/" title="上一篇: Cassandra Client查询优化">
+    <i class="fa fa-angle-left"></i>
+    </a>
+    <a href="/2015/09/10/2015-09-10-Storm-Window/" title="下一篇: Storm的滑动窗口">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
   
-    
 
 
 

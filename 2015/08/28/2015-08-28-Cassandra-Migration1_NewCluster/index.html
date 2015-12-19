@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/08/28/2015-08-28-Cassandra-Migration1_NewCluster/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="采用sstableloader迁移keyspace到新的集群">
-<meta property="og:updated_time" content="2015-12-19T06:35:39.000Z">
+<meta property="og:updated_time" content="2015-12-19T08:31:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cassandra数据迁移1 新集群sstableloader">
 <meta name="twitter:description" content="采用sstableloader迁移keyspace到新的集群">
@@ -220,7 +220,7 @@
 <p>Bulk load the sstables found in the directory <dir_path> to the configured cluster.<br>The parent directories of <dir_path> are used as the target keyspace/table name.<br>So for instance, to load an sstable named Standard1-g-1-Data.db into Keyspace1/Standard1,<br>you will need to have the files Standard1-g-1-Data.db and Standard1-g-1-Index.db<br>into a directory /path/to/Keyspace1/Standard1/. </dir_path></dir_path></p>
 </blockquote>
 <h3 id="使用sstableloader在线上环境直接迁移数据">使用sstableloader在线上环境直接迁移数据</h3><p>先迁移一张小表试试: <code>-d</code>指定目标集群的一个节点, <code>-t</code>表示限制流量, 最后跟上本地的sstable文件,路径名称必须是以<code>keyspace/table</code>结尾.  </p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/usr/install/cassandra/bin/sstableloader -d <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> -t <span class="number">100</span> /home/admin/cassandra/data/forseti_fp/analysis</span><br><span class="line">Established connection to initial hosts</span><br><span class="line">Opening sstables and calculating sections to stream</span><br><span class="line">Streaming relevant part of /home/admin/cassandra/data/forseti_fp/analysis/forseti_fp-analysis-jb-<span class="number">681</span>-Data.db ... /home/admin/cassandra/data/forseti_fp/analysis/forseti_fp-analysis-jb-<span class="number">679</span>-Data.db to [/<span class="number">192.168</span><span class="number">.47</span><span class="number">.228</span>, /<span class="number">192.168</span><span class="number">.47</span><span class="number">.229</span>, /<span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span>]</span><br><span class="line">progress: [/<span class="number">192.168</span><span class="number">.47</span><span class="number">.228</span> <span class="number">1</span>/<span class="number">13</span> (<span class="number">11</span>%)] [/<span class="number">192.168</span><span class="number">.47</span><span class="number">.229</span> <span class="number">1</span>/<span class="number">13</span> (<span class="number">16</span>%)] [/<span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> <span class="number">1</span>/<span class="number">13</span> (<span class="number">12</span>%)] [total: <span class="number">13</span>% - <span class="number">13</span>MB/s (avg: <span class="number">11</span>MB/s)]</span><br><span class="line"></span><br><span class="line">cqlsh:forseti_fp&gt; select * from analysis  limit <span class="number">1</span>;</span><br><span class="line"> token_id                                        | id                                   | app_name | gmt_create               | message            | partner_code</span><br><span class="line">-------------------------------------------------+--------------------------------------+----------+--------------------------+--------------------+--------------</span><br><span class="line"> EL150f582bf71f49d8075a0fe67209ce19b426137199dc7 | <span class="number">5f</span>3062d0-<span class="number">5</span>bf1-<span class="number">11e4</span>-<span class="number">98</span>a0-f1676ab45597 |    eleme | <span class="number">2014</span>-<span class="number">10</span>-<span class="number">25</span> <span class="number">10</span>:<span class="number">48</span>:<span class="number">17</span>+<span class="number">0800</span> | ImageWithoutCookie |        eleme</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/usr/install/cassandra/bin/sstableloader -d <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> -t <span class="number">100</span> /home/admin/cassandra/data/forseti_fp/analysis</span><br><span class="line">Established connection to initial hosts</span><br><span class="line">Opening sstables and calculating sections to stream</span><br><span class="line">Streaming relevant part of /home/admin/cassandra/data/forseti_fp/analysis/forseti_fp-analysis-jb-<span class="number">681</span>-Data.db ... /home/admin/cassandra/data/forseti_fp/analysis/forseti_fp-analysis-jb-<span class="number">679</span>-Data.db to [/<span class="number">192.168</span><span class="number">.47</span><span class="number">.228</span>, /<span class="number">192.168</span><span class="number">.47</span><span class="number">.229</span>, /<span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span>]</span><br><span class="line">progress: [/<span class="number">192.168</span><span class="number">.47</span><span class="number">.228</span> <span class="number">1</span>/<span class="number">13</span> (<span class="number">11</span>%)] [/<span class="number">192.168</span><span class="number">.47</span><span class="number">.229</span> <span class="number">1</span>/<span class="number">13</span> (<span class="number">16</span>%)] [/<span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> <span class="number">1</span>/<span class="number">13</span> (<span class="number">12</span>%)] [total: <span class="number">13</span>% - <span class="number">13</span>MB/s (avg: <span class="number">11</span>MB/s)]</span><br><span class="line"></span><br><span class="line">cqlsh:forseti_fp&gt; select * from analysis  limit <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
 <p>上面的命令只是在一台节点上导入数据, 可以使用pssh在多个节点上同时导入数据到新集群:   </p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./pssh.sh sstableloader -d <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> -t <span class="number">100</span> /home/admin/cassandra/data/forseti_fp/device</span><br></pre></td></tr></table></figure>
 <p><strong>A.流式传输日志</strong>  </p>
@@ -281,7 +281,7 @@
   <p><span>本文标题:</span><a href="/2015/08/28/2015-08-28-Cassandra-Migration1_NewCluster/">Cassandra数据迁移1 新集群sstableloader</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年08月28日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月19日 - 14时35分</p>
+  <p><span>最后更新:</span>2015年12月19日 - 16时31分</p>
   <p>
     <span>原始链接:</span><a href="/2015/08/28/2015-08-28-Cassandra-Migration1_NewCluster/" title="Cassandra数据迁移1 新集群sstableloader">http://github.com/zqhxuyuan/2015/08/28/2015-08-28-Cassandra-Migration1_NewCluster/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/08/28/2015-08-28-Cassandra-Migration1_NewCluster/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -310,15 +310,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2015/08/28/2015-08-28-Cassandra-Migration2_DC2/">
-        Cassandra数据迁移2 多数据中心数据迁移
+      <a href="/2015/08/28/2015-08-28-Cassandra-Migration5_SplitTable/">
+        Cassandra数据迁移 分离表
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/08/28/2015-08-28-Cassandra-Migration3_TestSandbox/">
-        Cassandra数据迁移3 多数据中心数据迁移
+      <a href="/2015/08/25/2015-08-25-Cassandra-Architecture/">
+        Apache Cassandra架构理解
       </a>
     </div>
   
@@ -402,10 +402,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2015/08/28/2015-08-28-Cassandra-Migration2_DC2/" title="上一篇: Cassandra数据迁移2 多数据中心数据迁移">
+    <a href="/2015/08/28/2015-08-28-Cassandra-Migration5_SplitTable/" title="上一篇: Cassandra数据迁移 分离表">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/08/28/2015-08-28-Cassandra-Migration3_TestSandbox/" title="下一篇: Cassandra数据迁移3 多数据中心数据迁移">
+    <a href="/2015/08/25/2015-08-25-Cassandra-Architecture/" title="下一篇: Apache Cassandra架构理解">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
