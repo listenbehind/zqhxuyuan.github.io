@@ -109,7 +109,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 15px;">cassandra</a> <a href="/tags/drill/" style="font-size: 20px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 12.5px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18px;">drill</a> <a href="/tags/druid/" style="font-size: 14px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 14px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/storm/" style="font-size: 16px;">storm</a> <a href="/tags/work/" style="font-size: 12px;">work</a>
 					</div>
 				</section>
 				
@@ -170,6 +170,585 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-2015-10-15-Cassandra-Daily" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/19/2015-10-15-Cassandra-Daily/" class="article-date">
+  	<time datetime="2015-12-19T06:29:59.000Z" itemprop="datePublished">2015-12-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <a id="more"></a>
+<h2 id="Cassandra日常运维">Cassandra日常运维</h2><h3 id="线上应急">线上应急</h3><p><strong>[日志]超过10s的GC:</strong>  </p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cat /var/log/cassandra/system.log | grep '2015-11-11' | grep 'GC for .*: [<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>]'</span><br><span class="line"></span><br><span class="line">./pssh.sh ip_all.txt "cat /var/log/cassandra/system.log | grep '2015-11-25' | grep 'GC for .*: [<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>]'"</span><br><span class="line"></span><br><span class="line">./pssh.sh ip_forseti.txt "cat /var/log/cassandra/system.log | grep '2015-12-14' | grep 'GC for .*: [<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>]'"</span><br><span class="line"></span><br><span class="line">cat /var/log/cassandra/system.log | grep 'GC for ConcurrentMarkSweep' | grep '2015-11-03'</span><br><span class="line"></span><br><span class="line">tail -f /var/log/cassandra/system.log | grep '2015-11-05' | grep 'GC'</span><br></pre></td></tr></table></figure>
+<p><strong>[JVM]查看GC:</strong>  </p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sudo -<span class="keyword">u</span> admin jstat -gc -<span class="keyword">h</span> 10 `sudo -<span class="keyword">u</span> admin jps | grep CassandraDaemon |awk '&#123;<span class="keyword">print</span> <span class="label">$1&#125;</span>'` 1000 | \</span><br><span class="line">awk '&#123;printf(<span class="string">"%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t\n"</span>,<span class="label">$1</span>,<span class="label">$5</span>,<span class="label">$3</span>,<span class="label">$4</span>,<span class="label">$6</span>,<span class="label">$8</span>,<span class="label">$11</span>,<span class="label">$12</span>,<span class="label">$13</span>,<span class="label">$14</span>)&#125;'</span><br><span class="line"></span><br><span class="line">sudo -<span class="keyword">u</span> admin jstat -gcutil `sudo -<span class="keyword">u</span> admin jps | grep CassandraDaemon |awk '&#123;<span class="keyword">print</span> <span class="label">$1&#125;</span>'` 1000 </span><br><span class="line"></span><br><span class="line">sudo -<span class="keyword">u</span> admin jstat -gc -<span class="keyword">h</span> 10 `sudo -<span class="keyword">u</span> admin jps | grep CassandraDaemon |awk '&#123;<span class="keyword">print</span> <span class="label">$1&#125;</span>'` 500 | \</span><br><span class="line">awk '&#123;printf(<span class="string">"%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t\n"</span>,<span class="label">$1</span>,<span class="label">$3</span>,<span class="label">$4</span>,<span class="label">$5</span>,<span class="label">$6</span>,<span class="label">$7</span>,<span class="label">$8</span>,<span class="label">$11</span>,<span class="label">$12</span>,<span class="label">$13</span>,<span class="label">$14</span>)&#125;'</span><br><span class="line"></span><br><span class="line">sudo -<span class="keyword">u</span> admin jmap -dump:<span class="keyword">format</span>=b,<span class="keyword">file</span>=/home/qihuang.zheng/1031.dat `sudo -<span class="keyword">u</span> admin jps | grep CassandraDaemon |awk '&#123;<span class="keyword">print</span> <span class="label">$1&#125;</span>'`</span><br><span class="line"></span><br><span class="line">       S0C         S0U         S1U          EC          EU          OC          <span class="keyword">OU</span>         YGC        YGCT         FGC        FGCT</span><br><span class="line">  419392.0    419392.0    419392.0   3355520.0   3355520.0  12582912.0  11641724.1      995186   39005.793        1951     810.868</span><br></pre></td></tr></table></figure>
+<p><strong>[进程]重启Cassandra进程:</strong>  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="operator"><span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/nodetool <span class="keyword">flush</span> &amp;&amp; </span><br><span class="line">sudo -u <span class="keyword">admin</span> <span class="keyword">kill</span> -<span class="number">9</span> <span class="string">`sudo -u admin jps | grep CassandraDaemon |awk '&#123;print $1&#125;'`</span></span><br><span class="line">ps -ef|grep cassandra</span><br><span class="line">sudo -u <span class="keyword">admin</span> /usr/<span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/cassandra</span><br><span class="line">/usr/<span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/nodetool setstreamthroughput <span class="comment">-- 4</span></span></span><br></pre></td></tr></table></figure>
+<p><strong>[日志]查询tombstone:</strong>  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./pssh<span class="class">.sh</span> ip_forseti<span class="class">.txt</span> <span class="string">"cat /var/log/cassandra/system.log | grep '2015-11-05' | grep 'tombstone'"</span></span><br><span class="line">./pssh<span class="class">.sh</span> ip_forseti<span class="class">.txt</span> <span class="string">"cat /var/log/cassandra/system.log | grep '2015-11-05' | grep 'messages dropped in last 5000ms'"</span></span><br></pre></td></tr></table></figure>
+<p><strong>[网络]查看网卡流量和限制Streams流量:</strong>  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">./pssh<span class="class">.sh</span> ip_all<span class="class">.txt</span> <span class="string">'/usr/install/cassandra/bin/nodetool getstreamthroughput'</span></span><br><span class="line"></span><br><span class="line">sudo iftop  </span><br><span class="line">./pssh<span class="class">.sh</span> ip_all<span class="class">.txt</span> <span class="string">'/usr/install/cassandra/bin/nodetool setstreamthroughput -- 10'</span></span><br></pre></td></tr></table></figure>
+<p><strong>[进程]查看最耗费CPU的线程:</strong>  </p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">top -Hp `sudo -<span class="keyword">u</span> admin jps | grep CassandraDaemon |awk '&#123;<span class="keyword">print</span> <span class="label">$1&#125;</span>'` | head -8 | tail -1 | awk '&#123;<span class="keyword">print</span> <span class="label">$1&#125;</span>'</span><br><span class="line">printf '%x\<span class="keyword">n</span>' </span><br><span class="line">sudo -<span class="keyword">u</span> admin jstack `sudo -<span class="keyword">u</span> admin jps | grep CassandraDaemon |awk '&#123;<span class="keyword">print</span> <span class="label">$1&#125;</span>'` | grep</span><br></pre></td></tr></table></figure>
+<p><strong>[统计]查看表的读写延迟:</strong>  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">./pssh<span class="class">.sh</span> ip_forseti<span class="class">.txt</span> <span class="string">'/usr/install/cassandra/bin/nodetool cfstats forseti.velocity | head -3'</span></span><br><span class="line"></span><br><span class="line">./pssh<span class="class">.sh</span> ip_fp<span class="class">.txt</span> <span class="string">'/usr/install/cassandra/bin/nodetool cfstats forseti_fp.android_device_session_temp | head -3'</span></span><br><span class="line">./pssh<span class="class">.sh</span> ip_fp<span class="class">.txt</span> <span class="string">'/usr/install/cassandra/bin/nodetool cfstats forseti_fp.ios_device_session | head -3'</span></span><br></pre></td></tr></table></figure>
+<p><strong>[统计]KeyCache命中率:</strong>  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./pssh<span class="class">.sh</span> ip_all<span class="class">.txt</span> <span class="string">'/usr/install/cassandra/bin/nodetool info | tail -2 | head -1'</span></span><br></pre></td></tr></table></figure>
+<p><strong>[应用]CQL查询示例:</strong>  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> velocity <span class="keyword">where</span> <span class="keyword">attribute</span>=<span class="string">'747361045'</span> <span class="keyword">and</span> partner_code=<span class="string">'koudai'</span> <span class="keyword">and</span> app_name=<span class="string">'weidian_cross'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'accountLogin'</span> </span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> partner_code <span class="keyword">desc</span>, app_name <span class="keyword">desc</span>, <span class="keyword">type</span> <span class="keyword">desc</span>, <span class="keyword">timestamp</span> <span class="keyword">desc</span> <span class="keyword">limit</span> <span class="number">1000</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> velocity <span class="keyword">where</span> <span class="keyword">attribute</span>=<span class="string">'705859'</span> <span class="keyword">and</span> partner_code=<span class="string">'fyzhibo'</span> <span class="keyword">and</span> app_name=<span class="string">'fyzhibo_web'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'accountLogin'</span> </span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> partner_code <span class="keyword">desc</span>, app_name <span class="keyword">desc</span>, <span class="keyword">type</span> <span class="keyword">desc</span>, <span class="keyword">timestamp</span> <span class="keyword">desc</span> <span class="keyword">limit</span> <span class="number">1000</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> velocity <span class="keyword">where</span> <span class="keyword">attribute</span>=<span class="string">'7f85ce9c58f3e91661a01494420efa68'</span> <span class="keyword">and</span> partner_code=<span class="string">'19e'</span> <span class="keyword">and</span> app_name=<span class="string">'19e_web'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'deviceId'</span> </span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> partner_code <span class="keyword">desc</span>, app_name <span class="keyword">desc</span>, <span class="keyword">type</span> <span class="keyword">desc</span>, <span class="keyword">timestamp</span> <span class="keyword">desc</span> <span class="keyword">limit</span> <span class="number">1000</span>;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/usr/<span class="operator"><span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/cqlsh -<span class="keyword">e</span> <span class="string">"desc table forseti_fp.android_device_session_temp;"</span> <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span></span></span><br></pre></td></tr></table></figure>
+<p><strong>清空表数据:</strong>  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/usr/install/cassandra/bin/cqlsh -e <span class="string">"truncate forseti_fp.android_device_session_temp;"</span> <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span></span><br><span class="line">/usr/install/cassandra/bin/nodetool clearsnapshot -h  <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> forseti_fp</span><br><span class="line">/usr/install/cassandra/bin/nodetool clearsnapshot -h  <span class="number">192.168</span><span class="number">.47</span><span class="number">.228</span> forseti_fp</span><br></pre></td></tr></table></figure>
+<h3 id="机器预估">机器预估</h3><p>1.每天的调用量有5000万, 预估需要多少容量  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Cassandra配置: SSD, <span class="number">8</span>CPU, <span class="number">32</span>G内存, <span class="number">3.5</span>T</span><br><span class="line">一个节点, <span class="number">2.5</span>亿keys, ttl=<span class="number">3</span>M, 占用<span class="number">500</span>G.  </span><br><span class="line">ttl=<span class="number">1</span>Y, 需要<span class="number">2</span>T. <span class="number">182</span>亿条keys, 需要<span class="number">145.6</span>T</span><br><span class="line">一条activity会有大概十几条velocity. <span class="number">182</span>亿的activity,对应velocity需要<span class="number">1456</span>T. </span><br><span class="line"></span><br><span class="line"><span class="number">10</span>Nodes, <span class="number">3</span>M <span class="number">25</span>亿velocity <span class="number">2.5</span>亿activity <span class="number">500</span>G*<span class="number">10</span>=<span class="number">5</span>T </span><br><span class="line">         <span class="number">6</span>M                            <span class="number">5</span>T*<span class="number">2</span>=<span class="number">10</span>T</span><br><span class="line">         <span class="number">182</span>亿activity, <span class="number">10</span>*(<span class="number">182</span>/<span class="number">2.5</span>)=<span class="number">3600</span>T=<span class="number">728</span>T</span><br></pre></td></tr></table></figure>
+<p>2.velocity新的三张表保存半年数据的容量</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">4</span>Nodes - <span class="number">1</span>Week - <span class="number">1</span>T</span><br><span class="line"><span class="number">4</span>Nodes - <span class="number">1</span>Month - <span class="number">4</span>T</span><br><span class="line"><span class="number">4</span>Nodes - <span class="number">6</span>Month - <span class="number">24</span>T</span><br><span class="line"><span class="number">8</span>Nodes - <span class="number">6</span>Month - <span class="number">12</span>T</span><br></pre></td></tr></table></figure>
+<h3 id="安装">安装</h3><p>1.统一使用admin用户安装启动软件, 方便管理和其他用户的使用:  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown admin:admin -R /usr/install/apache-cassandra-<span class="number">2.0</span><span class="number">.15</span></span><br></pre></td></tr></table></figure>
+<p>2.建立软链接,方便升级. 如果有升级, 只要替换软链接, 启动命令不需要改变:  </p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo -u admin ln -s <span class="regexp">/usr/i</span>nstall<span class="regexp">/apache-cassandra-2.0.15 /u</span>sr<span class="regexp">/install/</span>cassandra</span><br></pre></td></tr></table></figure>
+<p>3.关闭swap</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo swapoff -<span class="tag">a</span></span><br><span class="line">sudo vi /etc/fstab</span><br><span class="line"></span><br><span class="line">sed -<span class="tag">i</span> <span class="string">'s/^\(.*swap\)/#\1/'</span> /etc/fstab</span><br><span class="line">echo <span class="string">"vm.swappiness = 1"</span> &gt; /etc/sysctl.d/swappiness<span class="class">.conf</span></span><br><span class="line">sysctl -<span class="tag">p</span> /etc/sysctl.d/swappiness.conf</span><br></pre></td></tr></table></figure>
+<h3 id="文件">文件</h3><p>1.递归查看磁盘的容量或者Cassandra每个keyspace/table占用的大小(第三个按照大小排序取前10个):  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">du --max-depth=<span class="number">1</span> /home/admin/cassandra/data/forseti -h</span><br><span class="line">du /home/admin/cassandra/data/forseti/* -sh *</span><br><span class="line"><span class="built_in">cd</span> /home/admin/cassandra/data/forseti &amp;&amp; <span class="keyword">for</span> i <span class="keyword">in</span> $(ls <span class="operator">-l</span> |grep <span class="string">'^d'</span> |du <span class="operator">-s</span> * |sort -nr|awk <span class="string">'&#123;print $2&#125;'</span>);<span class="keyword">do</span> du -sh <span class="variable">$i</span>;<span class="keyword">done</span> | head -<span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /home/admin/cassandra/data/forseti_fp &amp;&amp; <span class="keyword">for</span> i <span class="keyword">in</span> $(ls <span class="operator">-l</span> |grep <span class="string">'^d'</span> |du <span class="operator">-s</span> * |sort -nr|awk <span class="string">'&#123;print $2&#125;'</span>);<span class="keyword">do</span> du -sh <span class="variable">$i</span>;<span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>2.找出修改时间在三个月前的文件(第二个命令会删除这些文件):  </p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find</span> <span class="regexp">/home/</span>admin<span class="regexp">/cassandra/</span>data<span class="regexp">/forseti/</span>activity_detail -type f -mtime +<span class="number">90</span> -exec ls -lrth &#123;&#125; \; | <span class="keyword">grep</span> Data</span><br><span class="line"><span class="keyword">find</span> <span class="regexp">/home/</span>admin<span class="regexp">/cassandra/</span>data<span class="regexp">/forseti/</span>activity_detail -type f -mtime +<span class="number">90</span> -exec rm &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+<p>3.查看是否有快照文件, 如果没有文件夹会报错<code>No such file or directory</code>:  </p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls <span class="regexp">/home/</span>admin<span class="regexp">/cassandra/</span>data<span class="regexp">/forseti/</span>velocity<span class="regexp">/snapshots</span></span><br></pre></td></tr></table></figure>
+<p>4.查看所有节点/home目录(数据目录)的磁盘剩余空间:  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pssh -A -h ip<span class="class">.txt</span> -<span class="tag">i</span> <span class="string">'df -h | grep /home'</span></span><br><span class="line">./pssh<span class="class">.sh</span> <span class="string">"df -h | grep /home"</span></span><br></pre></td></tr></table></figure>
+<p>5.重建数据目录:  </p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo -u admin rm -rf <span class="regexp">/home/</span>admin<span class="regexp">/cassandra &amp;&amp; sudo mkdir /</span>home<span class="regexp">/admin/</span>cassandra &amp;&amp; sudo chown <span class="string">admin:</span>admin -R <span class="regexp">/home/</span>admin<span class="regexp">/cassandra &amp;&amp; ll /</span>home<span class="regexp">/admin/</span>cassandra</span><br></pre></td></tr></table></figure>
+<h3 id="进程">进程</h3><p>1.启动Cassandra进程: <code>sudo -u admin /usr/install/cassandra/bin/cassandra</code><br>2.查看Cassandra进程: <code>sudo -u admin jps -lm</code> 或 <code>ps -ef | grep cassandra</code>  </p>
+<p>3.杀死Cassandra进程: 下面的命令不需要先用ps查看pid,再kill -9 pid, 直接使用一条命令就可以搞定.  </p>
+<figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo -u <span class="literal">admin</span> kill -<span class="number">9</span> `sudo -u <span class="literal">admin</span> jps | grep CassandraDaemon |awk '&#123;<span class="literal">print</span> <span class="variable">$1</span>&#125;'`</span><br><span class="line">sudo -u <span class="literal">admin</span> jps | grep CassandraDaemon |awk '&#123;<span class="literal">print</span> <span class="variable">$1</span>&#125;' | xargs sudo -u <span class="literal">admin</span> kill -<span class="number">9</span></span><br></pre></td></tr></table></figure>
+<p>4.找出Cassandra进程内最耗费CPU的线程(假设Cassandra的进程PID=20893):<br>A.查看进程相关的所有线程: 使用ps -Lfp pid或者ps -mp pid -o THREAD, tid, time或者top -Hp pid  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@<span class="number">192</span>-<span class="number">168</span>-<span class="number">47</span>-<span class="number">227</span> ~]$ top -Hp <span class="number">20893</span></span><br><span class="line">  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND</span><br><span class="line"><span class="number">44755</span> admin     <span class="number">24</span>   <span class="number">4</span>  <span class="number">158</span>g  <span class="number">31</span>g  <span class="number">11</span>g R <span class="number">85.4</span> <span class="number">50.2</span> <span class="number">639</span>:<span class="number">34.07</span> java</span><br><span class="line"><span class="number">44728</span> admin     <span class="number">24</span>   <span class="number">4</span>  <span class="number">158</span>g  <span class="number">31</span>g  <span class="number">11</span>g R <span class="number">84.1</span> <span class="number">50.2</span> <span class="number">608</span>:<span class="number">12.93</span> java</span><br><span class="line"><span class="number">44730</span> admin     <span class="number">24</span>   <span class="number">4</span>  <span class="number">158</span>g  <span class="number">31</span>g  <span class="number">11</span>g R <span class="number">83.1</span> <span class="number">50.2</span> <span class="number">691</span>:<span class="number">32.11</span> java</span><br><span class="line"><span class="number">44958</span> admin     <span class="number">20</span>   <span class="number">0</span>  <span class="number">158</span>g  <span class="number">31</span>g  <span class="number">11</span>g R <span class="number">82.1</span> <span class="number">50.2</span>   <span class="number">1028</span>:<span class="number">58</span> java</span><br></pre></td></tr></table></figure>
+<p>B.TIME列就是各个Java线程耗费的CPU时间, 计算进程ID对应的16进制   </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@<span class="number">192</span>-<span class="number">168</span>-<span class="number">47</span>-<span class="number">227</span> ~]$ <span class="built_in">printf</span> <span class="string">"%x\n"</span> <span class="number">44958</span></span><br><span class="line">af9e</span><br></pre></td></tr></table></figure>
+<p>C.输出Cassandra进程的堆栈信息，然后根据线程ID的十六进制值grep, 下面表示Cassandra进程耗费的CPU主要在于传输数据.    </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@<span class="number">192</span>-<span class="number">168</span>-<span class="number">47</span>-<span class="number">227</span> ~]$ sudo -u admin jstack <span class="number">20893</span> | grep af9e</span><br><span class="line"><span class="string">"STREAM-IN-/192.168.47.225"</span> daemon prio=<span class="number">10</span> tid=<span class="number">0x00007ff1229ec000</span> nid=<span class="number">0xaf9e</span> runnable [<span class="number">0x00007ff12c7e9000</span>]</span><br></pre></td></tr></table></figure>
+<p>5.启动Cassandra进程如果报错找不到java:  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">5</span>] <span class="number">15</span>:<span class="number">35</span>:<span class="number">54</span> [FAILURE] <span class="number">192.168</span><span class="number">.47</span><span class="number">.224</span> Exited with error code <span class="number">1</span></span><br><span class="line">Cassandra <span class="number">2.0</span> and later require Java <span class="number">7</span> or later.</span><br><span class="line">Stderr: which: <span class="function">no java <span class="title">in</span> <span class="params">(/usr/local/bin:/bin:/usr/bin)</span></span></span><br></pre></td></tr></table></figure>
+<p>解决方式: </p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo update-alternatives  --install  <span class="regexp">/usr/</span>bin<span class="regexp">/java java /u</span>sr<span class="regexp">/java/</span>jdk1.<span class="number">7.0</span>_51<span class="regexp">/bin/</span>java <span class="number">1888</span></span><br><span class="line">sudo update-alternatives  --install  <span class="regexp">/usr/</span>bin<span class="regexp">/javac javac /u</span>sr<span class="regexp">/java/</span>jdk1.<span class="number">7.0</span>_51<span class="regexp">/bin/</span>javac <span class="number">1888</span></span><br><span class="line">sudo update-alternatives --config java</span><br><span class="line">sudo update-alternatives --config javac</span><br></pre></td></tr></table></figure>
+<p>6.查看GC信息(第二条格式化输出美观的格式):  </p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo -<span class="keyword">u</span> admin jstat -gc `sudo -<span class="keyword">u</span> admin jps | grep CassandraDaemon |awk '&#123;<span class="keyword">print</span> <span class="label">$1&#125;</span>'` 1000</span><br><span class="line"></span><br><span class="line">sudo -<span class="keyword">u</span> admin jstat -gc -<span class="keyword">h</span> 20 `sudo -<span class="keyword">u</span> admin jps | grep CassandraDaemon |awk '&#123;<span class="keyword">print</span> <span class="label">$1&#125;</span>'` 1000 | \</span><br><span class="line">awk '&#123;printf(<span class="string">"%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t\n"</span>,<span class="label">$1</span>,<span class="label">$5</span>,<span class="label">$3</span>,<span class="label">$4</span>,<span class="label">$6</span>,<span class="label">$8</span>,<span class="label">$11</span>,<span class="label">$12</span>,<span class="label">$13</span>,<span class="label">$14</span>)&#125;'</span><br></pre></td></tr></table></figure>
+<h3 id="CQL查询客户端">CQL查询客户端</h3><p>1.不进入客户端,直接在终端执行脚本: 第二个命令查看forseti的ks, 会打印很多信息, 如果只是看ks的拓扑信息,使用head.  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="operator"><span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/cqlsh -<span class="keyword">e</span> <span class="string">'desc keyspaces'</span> <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span></span><br><span class="line">/usr/<span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/cqlsh -<span class="keyword">e</span> <span class="string">'desc keyspace forseti'</span> <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span> | <span class="keyword">head</span></span></span><br></pre></td></tr></table></figure>
+<p>2.创建keyspace,并指定副本数:   </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> KEYSPACE forseti <span class="keyword">WITH</span> <span class="keyword">REPLICATION</span> = &#123; <span class="string">'class'</span> : <span class="string">'SimpleStrategy'</span>, <span class="string">'replication_factor'</span> : <span class="number">3</span> &#125;;</span></span><br></pre></td></tr></table></figure>
+<p>3.导出csv文件(数据文件太大,COPY TO实际也需要查询):  </p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cqlsh 192.168.6.52 -e "<span class="built_ins">copy</span> forseti.historical_prices (ticker,date,adj_close,close,high,low,open,<span class="built_ins">volume</span>) to 'historical.csv';"</span><br><span class="line"></span><br><span class="line"><span class="built_in">copy</span> <span class="bash">forseti.velocity (attribute,partner_code,app_name,<span class="built_in">type</span>,<span class="string">"timestamp"</span>,event,sequence_id) to <span class="string">'217.csv'</span>;</span><br><span class="line"></span>Request did not complete within rpc_timeout.</span><br><span class="line"></span><br><span class="line">/usr/install/cassandra/bin/cqlsh 192.168.47.242 -e "<span class="built_ins">copy</span> forseti.velocity (attribute,partner_code,app_name,type,timestamp,event,sequence_id) to 'test1.csv';"</span><br><span class="line">/usr/install/cassandra/bin/cqlsh 192.168.47.242 -e "<span class="built_ins">copy</span> forseti.velocity to 'test1.csv';"</span><br></pre></td></tr></table></figure>
+<p>4.跳板机直接访问线上数据库</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">在跳板机上生成建表语句: </span><br><span class="line"><span class="regexp">/usr/</span>install<span class="regexp">/cassandra/</span>bin/cqlsh -e <span class="string">'desc keyspace forseti_fp'</span> <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span> &gt; forseti_fp.cql</span><br><span class="line"></span><br><span class="line">修改<span class="string">keyspace:</span></span><br><span class="line">CREATE KEYSPACE forseti_fp WITH REPLICATION = &#123; <span class="string">'class'</span> : <span class="string">'SimpleStrategy'</span>, <span class="string">'replication_factor'</span> : <span class="number">2</span> &#125;;</span><br><span class="line"></span><br><span class="line">在跳板机上执行建表语句:</span><br><span class="line"><span class="regexp">/usr/</span>install<span class="regexp">/cassandra/</span>bin/cqlsh <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> -f forseti_fp.cql</span><br><span class="line"></span><br><span class="line">在跳板机上查询:</span><br><span class="line">[qihuang.zheng<span class="annotation">@fd</span>047022 ~]$ <span class="regexp">/usr/</span>install<span class="regexp">/cassandra/</span>bin/cqlsh <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span></span><br><span class="line">cqlsh&gt; desc KEYSPACES ;</span><br><span class="line">system  forseti_fp  system_traces</span><br><span class="line"></span><br><span class="line">cqlsh&gt; use forseti_fp ;</span><br><span class="line"><span class="string">cqlsh:</span>forseti_fp&gt; desc TABLES ;</span><br><span class="line">analysis                device              ios_device_info     tcp_stack_ua</span><br></pre></td></tr></table></figure>
+<h3 id="nodetool维护工具">nodetool维护工具</h3><p>1.查看数据库所有的表(适合脚本方式获取并批量处理):  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="operator"><span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/nodetool cfstats forseti_fp | grep <span class="string">"Table: "</span> | sed -<span class="keyword">e</span> <span class="string">'s+^.*: ++'</span></span></span><br></pre></td></tr></table></figure>
+<p>2.查看CF的历史信息:  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/install/cassandra/bin/nodetool cfhistograms forseti velocity -h <span class="number">192.168</span><span class="number">.47</span><span class="number">.225</span></span><br></pre></td></tr></table></figure>
+<p>3.清理keyspace的快照:  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pssh -A -h ip<span class="class">.txt</span> -<span class="tag">i</span> <span class="string">'/usr/install/apache-cassandra-2.0.15/bin/nodetool clearsnapshot forseti_fp'</span></span><br><span class="line">pssh -A -H <span class="number">192.168</span>.<span class="number">47.203</span> -<span class="tag">i</span> <span class="string">'/usr/install/apache-cassandra-2.0.15/bin/nodetool clearsnapshot forseti_fp'</span></span><br></pre></td></tr></table></figure>
+<h3 id="集群维护">集群维护</h3><p><strong>1.扩容: 添加新节点到原集群forseti_cluster:</strong>  </p>
+<p>0.原先的集群中关于本机的配置(202): </p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng<span class="annotation">@cass</span>047202 conf]$ find <span class="regexp">/usr/</span>install<span class="regexp">/cassandra/</span>conf -name <span class="string">"*"</span> | xargs grep <span class="number">192.168</span><span class="number">.47</span></span><br><span class="line">./cassandra.<span class="string">yaml:</span><span class="string">rpc_address:</span> <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span></span><br><span class="line">./cassandra.<span class="string">yaml:</span><span class="string">listen_address:</span> <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span></span><br><span class="line">./cassandra.<span class="string">yaml:</span>  - &#123;<span class="string">seeds:</span> <span class="string">'192.168.47.203,192.168.47.204,192.168.47.202'</span>&#125;</span><br><span class="line">./cassandra-env.<span class="string">sh:</span>JVM_OPTS=<span class="string">"$JVM_OPTS -Djava.rmi.server.hostname=192.168.47.202"</span></span><br></pre></td></tr></table></figure>
+<p>A.在202上拷贝Cassandra安装目录和安装脚本到目标节点:  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp -r /usr/install/apache-cassandra-<span class="number">2.0</span><span class="number">.15</span> qihuang.zheng@<span class="number">192.168</span><span class="number">.47</span><span class="number">.215</span>:~/  </span><br><span class="line">scp install_cassandra.sh qihuang.zheng@<span class="number">192.168</span><span class="number">.47</span><span class="number">.215</span>:~/</span><br></pre></td></tr></table></figure>
+<p>B.在目标节点执行安装脚本<code>sudo sh install_cassandra.sh</code>:  </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">host=`ifconfig | grep <span class="string">"192.168.47"</span> | awk <span class="string">'/inet addr/&#123;sub("addr:",""); print $2&#125;'</span>`</span><br><span class="line">sed -i <span class="operator">-e</span> <span class="string">"s/rpc_address: 192.168.47.202/rpc_address: <span class="variable">$host</span>/g"</span> apache-cassandra-<span class="number">2.0</span>.<span class="number">15</span>/conf/cassandra.yaml</span><br><span class="line">sed -i <span class="operator">-e</span> <span class="string">"s/listen_address: 192.168.47.202/listen_address: <span class="variable">$host</span>/g"</span> apache-cassandra-<span class="number">2.0</span>.<span class="number">15</span>/conf/cassandra.yaml</span><br><span class="line">sed -i <span class="operator">-e</span> <span class="string">"s/192.168.47.202/<span class="variable">$host</span>/g"</span> apache-cassandra-<span class="number">2.0</span>.<span class="number">15</span>/conf/cassandra-env.sh</span><br><span class="line"><span class="comment">##修改种子节点和集群名称</span></span><br><span class="line">sed -i <span class="operator">-e</span> <span class="string">"s/192.168.47.203,192.168.47.204,192.168.47.202/192.168.47.226,192.168.48.47/g"</span> apache-cassandra-<span class="number">2.0</span>.<span class="number">15</span>/conf/cassandra.yaml</span><br><span class="line">sed -i <span class="operator">-e</span> <span class="string">"s/cluster_name: forseti_cluster/cluster_name: forseti_velocity/g"</span> apache-cassandra-<span class="number">2.0</span>.<span class="number">15</span>/conf/cassandra.yaml</span><br><span class="line"><span class="comment">##如果是全新的集群,则不需要加入:  </span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"auto_bootstrap:false"</span> &gt;&gt; apache-cassandra-<span class="number">2.0</span>.<span class="number">15</span>/conf/cassandra.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment">##数据目录使用不同磁盘</span></span><br><span class="line"><span class="comment">#sed -i -e 's#commitlog_directory: /home/admin/cassandra/commitlog#commitlog_directory: /data/cassandra/commitlog#g' apache-cassandra-2.0.15/conf/cassandra.yaml</span></span><br><span class="line"></span><br><span class="line">sudo mv ~/apache-cassandra-<span class="number">2.0</span>.<span class="number">15</span> /usr/install</span><br><span class="line">sudo chown admin:admin -R /usr/install/apache-cassandra-<span class="number">2.0</span>.<span class="number">15</span></span><br><span class="line">sudo -u admin ln <span class="operator">-s</span> /usr/install/apache-cassandra-<span class="number">2.0</span>.<span class="number">15</span> /usr/install/cassandra</span><br><span class="line">sudo mkdir /home/admin/cassandra</span><br><span class="line">sudo chown admin:admin -R /home/admin/cassandra</span><br><span class="line">sudo mkdir /var/<span class="built_in">log</span>/cassandra</span><br><span class="line">sudo chown admin:admin -R /var/<span class="built_in">log</span>/cassandra</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意: 一般加入新节点后, 需要对新节点repair, 老节点cleanup. 但是线上测试时发现这两个操作都很耗时.  </p>
+</blockquote>
+<p><strong>2.删除/下线节点:</strong>  </p>
+<p>A.正在运行的节点: <code>nodetool decommission</code><br>B.挂掉的节点:   </p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nodetool removenode host-<span class="property">id</span></span><br><span class="line">nodetool removenode status</span><br><span class="line">nodetool removenode force</span><br></pre></td></tr></table></figure>
+<p><strong>3.授权访问</strong></p>
+<p><a href="http://docs.datastax.com/en/cassandra/2.0/cassandra/security/security_config_native_authenticate_t.html" target="_blank" rel="external">http://docs.datastax.com/en/cassandra/2.0/cassandra/security/security_config_native_authenticate_t.html</a></p>
+<p>A.将cassandra.yaml的authenticator从AllowAllAuthenticator修改成密码方式  </p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">authenticator</span>: <span class="string">PasswordAuthenticator</span></span><br></pre></td></tr></table></figure>
+<p>B.增大system_auth keyspace的副本数等于集群中每个数据中心的节点数量  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">ALTER</span> KEYSPACE <span class="string">"Excalibur"</span> <span class="keyword">WITH</span> <span class="keyword">REPLICATION</span> = &#123; <span class="string">'class'</span> : <span class="string">'SimpleStrategy'</span>, <span class="string">'replication_factor'</span> : <span class="number">3</span> &#125;;</span></span><br><span class="line"><span class="operator"><span class="keyword">ALTER</span> KEYSPACE system_auth <span class="keyword">WITH</span> <span class="keyword">REPLICATION</span> = &#123;<span class="string">'class'</span> : <span class="string">'NetworkTopologyStrategy'</span>, <span class="string">'dc1'</span> : <span class="number">3</span>, <span class="string">'dc2'</span> : <span class="number">2</span>&#125;;</span></span><br></pre></td></tr></table></figure>
+<p>在每个节点依次执行<code>nodetool repair</code>, 这样会将副本数据拷贝到其他节点. 不至于一个节点当掉, 导致无法访问C.  </p>
+<p>….TODO</p>
+<h3 id="OpsCenter:">OpsCenter:</h3><h4 id="安装opscenter">安装opscenter</h4><p>opscenter只需要安装server端即可, 启动方式: <code>sudo -u admin /usr/install/opscenter-5.2.0/bin/opscenter</code><br>启动后会在opscenter下生成一个twistd.pid代表server的进程id.  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@cass047222 opscenter-<span class="number">5.2</span><span class="number">.0</span>]$ ps -ef | grep opscenter</span><br><span class="line">admin     <span class="number">6344</span>     <span class="number">1</span> <span class="number">39</span> <span class="number">11</span>:<span class="number">22</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">01</span> /usr/bin/python2<span class="number">.6</span> ./bin/twistd -r epoll -oy bin/start_opscenter.py</span><br></pre></td></tr></table></figure>
+<p>杀掉opscenter进程的方式:  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo kill -<span class="number">9</span> `sudo -u admin cat /usr/install/opscenter-<span class="number">5.2</span><span class="number">.2</span>/twistd.pid`</span><br></pre></td></tr></table></figure>
+<h4 id="创建集群和安装agent">创建集群和安装agent</h4><p>访问localhost:8888端口, 初始时没有任何集群, 选择管理已经存在的Cassandra集群. 填写上Cassandra集群的部分地址即可.<br>会提示: 没有安装Agent: <code>OpsCenter is having trouble connecting with the agents. Click here for more details Fix Now</code><br>点击<code>Fix Now</code>, 输入自己能访问这台机器的用户名密码, 完成每个Agent节点的安装.<br>正常在页面上安装完Agent后, 监控图是没有问题的. 但是经过一段时间有时候会没有数据. 需要修改每个agent的配置.  </p>
+<h4 id="修改agent配置">修改agent配置</h4><p>agent安装完后, 需要更改各个agent节点的配置信息: 更改local_interface的地址. stomp_interface是opscenter的地址.<br><code>sudo vi /var/lib/datastax-agent/conf/address.yaml</code>:  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">stomp_interface: <span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span></span><br><span class="line">use_ssl: <span class="number">0</span></span><br><span class="line">async_pool_size: <span class="number">200</span></span><br><span class="line">thrift_max_cons: <span class="number">200</span></span><br><span class="line">async_queue_size: <span class="number">20000</span></span><br><span class="line">hosts : [<span class="string">"192.168.47.202"</span>,<span class="string">"192.168.47.203"</span>,<span class="string">"192.168.47.204"</span>,<span class="string">"192.168.47.205"</span>,<span class="string">"192.168.47.206"</span>,<span class="string">"192.168.47.221"</span>,<span class="string">"192.168.47.222"</span>,<span class="string">"192.168.47.224"</span>,<span class="string">"192.168.47.227"</span>,<span class="string">"192.168.47.228"</span>]</span><br><span class="line">local_interface: <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span></span><br><span class="line">cassandra_conf: /usr/install/apache-cassandra-<span class="number">2.0</span><span class="number">.15</span>/conf/cassandra.yaml</span><br></pre></td></tr></table></figure>
+<p>修改完配置, 需要把agent进程杀掉  </p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo kill -9 `ps -ef|grep datastax_agent_monitor | head -1 |awk '&#123;<span class="keyword">print</span> <span class="label">$2&#125;</span>'` &amp;&amp; \</span><br><span class="line">sudo kill -9 `<span class="keyword">cat</span> /<span class="keyword">var</span>/<span class="keyword">run</span>/datastax-agent/datastax-agent.pid`</span><br></pre></td></tr></table></figure>
+<p>注意并不需要重启Agent(因为agent节点并没有启动的命令). 启动Agent的方式只能通过web页面的提示点击<code>Fix now</code>重新修复.    </p>
+<p>彻底删除agent(当opscenter修改配置完并重装还是没有起作用时):  </p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo kill -<span class="number">9</span> <span class="string">`ps -ef|grep datastax_agent_monitor | head -1 |awk '&#123;print $2&#125;'`</span> &amp;&amp;</span><br><span class="line">sudo kill -<span class="number">9</span> <span class="string">`cat /var/run/datastax-agent/datastax-agent.pid`</span> &amp;&amp;</span><br><span class="line">sudo rm -rf /var/<span class="class"><span class="keyword">lib</span>/<span class="title">datastax</span>-<span class="title">agent</span> &amp;&amp;</span></span><br><span class="line">sudo rm -rf /usr/share/datastax-agent</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-12-18-Spark-HBase-RDD" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/18/2015-12-18-Spark-HBase-RDD/" class="article-date">
+  	<time datetime="2015-12-17T16:00:00.000Z" itemprop="datePublished">2015-12-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/18/2015-12-18-Spark-HBase-RDD/">HBase-RDD</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>HBASE-RDD批量导入RDD数据到HBase中<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hbase/">hbase</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/12/18/2015-12-18-Spark-HBase-RDD/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-12-18-HBase-BulkLoad" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/18/2015-12-18-HBase-BulkLoad/" class="article-date">
+  	<time datetime="2015-12-17T16:00:00.000Z" itemprop="datePublished">2015-12-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/18/2015-12-18-HBase-BulkLoad/">HBase BulkLoad</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>HBase的BulkLoad分成了两个过程: MR生成HFile, 导入HFile到HBase集群<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hbase/">hbase</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/12/18/2015-12-18-HBase-BulkLoad/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-12-17-Billion-KV" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/17/2015-12-17-Billion-KV/" class="article-date">
+  	<time datetime="2015-12-16T16:00:00.000Z" itemprop="datePublished">2015-12-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/17/2015-12-17-Billion-KV/">千亿KV数据存储和查询方案</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>千亿数据,一次性批量大数据量存储,查询时间要求不是很严格,10万条一天内也可以接受.<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/work/">work</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/12/17/2015-12-17-Billion-KV/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-12-16-HBase" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/16/2015-12-16-HBase/" class="article-date">
+  	<time datetime="2015-12-15T16:00:00.000Z" itemprop="datePublished">2015-12-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/16/2015-12-16-HBase/">Hello HBase</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Meet HBase Again, also Phoenix.<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hbase/">hbase</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/12/16/2015-12-16-HBase/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-12-16-HBase-Optimize" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/16/2015-12-16-HBase-Optimize/" class="article-date">
+  	<time datetime="2015-12-15T16:00:00.000Z" itemprop="datePublished">2015-12-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/16/2015-12-16-HBase-Optimize/">HBase性能优化方法总结</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>转载自大圆那些事:<a href="http://www.cnblogs.com/panfeng412/">http://www.cnblogs.com/panfeng412/</a><br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hbase/">hbase</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/12/16/2015-12-16-HBase-Optimize/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
   
     <article id="post-2015-12-12-Apache-Geode" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -882,646 +1461,6 @@
         <p class="article-more-link">
           <a  href="/2015/11/27/2015-11-27-StreamCQL-operator/#more">more >></a>
         </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-11-26-StreamCQL-schema" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/26/2015-11-26-StreamCQL-schema/" class="article-date">
-  	<time datetime="2015-11-25T16:00:00.000Z" itemprop="datePublished">2015-11-26</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/26/2015-11-26-StreamCQL-schema/">StreamCQL源码阅读(2) 语法和语义解析</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>StreamCQL的Schema以及语法和语义解析</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/storm/">storm</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/11/26/2015-11-26-StreamCQL-schema/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-11-24-StreamCQL-task" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/24/2015-11-24-StreamCQL-task/" class="article-date">
-  	<time datetime="2015-11-23T16:00:00.000Z" itemprop="datePublished">2015-11-24</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/24/2015-11-24-StreamCQL-task/">StreamCQL源码阅读(1) 提交任务</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>大数据上的流式SQL引擎—StreamCQL: <a href="http://www.csdn.net/article/2015-11-13/2826204">http://www.csdn.net/article/2015-11-13/2826204</a></p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/storm/">storm</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/11/24/2015-11-24-StreamCQL-task/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-11-20-Cassandra-Stream" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/20/2015-11-20-Cassandra-Stream/" class="article-date">
-  	<time datetime="2015-11-19T16:00:00.000Z" itemprop="datePublished">2015-11-20</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/20/2015-11-20-Cassandra-Stream/">Cassandra源码分析之Stream</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>大数据源码阅读系列之ApacheCassandra: sstable的stream流程</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/11/20/2015-11-20-Cassandra-Stream/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-11-10-Cassandra-Client" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/10/2015-11-10-Cassandra-Client/" class="article-date">
-  	<time datetime="2015-11-09T16:00:00.000Z" itemprop="datePublished">2015-11-10</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/10/2015-11-10-Cassandra-Client/">Cassandra Client查询优化</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>大数据源码阅读系列之ApacheCassandra: Cassandra客户端的查询优化</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/11/10/2015-11-10-Cassandra-Client/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-09-10-Storm-Window" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/09/10/2015-09-10-Storm-Window/" class="article-date">
-  	<time datetime="2015-09-09T16:00:00.000Z" itemprop="datePublished">2015-09-10</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/10/2015-09-10-Storm-Window/">Storm的滑动窗口</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Storm滑动窗口的实现, 使用TickTuple</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/storm/">storm</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/09/10/2015-09-10-Storm-Window/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-08-25-Apache-Cassandra" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/08/25/2015-08-25-Apache-Cassandra/" class="article-date">
-  	<time datetime="2015-08-24T16:00:00.000Z" itemprop="datePublished">2015-08-25</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/25/2015-08-25-Apache-Cassandra/">Apache Cassandra入门</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-        <h2 id="Hello_Cassandra(单机模式)">Hello Cassandra(单机模式)</h2><p><a href="http://wiki.apache.org/cassandra/GettingStarted" target="_blank" rel="external">http://wiki.apache.org/cassandra/GettingStarted</a></p>
-<p>添加环境变量并source生效,使得可以在任意位置执行cassandra/bin安装目录下的命令  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> CASSANDRA_HOME=<span class="string">"/Users/zhengqh/Soft/apache-cassandra-2.0.16"</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">"<span class="variable">$CASSANDRA_HOME</span>/bin:<span class="variable">$PATH</span>"</span></span><br></pre></td></tr></table></figure>
-<p>前台启动Cassandra进程, <strong><code>sudo cassandra -f</code></strong></p>
-<p>日志输出: 创建了一些系统目录,并监听了thrift</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">INFO <span class="number">09</span>:<span class="number">24</span>:<span class="number">50</span>,<span class="number">569</span> Starting listening <span class="keyword">for</span> CQL clients on localhost/<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">9042.</span>..</span><br><span class="line">INFO <span class="number">09</span>:<span class="number">24</span>:<span class="number">50</span>,<span class="number">691</span> Using TFramedTransport with a max frame size of <span class="number">15728640</span> bytes.</span><br><span class="line">INFO <span class="number">09</span>:<span class="number">24</span>:<span class="number">50</span>,<span class="number">693</span> Binding thrift service to localhost/<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">9160</span></span><br><span class="line">INFO <span class="number">09</span>:<span class="number">24</span>:<span class="number">50</span>,<span class="number">727</span> Using synchronous/threadpool thrift server on localhost : <span class="number">9160</span></span><br><span class="line">INFO <span class="number">09</span>:<span class="number">24</span>:<span class="number">50</span>,<span class="number">727</span> Listening <span class="keyword">for</span> thrift clients...</span><br></pre></td></tr></table></figure>
-<p>启动一个新的终端, 启动客户端查询: <strong><code>cqlsh</code></strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> KEYSPACE mykeyspace  </span><br><span class="line"><span class="keyword">WITH</span> <span class="keyword">REPLICATION</span> = &#123; <span class="string">'class'</span> : <span class="string">'SimpleStrategy'</span>, <span class="string">'replication_factor'</span> : <span class="number">1</span> &#125;;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">USE</span> mykeyspace;</span>  </span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">users</span> (</span><br><span class="line">  user_id <span class="built_in">int</span> PRIMARY <span class="keyword">KEY</span>,</span><br><span class="line">  fname <span class="built_in">text</span>,</span><br><span class="line">  lname <span class="built_in">text</span></span><br><span class="line">);</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">users</span> (user_id,  fname, lname) <span class="keyword">VALUES</span> (<span class="number">1745</span>, <span class="string">'john'</span>, <span class="string">'smith'</span>);</span>  </span><br><span class="line"><span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">users</span> (user_id,  fname, lname) <span class="keyword">VALUES</span> (<span class="number">1744</span>, <span class="string">'john'</span>, <span class="string">'doe'</span>);</span>  </span><br><span class="line"><span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">users</span> (user_id,  fname, lname) <span class="keyword">VALUES</span> (<span class="number">1746</span>, <span class="string">'john'</span>, <span class="string">'smith'</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span> <span class="keyword">ON</span> <span class="keyword">users</span> (lname);</span>  </span><br><span class="line"><span class="operator"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> lname = <span class="string">'smith'</span>;</span></span><br></pre></td></tr></table></figure>
-<p>下面是详细的步骤和输出:  </p>
-<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">$ cqlsh</span><br><span class="line">Connected <span class="keyword">to</span> Test Cluster at localhost:<span class="number">9160</span>.</span><br><span class="line">[cqlsh <span class="number">4.1</span>.<span class="number">1</span> | Cassandra <span class="number">2.0</span>.<span class="number">16</span> | CQL spec <span class="number">3.1</span>.<span class="number">1</span> | Thrift protocol <span class="number">19.39</span>.<span class="number">0</span>]</span><br><span class="line">Use HELP <span class="keyword">for</span> help.</span><br><span class="line">cqlsh&gt; <span class="keyword">CREATE</span> KEYSPACE mykeyspace</span><br><span class="line">   ... <span class="keyword">WITH</span> REPLICATION = <span class="comment">&#123; 'class' : 'SimpleStrategy', 'replication_factor' : 1 &#125;</span>;</span><br><span class="line">cqlsh&gt; USE mykeyspace;</span><br><span class="line">cqlsh:mykeyspace&gt;</span><br><span class="line">cqlsh:mykeyspace&gt; <span class="keyword">CREATE</span> TABLE users (</span><br><span class="line">              ...   user_id int PRIMARY KEY,</span><br><span class="line">              ...   fname text,</span><br><span class="line">              ...   lname text</span><br><span class="line">              ... );</span><br><span class="line">cqlsh:mykeyspace&gt; INSERT <span class="keyword">INTO</span> users (user_id,  fname, lname) VALUES (<span class="number">1745</span>, <span class="string">'john'</span>, <span class="string">'smith'</span>);</span><br><span class="line">cqlsh:mykeyspace&gt; INSERT <span class="keyword">INTO</span> users (user_id,  fname, lname) VALUES (<span class="number">1744</span>, <span class="string">'john'</span>, <span class="string">'doe'</span>);</span><br><span class="line">cqlsh:mykeyspace&gt; INSERT <span class="keyword">INTO</span> users (user_id,  fname, lname) VALUES (<span class="number">1746</span>, <span class="string">'john'</span>, <span class="string">'smith'</span>);</span><br><span class="line">cqlsh:mykeyspace&gt; <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users;</span><br><span class="line"></span><br><span class="line"> user_id | fname | lname</span><br><span class="line">---------+-------+-------</span><br><span class="line">    <span class="number">1745</span> |  john | smith</span><br><span class="line">    <span class="number">1744</span> |  john |   doe</span><br><span class="line">    <span class="number">1746</span> |  john | smith</span><br><span class="line"></span><br><span class="line">cqlsh:mykeyspace&gt; <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> lname = <span class="string">'smith'</span>;</span><br><span class="line">Bad Request: No indexed columns present <span class="keyword">in</span> <span class="keyword">by</span>-columns clause <span class="keyword">with</span> Equal <span class="keyword">operator</span></span><br><span class="line">cqlsh:mykeyspace&gt; <span class="keyword">CREATE</span> <span class="keyword">INDEX</span> <span class="keyword">ON</span> users (lname);</span><br><span class="line">cqlsh:mykeyspace&gt; <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> lname = <span class="string">'smith'</span>;</span><br><span class="line"></span><br><span class="line"> user_id | fname | lname</span><br><span class="line">---------+-------+-------</span><br><span class="line">    <span class="number">1745</span> |  john | smith</span><br><span class="line">    <span class="number">1746</span> |  john | smith</span><br></pre></td></tr></table></figure>
-<p>观察服务端的输出: 分别创建了keyspace,table,index. keyspace可以理解为DataBase.  </p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">INFO <span class="number">09</span>:<span class="number">29</span>:<span class="number">21</span>,<span class="number">981</span> Create <span class="keyword">new</span> Keyspace: mykeyspace, rep strategy:SimpleStrategy&#123;&#125;, strategy_options: &#123;replication_factor=<span class="number">1</span>&#125;, durable_writes: <span class="literal">true</span></span><br><span class="line">INFO <span class="number">09</span>:<span class="number">29</span>:<span class="number">45</span>,<span class="number">822</span> Initializing mykeyspace.users</span><br><span class="line">INFO <span class="number">09</span>:<span class="number">31</span>:<span class="number">21</span>,<span class="number">102</span> Initializing mykeyspace.users.users_lname_idx</span><br><span class="line">INFO <span class="number">09</span>:<span class="number">31</span>:<span class="number">21</span>,<span class="number">230</span> Index build of users.users_lname_idx complete</span><br></pre></td></tr></table></figure>
-<p>使用nodetool工具查看集群状态: <strong><code>nodetool -h localhost -p 7199 status</code></strong>,或者直接<strong><code>bin/nodetool status</code></strong></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Note: Ownership information does not include topology; <span class="keyword">for</span> complete information, specify a keyspace</span><br><span class="line">Datacenter: datacenter1</span><br><span class="line">=======================</span><br><span class="line">Status=Up/Down</span><br><span class="line">|/ State=Normal/Leaving/Joining/Moving</span><br><span class="line">--  Address    Load       Tokens  Owns   Host ID                               Rack</span><br><span class="line">UN  <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>  <span class="number">77.2</span> KB    <span class="number">256</span>     <span class="number">100.0</span>%  <span class="number">9605</span>a4d0-<span class="number">99</span>ca-<span class="number">4582</span>-<span class="number">8</span>a7d-<span class="number">49</span>a7cb9bd942  rack1</span><br></pre></td></tr></table></figure>
-<p>由于我们在$CASSANDRA_HOME/conf/cassandra.yaml中修改了data路径<br>可以看到在cql中创建的keyspace,table,index都对应了本地的目录和文件.  </p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">➜  ~  cd data/cassandra</span><br><span class="line">➜  cassandra  ll</span><br><span class="line">drwxr-xr-x   <span class="number">4</span> root  staff   <span class="number">136</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">24</span> commitlog</span><br><span class="line">drwxr-xr-x   <span class="number">3</span> root  staff   <span class="number">102</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">29</span> mykeyspace</span><br><span class="line">drwxr-xr-x  <span class="number">18</span> root  staff   <span class="number">612</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">24</span> system</span><br><span class="line">drwxr-xr-x   <span class="number">4</span> root  staff   <span class="number">136</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">24</span> system_traces</span><br><span class="line">➜  cassandra  ll mykeyspace</span><br><span class="line">drwxr-xr-x  <span class="number">16</span> root  staff   <span class="number">544</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">31</span> users</span><br><span class="line">➜  cassandra  ll mykeyspace/users</span><br><span class="line">-rw-r--r--  <span class="number">1</span> root  staff    <span class="number">43</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">31</span> mykeyspace-users-jb-<span class="number">1</span>-CompressionInfo.db</span><br><span class="line">-rw-r--r--  <span class="number">1</span> root  staff   <span class="number">134</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">31</span> mykeyspace-users-jb-<span class="number">1</span>-Data.db</span><br><span class="line">-rw-r--r--  <span class="number">1</span> root  staff    <span class="number">16</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">31</span> mykeyspace-users-jb-<span class="number">1</span>-Filter.db</span><br><span class="line">-rw-r--r--  <span class="number">1</span> root  staff    <span class="number">54</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">31</span> mykeyspace-users-jb-<span class="number">1</span>-Index.db</span><br><span class="line">-rw-r--r--  <span class="number">1</span> root  staff   <span class="number">4.3</span>K  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">31</span> mykeyspace-users-jb-<span class="number">1</span>-Statistics.db</span><br><span class="line">-rw-r--r--  <span class="number">1</span> root  staff    <span class="number">80</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">31</span> mykeyspace-users-jb-<span class="number">1</span>-Summary.db</span><br><span class="line">-rw-r--r--  <span class="number">1</span> root  staff    <span class="number">79</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">31</span> mykeyspace-users-jb-<span class="number">1</span>-TOC.txt</span><br><span class="line">-rw-r--r--  <span class="number">1</span> root  staff    <span class="number">43</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">31</span> mykeyspace-users.users_lname_idx-jb-<span class="number">1</span>-CompressionInfo.db</span><br><span class="line">-rw-r--r--  <span class="number">1</span> root  staff    <span class="number">80</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">31</span> mykeyspace-users.users_lname_idx-jb-<span class="number">1</span>-Data.db</span><br><span class="line">-rw-r--r--  <span class="number">1</span> root  staff    <span class="number">16</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">31</span> mykeyspace-users.users_lname_idx-jb-<span class="number">1</span>-Filter.db</span><br><span class="line">-rw-r--r--  <span class="number">1</span> root  staff    <span class="number">36</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">31</span> mykeyspace-users.users_lname_idx-jb-<span class="number">1</span>-Index.db</span><br><span class="line">-rw-r--r--  <span class="number">1</span> root  staff   <span class="number">4.3</span>K  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">31</span> mykeyspace-users.users_lname_idx-jb-<span class="number">1</span>-Statistics.db</span><br><span class="line">-rw-r--r--  <span class="number">1</span> root  staff    <span class="number">79</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">31</span> mykeyspace-users.users_lname_idx-jb-<span class="number">1</span>-Summary.db</span><br><span class="line">-rw-r--r--  <span class="number">1</span> root  staff    <span class="number">79</span>B  <span class="number">6</span> <span class="number">25</span> <span class="number">09</span>:<span class="number">31</span> mykeyspace-users.users_lname_idx-jb-<span class="number">1</span>-TOC.txt</span><br></pre></td></tr></table></figure>
-<p>kill cassandra:  </p>
-<p><strong><code>pkill -f CassandraDaemon</code></strong><br><strong><code>ps -ef | grep CassandraDeameon</code></strong>后<strong><code>sudo kill -9 pid</code></strong></p>
-<p>终端Ctrl+C中断进程输出</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">^C INFO <span class="number">09</span>:<span class="number">48</span>:<span class="number">33</span>,<span class="number">868</span> Stop listening to thrift clients</span><br><span class="line"> INFO <span class="number">09</span>:<span class="number">48</span>:<span class="number">33</span>,<span class="number">909</span> Stop listening <span class="keyword">for</span> CQL clients</span><br><span class="line"> INFO <span class="number">09</span>:<span class="number">48</span>:<span class="number">33</span>,<span class="number">911</span> Announcing shutdown</span><br><span class="line"> INFO <span class="number">09</span>:<span class="number">48</span>:<span class="number">33</span>,<span class="number">912</span> Node localhost/<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> state jump to normal</span><br><span class="line"> INFO <span class="number">09</span>:<span class="number">48</span>:<span class="number">35</span>,<span class="number">952</span> Waiting <span class="keyword">for</span> messaging service to quiesce</span><br><span class="line"> INFO <span class="number">09</span>:<span class="number">48</span>:<span class="number">35</span>,<span class="number">956</span> <span class="function">MessagingService has terminated the <span class="title">accept</span><span class="params">()</span> thread</span></span><br></pre></td></tr></table></figure>
-<h3 id="配置文件默认值">配置文件默认值</h3><table>
-<thead>
-<tr>
-<th>配置项</th>
-<th>说明</th>
-<th>默认值</th>
-<th>配置文件</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>data_file_directories</td>
-<td>数据</td>
-<td>/var/lib/cassandra/data</td>
-<td>cassandra.yaml</td>
-</tr>
-<tr>
-<td>commitlog_directory</td>
-<td>提交日志</td>
-<td>/var/lib/cassandra/commitlog</td>
-<td>cassandra.yaml</td>
-</tr>
-<tr>
-<td>saved_caches_directory</td>
-<td>缓存</td>
-<td>/var/lib/cassandra/saved_caches</td>
-<td>cassandra.yaml</td>
-</tr>
-<tr>
-<td>log4j.appender.R.File</td>
-<td>日志</td>
-<td>/var/log/cassandra</td>
-<td>log4j-server.properties</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Cassandra_Cluster">Cassandra Cluster</h2><p><a href="http://blog.csdn.net/rzliuwei/article/details/40430031" target="_blank" rel="external">http://blog.csdn.net/rzliuwei/article/details/40430031</a></p>
-<p><strong>vi cassandra.yaml</strong></p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">seed_provider</span>:</span><br><span class="line">    <span class="tag">-</span> <span class="tag">class_name</span>: <span class="tag">org</span><span class="class">.apache</span><span class="class">.cassandra</span><span class="class">.locator</span><span class="class">.SimpleSeedProvider</span></span><br><span class="line">      <span class="tag">parameters</span>:</span><br><span class="line">          <span class="tag">-</span> <span class="tag">seeds</span>: "192<span class="class">.168</span><span class="class">.6</span><span class="class">.52</span>,192<span class="class">.168</span><span class="class">.6</span><span class="class">.53</span>"</span><br><span class="line"></span><br><span class="line"><span class="tag">listen_address</span>: 192<span class="class">.168</span><span class="class">.6</span><span class="class">.52</span></span><br><span class="line"></span><br><span class="line"><span class="tag">rpc_address</span>:</span><br></pre></td></tr></table></figure>
-<p>注意:</p>
-<blockquote>
-<ol>
-<li>seeds 可以选择集群中比较稳定的机器, 不需要写下所有的节点.  </li>
-<li>listen_address在每台机器上都要修改成自己本机的IP地址.  </li>
-<li>rpc_address修改为空,或者跟listen_address一样,为本机IP.</li>
-</ol>
-</blockquote>
-<p>将cassandra整个目录都分发到集群中(更改目录权限,建立软链接,创建日志目录,更改日志目录权限).</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scp -r apache-cassandra-2.0.16 qihuang.zheng@192.168.6.52:/usr/<span class="operator"><span class="keyword">install</span> </span><br><span class="line">sudo chown <span class="keyword">admin</span>:<span class="keyword">admin</span> -R /usr/<span class="keyword">install</span>/apache-cassandra-<span class="number">2.0</span><span class="number">.16</span></span><br><span class="line">sudo -u <span class="keyword">admin</span> <span class="keyword">ln</span> -s /usr/<span class="keyword">install</span>/apache-cassandra-<span class="number">2.0</span><span class="number">.16</span> /usr/<span class="keyword">install</span>/cassandra</span><br><span class="line">sudo mkdir /<span class="keyword">var</span>/<span class="keyword">log</span>/cassandra</span><br><span class="line">sudo chown <span class="keyword">admin</span>:<span class="keyword">admin</span> -R /<span class="keyword">var</span>/<span class="keyword">log</span>/cassandra</span></span><br></pre></td></tr></table></figure>
-<p>在每个节点都启动Cassandra服务: 先启动seeds,然后启动其他节点</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/<span class="operator"><span class="keyword">install</span>/apache-cassandra-<span class="number">2.0</span><span class="number">.16</span></span><br><span class="line">sudo -u <span class="keyword">admin</span> <span class="keyword">bin</span>/cassandra</span></span><br></pre></td></tr></table></figure>
-<p>随便在某一台机器安装了cassandra的节点查看整个集群所有节点的状态:</p>
-<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@dp0652 apache-cassandra-2.0.16]$ bin/nodetool status</span><br><span class="line">Datacenter: datacenter1</span><br><span class="line">=======================</span><br><span class="line">Status=Up/Down</span><br><span class="line">|/ State=Normal/Leaving/Joining/Moving</span><br><span class="line">--  Address       Load       Tokens  Owns (effective)  Host ID                               Rack</span><br><span class="line">UN  <span class="number">192.168.6.52</span>  46.21 KB   256     41.9%             69d3a2ab-cad8-4fdc-b<span class="number">609-7b9</span>c0ce3243a  rack1</span><br><span class="line">UN  <span class="number">192.168.6.53</span>  62.46 KB   256     40.7%             dc884efd-<span class="number">5f26-4746</span>-b5c6-73ac<span class="number">7d446796</span>  rack1</span><br><span class="line">UN  <span class="number">192.168.6.55</span>  76.73 KB   256     37.9%             <span class="number">180e65c1-7</span>ac1-4a2c-b8a6-c9ae3dc08de1  rack1</span><br><span class="line">UN  <span class="number">192.168.6.56</span>  14.21 KB   256     40.9%             <span class="number">6a1a7d22</span>-ffdf-<span class="number">4598-8402</span>-fe0ffa62663d  rack1</span><br><span class="line">UN  <span class="number">192.168.6.57</span>  14.21 KB   256     38.6%             d35ceda3-f<span class="number">8b2-49a6</span>-98fd-<span class="number">390b234148</span>1c  rack1</span><br></pre></td></tr></table></figure>
-<p>下面是依次启动52~57, 在seeds节点52可以看到下面的输出</p>
-<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">ERROR <span class="number">10:18:22,50</span>2 Directory /var/lib/cassandra/data doesn't exist</span><br><span class="line">ERROR <span class="number">10:18:22,50</span>9 Directory /var/lib/cassandra/commitlog doesn't exist</span><br><span class="line">ERROR <span class="number">10:18:22,51</span>0 Directory /var/lib/cassandra/saved_caches doesn't exist</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"> INFO <span class="number">10:18:25,65</span>4 Node /<span class="number">192.168.6.52</span> state jump to normal</span><br><span class="line"> INFO <span class="number">10:18:25,76</span>1 Waiting for gossip to settle before accepting client requests...</span><br><span class="line"> INFO <span class="number">10:18:25,79</span>1 Compacted 4 sstables to [/var/lib/cassandra/data/system/local/system-local-jb-5,].  5,935 bytes to 5,784 (~97% of original) in 187ms = <span class="number">0.029498</span>MB/s.  4 total partitions merged to 1.  Partition merge counts were &#123;4:1, &#125;</span><br><span class="line"> INFO <span class="number">10:18:33,76</span>3 No gossip backlog<span class="comment">; proceeding</span></span><br><span class="line"> INFO <span class="number">10:18:33,93</span>0 Starting listening for CQL clients on /<span class="number">192.168.6.52</span>:9042...</span><br><span class="line"> INFO <span class="number">10:18:34,01</span>5 Using TFramedTransport with a max frame size of <span class="number">15728640</span> bytes.</span><br><span class="line"> INFO <span class="number">10:18:34,01</span>7 Binding thrift service to /<span class="number">192.168.6.52</span>:9160</span><br><span class="line"> INFO <span class="number">10:18:34,03</span>1 Using synchronous/threadpool thrift server on dp0652 : 9160</span><br><span class="line"> INFO <span class="number">10:18:34,03</span>2 Listening for thrift clients...</span><br><span class="line"> INFO <span class="number">10:19:59,68</span>9 Handshaking version with /<span class="number">192.168.6.53</span></span><br><span class="line"> INFO <span class="number">10:20:00,55</span>1 Node /<span class="number">192.168.6.53</span> is now part of the cluster</span><br><span class="line"> INFO <span class="number">10:20:00,55</span>7 InetAddress /<span class="number">192.168.6.53</span> is now UP</span><br><span class="line"></span><br><span class="line"> INFO <span class="number">10:21:29,74</span>3 Handshaking version with /<span class="number">192.168.6.55</span></span><br><span class="line"> INFO <span class="number">10:21:32,59</span>6 Node /<span class="number">192.168.6.55</span> is now part of the cluster</span><br><span class="line"> INFO <span class="number">10:21:32,59</span>9 InetAddress /<span class="number">192.168.6.55</span> is now UP</span><br><span class="line"> INFO <span class="number">10:22:06,32</span>9 [Stream #f<span class="number">921b340</span>-1ae0-11e5-ab<span class="number">43-1146c6</span>cf1690] Received streaming plan for Bootstrap</span><br><span class="line"> INFO <span class="number">10:22:06,50</span>5 [Stream #f<span class="number">921b340</span>-1ae0-11e5-ab<span class="number">43-1146c6</span>cf1690] Session with /<span class="number">192.168.6.55</span> is complete</span><br><span class="line"> INFO <span class="number">10:22:06,51</span>2 [Stream #f<span class="number">921b340</span>-1ae0-11e5-ab<span class="number">43-1146c6</span>cf1690] All sessions completed</span><br><span class="line"></span><br><span class="line"> INFO <span class="number">10:22:32,68</span>3 Handshaking version with /<span class="number">192.168.6.56</span></span><br><span class="line"> INFO <span class="number">10:22:34,68</span>1 Node /<span class="number">192.168.6.56</span> is now part of the cluster</span><br><span class="line"> INFO <span class="number">10:22:34,68</span>4 InetAddress /<span class="number">192.168.6.56</span> is now UP</span><br><span class="line"> INFO <span class="number">10:22:42,99</span>6 Handshaking version with /<span class="number">192.168.6.57</span></span><br><span class="line"> INFO <span class="number">10:22:45,68</span>8 Node /<span class="number">192.168.6.57</span> is now part of the cluster</span><br><span class="line"> INFO <span class="number">10:22:45,69</span>7 InetAddress /<span class="number">192.168.6.57</span> is now UP</span><br><span class="line"> INFO <span class="number">10:23:07,64</span>7 [Stream #1db<span class="number">71650-1</span>ae1-11e5-bd7c-33c4208ae8ae] Received streaming plan for Bootstrap</span><br><span class="line"> INFO <span class="number">10:23:07,79</span>5 [Stream #1db<span class="number">71650-1</span>ae1-11e5-bd7c-33c4208ae8ae] Session with /<span class="number">192.168.6.56</span> is complete</span><br><span class="line"> INFO <span class="number">10:23:07,79</span>6 [Stream #1db<span class="number">71650-1</span>ae1-11e5-bd7c-33c4208ae8ae] All sessions completed</span><br><span class="line"> INFO <span class="number">10:23:20,29</span>9 [Stream #<span class="number">253d8260-1</span>ae<span class="number">1-11e5-83</span><span class="number">87-4d9d1</span>ede5533] Received streaming plan for Bootstrap</span><br><span class="line"> INFO <span class="number">10:23:20,41</span>5 [Stream #<span class="number">253d8260-1</span>ae<span class="number">1-11e5-83</span><span class="number">87-4d9d1</span>ede5533] Session with /<span class="number">192.168.6.57</span> is complete</span><br><span class="line"> INFO <span class="number">10:23:20,41</span>6 [Stream #<span class="number">253d8260-1</span>ae<span class="number">1-11e5-83</span><span class="number">87-4d9d1</span>ede5533] All sessions completed</span><br></pre></td></tr></table></figure>
-<p>seed节点53的输出</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">INFO <span class="number">10</span>:<span class="number">20</span>:<span class="number">09</span>,<span class="number">212</span> Listening <span class="keyword">for</span> thrift clients...</span><br><span class="line">INFO <span class="number">10</span>:<span class="number">21</span>:<span class="number">29</span>,<span class="number">678</span> Handshaking version with /<span class="number">192.168</span><span class="number">.6</span><span class="number">.55</span></span><br><span class="line">INFO <span class="number">10</span>:<span class="number">21</span>:<span class="number">31</span>,<span class="number">965</span> Node /<span class="number">192.168</span><span class="number">.6</span><span class="number">.55</span> is now part of the cluster</span><br><span class="line">INFO <span class="number">10</span>:<span class="number">21</span>:<span class="number">31</span>,<span class="number">968</span> InetAddress /<span class="number">192.168</span><span class="number">.6</span><span class="number">.55</span> is now UP</span><br><span class="line">INFO <span class="number">10</span>:<span class="number">22</span>:<span class="number">32</span>,<span class="number">618</span> Handshaking version with /<span class="number">192.168</span><span class="number">.6</span><span class="number">.56</span></span><br><span class="line">INFO <span class="number">10</span>:<span class="number">22</span>:<span class="number">36</span>,<span class="number">055</span> Node /<span class="number">192.168</span><span class="number">.6</span><span class="number">.56</span> is now part of the cluster</span><br><span class="line">INFO <span class="number">10</span>:<span class="number">22</span>:<span class="number">36</span>,<span class="number">058</span> InetAddress /<span class="number">192.168</span><span class="number">.6</span><span class="number">.56</span> is now UP</span><br><span class="line">INFO <span class="number">10</span>:<span class="number">22</span>:<span class="number">42</span>,<span class="number">930</span> Handshaking version with /<span class="number">192.168</span><span class="number">.6</span><span class="number">.57</span></span><br><span class="line">INFO <span class="number">10</span>:<span class="number">22</span>:<span class="number">44</span>,<span class="number">965</span> Node /<span class="number">192.168</span><span class="number">.6</span><span class="number">.57</span> is now part of the cluster</span><br><span class="line">INFO <span class="number">10</span>:<span class="number">22</span>:<span class="number">44</span>,<span class="number">967</span> InetAddress /<span class="number">192.168</span><span class="number">.6</span><span class="number">.57</span> is now UP</span><br><span class="line">INFO <span class="number">10</span>:<span class="number">23</span>:<span class="number">07</span>,<span class="number">611</span> [Stream <span class="preprocessor">#<span class="number">1</span>db71650-<span class="number">1</span>ae1-<span class="number">11e5</span>-bd7c-<span class="number">33</span>c4208ae8ae] Received streaming plan for Bootstrap</span></span><br><span class="line">INFO <span class="number">10</span>:<span class="number">23</span>:<span class="number">07</span>,<span class="number">684</span> [Stream <span class="preprocessor">#<span class="number">1</span>db71650-<span class="number">1</span>ae1-<span class="number">11e5</span>-bd7c-<span class="number">33</span>c4208ae8ae] Session with /<span class="number">192.168</span><span class="number">.6</span><span class="number">.56</span> is complete</span></span><br><span class="line">INFO <span class="number">10</span>:<span class="number">23</span>:<span class="number">07</span>,<span class="number">691</span> [Stream <span class="preprocessor">#<span class="number">1</span>db71650-<span class="number">1</span>ae1-<span class="number">11e5</span>-bd7c-<span class="number">33</span>c4208ae8ae] All sessions completed</span></span><br><span class="line">INFO <span class="number">10</span>:<span class="number">23</span>:<span class="number">20</span>,<span class="number">230</span> [Stream <span class="preprocessor">#<span class="number">253</span>d8260-<span class="number">1</span>ae1-<span class="number">11e5</span>-<span class="number">8387</span>-<span class="number">4</span>d9d1ede5533] Received streaming plan for Bootstrap</span></span><br><span class="line">INFO <span class="number">10</span>:<span class="number">23</span>:<span class="number">20</span>,<span class="number">312</span> [Stream <span class="preprocessor">#<span class="number">253</span>d8260-<span class="number">1</span>ae1-<span class="number">11e5</span>-<span class="number">8387</span>-<span class="number">4</span>d9d1ede5533] Session with /<span class="number">192.168</span><span class="number">.6</span><span class="number">.57</span> is complete</span></span><br><span class="line">INFO <span class="number">10</span>:<span class="number">23</span>:<span class="number">20</span>,<span class="number">313</span> [Stream <span class="preprocessor">#<span class="number">253</span>d8260-<span class="number">1</span>ae1-<span class="number">11e5</span>-<span class="number">8387</span>-<span class="number">4</span>d9d1ede5533] All sessions completed</span></span><br></pre></td></tr></table></figure>
-<p>由于前面两个seeds节点我们采用了-f启动, 所以我们关掉53节点, 在52上观测到53当掉了</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">INFO <span class="number">10</span>:<span class="number">37</span>:<span class="number">19</span>,<span class="number">533</span> InetAddress /<span class="number">192.168</span><span class="number">.6</span><span class="number">.53</span> is now DOWN</span><br><span class="line">INFO <span class="number">10</span>:<span class="number">37</span>:<span class="number">20</span>,<span class="number">001</span> Handshaking version with /<span class="number">192.168</span><span class="number">.6</span><span class="number">.53</span></span><br><span class="line">INFO <span class="number">10</span>:<span class="number">37</span>:<span class="number">28</span>,<span class="number">042</span> GC <span class="keyword">for</span> ParNew: <span class="number">316</span> ms <span class="keyword">for</span> <span class="number">1</span> collections, <span class="number">201429600</span> used; max is <span class="number">8375238656</span></span><br></pre></td></tr></table></figure>
-<p>此时再观察集群的状态, 53的第一列状态为DN(DownNode)  </p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">--</span>  <span class="tag">Address</span>       <span class="tag">Load</span>       <span class="tag">Tokens</span>  <span class="tag">Owns</span> (<span class="tag">effective</span>)  <span class="tag">Host</span> <span class="tag">ID</span>                               <span class="tag">Rack</span></span><br><span class="line"><span class="tag">UN</span>  192<span class="class">.168</span><span class="class">.6</span><span class="class">.52</span>  46<span class="class">.21</span> <span class="tag">KB</span>   256     41<span class="class">.9</span>%             69<span class="tag">d3a2ab-cad8-4fdc-b609-7b9c0ce3243a</span>  <span class="tag">rack1</span></span><br><span class="line"><span class="tag">DN</span>  192<span class="class">.168</span><span class="class">.6</span><span class="class">.53</span>  62<span class="class">.46</span> <span class="tag">KB</span>   256     40<span class="class">.7</span>%             <span class="tag">dc884efd-5f26-4746-b5c6-73ac7d446796</span>  <span class="tag">rack1</span></span><br><span class="line"><span class="tag">UN</span>  192<span class="class">.168</span><span class="class">.6</span><span class="class">.55</span>  76<span class="class">.73</span> <span class="tag">KB</span>   256     37<span class="class">.9</span>%             180<span class="tag">e65c1-7ac1-4a2c-b8a6-c9ae3dc08de1</span>  <span class="tag">rack1</span></span><br><span class="line"><span class="tag">UN</span>  192<span class="class">.168</span><span class="class">.6</span><span class="class">.56</span>  96<span class="class">.73</span> <span class="tag">KB</span>   256     40<span class="class">.9</span>%             6<span class="tag">a1a7d22-ffdf-4598-8402-fe0ffa62663d</span>  <span class="tag">rack1</span></span><br><span class="line"><span class="tag">UN</span>  192<span class="class">.168</span><span class="class">.6</span><span class="class">.57</span>  97<span class="class">.07</span> <span class="tag">KB</span>   256     38<span class="class">.6</span>%             <span class="tag">d35ceda3-f8b2-49a6-98fd-390b2341481c</span>  <span class="tag">rack1</span></span><br></pre></td></tr></table></figure>
-<p>在集群中任意一个节点建表和插入数据, 注意不同的是副本因子<code>replication_factor=3</code>  </p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> KEYSPACE mykeyspace</span><br><span class="line"><span class="keyword">WITH</span> <span class="keyword">REPLICATION</span> = &#123; <span class="string">'class'</span> : <span class="string">'SimpleStrategy'</span>, <span class="string">'replication_factor'</span> : <span class="number">3</span> &#125;;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">USE</span> mykeyspace;</span></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">users</span> ( user_id <span class="built_in">int</span> PRIMARY <span class="keyword">KEY</span>, fname <span class="built_in">text</span>, lname <span class="built_in">text</span> );</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">users</span> (user_id, fname, lname) <span class="keyword">VALUES</span> (<span class="number">1745</span>, <span class="string">'john'</span>, <span class="string">'smith'</span>);</span></span><br><span class="line"><span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">users</span> (user_id, fname, lname) <span class="keyword">VALUES</span> (<span class="number">1744</span>, <span class="string">'john'</span>, <span class="string">'doe'</span>);</span></span><br><span class="line"><span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">users</span> (user_id, fname, lname) <span class="keyword">VALUES</span> (<span class="number">1746</span>, <span class="string">'john'</span>, <span class="string">'smith'</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span> <span class="keyword">ON</span> <span class="keyword">users</span> (lname);</span></span><br><span class="line"><span class="operator"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> lname = <span class="string">'smith'</span>;</span></span><br></pre></td></tr></table></figure>
-<p>在另外的节点上查看数据,注意cqlsh要加上host地址,随便集群中的哪个节点都可以,但不能都不跟.  </p>
-<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@dp0655 apache-cassandra-2.0.16]$ bin/cqlsh 192.168.6.55</span><br><span class="line">Connected to Test Cluster at 192.168.6.55:9160.</span><br><span class="line">cqlsh&gt; use mykeyspace;</span><br><span class="line">cqlsh:mykeyspace&gt; SELECT * FROM users WHERE lname = <span class="emphasis">'smith'</span>;</span><br><span class="line"><span class="header"> user_id | fname | lname</span><br><span class="line">---------+-------+-------</span></span><br><span class="line"><span class="code">    1745 |  john | smith</span></span><br><span class="line"><span class="code">    1746 |  john | smith</span></span><br></pre></td></tr></table></figure>
-<h2 id="PrimaryKey_&amp;_Examples">PrimaryKey &amp; Examples</h2><blockquote>
-<p><strong>Primary Key 👉 Partition Key</strong>: <code>controls how the data is spread around the cluster</code><br><strong>Cluster Key</strong>: <code>controls how the data is sorted on disk</code></p>
-</blockquote>
-<p>Rows are spread around the cluster based on a hash of the partition key, which is the first element of the PRIMARY KEY<br>每一行数据分散在集群中, 根据的是partition-key的hash值. partition-key指的是primary-key的第一个字段(第一部分,可能不止一个字段哦).  </p>
-<p>Primary keys can be composite; the first part of the primary key is the partition key and determines the primary node for the partition<br>主键可以是复合的, 主键的第一部分是分区键,决定了分区的主节点.   </p>
-<h3 id="单一主键">单一主键</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">users</span>(</span><br><span class="line">  username <span class="built_in">varchar</span>,</span><br><span class="line">  email <span class="built_in">varchar</span>,</span><br><span class="line">  birth <span class="keyword">timestamp</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span>(username)</span><br><span class="line">);</span></span><br><span class="line"><span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">users</span>(username,email,birth)<span class="keyword">VALUES</span>(<span class="string">'john.doe'</span>,<span class="string">'johndoe@gmail.com'</span>,<span class="string">'1970-01-01'</span>);</span></span><br><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">users</span>;</span></span><br><span class="line"> username | birth                    | email</span><br><span class="line"><span class="comment">----------+--------------------------+-------------------</span></span><br><span class="line"> john.doe | 1970-01-01 01:00:00+0800 | johndoe@gmail.com</span><br></pre></td></tr></table></figure>
-<h3 id="复合主键(Composite_Primary_Key)">复合主键(Composite Primary Key)</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> user_attr(</span><br><span class="line">  username <span class="built_in">varchar</span>,</span><br><span class="line">  <span class="keyword">key</span> <span class="built_in">varchar</span>,</span><br><span class="line">  <span class="keyword">value</span> <span class="built_in">varchar</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span>(username,<span class="keyword">key</span>)</span><br><span class="line">);</span></span><br><span class="line"><span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> user_attr(username,<span class="keyword">key</span>,<span class="keyword">value</span>)<span class="keyword">VALUES</span>(<span class="string">'john.doe'</span>,<span class="string">'married_to'</span>,<span class="string">'janedoe'</span>);</span></span><br><span class="line"><span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> user_attr(username,<span class="keyword">key</span>,<span class="keyword">value</span>)<span class="keyword">VALUES</span>(<span class="string">'john.doe'</span>,<span class="string">'last_login'</span>,<span class="string">'2014-01-04T12:00:00'</span>);</span></span><br><span class="line"><span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> user_attr(username,<span class="keyword">key</span>,<span class="keyword">value</span>)<span class="keyword">VALUES</span>(<span class="string">'anna'</span>,<span class="string">'last_login'</span>,<span class="string">'2014-04-03T13:00:00'</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> user_attr;</span></span><br><span class="line"> username | key        | value</span><br><span class="line"><span class="comment">----------+------------+---------------------</span></span><br><span class="line">     anna | last_login | 2014-04-03T13:00:00</span><br><span class="line"> john.doe | last_login | 2014-01-04T12:00:00</span><br><span class="line"> john.doe | married_to |             janedoe</span><br></pre></td></tr></table></figure>
-<p>复合主键示例中, username是Partition Key, key是Clustering Columns.<br>PartitionKey是未排序的, 而Clustering Columns是会进行排序的.<br>比如相同partition-key的username=john.doe,其中clustring columns的顺序是last_login先于married_to.因为字母表中l在m前面.  </p>
-<p>Note that the PRIMARY KEY has two components: username, which is the partitioning key, and key, which is called the clustering key.<br>This will give us <code>one partition per username每个用户只有一个分区</code>. Within a particular partition (user), rows will be ordered by key.   </p>
-<p>复合主键在磁盘上的Partition Layout(cluster column1到2分别根据cluster column进行排序):  </p>
-<table>
-<thead>
-<tr>
-<th>primary key</th>
-<th>cluster column 1</th>
-<th>cluster column 2</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>username</code>:anna</td>
-<td><code>last_login</code>:2014-04-03T13:00:00</td>
-<td>-</td>
-</tr>
-<tr>
-<td><code>username</code>:john.doe</td>
-<td><code>last_login</code>:2014-01-04T12:00:00</td>
-<td><code>married_to</code>:janedoe</td>
-</tr>
-</tbody>
-</table>
-<h3 id="复合分区键(Compound_Partition_Key,随机)">复合分区键(Compound Partition Key,随机)</h3><p>If we have thousands or millions of small groups with hundreds of users each, we’ll get a pretty even spread(分区键很多,聚合键数量少).<br>But if there’s one group with millions of users in it(聚合键数量很多), the entire burden will be shouldered by one node (or one set of replicas)<br>The basic technique is to add another column to the PRIMARY KEY to form a <code>compound partition key</code>.    </p>
-<p>上面的表结构对于一个用户有较少的字段,并且用户数很多的情况下, 可以均衡地在集群中分布数据. 但是如果有一个用户字段数(key)非常多,则节点的负载会很重.<br>可以给partition-key添加一个字段组成复合primary-key,就可以比较均衡地分布数据. 但是这种代价是读取时由于一个username由多个分区组成,读负载会增大.  </p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">groups</span> (</span><br><span class="line">    groupname <span class="built_in">text</span>,</span><br><span class="line">    username <span class="built_in">text</span>,</span><br><span class="line">    email <span class="built_in">text</span>,</span><br><span class="line">    age <span class="built_in">int</span>,</span><br><span class="line">    hash_prefix <span class="built_in">int</span>,</span><br><span class="line">    PRIMARY <span class="keyword">KEY</span> ((groupname, hash_prefix), username)</span><br><span class="line">)</span></span><br></pre></td></tr></table></figure>
-<p>The new column hash_prefix, holds a prefix of a hash of the username. For example, it could be the first byte of the hash modulo four.<br>Together with groupname, these two columns form the compound partition key. Instead of <code>a group residing on one partition</code>,<br>it’s <code>now spread across four partitions</code>. Our data is more evenly spread out, but we now have to <code>read four times as many partitions</code>.  </p>
-<h3 id="根据时间范围组合分区键求TopN">根据时间范围组合分区键求TopN</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> group_join_dates (</span><br><span class="line">    groupname <span class="built_in">text</span>,</span><br><span class="line">    joined timeuuid,</span><br><span class="line">    join_date <span class="built_in">text</span>,</span><br><span class="line">    username <span class="built_in">text</span>,</span><br><span class="line">    email <span class="built_in">text</span>,</span><br><span class="line">    age <span class="built_in">int</span>,</span><br><span class="line">    PRIMARY <span class="keyword">KEY</span> ((groupname, join_date), joined)</span><br><span class="line">) <span class="keyword">WITH</span> <span class="keyword">CLUSTERING</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> (joined <span class="keyword">DESC</span>)</span></span><br></pre></td></tr></table></figure>
-<p>Each day, a new partition will start. When querying the X newest users, we will first query today’s partition,<br>then yesterday’s, and so on, until we have X users. </p>
-<h3 id="参考文档">参考文档</h3><p>数据模型的基本规则: <a href="http://www.datastax.com/dev/blog/basic-rules-of-cassandra-data-modeling" target="_blank" rel="external">http://www.datastax.com/dev/blog/basic-rules-of-cassandra-data-modeling</a></p>
-<p><strong>Query Performance</strong></p>
-<ul>
-<li>Single-partition queries are fast!</li>
-<li>Queries for ranges on clustering columns are fast! </li>
-<li>Queries for multiple partitions are slow</li>
-<li>Use secondary indexes with caution</li>
-</ul>
-<h3 id="twissandra_:_Twitter_with_Cassandra_Backend_Demo">twissandra : Twitter with Cassandra Backend Demo</h3><p><a href="https://github.com/twissandra/twissandra">https://github.com/twissandra/twissandra</a></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">users</span> (</span><br><span class="line">    username <span class="built_in">text</span> PRIMARY <span class="keyword">KEY</span>,</span><br><span class="line">    <span class="keyword">password</span> <span class="built_in">text</span></span><br><span class="line">);</span></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> friends (</span><br><span class="line">    username <span class="built_in">text</span>,</span><br><span class="line">    friend <span class="built_in">text</span>,</span><br><span class="line">    since <span class="keyword">timestamp</span>,</span><br><span class="line">    PRIMARY <span class="keyword">KEY</span> (username, friend)</span><br><span class="line">);</span></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> followers (</span><br><span class="line">    username <span class="built_in">text</span>,</span><br><span class="line">    follower <span class="built_in">text</span>,</span><br><span class="line">    since <span class="keyword">timestamp</span>,</span><br><span class="line">    PRIMARY <span class="keyword">KEY</span> (username, follower)</span><br><span class="line">);</span></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> tweets (</span><br><span class="line">    tweet_id <span class="keyword">uuid</span> PRIMARY <span class="keyword">KEY</span>,</span><br><span class="line">    username <span class="built_in">text</span>,</span><br><span class="line">    <span class="keyword">body</span> <span class="built_in">text</span></span><br><span class="line">);</span></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> userline (</span><br><span class="line">    username <span class="built_in">text</span>,</span><br><span class="line">    <span class="keyword">time</span> timeuuid,</span><br><span class="line">    tweet_id <span class="keyword">uuid</span>,</span><br><span class="line">    PRIMARY <span class="keyword">KEY</span> (username, <span class="keyword">time</span>)</span><br><span class="line">) <span class="keyword">WITH</span> <span class="keyword">CLUSTERING</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> (<span class="keyword">time</span> <span class="keyword">DESC</span>);</span></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> timeline (</span><br><span class="line">    username <span class="built_in">text</span>,</span><br><span class="line">    <span class="keyword">time</span> timeuuid,</span><br><span class="line">    tweet_id <span class="keyword">uuid</span>,</span><br><span class="line">    PRIMARY <span class="keyword">KEY</span> (username, <span class="keyword">time</span>)</span><br><span class="line">) <span class="keyword">WITH</span> <span class="keyword">CLUSTERING</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> (<span class="keyword">time</span> <span class="keyword">DESC</span>);</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>用户表users的主键是username<br>朋友friends和粉丝followers的主键是自己的username加上对方的username<br>推文的主键是UUID<br>用户的时间线userline和所有的时间线timeline的主键是用户名username和创建时间<br>时间线的cluster key是time字段,两个时间线的表的排序字段都是desc,因为最新的推文要排列在前面  </p>
-</blockquote>
-<h3 id="TTL_&amp;_Delete">TTL &amp; Delete</h3><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> TABLE emp (</span><br><span class="line">  empID int,</span><br><span class="line">  deptID int,</span><br><span class="line">  first_name varchar,</span><br><span class="line">  last_name varchar,</span><br><span class="line">  PRIMARY KEY (empID, deptID));</span><br><span class="line"></span><br><span class="line">插入数据,第二条指定了过去时间=<span class="number">60</span>秒</span><br><span class="line">INSERT <span class="keyword">INTO</span> emp (empID, deptID, first_name, last_name) VALUES (<span class="number">104</span>, <span class="number">15</span>, <span class="string">'jane'</span>, <span class="string">'smith'</span>);</span><br><span class="line">INSERT <span class="keyword">INTO</span> emp (empID, deptID, first_name, last_name) VALUES (<span class="number">105</span>, <span class="number">17</span>, <span class="string">'jane'</span>, <span class="string">'smith'</span>) <span class="keyword">USING</span> TTL <span class="number">60</span>;</span><br><span class="line"></span><br><span class="line">cqlsh:mykeyspace&gt; <span class="keyword">SELECT</span> empid,WRITETIME(first_name),TTL(last_name) <span class="keyword">from</span> emp;</span><br><span class="line"> empid | ttl(last_name)</span><br><span class="line">-------+----------------</span><br><span class="line">   <span class="number">105</span> |            <span class="number">35</span></span><br><span class="line">   <span class="number">104</span> |           null</span><br><span class="line">过了<span class="number">60</span>秒之后, 再次查询, 只有一条记录<span class="number">104</span>. <span class="number">105</span>因为<span class="number">60</span>秒过去了,所以被删除. </span><br><span class="line"></span><br><span class="line">更新过期时间, 可以在上面<span class="number">60</span>秒还没有过期的时候执行(如果已经过期了不在了,效果跟上面的一样,那就是插入了)</span><br><span class="line">INSERT <span class="keyword">INTO</span> emp (empID, deptID, first_name, last_name) VALUES (<span class="number">105</span>, <span class="number">17</span>, <span class="string">'miaomiao'</span>, <span class="string">'han'</span>) <span class="keyword">USING</span> TTL <span class="number">600</span>;</span><br><span class="line">cqlsh:mykeyspace&gt; <span class="keyword">SELECT</span> empid,TTL(last_name) <span class="keyword">from</span> emp;</span><br><span class="line"> empid | ttl(last_name)</span><br><span class="line">-------+----------------</span><br><span class="line">   <span class="number">105</span> |            <span class="number">345</span></span><br><span class="line">   <span class="number">104</span> |           null</span><br><span class="line"></span><br><span class="line">删除一行记录, 并不会真正删除,查询时,还在!</span><br><span class="line">cqlsh:mykeyspace&gt; delete <span class="keyword">from</span> emp <span class="keyword">where</span> empid=<span class="number">104</span> <span class="keyword">and</span> deptid=<span class="number">105</span>;</span><br><span class="line">cqlsh:mykeyspace&gt; <span class="keyword">select</span> * <span class="keyword">from</span> emp;</span><br><span class="line"> empid | deptid | first_name | last_name</span><br><span class="line">-------+--------+------------+-----------</span><br><span class="line">   <span class="number">105</span> |     <span class="number">17</span> |   miaomiao |       han</span><br><span class="line">   <span class="number">104</span> |     <span class="number">15</span> |       jane |     smith</span><br><span class="line"></span><br><span class="line">删除一列,这一列为null. 但是不能删除主键.</span><br><span class="line">cqlsh:mykeyspace&gt; DELETE last_name <span class="keyword">FROM</span> emp <span class="keyword">WHERE</span> empid=<span class="number">104</span> <span class="keyword">and</span> deptid=<span class="number">15</span>;</span><br><span class="line">cqlsh:mykeyspace&gt; </span><br><span class="line">cqlsh:mykeyspace&gt; <span class="keyword">select</span> * <span class="keyword">from</span> emp;</span><br><span class="line"> empid | deptid | first_name | last_name</span><br><span class="line">-------+--------+------------+-----------</span><br><span class="line">   <span class="number">105</span> |     <span class="number">17</span> |   miaomiao |       han</span><br><span class="line">   <span class="number">104</span> |     <span class="number">15</span> |       jane |      null</span><br></pre></td></tr></table></figure>
-<p>上面是对一行数据的所有列都设置了TTL(当然除了primary-key外), 还可以针对一些列设置TTL.  </p>
-<p><a href="http://cjwebb.github.io/blog/2015/03/02/cassandra-ttl-is-per-column/" target="_blank" rel="external">http://cjwebb.github.io/blog/2015/03/02/cassandra-ttl-is-per-column/</a></p>
-<h3 id="List,Set,Map">List,Set,Map</h3><p><a href="http://www.datastax.com/dev/blog/cql3_collections" target="_blank" rel="external">http://www.datastax.com/dev/blog/cql3_collections</a>  </p>
-<p>集合Set:  </p>
-<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE users (</span><br><span class="line">  user_id text PRIMARY KEY,</span><br><span class="line">  first_name text,</span><br><span class="line">  last_name text,</span><br><span class="line">  emails <span class="built_in">set</span>&lt;text&gt;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">列的顺序并不一定是插入的顺序<span class="built_in">. </span>而是按照字母顺序, 比如e,f,l<span class="built_in">.  </span>集合<span class="built_in">set</span>中的元素顺序也是字母顺序<span class="built_in">.</span><br><span class="line"></span>插入的是f先于baggins, 而显示时因为字母表中b在f之前, 所以为baggins,f<span class="built_in">.</span><br><span class="line"></span>cqlsh:test&gt; INSERT <span class="keyword">INTO</span> users (user_id, first_name, last_name, emails) VALUES(<span class="string">'frodo'</span>,<span class="string">'Frodo'</span>, <span class="string">'Baggins'</span>, &#123;<span class="string">'f@baggins.com'</span>, <span class="string">'baggins@gmail.com'</span>&#125;);</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * from users;</span><br><span class="line"> user_id | emails                                 | first_name | last_name</span><br><span class="line">---------+----------------------------------------+------------+-----------</span><br><span class="line">   frodo | &#123;<span class="string">'baggins@gmail.com'</span>, <span class="string">'f@baggins.com'</span>&#125; |      Frodo |   Baggins</span><br><span class="line"></span><br><span class="line">添加一个元素, fb因为在所有集合元素中的字母顺序最后, 所以显示在集合最后</span><br><span class="line">cqlsh:test&gt; UPDATE users <span class="built_in">SET</span> emails = emails + &#123;<span class="string">'fb@friendsofmordor.org'</span>&#125; <span class="keyword">WHERE</span> user_id = <span class="string">'frodo'</span>;</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * from users;</span><br><span class="line"> user_id | emails                                                           | first_name | last_name</span><br><span class="line">---------+------------------------------------------------------------------+------------+-----------</span><br><span class="line">   frodo | &#123;<span class="string">'baggins@gmail.com'</span>, <span class="string">'f@baggins.com'</span>, <span class="string">'fb@friendsofmordor.org'</span>&#125; |      Frodo |   Baggins</span><br><span class="line"></span><br><span class="line">添加一个ab,在字母表最前面, 所以显示在集合的第一个: </span><br><span class="line">cqlsh:test&gt; UPDATE users <span class="built_in">SET</span> emails = emails + &#123;<span class="string">'ab@friendsofmordor.org'</span>&#125; <span class="keyword">WHERE</span> user_id = <span class="string">'frodo'</span>;</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * from users;</span><br><span class="line"> user_id | emails                                                                                     | first_name | last_name</span><br><span class="line">---------+--------------------------------------------------------------------------------------------+------------+-----------</span><br><span class="line">   frodo | &#123;<span class="string">'ab@friendsofmordor.org'</span>, <span class="string">'baggins@gmail.com'</span>, <span class="string">'f@baggins.com'</span>, <span class="string">'fb@friendsofmordor.org'</span>&#125; |      Frodo |   Baggins</span><br><span class="line"></span><br><span class="line">设置为空和删除列都会使得该列数据为<span class="built_in">null</span>, delete并不会把列真正删掉<span class="built_in">.</span><br><span class="line"></span>cqlsh:test&gt; UPDATE users <span class="built_in">SET</span> emails = &#123;&#125; <span class="keyword">WHERE</span> user_id = <span class="string">'frodo'</span>;</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * from users;</span><br><span class="line"> user_id | emails | first_name | last_name</span><br><span class="line">---------+--------+------------+-----------</span><br><span class="line">   frodo |   <span class="built_in">null</span> |      Frodo |   Baggins</span><br><span class="line"></span><br><span class="line">cqlsh:test&gt; DELETE emails FROM users <span class="keyword">WHERE</span> user_id = <span class="string">'frodo'</span>;</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * from users;</span><br><span class="line"> user_id | emails | first_name | last_name</span><br><span class="line">---------+--------+------------+-----------</span><br><span class="line">   frodo |   <span class="built_in">null</span> |      Frodo |   Baggins</span><br></pre></td></tr></table></figure>
-<p>列表List: </p>
-<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">在已有的表结构上添加一列</span><br><span class="line">cqlsh:test&gt;   ALTER TABLE users <span class="keyword">ADD</span> top_places list&lt;text&gt;;</span><br><span class="line">cqlsh:test&gt; UPDATE users <span class="keyword">SET</span> top_places = [ <span class="string">'rivendell'</span>, <span class="string">'rohan'</span> ] <span class="keyword">WHERE</span> user_id= <span class="string">'frodo'</span>;</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * <span class="keyword">from</span> users;</span><br><span class="line"> user_id | emails | first_name | last_name | top_places</span><br><span class="line">---------+--------+------------+-----------+------------------------</span><br><span class="line">   frodo |   null |      Frodo |   Baggins | [<span class="string">'rivendell'</span>, <span class="string">'rohan'</span>]</span><br><span class="line">   </span><br><span class="line">在列表头部添加元素</span><br><span class="line">cqlsh:test&gt; UPDATE users <span class="keyword">SET</span> top_places = [ <span class="string">'home'</span> ] + top_places <span class="keyword">WHERE</span> user_id = <span class="string">'frodo'</span>;</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * <span class="keyword">from</span> users;</span><br><span class="line"> user_id | emails | first_name | last_name | top_places</span><br><span class="line">---------+--------+------------+-----------+--------------------------------</span><br><span class="line">   frodo |   null |      Frodo |   Baggins | [<span class="string">'home'</span>, <span class="string">'rivendell'</span>, <span class="string">'rohan'</span>]</span><br><span class="line"></span><br><span class="line">在列表尾部添加元素</span><br><span class="line">cqlsh:test&gt; UPDATE users <span class="keyword">SET</span> top_places = top_places + [ <span class="string">'mordor'</span> ] <span class="keyword">WHERE</span> user_id = <span class="string">'frodo'</span>;</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * <span class="keyword">from</span> users;</span><br><span class="line"> user_id | emails | first_name | last_name | top_places</span><br><span class="line">---------+--------+------------+-----------+------------------------------------------</span><br><span class="line">   frodo |   null |      Frodo |   Baggins | [<span class="string">'home'</span>, <span class="string">'rivendell'</span>, <span class="string">'rohan'</span>, <span class="string">'mordor'</span>]</span><br><span class="line"></span><br><span class="line">更新元素: 索引从<span class="number">0</span>开始, 下面的意思是更新列表的第三个元素的值. 问题是能不能在指定位置插入元素?</span><br><span class="line">cqlsh:test&gt; UPDATE users <span class="keyword">SET</span> top_places[<span class="number">2</span>] = <span class="string">'riddermark'</span> <span class="keyword">WHERE</span> user_id =<span class="string">'frodo'</span>;</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * <span class="keyword">from</span> users;</span><br><span class="line"> user_id | emails | first_name | last_name | top_places</span><br><span class="line">---------+--------+------------+-----------+-----------------------------------------------</span><br><span class="line">   frodo |   null |      Frodo |   Baggins | [<span class="string">'home'</span>, <span class="string">'rivendell'</span>, <span class="string">'riddermark'</span>, <span class="string">'mordor'</span>]</span><br><span class="line"></span><br><span class="line">根据索引删除列表某个元素, 索引也是从<span class="number">0</span>开始. 下面表示删除列表第四个元素.  注意用的是delete</span><br><span class="line">cqlsh:test&gt; DELETE top_places[<span class="number">3</span>] <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> user_id = <span class="string">'frodo'</span>;</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * <span class="keyword">from</span> users;</span><br><span class="line"> user_id | emails | first_name | last_name | top_places</span><br><span class="line">---------+--------+------------+-----------+-------------------------------------</span><br><span class="line">   frodo |   null |      Frodo |   Baggins | [<span class="string">'home'</span>, <span class="string">'rivendell'</span>, <span class="string">'riddermark'</span>]</span><br><span class="line"></span><br><span class="line">根据内容删除指定的元素.  注意用的是update更新操作</span><br><span class="line">cqlsh:test&gt; UPDATE users <span class="keyword">SET</span> top_places = top_places - [<span class="string">'rivendell'</span>] <span class="keyword">WHERE</span> user_id = <span class="string">'frodo'</span>;</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * <span class="keyword">from</span> users;</span><br><span class="line"> user_id | emails | first_name | last_name | top_places</span><br><span class="line">---------+--------+------------+-----------+------------------------</span><br><span class="line">   frodo |   null |      Frodo |   Baggins | [<span class="string">'home'</span>, <span class="string">'riddermark'</span>]</span><br></pre></td></tr></table></figure>
-<p>映射Map:  </p>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">添加Map数据结构, key为timestamp,<span class="keyword">value</span>为文本</span><br><span class="line">cqlsh:test&gt; ALTER TABLE users ADD todo map&lt;timestamp, text&gt;;</span><br><span class="line"></span><br><span class="line">没有存在,则插入</span><br><span class="line">cqlsh:test&gt; UPDATE users SET todo =  &#123; <span class="string">'2012-9-24'</span> : <span class="string">'entermordor'</span>, <span class="string">'2012-10-2 12:00'</span> : <span class="string">'throwring into mount doom'</span> &#125; WHERE user_id = <span class="string">'frodo'</span>;</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * <span class="keyword">from</span> users;</span><br><span class="line"> user_id | emails | first_name | last_name | todo                                                                                                 | top_places</span><br><span class="line">---------+--------+------------+-----------+------------------------------------------------------------------------------------------------------+------------------------</span><br><span class="line">   frodo |   <span class="keyword">null</span> |      Frodo |   Baggins | &#123;<span class="string">'2012-09-24 00:00:00+0800'</span>: <span class="string">'entermordor'</span>, <span class="string">'2012-10-02 12:00:00+0800'</span>: <span class="string">'throwring into mount doom'</span>&#125; | [<span class="string">'home'</span>, <span class="string">'riddermark'</span>]</span><br><span class="line"></span><br><span class="line">已经存在,则更新</span><br><span class="line">cqlsh:test&gt; UPDATE users SET todo[<span class="string">'2012-10-2 12:00'</span>] = <span class="string">'throw my precious intomount doom'</span> WHERE user_id = <span class="string">'frodo'</span>;</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * <span class="keyword">from</span> users;</span><br><span class="line"> user_id | emails | first_name | last_name | todo                                                                                                        | top_places</span><br><span class="line">---------+--------+------------+-----------+-------------------------------------------------------------------------------------------------------------+------------------------</span><br><span class="line">   frodo |   <span class="keyword">null</span> |      Frodo |   Baggins | &#123;<span class="string">'2012-09-24 00:00:00+0800'</span>: <span class="string">'entermordor'</span>, <span class="string">'2012-10-02 12:00:00+0800'</span>: <span class="string">'throw my precious intomount doom'</span>&#125; | [<span class="string">'home'</span>, <span class="string">'riddermark'</span>]</span><br><span class="line"></span><br><span class="line">插入一条新记录</span><br><span class="line">cqlsh:test&gt; <span class="function">INSERT INTO <span class="title">users</span> (<span class="params">user_id,todo</span>)  <span class="title">VALUES</span> (<span class="params"><span class="string">'miaohan'</span>, &#123; <span class="string">'2013-9-22 12:01'</span> : <span class="string">'birthday wishes to Bilbo'</span>,  <span class="string">'2013-10-1 18:00'</span> : <span class="string">'Check into Inn of Prancing Pony'</span> &#125;</span>)</span>;</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * <span class="keyword">from</span> users;</span><br><span class="line"> user_id | emails | first_name | last_name | todo                                                                                                                    | top_places</span><br><span class="line">---------+--------+------------+-----------+-------------------------------------------------------------------------------------------------------------------------+------------------------</span><br><span class="line"> miaohan |   <span class="keyword">null</span> |       <span class="keyword">null</span> |      <span class="keyword">null</span> | &#123;<span class="string">'2013-09-22 12:01:00+0800'</span>: <span class="string">'birthday wishes to Bilbo'</span>, <span class="string">'2013-10-01 18:00:00+0800'</span>: <span class="string">'Check into Inn of Prancing Pony'</span>&#125; |                   <span class="keyword">null</span></span><br><span class="line">   frodo |   <span class="keyword">null</span> |      Frodo |   Baggins |             &#123;<span class="string">'2012-09-24 00:00:00+0800'</span>: <span class="string">'entermordor'</span>, <span class="string">'2012-10-02 12:00:00+0800'</span>: <span class="string">'throw my precious intomount doom'</span>&#125; | [<span class="string">'home'</span>, <span class="string">'riddermark'</span>]</span><br><span class="line"></span><br><span class="line">删除Map中的一个键值对</span><br><span class="line">cqlsh:test&gt; DELETE todo[<span class="string">'2012-9-24'</span>] FROM users WHERE user_id = <span class="string">'frodo'</span>;</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * <span class="keyword">from</span> users;</span><br><span class="line"> user_id | emails | first_name | last_name | todo                                                                                                                    | top_places</span><br><span class="line">---------+--------+------------+-----------+-------------------------------------------------------------------------------------------------------------------------+------------------------</span><br><span class="line"> miaohan |   <span class="keyword">null</span> |       <span class="keyword">null</span> |      <span class="keyword">null</span> | &#123;<span class="string">'2013-09-22 12:01:00+0800'</span>: <span class="string">'birthday wishes to Bilbo'</span>, <span class="string">'2013-10-01 18:00:00+0800'</span>: <span class="string">'Check into Inn of Prancing Pony'</span>&#125; |                   <span class="keyword">null</span></span><br><span class="line">   frodo |   <span class="keyword">null</span> |      Frodo |   Baggins |                                                        &#123;<span class="string">'2012-10-02 12:00:00+0800'</span>: <span class="string">'throw my precious intomount doom'</span>&#125; | [<span class="string">'home'</span>, <span class="string">'riddermark'</span>]</span><br><span class="line"></span><br><span class="line">插入(没有存在时)或更新(已经存在时), 同时设置ttl失效时间. 在ttl时间后, 这个键值对会从Map中删除</span><br><span class="line">cqlsh:test&gt; UPDATE users USING TTL <span class="number">60</span> SET todo[<span class="string">'2012-10-1'</span>] = <span class="string">'find water'</span> WHERE user_id = <span class="string">'frodo'</span>;</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * <span class="keyword">from</span> users;</span><br><span class="line"> user_id | emails | first_name | last_name | todo                                                                                                                    | top_places</span><br><span class="line">---------+--------+------------+-----------+-------------------------------------------------------------------------------------------------------------------------+------------------------</span><br><span class="line"> miaohan |   <span class="keyword">null</span> |       <span class="keyword">null</span> |      <span class="keyword">null</span> | &#123;<span class="string">'2013-09-22 12:01:00+0800'</span>: <span class="string">'birthday wishes to Bilbo'</span>, <span class="string">'2013-10-01 18:00:00+0800'</span>: <span class="string">'Check into Inn of Prancing Pony'</span>&#125; |                   <span class="keyword">null</span></span><br><span class="line">   frodo |   <span class="keyword">null</span> |      Frodo |   Baggins |              &#123;<span class="string">'2012-10-01 00:00:00+0800'</span>: <span class="string">'find water'</span>, <span class="string">'2012-10-02 12:00:00+0800'</span>: <span class="string">'throw my precious intomount doom'</span>&#125; | [<span class="string">'home'</span>, <span class="string">'riddermark'</span>]</span><br><span class="line"></span><br><span class="line">过了<span class="number">60</span>秒后, todo[<span class="string">'2012-10-1'</span>] 的记录会从Map中删除掉</span><br><span class="line">cqlsh:test&gt; <span class="keyword">select</span> * <span class="keyword">from</span> users;</span><br><span class="line"> user_id | emails | first_name | last_name | todo                                                                                                                    | top_places</span><br><span class="line">---------+--------+------------+-----------+-------------------------------------------------------------------------------------------------------------------------+------------------------</span><br><span class="line"> miaohan |   <span class="keyword">null</span> |       <span class="keyword">null</span> |      <span class="keyword">null</span> | &#123;<span class="string">'2013-09-22 12:01:00+0800'</span>: <span class="string">'birthday wishes to Bilbo'</span>, <span class="string">'2013-10-01 18:00:00+0800'</span>: <span class="string">'Check into Inn of Prancing Pony'</span>&#125; |                   <span class="keyword">null</span></span><br><span class="line">   frodo |   <span class="keyword">null</span> |      Frodo |   Baggins |                                                        &#123;<span class="string">'2012-10-02 12:00:00+0800'</span>: <span class="string">'throw my precious intomount doom'</span>&#125; | [<span class="string">'home'</span>, <span class="string">'riddermark'</span>]</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
-	</div>
-
       
       <div class="clearfix"></div>
     </div>

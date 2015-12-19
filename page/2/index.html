@@ -109,7 +109,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 15px;">cassandra</a> <a href="/tags/drill/" style="font-size: 20px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 12.5px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18px;">drill</a> <a href="/tags/druid/" style="font-size: 14px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 14px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/storm/" style="font-size: 16px;">storm</a> <a href="/tags/work/" style="font-size: 12px;">work</a>
 					</div>
 				</section>
 				
@@ -171,6 +171,1275 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-2015-11-26-StreamCQL-schema" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/11/26/2015-11-26-StreamCQL-schema/" class="article-date">
+  	<time datetime="2015-11-25T16:00:00.000Z" itemprop="datePublished">2015-11-26</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/26/2015-11-26-StreamCQL-schema/">StreamCQL源码阅读(2) 语法和语义解析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>StreamCQL的Schema以及语法和语义解析</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Source/">Source</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/storm/">storm</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/11/26/2015-11-26-StreamCQL-schema/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-11-24-StreamCQL-task" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/11/24/2015-11-24-StreamCQL-task/" class="article-date">
+  	<time datetime="2015-11-23T16:00:00.000Z" itemprop="datePublished">2015-11-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/24/2015-11-24-StreamCQL-task/">StreamCQL源码阅读(1) 提交任务</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>大数据上的流式SQL引擎—StreamCQL: <a href="http://www.csdn.net/article/2015-11-13/2826204">http://www.csdn.net/article/2015-11-13/2826204</a></p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Source/">Source</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/storm/">storm</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/11/24/2015-11-24-StreamCQL-task/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-11-20-Cassandra-Stream" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/11/20/2015-11-20-Cassandra-Stream/" class="article-date">
+  	<time datetime="2015-11-19T16:00:00.000Z" itemprop="datePublished">2015-11-20</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/20/2015-11-20-Cassandra-Stream/">Cassandra源码分析之Stream</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>大数据源码阅读系列之ApacheCassandra: sstable的stream流程</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Source/">Source</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/11/20/2015-11-20-Cassandra-Stream/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-11-17-Cassandra-Migration7_VelocityHadoop" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/11/17/2015-11-17-Cassandra-Migration7_VelocityHadoop/" class="article-date">
+  	<time datetime="2015-11-16T16:00:00.000Z" itemprop="datePublished">2015-11-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/17/2015-11-17-Cassandra-Migration7_VelocityHadoop/">Cassandra数据迁移 分离表</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>使用Hadoop-sstable读取Cassandra数据<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/11/17/2015-11-17-Cassandra-Migration7_VelocityHadoop/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-11-15-Cassandra-Migration6_VelocitySpark" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/11/15/2015-11-15-Cassandra-Migration6_VelocitySpark/" class="article-date">
+  	<time datetime="2015-11-14T16:00:00.000Z" itemprop="datePublished">2015-11-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/15/2015-11-15-Cassandra-Migration6_VelocitySpark/">Cassandra数据迁移 分离表</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>使用Spark读写Cassandra</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/11/15/2015-11-15-Cassandra-Migration6_VelocitySpark/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-11-10-Cassandra-Client" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/11/10/2015-11-10-Cassandra-Client/" class="article-date">
+  	<time datetime="2015-11-09T16:00:00.000Z" itemprop="datePublished">2015-11-10</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/10/2015-11-10-Cassandra-Client/">Cassandra Client查询优化</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>大数据源码阅读系列之ApacheCassandra: Cassandra客户端的查询优化</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Source/">Source</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/11/10/2015-11-10-Cassandra-Client/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-09-10-Storm-Window" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/09/10/2015-09-10-Storm-Window/" class="article-date">
+  	<time datetime="2015-09-09T16:00:00.000Z" itemprop="datePublished">2015-09-10</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/10/2015-09-10-Storm-Window/">Storm的滑动窗口</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Storm滑动窗口的实现, 使用TickTuple</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/storm/">storm</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/09/10/2015-09-10-Storm-Window/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-08-28-Cassandra-Migration4_Product" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/08/28/2015-08-28-Cassandra-Migration4_Product/" class="article-date">
+  	<time datetime="2015-08-27T16:00:00.000Z" itemprop="datePublished">2015-08-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/28/2015-08-28-Cassandra-Migration4_Product/">Cassandra数据迁移4 多数据中心数据迁移</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <a id="more"></a>
+<h2 id="迁移fp数据库-方案2:_多数据中心数据迁移">迁移fp数据库-方案2: 多数据中心数据迁移</h2><h2 id="forseti_fp线上迁移步骤:">forseti_fp线上迁移步骤:</h2><p>分离forseti_fp keyspace到新数据中心: </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">1.新数据中心227,228,229的配置文件:</span><br><span class="line">$ sudo -u admin vi /usr/<span class="operator"><span class="keyword">install</span>/cassandra/conf/cassandra.yaml:</span><br><span class="line">  cluster_name: forseti_cluster</span><br><span class="line">  endpoint_snitch: GossipingPropertyFileSnitch</span><br><span class="line">  - seeds: <span class="string">"192.168.47.202,192.168.47.227"</span></span><br><span class="line">  auto_bootstrap: <span class="literal">false</span></span><br><span class="line">$ sudo -u <span class="keyword">admin</span> vi /usr/<span class="keyword">install</span>/cassandra/conf/cassandra-rackdc.properties</span><br><span class="line">  dc=DC3</span><br><span class="line">  rack=RAC1</span><br><span class="line"></span><br><span class="line"><span class="number">2.</span>启动新数据中心的各个节点: sudo -u <span class="keyword">admin</span> /usr/<span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/cassandra  </span><br><span class="line"></span><br><span class="line"><span class="number">3.</span>修改forseti_fp的副本策略: 添加DC3</span><br><span class="line">  <span class="keyword">ALTER</span> KEYSPACE forseti_fp <span class="keyword">WITH</span> <span class="keyword">REPLICATION</span> = &#123; <span class="string">'class'</span> : <span class="string">'NetworkTopologyStrategy'</span>, <span class="string">'DC2'</span> : <span class="number">2</span>, <span class="string">'DC1'</span> : <span class="number">3</span>, <span class="string">'DC3'</span> : <span class="number">3</span>&#125;;</span></span><br><span class="line"></span><br><span class="line">4.在新数据中心DC3重建来自DC1的数据: 这个过程会同步原数据中心的forseti_fp数据到新数据中心(因为只有forseti_fp配置了DC3),会执行一定的时间.  </span><br><span class="line">  /usr/<span class="operator"><span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/nodetool -h <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> <span class="keyword">rebuild</span> DC1</span><br><span class="line">  /usr/<span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/nodetool -h <span class="number">192.168</span><span class="number">.47</span><span class="number">.228</span> <span class="keyword">rebuild</span> DC1</span><br><span class="line">  /usr/<span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/nodetool -h <span class="number">192.168</span><span class="number">.47</span><span class="number">.229</span> <span class="keyword">rebuild</span> DC1  </span><br><span class="line"></span><br><span class="line"><span class="number">5.</span>修改forseti_fp的副本策略: 删除DC1</span><br><span class="line">  <span class="keyword">ALTER</span> KEYSPACE forseti_fp <span class="keyword">WITH</span> <span class="keyword">REPLICATION</span> = &#123; <span class="string">'class'</span> : <span class="string">'NetworkTopologyStrategy'</span>, <span class="string">'DC2'</span> : <span class="number">2</span>, <span class="string">'DC3'</span> : <span class="number">3</span> &#125;;</span>  </span><br><span class="line"></span><br><span class="line">6.删除原数据中心各节点的forseti_fp数据: sudo -u admin rm -rf /home/admin/cassandra/data/forseti_fp</span><br><span class="line"></span><br><span class="line">7.cqlsh连接原数据中心, 验证查询forseti_fp数据</span><br></pre></td></tr></table></figure>
+<p>如果是多数据中心, 即forseti_fp使用两个数据中心DC1, DC2. 则只需做到第三步.  </p>
+<blockquote>
+<p>注意: 第一步中的seeds必须包含原DC的节点, 才能同步数据到新DC.<br>当同步完fp数据后, 202节点要从seeds中移除.  –&gt;但是这一步后来并没有做,不过因为在同一集群里,即使去掉也不会真正分离! </p>
+<p>后记:<br>完全分离forseti和forseti_fp: 需要设置不同的cluster_name, 并且fp的seeds不能包括forseti的节点.<br>修改配置文件的cluster_name: forseti_fp.  修改seeds将202去掉.  </p>
+</blockquote>
+<h3 id="1-先去掉seeds_:">1.先去掉seeds :</h3><p>测试环境52,53的seeds只配置了52.  启动一个程序的ContactPoint也只连接52. 并不断地读取和写入test2.<br>注意: 这个test2的副本数=2. 这样当掉一个节点, 数据并不会丢失. 因为两个节点两个副本,则每个节点都保存了完整的数据.   </p>
+<p>刚开始创建CassandraClient时, ContactPoint只有52,会连接这个集群的所有节点52,53.  </p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">19:37:07,86</span>3  INFO DCAwareRoundRobinPolicy:185 - Using provided data-center name 'DC1' for DCAwareRoundRobinPolicy</span><br><span class="line"><span class="number">19:37:07,86</span>3  INFO Cluster:1308 - New Cassandra host /<span class="number">192.168.6.52</span>:9042 added</span><br><span class="line"><span class="number">19:37:07,86</span>3  INFO Cluster:1308 - New Cassandra host /<span class="number">192.168.6.53</span>:9042 added</span><br><span class="line"><span class="number">628,740</span></span><br><span class="line">278</span><br><span class="line"><span class="number">414,824</span></span><br><span class="line">278</span><br></pre></td></tr></table></figure>
+<p>当关闭53节点时, 程序正常进行, 在重启53的刚开始时刻, 会提示连接到53失败.  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">19</span>:<span class="number">37</span>:<span class="number">51</span>,<span class="number">590</span> ERROR Session:<span class="number">237</span> - Error creating pool to /<span class="number">192.168</span>.<span class="number">6.53</span>:<span class="number">9042</span></span><br><span class="line">com<span class="class">.datastax</span><span class="class">.driver</span><span class="class">.core</span><span class="class">.TransportException</span>: [/<span class="number">192.168</span>.<span class="number">6.53</span>:<span class="number">9042</span>] Cannot connect</span><br><span class="line">  at com<span class="class">.datastax</span><span class="class">.driver</span><span class="class">.core</span><span class="class">.Connection</span>$<span class="number">1</span>.<span class="function"><span class="title">operationComplete</span><span class="params">(Connection.java:<span class="number">156</span>)</span></span></span><br><span class="line">Caused by: java<span class="class">.net</span><span class="class">.ConnectException</span>: Connection refused: /<span class="number">192.168</span>.<span class="number">6.53</span>:<span class="number">9042</span></span><br><span class="line">  at sun<span class="class">.nio</span><span class="class">.ch</span><span class="class">.SocketChannelImpl</span><span class="class">.checkConnect</span>(Native Method)</span><br><span class="line">  at sun<span class="class">.nio</span><span class="class">.ch</span><span class="class">.SocketChannelImpl</span><span class="class">.finishConnect</span>(SocketChannelImpl<span class="class">.java</span>:<span class="number">717</span>)</span><br><span class="line">十一月 <span class="number">02</span>, <span class="number">2015</span> <span class="number">7</span>:<span class="number">37</span>:<span class="number">51</span> 下午 com<span class="class">.google</span><span class="class">.common</span><span class="class">.util</span><span class="class">.concurrent</span><span class="class">.Futures</span><span class="variable">$CombinedFuture</span> setExceptionAndMaybeLog</span><br><span class="line">严重: <span class="tag">input</span> future failed.</span><br><span class="line">com<span class="class">.datastax</span><span class="class">.driver</span><span class="class">.core</span><span class="class">.TransportException</span>: [/<span class="number">192.168</span>.<span class="number">6.53</span>:<span class="number">9042</span>] Cannot connect</span><br><span class="line">  at com<span class="class">.datastax</span><span class="class">.driver</span><span class="class">.core</span><span class="class">.Connection</span>$<span class="number">1</span>.<span class="function"><span class="title">operationComplete</span><span class="params">(Connection.java:<span class="number">156</span>)</span></span></span><br><span class="line">Caused by: java<span class="class">.net</span><span class="class">.ConnectException</span>: Connection refused: /<span class="number">192.168</span>.<span class="number">6.53</span>:<span class="number">9042</span></span><br><span class="line">  at sun<span class="class">.nio</span><span class="class">.ch</span><span class="class">.SocketChannelImpl</span><span class="class">.checkConnect</span>(Native Method)</span><br><span class="line">  at sun<span class="class">.nio</span><span class="class">.ch</span><span class="class">.SocketChannelImpl</span><span class="class">.finishConnect</span>(SocketChannelImpl<span class="class">.java</span>:<span class="number">717</span>)</span><br></pre></td></tr></table></figure>
+<p>可以看到虽然53正在启动, 但并不影响读写:  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">951</span>,<span class="number">531</span></span><br><span class="line"><span class="number">278</span></span><br><span class="line"><span class="number">875</span>,<span class="number">291</span></span><br><span class="line"><span class="number">278</span></span><br></pre></td></tr></table></figure>
+<p>现在轮到当掉52试试看, 在启动52的时候, 也会报错连接到52失败, 不过同样不影响读写:  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">19</span>:<span class="number">39</span>:<span class="number">09</span>,<span class="number">195</span> ERROR Session:<span class="number">237</span> - Error creating pool to /<span class="number">192.168</span><span class="number">.6</span><span class="number">.52</span>:<span class="number">9042</span></span><br><span class="line">com.datastax.driver.core.TransportException: [/<span class="number">192.168</span><span class="number">.6</span><span class="number">.52</span>:<span class="number">9042</span>] Cannot connect</span><br><span class="line">....</span><br><span class="line">十一月 <span class="number">02</span>, <span class="number">2015</span> <span class="number">7</span>:<span class="number">39</span>:<span class="number">09</span> 下午 com.google.common.util.concurrent.Futures$CombinedFuture setExceptionAndMaybeLog</span><br><span class="line">严重: input future failed.</span><br><span class="line">com.datastax.driver.core.TransportException: [/<span class="number">192.168</span><span class="number">.6</span><span class="number">.52</span>:<span class="number">9042</span>] Connection closed during initialization.</span><br><span class="line"><span class="number">548</span>,<span class="number">775</span></span><br><span class="line"><span class="number">278</span></span><br><span class="line"><span class="number">751</span>,<span class="number">397</span></span><br><span class="line"><span class="number">278</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>为什么seeds只有一个节点, 而且这个节点和ContactPoint是一样的, 在分开重启两个节点的时候都没有问题?<br>因为在同一个Cluster里面, ContactPoint会根据seeds去寻找集群中的所有节点. 并把这些节点一开始就加入到C* Driver的Cluster对象中.<br>所以当掉另一个非seeds节点, 并没有影响, 因为读取的时候, 仍然可以从seeds节点读取.<br>那么为什么当掉seeds节点, 也没有影响, 因为Cluster对象已经把所有的节点加入进来. 种子节点当掉还有另外的节点顶替.<br>种子节点的作用只是为了更快地发现集群中的其他节点. 通过种子节点去寻找集群中的其他节点. 这样对于发现算法比较快.<br>其实还和keyspace的副本个数为2个是有关系的. 如果副本数=1, 有两个节点, 当掉节点的话会丢失一半的数据.  </p>
+<p>只去掉seeds节点. 对于线上的这种一个集群, 两个DC是否有根本性地改变?<br>对于velocity应用, 设置的ContactPoint的202, 尽管202在DC1, 但是因为在同一集群里面,<br>创建Client的时候 <strong>Cluster对象还是会去连接集群的所有节点的, 即DC1和DC2的所有节点</strong>    </p>
+</blockquote>
+<h3 id="2-测试环境更改cluster_name">2.测试环境更改cluster_name</h3><p>测试环境之前将52,53和56,57分成相同cluster的不同DC. 直接修改集群名字, 并重启56,57会报错:  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ERROR <span class="number">12</span>:<span class="number">05</span>:<span class="number">33</span>,<span class="number">532</span> Fatal exception during initialization</span><br><span class="line">org<span class="class">.apache</span><span class="class">.cassandra</span><span class="class">.exceptions</span><span class="class">.ConfigurationException</span>: Saved cluster name forseti_cluster != configured name forseti_fp</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>为什么会报错集群名称不一致? 因为Cassandra启动时会使用cassandra.yaml中的cluster_name,<br>但是如果之前已经启动过, 会和system.local对比. 不一致就无法启动.  </p>
+</blockquote>
+<p>重启56,56报错: 提示的已经使用的端口是0. 为什么不是cassandra-env.sh中的JMX_PORT?   </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@dp0657 cassandra]$ 错误: 代理抛出异常错误: java.rmi.server.ExportException: Port already in use: <span class="number">0</span>; nested exception is:</span><br><span class="line">  java.net.BindException: 地址已在使用</span><br><span class="line">         vmop                    [threads: total initially_running wait_to_block]    [time: spin block sync cleanup vmop] page_trap_count</span><br><span class="line"><span class="number">0.578</span>: Exit                             [       <span class="number">9</span>          <span class="number">0</span>              <span class="number">0</span>    ]      [     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>     <span class="number">0</span>   <span class="number">313</span>    ]  <span class="number">0</span></span><br><span class="line">Polling page always armed</span><br><span class="line">Exit                               <span class="number">1</span></span><br><span class="line">    <span class="number">0</span> VM operations coalesced during safepoint</span><br><span class="line">Maximum sync time      <span class="number">0</span> <span class="function">ms</span><br><span class="line">Maximum vm operation <span class="title">time</span> <span class="params">(except <span class="keyword">for</span> Exit VM operation)</span>      0 ms</span></span><br></pre></td></tr></table></figure>
+<p>去掉cassandra-env.sh的JMX配置可以正常启动, 但是无法使用nodetool等JMX工具!  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@dp0656 ~]$ /usr/<span class="operator"><span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/nodetool <span class="keyword">status</span></span><br><span class="line"><span class="keyword">Failed</span> <span class="keyword">to</span> <span class="keyword">connect</span> <span class="keyword">to</span> <span class="string">'127.0.0.1:7199'</span>: 拒绝连接</span></span><br></pre></td></tr></table></figure>
+<p><a href="http://stackoverflow.com/questions/22006887/cassandra-saved-cluster-name-test-cluster-configured-name" target="_blank" rel="external">http://stackoverflow.com/questions/22006887/cassandra-saved-cluster-name-test-cluster-configured-name</a><br><a href="https://www.reddit.com/r/cassandra/comments/36turb/how_do_you_rename_your_cluster/" target="_blank" rel="external">https://www.reddit.com/r/cassandra/comments/36turb/how_do_you_rename_your_cluster/</a>  </p>
+<p>测试环境, 如果update之后没有flush, 还是会报上面的错:  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="operator"><span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/cqlsh -<span class="keyword">e</span> <span class="string">"UPDATE system.local SET cluster_name = 'forseti_test' where key='local';"</span> <span class="number">192.168</span><span class="number">.6</span><span class="number">.56</span></span><br><span class="line"></span><br><span class="line">在<span class="number">56</span>上执行:  </span><br><span class="line">sudo -u <span class="keyword">admin</span> sed -<span class="keyword">i</span> -<span class="keyword">e</span> <span class="string">"s/cluster_name: forseti_cluster/cluster_name: forseti_test/g"</span> /usr/<span class="keyword">install</span>/cassandra/conf/cassandra.yaml</span><br><span class="line">sudo -u <span class="keyword">admin</span> sed -<span class="keyword">i</span> -<span class="keyword">e</span> <span class="string">"s/192.168.6.52,192.168.6.56/192.168.6.56/g"</span> /usr/<span class="keyword">install</span>/cassandra/conf/cassandra.yaml</span></span><br></pre></td></tr></table></figure>
+<p>由于测试环境的56,57暂时无法以JMX方式启动, 先到线上Spark环境测试下.  </p>
+<h3 id="3-Spark集群修改cluster_name:_forseti_backup">3.Spark集群修改cluster_name: forseti_backup</h3><p>Spark环境原先都在同一个集群<code>forseti_backup</code>的同一个DC中. 修改某几个节点的cluster_name=<code>forseti_test</code>和DC(实际上只要cluster_name不一样, DC一样也没有关系的).    </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="operator"><span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/cqlsh -<span class="keyword">e</span> <span class="string">"select cluster_name from system.local where key='local';"</span> <span class="number">192.168</span><span class="number">.47</span><span class="number">.223</span></span><br><span class="line">cat /usr/<span class="keyword">install</span>/cassandra/conf/cassandra.yaml | grep cluster</span><br><span class="line">cat /usr/<span class="keyword">install</span>/cassandra/conf/cassandra.yaml | grep <span class="keyword">seed</span></span><br><span class="line"></span><br><span class="line"><span class="number">1.</span>在启动状态下,更新节点<span class="keyword">system</span>.<span class="keyword">local</span>表的cluster_name:  </span><br><span class="line">/usr/<span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/cqlsh -<span class="keyword">e</span> <span class="string">"UPDATE system.local SET cluster_name = 'forseti_backup' where key='local';"</span> <span class="number">192.168</span><span class="number">.47</span><span class="number">.208</span></span><br><span class="line">/usr/<span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/nodetool <span class="keyword">flush</span> -h <span class="number">192.168</span><span class="number">.47</span><span class="number">.208</span></span><br><span class="line"></span><br><span class="line"><span class="number">2.</span>修改cluster_name和DC, 由于不同集群需要修改种子节点:  </span><br><span class="line">sudo -u <span class="keyword">admin</span> sed -<span class="keyword">i</span> -<span class="keyword">e</span> <span class="string">"s/cluster_name: forseti_backup/cluster_name: forseti_test/g"</span> /usr/<span class="keyword">install</span>/cassandra/conf/cassandra.yaml</span><br><span class="line">sudo -u <span class="keyword">admin</span> sed -<span class="keyword">i</span> -<span class="keyword">e</span> <span class="string">"s/192.168.47.241,192.168.47.242/192.168.47.223,192.168.47.208/g"</span> /usr/<span class="keyword">install</span>/cassandra/conf/cassandra.yaml</span><br><span class="line">sudo -u <span class="keyword">admin</span> sed -<span class="keyword">i</span> -<span class="keyword">e</span> <span class="string">"s/DC1/DC3/g"</span> /usr/<span class="keyword">install</span>/cassandra/conf/cassandra-rackdc.properties</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span>重启更改了集群名称的节点:  </span><br><span class="line">sudo -u <span class="keyword">admin</span> <span class="keyword">kill</span> -<span class="number">9</span> <span class="string">`sudo -u admin jps | grep CassandraDaemon |awk '&#123;print $1&#125;'`</span></span><br><span class="line"><span class="keyword">sleep</span> <span class="number">2</span></span><br><span class="line">sudo -u <span class="keyword">admin</span> /usr/<span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/cassandra</span></span><br></pre></td></tr></table></figure>
+<p>原集群(forseti_backup)原DC(DC1)显示223为DN.  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@spark047219 ~]$ /usr/install/cassandra/bin/nodetool status</span><br><span class="line">Datacenter: DC1</span><br><span class="line">===============</span><br><span class="line">--  Address         Load       Tokens  Owns   Host ID                               Rack</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.223</span>  <span class="number">49.49</span> GB   <span class="number">256</span>     <span class="number">7.5</span>%   a4b91faf-<span class="number">3e1</span>f-<span class="number">46</span>df-a1cc-<span class="number">39</span>bb267bc683  RAC1</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.219</span>  <span class="number">62.61</span> GB   <span class="number">256</span>     <span class="number">7.2</span>%   <span class="number">953</span>dda8c-<span class="number">3908</span>-<span class="number">401f</span>-<span class="number">9</span>adb-aa59c4cb92d1  RAC1</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+<p>但是新集群(forseti_test)新DC(DC3)显示自己是好的, 其他节点为?:  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@spark047223 ~]$ /usr/install/cassandra/bin/nodetool status</span><br><span class="line">Datacenter: DC1</span><br><span class="line">===============</span><br><span class="line">--  Address         Load       Tokens  Owns   Host ID                               Rack</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.219</span>  ?          <span class="number">256</span>     <span class="number">7.2</span>%   <span class="number">953</span>dda8c-<span class="number">3908</span>-<span class="number">401f</span>-<span class="number">9</span>adb-aa59c4cb92d1  r1</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.218</span>  ?          <span class="number">256</span>     <span class="number">7.7</span>%   <span class="number">42</span>b8bfae-a6ee-<span class="number">439</span>b-b101-<span class="number">4</span>a0963c9aaa0  r1</span><br><span class="line">...</span><br><span class="line">Datacenter: DC3</span><br><span class="line">===============</span><br><span class="line">--  Address         Load       Tokens  Owns   Host ID                               Rack</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.223</span>  <span class="number">49.49</span> GB   <span class="number">256</span>     <span class="number">7.5</span>%   a4b91faf-<span class="number">3e1</span>f-<span class="number">46</span>df-a1cc-<span class="number">39</span>bb267bc683  RAC1</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果集群所有节点同一改名字, 是可以先update, 然后修改名称, 最后重启.<br>但是这里要将一部分节点保留原来的集群, 而一部分节点使用新的集群名称. 貌似有点困难.  </p>
+<p><strong>但是如果要分离的这两部分节点本来数据就是没有交集的. 是不是可以使用removenode方式移除对方?</strong><br>比如这里的forseti和forseti_fp两个keyspace因为DC不同, 所以数据是隔离的.  </p>
+</blockquote>
+<hr>
+<h3 id="4-线上修改fp的cluster_name">4.线上修改fp的cluster_name</h3><p>查看system.local中的cluster_name:  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cqlsh -e "<span class="operator"><span class="keyword">select</span> cluster_name <span class="keyword">from</span> <span class="keyword">system</span>.<span class="keyword">local</span> <span class="keyword">where</span> <span class="keyword">key</span>=<span class="string">'local'</span>;</span>" 192.168.47.229</span><br></pre></td></tr></table></figure>
+<p>查看配置文件的cluster_name:  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./pssh<span class="class">.sh</span> ip_fp<span class="class">.txt</span> <span class="string">'cat /usr/install/cassandra/conf/cassandra.yaml | grep cluster'</span></span><br></pre></td></tr></table></figure>
+<p><strong>更改fp三个节点的cluster_name:</strong>  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">1.在启动状态下,更新节点system.local表的cluster_name(可以在202上远程操作):  </span><br><span class="line">cqlsh -e "<span class="operator"><span class="keyword">UPDATE</span> <span class="keyword">system</span>.<span class="keyword">local</span> <span class="keyword">SET</span> cluster_name = <span class="string">'forseti_fp'</span> <span class="keyword">where</span> <span class="keyword">key</span>=<span class="string">'local'</span>;</span>" 192.168.47.229</span><br><span class="line">nodetool <span class="operator"><span class="keyword">flush</span> -h <span class="number">192.168</span><span class="number">.47</span><span class="number">.229</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">bin</span>/cqlsh -<span class="keyword">e</span> <span class="string">"UPDATE system.local SET cluster_name = 'forseti_fp' where key='local';"</span> <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span></span><br><span class="line">nodetool <span class="keyword">flush</span> -h <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span></span><br><span class="line"></span><br><span class="line">cqlsh -<span class="keyword">e</span> <span class="string">"UPDATE system.local SET cluster_name = 'forseti_fp' where key='local';"</span> <span class="number">192.168</span><span class="number">.47</span><span class="number">.228</span></span><br><span class="line">nodetool <span class="keyword">flush</span> -h <span class="number">192.168</span><span class="number">.47</span><span class="number">.228</span> </span><br><span class="line"></span><br><span class="line"><span class="number">2.</span>修改cluster_name和DC, 由于不同集群需要修改种子节点(在各个节点分别执行):  </span><br><span class="line">sudo -u <span class="keyword">admin</span> sed -<span class="keyword">i</span> -<span class="keyword">e</span> <span class="string">"s/cluster_name: forseti_cluster/cluster_name: forseti_fp/g"</span> /usr/<span class="keyword">install</span>/cassandra/conf/cassandra.yaml</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span>重启更改了集群名称的节点:  </span><br><span class="line">sudo -u <span class="keyword">admin</span> <span class="keyword">kill</span> -<span class="number">9</span> <span class="string">`sudo -u admin jps | grep CassandraDaemon |awk '&#123;print $1&#125;'`</span></span><br><span class="line"><span class="keyword">sleep</span> <span class="number">2</span></span><br><span class="line">sudo -u <span class="keyword">admin</span> /usr/<span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/cassandra</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>特别注意: <strong>使用CQL update完后一定要flush一下, 否则启动不起来的! 就只能把conf的cluster_name改回去再重启.</strong>  </p>
+<p>如果有某个节点本身不在集群中, 比如227之前已经被移除了, 可以不用使用forseti_cluster启动227,再修改. 而是直接修改cluster_name并启动227.  </p>
+</blockquote>
+<p>在fp的几个节点查看集群状态, 会发现之前velocity的几个节点状态为DN:  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@<span class="number">192</span>-<span class="number">168</span>-<span class="number">47</span>-<span class="number">228</span> ~]$ nodetool status</span><br><span class="line">Note: Ownership information does not include topology; <span class="keyword">for</span> complete information, specify a keyspace</span><br><span class="line">Datacenter: DC1</span><br><span class="line">===============</span><br><span class="line">--  Address         Load       Tokens  Owns   Host ID                               Rack</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.206</span>  ?          <span class="number">256</span>     <span class="number">8.6</span>%   <span class="number">75f</span>42842-e3ac-<span class="number">4</span>bbe-<span class="number">947</span>d-<span class="number">6</span>b7537a521da  r1</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span>  ?          <span class="number">256</span>     <span class="number">9.1</span>%   <span class="number">1</span>cc2c236-<span class="number">8</span>def-<span class="number">4f</span>2b-<span class="number">8149</span>-<span class="number">28</span>d591fc6b05  r1</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.204</span>  ?          <span class="number">256</span>     <span class="number">8.2</span>%   <span class="number">91</span>ad3d42-<span class="number">4207</span>-<span class="number">46f</span>e-<span class="number">8188</span>-<span class="number">34</span>c3f0b2dbd2  r1</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.221</span>  ?          <span class="number">256</span>     <span class="number">8.3</span>%   <span class="number">87e100</span>ed-<span class="number">85</span>c4-<span class="number">44</span>cb-<span class="number">9</span>d9f-<span class="number">2</span>d602d016038  r1</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span>  ?          <span class="number">256</span>     <span class="number">8.0</span>%   ac6313c8-e0b5-<span class="number">463</span>b-<span class="number">8f</span>90-<span class="number">55</span>dc0f59e476  r1</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span>  ?          <span class="number">256</span>     <span class="number">8.0</span>%   abaa0cbc-<span class="number">09</span>d3-<span class="number">4990</span>-<span class="number">8698</span>-ff4d2f2bb4f7  r1</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.203</span>  ?          <span class="number">256</span>     <span class="number">8.6</span>%   <span class="number">19</span>b0b9cc-cad2-<span class="number">4</span>b61-<span class="number">8</span>da6-<span class="number">95423f</span>e94af8  r1</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.224</span>  ?          <span class="number">256</span>     <span class="number">8.5</span>%   <span class="number">27e84</span>abe-fb06-<span class="number">47f</span>f-<span class="number">8861</span>-<span class="number">130767</span>ee006b  r1</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.225</span>  ?          <span class="number">256</span>     <span class="number">7.8</span>%   <span class="number">216</span>c67cf-de7d-<span class="number">4190</span>-<span class="number">9</span>d0d-<span class="number">441f</span>c16a7f71  r1</span><br><span class="line">Datacenter: DC3</span><br><span class="line">===============</span><br><span class="line">--  Address         Load       Tokens  Owns   Host ID                               Rack</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.228</span>  <span class="number">4.75</span> TB    <span class="number">256</span>     <span class="number">8.1</span>%   f3d26148-d2da-<span class="number">479</span>c-ae9e-ae41aced1be9  RAC1</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.229</span>  <span class="number">226.43</span> GB  <span class="number">256</span>     <span class="number">8.6</span>%   <span class="number">18</span>a87c56-dcba-<span class="number">4614</span>-adba-<span class="number">804</span>aa7761a06  RAC1</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span>  <span class="number">135.54</span> KB  <span class="number">256</span>     <span class="number">8.2</span>%   <span class="number">02575631</span>-<span class="number">6</span>ccb-<span class="number">4803</span>-<span class="number">81f</span>d-<span class="number">5</span>bf7a978726d  RAC1</span><br></pre></td></tr></table></figure>
+<p>没有关系, 直接把这些DN的节点都remove掉, 我们先移除206节点:  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@<span class="number">192</span>-<span class="number">168</span>-<span class="number">47</span>-<span class="number">228</span> ~]$ nodetool removenode <span class="number">75f</span>42842-e3ac-<span class="number">4</span>bbe-<span class="number">947</span>d-<span class="number">6</span>b7537a521da</span><br><span class="line">....正常的话这里会等很久才结束的, 实际上由于C本身的bug,这个过程永远也结束不了.</span><br></pre></td></tr></table></figure>
+<p>由于removenode会比较慢, 而且现在数据已经是按照DC分离的, 所以可以直接强制移除:  </p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@<span class="number">192-168-47-228</span> ~]$ nodetool removenode status</span><br><span class="line">RemovalStatus: Removing token (-<span class="number">92082752655</span><span class="number">32230712</span>). Waiting for replication confirmation from [/<span class="number">192.168.47.228</span>,/<span class="number">192.168.47.229</span>,/<span class="number">192.168.47.227</span>].</span><br><span class="line">[qihuang.zheng@<span class="number">192-168-47-228</span> ~]$ nodetool removenode force</span><br><span class="line">RemovalStatus: Removing token (-<span class="number">92082752655</span><span class="number">32230712</span>). Waiting for replication confirmation from [/<span class="number">192.168.47.228</span>,/<span class="number">192.168.47.229</span>,/<span class="number">192.168.47.227</span>].</span><br><span class="line">[qihuang.zheng@<span class="number">192-168-47-228</span> ~]$ nodetool removenode status</span><br><span class="line">RemovalStatus: No token removals in process.</span><br></pre></td></tr></table></figure>
+<p>强制移除之后, removenode hostid的命令过会儿会报异常, 不过没有关系滴:  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Exception <span class="keyword">in</span> thread <span class="string">"main"</span> java<span class="class">.lang</span><span class="class">.RuntimeException</span>: Endpoint /<span class="number">192.168</span>.<span class="number">47.206</span> generation changed while trying to remove it</span><br><span class="line">  at org<span class="class">.apache</span><span class="class">.cassandra</span><span class="class">.gms</span><span class="class">.Gossiper</span><span class="class">.advertiseRemoving</span>(Gossiper<span class="class">.java</span>:<span class="number">515</span>)</span><br><span class="line">  at org<span class="class">.apache</span><span class="class">.cassandra</span><span class="class">.service</span><span class="class">.StorageService</span><span class="class">.removeNode</span>(StorageService<span class="class">.java</span>:<span class="number">3370</span>)</span><br><span class="line">  at sun<span class="class">.reflect</span><span class="class">.NativeMethodAccessorImpl</span><span class="class">.invoke0</span>(Native Method)</span><br><span class="line">  at sun<span class="class">.reflect</span><span class="class">.NativeMethodAccessorImpl</span><span class="class">.invoke</span>(NativeMethodAccessorImpl<span class="class">.java</span>:<span class="number">57</span>)</span><br><span class="line">  at sun<span class="class">.reflect</span><span class="class">.DelegatingMethodAccessorImpl</span><span class="class">.invoke</span>(DelegatingMethodAccessorImpl<span class="class">.java</span>:<span class="number">43</span>)</span><br><span class="line">  at java<span class="class">.lang</span><span class="class">.reflect</span><span class="class">.Method</span><span class="class">.invoke</span>(Method<span class="class">.java</span>:<span class="number">606</span>)</span><br><span class="line">  at sun<span class="class">.reflect</span><span class="class">.misc</span><span class="class">.Trampoline</span><span class="class">.invoke</span>(MethodUtil<span class="class">.java</span>:<span class="number">75</span>)</span><br><span class="line">  at sun<span class="class">.reflect</span><span class="class">.GeneratedMethodAccessor14</span><span class="class">.invoke</span>(Unknown Source)</span><br><span class="line">  at sun<span class="class">.reflect</span><span class="class">.DelegatingMethodAccessorImpl</span><span class="class">.invoke</span>(DelegatingMethodAccessorImpl<span class="class">.java</span>:<span class="number">43</span>)</span><br><span class="line">  at java<span class="class">.lang</span><span class="class">.reflect</span><span class="class">.Method</span><span class="class">.invoke</span>(Method<span class="class">.java</span>:<span class="number">606</span>)</span><br><span class="line">  at sun<span class="class">.reflect</span><span class="class">.misc</span><span class="class">.MethodUtil</span><span class="class">.invoke</span>(MethodUtil<span class="class">.java</span>:<span class="number">279</span>)</span><br></pre></td></tr></table></figure>
+<p>再次查看状态, 发现206节点已经不见了!  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@<span class="number">192</span>-<span class="number">168</span>-<span class="number">47</span>-<span class="number">228</span> ~]$ nodetool status</span><br><span class="line">Note: Ownership information does not include topology; <span class="keyword">for</span> complete information, specify a keyspace</span><br><span class="line">Datacenter: DC1</span><br><span class="line">===============</span><br><span class="line">--  Address         Load       Tokens  Owns   Host ID                               Rack</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span>  ?          <span class="number">256</span>     <span class="number">10.0</span>%  <span class="number">1</span>cc2c236-<span class="number">8</span>def-<span class="number">4f</span>2b-<span class="number">8149</span>-<span class="number">28</span>d591fc6b05  r1</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.204</span>  ?          <span class="number">256</span>     <span class="number">8.9</span>%   <span class="number">91</span>ad3d42-<span class="number">4207</span>-<span class="number">46f</span>e-<span class="number">8188</span>-<span class="number">34</span>c3f0b2dbd2  r1</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.221</span>  ?          <span class="number">256</span>     <span class="number">9.1</span>%   <span class="number">87e100</span>ed-<span class="number">85</span>c4-<span class="number">44</span>cb-<span class="number">9</span>d9f-<span class="number">2</span>d602d016038  r1</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span>  ?          <span class="number">256</span>     <span class="number">9.0</span>%   ac6313c8-e0b5-<span class="number">463</span>b-<span class="number">8f</span>90-<span class="number">55</span>dc0f59e476  r1</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span>  ?          <span class="number">256</span>     <span class="number">8.4</span>%   abaa0cbc-<span class="number">09</span>d3-<span class="number">4990</span>-<span class="number">8698</span>-ff4d2f2bb4f7  r1</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.203</span>  ?          <span class="number">256</span>     <span class="number">9.3</span>%   <span class="number">19</span>b0b9cc-cad2-<span class="number">4</span>b61-<span class="number">8</span>da6-<span class="number">95423f</span>e94af8  r1</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.224</span>  ?          <span class="number">256</span>     <span class="number">9.4</span>%   <span class="number">27e84</span>abe-fb06-<span class="number">47f</span>f-<span class="number">8861</span>-<span class="number">130767</span>ee006b  r1</span><br><span class="line">DN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.225</span>  ?          <span class="number">256</span>     <span class="number">8.7</span>%   <span class="number">216</span>c67cf-de7d-<span class="number">4190</span>-<span class="number">9</span>d0d-<span class="number">441f</span>c16a7f71  r1</span><br><span class="line">Datacenter: DC3</span><br><span class="line">===============</span><br><span class="line">--  Address         Load       Tokens  Owns   Host ID                               Rack</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.228</span>  <span class="number">4.75</span> TB    <span class="number">256</span>     <span class="number">9.0</span>%   f3d26148-d2da-<span class="number">479</span>c-ae9e-ae41aced1be9  RAC1</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.229</span>  <span class="number">226.43</span> GB  <span class="number">256</span>     <span class="number">9.3</span>%   <span class="number">18</span>a87c56-dcba-<span class="number">4614</span>-adba-<span class="number">804</span>aa7761a06  RAC1</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span>  <span class="number">135.54</span> KB  <span class="number">256</span>     <span class="number">9.0</span>%   <span class="number">02575631</span>-<span class="number">6</span>ccb-<span class="number">4803</span>-<span class="number">81f</span>d-<span class="number">5</span>bf7a978726d  RAC1</span><br></pre></td></tr></table></figure>
+<p>OK, 继续移除其他节点. 同样在原来的velocity集群中也会看到fp的三个节点状态为DN, 按照同样的方式移除就可以了.  </p>
+<p>等到把所有节点都移除之后(fp移除velocity的, velocity的移除fp的), 查看集群状态, 都完全分离了:  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@<span class="number">192</span>-<span class="number">168</span>-<span class="number">47</span>-<span class="number">227</span> ~]$ nodetool status</span><br><span class="line">Note: Ownership information does not include topology; <span class="keyword">for</span> complete information, specify a keyspace</span><br><span class="line">Datacenter: DC3</span><br><span class="line">===============</span><br><span class="line">--  Address         Load       Tokens  Owns   Host ID                               Rack</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.228</span>  <span class="number">4.76</span> TB    <span class="number">256</span>     <span class="number">32.7</span>%  f3d26148-d2da-<span class="number">479</span>c-ae9e-ae41aced1be9  RAC1</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.229</span>  <span class="number">230.89</span> GB  <span class="number">256</span>     <span class="number">34.7</span>%  <span class="number">18</span>a87c56-dcba-<span class="number">4614</span>-adba-<span class="number">804</span>aa7761a06  RAC1</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span>  <span class="number">4.54</span> GB    <span class="number">256</span>     <span class="number">32.5</span>%  <span class="number">02575631</span>-<span class="number">6</span>ccb-<span class="number">4803</span>-<span class="number">81f</span>d-<span class="number">5</span>bf7a978726d  RAC1</span><br><span class="line"></span><br><span class="line">[qihuang.zheng@cass047202 ~]$ nodetool status</span><br><span class="line">Note: Ownership information does not include topology; <span class="keyword">for</span> complete information, specify a keyspace</span><br><span class="line">Datacenter: DC1</span><br><span class="line">===============</span><br><span class="line">--  Address         Load       Tokens  Owns   Host ID                               Rack</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.206</span>  <span class="number">882.16</span> GB  <span class="number">256</span>     <span class="number">11.6</span>%  <span class="number">75f</span>42842-e3ac-<span class="number">4</span>bbe-<span class="number">947</span>d-<span class="number">6</span>b7537a521da  RAC1</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span>  <span class="number">736.41</span> GB  <span class="number">256</span>     <span class="number">11.9</span>%  <span class="number">1</span>cc2c236-<span class="number">8</span>def-<span class="number">4f</span>2b-<span class="number">8149</span>-<span class="number">28</span>d591fc6b05  RAC1</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.204</span>  <span class="number">740.37</span> GB  <span class="number">256</span>     <span class="number">10.7</span>%  <span class="number">91</span>ad3d42-<span class="number">4207</span>-<span class="number">46f</span>e-<span class="number">8188</span>-<span class="number">34</span>c3f0b2dbd2  RAC1</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.221</span>  <span class="number">2.78</span> TB    <span class="number">256</span>     <span class="number">11.2</span>%  <span class="number">87e100</span>ed-<span class="number">85</span>c4-<span class="number">44</span>cb-<span class="number">9</span>d9f-<span class="number">2</span>d602d016038  RAC1</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span>  <span class="number">827.77</span> GB  <span class="number">256</span>     <span class="number">10.6</span>%  ac6313c8-e0b5-<span class="number">463</span>b-<span class="number">8f</span>90-<span class="number">55</span>dc0f59e476  RAC1</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span>  <span class="number">749.38</span> GB  <span class="number">256</span>     <span class="number">10.8</span>%  abaa0cbc-<span class="number">09</span>d3-<span class="number">4990</span>-<span class="number">8698</span>-ff4d2f2bb4f7  RAC1</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.203</span>  <span class="number">805.45</span> GB  <span class="number">256</span>     <span class="number">11.7</span>%  <span class="number">19</span>b0b9cc-cad2-<span class="number">4</span>b61-<span class="number">8</span>da6-<span class="number">95423f</span>e94af8  RAC1</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.224</span>  <span class="number">821.79</span> GB  <span class="number">256</span>     <span class="number">11.1</span>%  <span class="number">27e84</span>abe-fb06-<span class="number">47f</span>f-<span class="number">8861</span>-<span class="number">130767</span>ee006b  RAC1</span><br><span class="line">UN  <span class="number">192.168</span><span class="number">.47</span><span class="number">.225</span>  <span class="number">680</span> GB     <span class="number">256</span>     <span class="number">10.5</span>%  <span class="number">216</span>c67cf-de7d-<span class="number">4190</span>-<span class="number">9</span>d0d-<span class="number">441f</span>c16a7f71  RAC1</span><br></pre></td></tr></table></figure>
+<p>A.分离之前, 202节点有流量到228,229(这时fp集群只有这两个节点), 228,229的流量也有从velocity过来:  </p>
+<p><img src="http://img.blog.csdn.net/20151116155749972" alt="iftop_202"></p>
+<p>B.分离之后, velocity的流量都不会到fp的三个节点了, 而227,228的流量则还是有部分流量从velocity过来.  </p>
+<p><img src="http://img.blog.csdn.net/20151116155804033" alt="iftop_fp_split"></p>
+<blockquote>
+<p>这是因为fp的ContactPoint设置了227,228,在分离集群之后,如果刷新Session就不会连到原来的集群了. </p>
+</blockquote>
+<p>C.重启了fp的应用, 现在fp的流量也不会从velocity过来了.  </p>
+<p><img src="http://img.blog.csdn.net/20151116155818007" alt="iftop_fp_totalsplit"></p>
+<p>D.分离之后, velocity的查询时间平稳在500ms以内了. 下面分别是3h,12h在分离集群之后的对比(14点左右才分离)   </p>
+<p><img src="http://img.blog.csdn.net/20151116202304557" alt="500ms_3h">  </p>
+<p><img src="http://img.blog.csdn.net/20151116202319291" alt="500ms_12h"></p>
+<p>E.下面是OpsCenter的监控, 首先是超时的(当天的和一周的视图)   </p>
+<p><img src="http://img.blog.csdn.net/20151116203949238" alt="ops_unormal">  </p>
+<p><img src="http://img.blog.csdn.net/20151116204448163" alt="ops_un1week"></p>
+<p>上面超时很严重的可以很明显地看到性能抖动很厉害, 而下面则比较稳定地维持在一个水平上.  </p>
+<p><img src="http://img.blog.csdn.net/20151116204003904" alt="ops_normal"></p>
+<blockquote>
+<p>总结:<br>1.由于之前同步fp的数据时,利用Cassandra的多数据中心特点,必须在同一个集群内才能同步数据(利用rebuild将原DC的数据同步到新DC).<br>2.同一个集群多个数据中心, 会存在节点之间互相通信, 因此即使采用DC分离的方式分离velocity和fp的库. 但是两者之间还是存在数据同步.<br>3.不同集群同步数据的方式可以采用sstableloader,前提是应用提供双写集群,因为sstableloader只能保证某个时刻的数据,一般用于快照.<br>4.彻底隔离velocity和fp的流量通信,要设置不同的cluster_name, 一旦集群不同, 两者之间就不会有通信了.  </p>
+</blockquote>
+<hr>
+<h2 id="线上测试库quote与线上正式库forseti_fp">线上测试库quote与线上正式库forseti_fp</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line">1.准备测试库,表</span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> KEYSPACE quote <span class="keyword">WITH</span> <span class="keyword">replication</span> = &#123;</span><br><span class="line">  <span class="string">'class'</span>: <span class="string">'NetworkTopologyStrategy'</span>,</span><br><span class="line">  <span class="string">'DC2'</span>: <span class="string">'2'</span>,</span><br><span class="line">  <span class="string">'DC1'</span>: <span class="string">'3'</span></span><br><span class="line">&#125;;</span></span><br><span class="line"><span class="operator"><span class="keyword">USE</span> quote;</span></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> historical_prices (</span><br><span class="line">    ticker <span class="keyword">ascii</span>,</span><br><span class="line">    <span class="built_in">date</span> <span class="keyword">timestamp</span>,</span><br><span class="line">    <span class="keyword">open</span> <span class="built_in">decimal</span>,</span><br><span class="line">    <span class="keyword">high</span> <span class="built_in">decimal</span>,</span><br><span class="line">    <span class="keyword">low</span> <span class="built_in">decimal</span>,</span><br><span class="line">    <span class="keyword">close</span> <span class="built_in">decimal</span>,</span><br><span class="line">    volume <span class="built_in">bigint</span>,</span><br><span class="line">    adj_close <span class="built_in">decimal</span>,</span><br><span class="line">    PRIMARY <span class="keyword">KEY</span> (ticker, <span class="built_in">date</span>)</span><br><span class="line">) <span class="keyword">WITH</span> <span class="keyword">CLUSTERING</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> (<span class="built_in">date</span> <span class="keyword">DESC</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> KEYSPACE test2 <span class="keyword">WITH</span> <span class="keyword">replication</span> = &#123;</span><br><span class="line">  <span class="string">'class'</span>: <span class="string">'NetworkTopologyStrategy'</span>,</span><br><span class="line">  <span class="string">'DC2'</span>: <span class="string">'1'</span>,</span><br><span class="line">  <span class="string">'DC1'</span>: <span class="string">'2'</span></span><br><span class="line">&#125;;</span></span><br><span class="line"><span class="operator"><span class="keyword">use</span> test2;</span></span><br><span class="line"><span class="operator"><span class="keyword">create</span> <span class="keyword">table</span> <span class="keyword">test</span>(</span><br><span class="line">  a <span class="built_in">text</span> primary <span class="keyword">key</span>,</span><br><span class="line">  b <span class="built_in">text</span></span><br><span class="line">);</span></span><br><span class="line"><span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">test</span>(a,b)<span class="keyword">values</span>(<span class="string">'1'</span>,<span class="string">'1'</span>);</span></span><br><span class="line"><span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">test</span>(a,b)<span class="keyword">values</span>(<span class="string">'2'</span>,<span class="string">'2'</span>);</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> forseti.velocity_app(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,<span class="keyword">event</span>,sequence_id)<span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">12345</span>,<span class="string">'test001'</span>,<span class="string">'12345'</span>);</span></span><br><span class="line"><span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> forseti.velocity_global(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,<span class="keyword">event</span>,sequence_id)<span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">12343</span>,<span class="string">'test001'</span>,<span class="string">'12343'</span>);</span></span><br><span class="line"><span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> forseti.velocity_global(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,<span class="keyword">event</span>,sequence_id)<span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">12346</span>,<span class="string">'test001'</span>,<span class="string">'12346'</span>);</span></span><br><span class="line"></span><br><span class="line">2.导入测试数据到原数据中心</span><br><span class="line">scp -r data_20150916 qihuang.zheng@60.12.226.22:~/</span><br><span class="line">[qihuang.zheng@fd047022 ~]$ /usr/<span class="operator"><span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/cqlsh <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span> -<span class="keyword">f</span> <span class="keyword">schema</span>.cql</span><br><span class="line">[qihuang.zheng@fd047022 ~]$ /usr/<span class="keyword">install</span>/cassandra/<span class="keyword">bin</span>/sstableloader -<span class="keyword">d</span> <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span> data_20150916/quote/historical_prices</span><br><span class="line">Established <span class="keyword">connection</span> <span class="keyword">to</span> <span class="keyword">initial</span> <span class="keyword">hosts</span></span><br><span class="line">Opening sstables <span class="keyword">and</span> calculating sections <span class="keyword">to</span> stream</span><br><span class="line">Streaming relevant part <span class="keyword">of</span> data_20150916/quote/historical_prices/quote-historical_prices-jb-<span class="number">1</span>-<span class="keyword">Data</span>.db <span class="keyword">to</span> [/<span class="number">192.168</span><span class="number">.47</span><span class="number">.206</span>, /<span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span>, /<span class="number">192.168</span><span class="number">.47</span><span class="number">.221</span>, /<span class="number">192.168</span><span class="number">.47</span><span class="number">.204</span>, /<span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span>, /<span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span>, /<span class="number">192.168</span><span class="number">.47</span><span class="number">.203</span>, /<span class="number">192.168</span><span class="number">.47</span><span class="number">.224</span>, /<span class="number">192.168</span><span class="number">.47</span><span class="number">.225</span>, /<span class="number">192.168</span><span class="number">.47</span><span class="number">.226</span>]</span><br><span class="line">Streaming <span class="keyword">session</span> <span class="keyword">ID</span>: ac8971b0-<span class="number">5</span>c3c-<span class="number">11e5</span>-b684-d3bbb94cd1e5</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span>配置和启动新数据中心</span><br><span class="line">sudo rm -rf /home/<span class="keyword">admin</span>/cassandra/commitlog &amp;&amp; sudo rm -rf /home/<span class="keyword">admin</span>/cassandra/<span class="keyword">data</span> &amp;&amp; sudo rm /<span class="keyword">var</span>/<span class="keyword">log</span>/cassandra<span class="comment">/* &amp;&amp; sudo rm -rf /home/admin/cassandra/saved_caches</span><br><span class="line">sudo rm -rf /data/cassandra/commitlog</span><br><span class="line">修改配置文件...</span><br><span class="line">sudo -u admin jps | grep CassandraDaemon |awk '&#123;print $1&#125;' | xargs sudo -u admin kill -9</span><br><span class="line">sudo -u admin /usr/install/cassandra/bin/cassandra </span><br><span class="line"></span><br><span class="line">4.添加新数据中心</span><br><span class="line">ALTER KEYSPACE quote WITH REPLICATION = &#123; 'class' : 'NetworkTopologyStrategy', 'DC2' : 2, 'DC1' : 3, 'DC3' : 3&#125;;</span><br><span class="line">ALTER KEYSPACE forseti_fp WITH REPLICATION = &#123; 'class' : 'NetworkTopologyStrategy', 'DC2' : 2, 'DC1' : 3, 'DC3' : 3&#125;;</span><br><span class="line"></span><br><span class="line">5.重建数据</span><br><span class="line">  /usr/install/cassandra/bin/nodetool -h 192.168.47.227 rebuild DC1</span><br><span class="line">  /usr/install/cassandra/bin/nodetool -h 192.168.47.228 rebuild DC1</span><br><span class="line">  /usr/install/cassandra/bin/nodetool -h 192.168.47.229 rebuild DC1  </span><br><span class="line">如何知道重建已经完成? </span><br><span class="line">1) 重建的时候会存在一个NodeCmd进程, 如果进程不在了, 说明已经完成</span><br><span class="line">2) 重建的时候每个节点的netstats显示从其他节点复制数据, 如果netstats状态为NORMAL,且没有正在复制的文件, 说明已经完成. </span><br><span class="line"></span><br><span class="line">6.再次测试导入数据, 数据会写入到原数据中心和新数据中心两个数据中心!</span><br><span class="line"></span><br><span class="line">7.删除原数据中心</span><br><span class="line">ALTER KEYSPACE quote WITH REPLICATION = &#123; 'class' : 'NetworkTopologyStrategy', 'DC2' : 2, 'DC3' : 3&#125;;</span><br><span class="line">ALTER KEYSPACE forseti_fp WITH REPLICATION = &#123; 'class' : 'NetworkTopologyStrategy', 'DC2' : 2, 'DC3' : 3&#125;;</span><br><span class="line"></span><br><span class="line">8.导入新数据到新数据中心中</span><br><span class="line">scp -r data_20150916_2 qihuang.zheng@60.12.226.22:~/</span><br><span class="line">[qihuang.zheng@fd047022 ~]$ /usr/install/cassandra/bin/sstableloader -d 192.168.47.202 data_20150916_2/quote/historical_prices</span><br><span class="line">Established connection to initial hosts</span><br><span class="line">Opening sstables and calculating sections to stream</span><br><span class="line">Streaming relevant part of data_20150916_2/quote/historical_prices/quote-historical_prices-jb-1-Data.db to [/192.168.47.228, /192.168.47.229, /192.168.47.227]</span><br><span class="line">Streaming session ID: f03c0390-5c42-11e5-bd81-d3bbb94cd1e5</span><br><span class="line"></span><br><span class="line">9.在原数据中心所有节点清理数据: </span><br><span class="line">sudo -u admin rm -rf /home/admin/cassandra/data/quote/</span><br><span class="line">sudo -u admin rm -rf /home/admin/cassandra/data/forseti_fp/</span><br><span class="line"></span><br><span class="line">10.指定quote,查看节点状态: 因为DC1都没有quote,所以Own=0. 而DC3一共三个节点, quote的副本数=3,所以Own=100%</span><br><span class="line">同理, 查看forseti的状态, 因为DC3都没有所以为0.   </span><br><span class="line">[qihuang.zheng@fd047022 ~]$ /usr/install/cassandra/bin/nodetool -h 192.168.47.202 status quote</span><br><span class="line">[qihuang.zheng@fd047022 ~]$ /usr/install/cassandra/bin/nodetool -h 192.168.47.202 status forseti</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="问题:_客户端的连接策略需要更改吗?">问题: 客户端的连接策略需要更改吗?</h3><p>三个方案:  </p>
+<ul>
+<li>1.客户端连接不做任何修改, 备份策略删除DC1  </li>
+<li>2.备份策略删除DC1, 修改客户端连接DC3节点  </li>
+<li>3.修改客户端连接DC3节点, 备份策略删除DC1  √</li>
+</ul>
+<p>方案1:  </p>
+<p>1.在第五步rebuild完成后, forseti_fp的备份策略是DC1, DC3.<br>这时候客户端连接的还是DC1的203节点(客户端的ContactPoint没有变化), 数据会同时写入到DC1和DC3.<br>查询时, 因为ContactPoint还是203, 而且203上也是有数据的, 所以查询会在203上直接返回.  </p>
+<p>2.假设客户端的连接策略没有变化, 还是连接DC1的203.<br>修改forseti_fp的备份策略只有DC3, 因为现在forseti_fp只有DC3.<br>所以尽管客户端连接的是203, 数据不再会写入到DC1了(因为备份策略没有DC1了)  </p>
+<p>3.1 因此修改备份策略为DC3后, 客户端的连接策略不要做任何修改, 数据的读写也都是正常的.<br>由于是在同一个集群, 203节点现在是Coordinator, 它会连接到DC3数据中心, 写入到DC3中.<br>查询时也是一样的, 只会从DC3查询. </p>
+<p><img src="http://img.blog.csdn.net/20150924172836743" alt="cass_up0"></p>
+<p>方案2:  </p>
+<p>3.2 如果修改forseti_fp的ContactPoint为DC3的227, 现在数据的读写连接的Coordinator节点是227, 刚好是DC3上的节点.<br>这时候的读写不会像之前一样, 将请求连接到另一个数据中心, 而是在同一个数据中心完成.  </p>
+<p><img src="http://img.blog.csdn.net/20150924172851977" alt="cass_up1"></p>
+<p>方案3:  </p>
+<p>1.forseti_fp的备份策略为DC1,DC3  </p>
+<p>2.修改客户端的连接策略为DC3中的节点227.<br>因为已经rebuild完了,数据已经从DC1完全同步到DC3,<br>而对于rebuild过程中发生的数据写入,因为配置了DC1,DC3策略,数据已经写入到DC3了. </p>
+<p>3.修改forseti_fp的备份策略为DC3<br>修改为DC3之后, 数据在DC3中已经是完整的, 并且新数据只会写入到DC3. 数据的读写也都发生在DC3. </p>
+<p><img src="http://img.blog.csdn.net/20150924165447928" alt="cass_up2"></p>
+<p>最终选择方案3, 因为对于方案1,2. 连接的是原DC的节点, 而最终数据是存在新DC上的. </p>
+<p>@赵岩 我们线上要迁移一个数据库到另一个数据中心.<br>已经完成的操作是: 数据库的副本设置为两个数据中心, 并且在新数据中心已经通过rebuild重建原数据中心的节点.<br>然后修改副本策略把原先的数据中心删除掉, 并且删除原数据中心的数据文件.<br>由于是在同一个集群的两个数据中心内, 我的理解是客户端的连接addContactPoint都不需要更改也是没有问题的.</p>
+<h4 id="数据验证">数据验证</h4><p>9个节点, forseti_fp的数据每个节点大概有2T. 一共是18T. 而使用status查看DC3只有12T.注意DC1的Load并不单单是forseti_fp的.   </p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@cass047202 ~]$ /usr/install/cassandra/bin/nodetool status forseti_fp</span><br><span class="line">Datacenter: DC3</span><br><span class="line">===============</span><br><span class="line">--  Address         Load       Tokens  Owns (effective)  Host ID                               Rack</span><br><span class="line">UN  <span class="number">192.168.47.228</span>  3.63 TB    256     100.0%            f<span class="number">3d26148</span>-d2da-479c-ae9e-ae41aced1be9  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.229</span>  4.96 TB    256     100.0%            b<span class="number">9b9e891</span>-cbe8-400d-9061-08cb56c8415d  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.227</span>  3.75 TB    256     100.0%            57eb<span class="number">6f83-734</span>d-48ef-855b-e<span class="number">745001e82</span>07  RAC1</span><br><span class="line">Datacenter: DC1</span><br><span class="line">===============</span><br><span class="line">--  Address         Load       Tokens  Owns (effective)  Host ID                               Rack</span><br><span class="line">UN  <span class="number">192.168.47.206</span>  2.83 TB    256     31.8%             <span class="number">75f42842</span>-e3ac-4bbe-947d-<span class="number">6b7537a52</span>1da  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.222</span>  2.73 TB    256     30.0%             1cc<span class="number">2c236-8</span>def-4f2b-<span class="number">8149-28d59</span>1fc6b05  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.204</span>  2.53 TB    256     27.6%             91ad<span class="number">3d42-4207</span>-46fe-<span class="number">8188-34c3</span>f0b2dbd2  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.221</span>  2.93 TB    256     30.7%             87e100ed-85c4-44cb-9d9f-<span class="number">2d602d01</span>6038  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.205</span>  2.74 TB    256     30.4%             ac6313c8-e<span class="number">0b5-463</span>b-8f90-55dc<span class="number">0f59e476</span>  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.202</span>  2.94 TB    256     30.3%             abaa0cbc-<span class="number">09d3-4990</span>-8698-ff4d2f2bb4f7  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.203</span>  2.64 TB    256     30.3%             19b0b9cc-cad<span class="number">2-4b61-8</span>da<span class="number">6-95423</span>fe94af8  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.224</span>  2.36 TB    256     30.9%             27e84abe-fb06-47ff-<span class="number">8861-130767</span>ee006b  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.225</span>  1.93 TB    256     29.1%             216c67cf-de7d-<span class="number">4190-9d0</span>d-441fc16a7f71  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.226</span>  1.9 TB     256     28.8%             2591cec<span class="number">9-42f9-4</span>f60-a<span class="number">622-00d46</span><span class="number">3910994</span>  RAC1</span><br><span class="line"></span><br><span class="line">去掉DC1的备份策略之后:</span><br><span class="line">[qihuang.zheng@<span class="number">192-168-47-229</span> ~]$ /usr/install/cassandra/bin/nodetool status forseti_fp</span><br><span class="line">Datacenter: DC3</span><br><span class="line">===============</span><br><span class="line">--  Address         Load       Tokens  Owns (effective)  Host ID                               Rack</span><br><span class="line">UN  <span class="number">192.168.47.228</span>  3.7 TB     256     100.0%            f<span class="number">3d26148</span>-d2da-479c-ae9e-ae41aced1be9  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.229</span>  5 TB       256     100.0%            b<span class="number">9b9e891</span>-cbe8-400d-9061-08cb56c8415d  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.227</span>  3.89 TB    256     100.0%            57eb<span class="number">6f83-734</span>d-48ef-855b-e<span class="number">745001e82</span>07  RAC1</span><br><span class="line">Datacenter: DC1</span><br><span class="line">===============</span><br><span class="line">--  Address         Load       Tokens  Owns (effective)  Host ID                               Rack</span><br><span class="line">UN  <span class="number">192.168.47.206</span>  2.88 TB    256     0.0%              <span class="number">75f42842</span>-e3ac-4bbe-947d-<span class="number">6b7537a52</span>1da  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.222</span>  2.78 TB    256     0.0%              1cc<span class="number">2c236-8</span>def-4f2b-<span class="number">8149-28d59</span>1fc6b05  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.204</span>  2.57 TB    256     0.0%              91ad<span class="number">3d42-4207</span>-46fe-<span class="number">8188-34c3</span>f0b2dbd2  RAC1</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">[qihuang.zheng@<span class="number">192-168-47-229</span> ~]$ /usr/install/cassandra/bin/nodetool status forseti</span><br><span class="line">Datacenter: DC3</span><br><span class="line">===============</span><br><span class="line">--  Address         Load       Tokens  Owns (effective)  Host ID                               Rack</span><br><span class="line">UN  <span class="number">192.168.47.228</span>  3.7 TB     256     0.0%              f<span class="number">3d26148</span>-d2da-479c-ae9e-ae41aced1be9  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.229</span>  5 TB       256     0.0%              b<span class="number">9b9e891</span>-cbe8-400d-9061-08cb56c8415d  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.227</span>  3.89 TB    256     0.0%              57eb<span class="number">6f83-734</span>d-48ef-855b-e<span class="number">745001e82</span>07  RAC1</span><br><span class="line">Datacenter: DC1</span><br><span class="line">===============</span><br><span class="line">--  Address         Load       Tokens  Owns (effective)  Host ID                               Rack</span><br><span class="line">UN  <span class="number">192.168.47.206</span>  2.88 TB    256     31.8%             <span class="number">75f42842</span>-e3ac-4bbe-947d-<span class="number">6b7537a52</span>1da  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.222</span>  2.78 TB    256     30.0%             1cc<span class="number">2c236-8</span>def-4f2b-<span class="number">8149-28d59</span>1fc6b05  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.204</span>  2.57 TB    256     27.6%             91ad<span class="number">3d42-4207</span>-46fe-<span class="number">8188-34c3</span>f0b2dbd2  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.221</span>  2.97 TB    256     30.7%             87e100ed-85c4-44cb-9d9f-<span class="number">2d602d01</span>6038  RAC1</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>直接查看数据文件的大小, DC1:16.7,  DC3:15.3, 差了有1T多  </p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[qihuang.zheng@cass047202 ~]</span>$ ./pssh.sh 'du --max-depth=<span class="number">0</span> /home/admin/cassandra/data/forseti_fp -h'</span><br><span class="line"><span class="string">[1]</span> <span class="number">10</span>:<span class="number">16</span>:<span class="number">00</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.204</span></span><br><span class="line"><span class="number">1</span>.8T  /home/admin/cassandra/data/forseti_fp</span><br><span class="line"><span class="string">[2]</span> <span class="number">10</span>:<span class="number">16</span>:<span class="number">00</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.224</span></span><br><span class="line"><span class="number">1</span>.5T  /home/admin/cassandra/data/forseti_fp</span><br><span class="line"><span class="string">[3]</span> <span class="number">10</span>:<span class="number">16</span>:<span class="number">00</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.226</span></span><br><span class="line"><span class="number">1</span>.6T  /home/admin/cassandra/data/forseti_fp</span><br><span class="line"><span class="string">[4]</span> <span class="number">10</span>:<span class="number">16</span>:<span class="number">00</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.225</span></span><br><span class="line"><span class="number">1</span>.4T  /home/admin/cassandra/data/forseti_fp</span><br><span class="line"><span class="string">[5]</span> <span class="number">10</span>:<span class="number">16</span>:<span class="number">00</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.206</span></span><br><span class="line"><span class="number">2</span>.3T  /home/admin/cassandra/data/forseti_fp</span><br><span class="line"><span class="string">[6]</span> <span class="number">10</span>:<span class="number">16</span>:<span class="number">00</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.221</span></span><br><span class="line"><span class="number">2</span>.1T  /home/admin/cassandra/data/forseti_fp</span><br><span class="line"><span class="string">[7]</span> <span class="number">10</span>:<span class="number">16</span>:<span class="number">00</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.203</span></span><br><span class="line"><span class="number">1</span>.9T  /home/admin/cassandra/data/forseti_fp</span><br><span class="line"><span class="string">[8]</span> <span class="number">10</span>:<span class="number">16</span>:<span class="number">00</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.205</span></span><br><span class="line"><span class="number">2</span>.2T  /home/admin/cassandra/data/forseti_fp</span><br><span class="line"><span class="string">[9]</span> <span class="number">10</span>:<span class="number">16</span>:<span class="number">01</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.222</span></span><br><span class="line"><span class="number">1</span>.9T  /home/admin/cassandra/data/forseti_fp</span><br><span class="line"><span class="string">[10]</span> <span class="number">10</span>:<span class="number">16</span>:<span class="number">01</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.228</span></span><br><span class="line"><span class="number">4</span>.8T  /home/admin/cassandra/data/forseti_fp</span><br><span class="line"><span class="string">[11]</span> <span class="number">10</span>:<span class="number">16</span>:<span class="number">01</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.227</span></span><br><span class="line"><span class="number">4</span>.4T  /home/admin/cassandra/data/forseti_fp</span><br><span class="line"><span class="string">[12]</span> <span class="number">10</span>:<span class="number">16</span>:<span class="number">06</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.229</span></span><br><span class="line"><span class="number">6</span>.1T  /home/admin/cassandra/data/forseti_fp</span><br></pre></td></tr></table></figure>
+<h4 id="验证成功分离">验证成功分离</h4><p>1.直接查看数据文件的日期, 在13分的时候修改了备份策略只有DC3, 因此在这之后数据都不会再写入DC1了.<br>查看DC1节点的forseti_fp文件夹的最后修改日志都在13分之前, 而DC3节点的日期为最新日期.<br>说明现在只写入到了DC3中. 可以放心地删除DC1的数据了.</p>
+<figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@cass047202 ~]$ ./pssh.sh 'ls /home/<span class="literal">admin</span>/cassandra/data/forseti_fp -rtl | tail -<span class="number">2</span>'</span><br><span class="line">[<span class="number">1</span>] <span class="number">10</span>:<span class="number">16</span>:<span class="number">56</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.203</span></span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span>  <span class="number">192512</span> <span class="number">9</span>月  <span class="number">25</span> <span class="number">10</span>:<span class="number">13</span> android_device_session_temp</span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span>   <span class="number">98304</span> <span class="number">9</span>月  <span class="number">25</span> <span class="number">10</span>:<span class="number">13</span> devicedbmap</span><br><span class="line">[<span class="number">2</span>] <span class="number">10</span>:<span class="number">16</span>:<span class="number">56</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.204</span></span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span>  <span class="number">466944</span> <span class="number">9</span>月  <span class="number">25</span> <span class="number">10</span>:<span class="number">09</span> android_device_session_temp</span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span>  <span class="number">352256</span> <span class="number">9</span>月  <span class="number">25</span> <span class="number">10</span>:<span class="number">09</span> devicedbmap</span><br><span class="line">....</span><br><span class="line">[<span class="number">12</span>] <span class="number">10</span>:<span class="number">16</span>:<span class="number">56</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.227</span></span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span>  <span class="number">741376</span> <span class="number">9</span>月  <span class="number">25</span> <span class="number">10</span>:<span class="number">16</span> tcp_syn_data</span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span> <span class="number">2015232</span> <span class="number">9</span>月  <span class="number">25</span> <span class="number">10</span>:<span class="number">16</span> android_device_session_temp</span><br><span class="line">[<span class="number">4</span>] <span class="number">10</span>:<span class="number">16</span>:<span class="number">56</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.229</span></span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span> <span class="number">2387968</span> <span class="number">9</span>月  <span class="number">25</span> <span class="number">10</span>:<span class="number">16</span> android_device_session_temp</span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span> <span class="number">6045696</span> <span class="number">9</span>月  <span class="number">25</span> <span class="number">10</span>:<span class="number">16</span> android_device_session</span><br><span class="line">[<span class="number">10</span>] <span class="number">10</span>:<span class="number">16</span>:<span class="number">56</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.228</span></span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span>  <span class="number">532480</span> <span class="number">9</span>月  <span class="number">25</span> <span class="number">10</span>:<span class="number">16</span> device_session_map</span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span>   <span class="number">20480</span> <span class="number">9</span>月  <span class="number">25</span> <span class="number">10</span>:<span class="number">16</span> tcp_stack_ua</span><br></pre></td></tr></table></figure>
+<p>2.使用tracing on查询:  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">在修改之前, cqlsh连接的是<span class="number">227</span>, 有时会将请求转发到DC1的节点上:  </span><br><span class="line"> activity                                                                                        | timestamp    | source         | source_elapsed</span><br><span class="line">-------------------------------------------------------------------------------------------------+--------------+----------------+----------------</span><br><span class="line">                                                                              execute_cql3_query | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">660</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |              <span class="number">0</span></span><br><span class="line">                                           Parsing select * from android_device_session limit <span class="number">1</span>; | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">660</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |             <span class="number">64</span></span><br><span class="line">                                                                             Preparing statement | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">660</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |            <span class="number">130</span></span><br><span class="line">                                                                   Determining replicas to query | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">660</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |            <span class="number">240</span></span><br><span class="line">                                                            Enqueuing request to /<span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span> | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">661</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |           <span class="number">1133</span></span><br><span class="line">                                                              Sending message to /<span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span> | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">661</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |           <span class="number">1246</span></span><br><span class="line">                                                           Message received from /<span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span> | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">673</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |          <span class="number">13366</span></span><br><span class="line">                                                        Processing response from /<span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span> | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">673</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |          <span class="number">13504</span></span><br><span class="line">                                                           Message received from /<span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">674</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span> |             <span class="number">38</span></span><br><span class="line"> Executing seq scan across <span class="number">8</span> sstables <span class="keyword">for</span> [min(-<span class="number">9223372036854775808</span>), max(-<span class="number">9209434738668044748</span>)] | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">674</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span> |            <span class="number">251</span></span><br><span class="line">                                                     Seeking to partition beginning in data file | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">684</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span> |           <span class="number">9749</span></span><br><span class="line">                                                               Read <span class="number">1</span> live and <span class="number">0</span> tombstone cells | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">685</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span> |          <span class="number">11081</span></span><br><span class="line">                                                     Seeking to partition beginning in data file | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">685</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span> |          <span class="number">11119</span></span><br><span class="line">                                                               Read <span class="number">1</span> live and <span class="number">0</span> tombstone cells | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">685</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span> |          <span class="number">11140</span></span><br><span class="line">                                                                    Scanned <span class="number">1</span> rows and matched <span class="number">1</span> | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">685</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span> |          <span class="number">11240</span></span><br><span class="line">                                                           Enqueuing response to /<span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">685</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span> |          <span class="number">11332</span></span><br><span class="line">                                                              Sending message to /<span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">686</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.205</span> |          <span class="number">11464</span></span><br><span class="line">                                                                                Request complete | <span class="number">10</span>:<span class="number">08</span>:<span class="number">50</span>,<span class="number">673</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |          <span class="number">13719</span></span><br><span class="line"></span><br><span class="line">修改之后, 只会连接到DC1的节点:  </span><br><span class="line"> activity                                                                                           | timestamp    | source         | source_elapsed</span><br><span class="line">----------------------------------------------------------------------------------------------------+--------------+----------------+----------------</span><br><span class="line">                                                                                 execute_cql3_query | <span class="number">10</span>:<span class="number">11</span>:<span class="number">01</span>,<span class="number">916</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |              <span class="number">0</span></span><br><span class="line">                                              Parsing select * from android_device_session limit <span class="number">1</span>; | <span class="number">10</span>:<span class="number">11</span>:<span class="number">01</span>,<span class="number">916</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |             <span class="number">87</span></span><br><span class="line">                                                                                Preparing statement | <span class="number">10</span>:<span class="number">11</span>:<span class="number">01</span>,<span class="number">916</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |            <span class="number">171</span></span><br><span class="line">                                                                      Determining replicas to query | <span class="number">10</span>:<span class="number">11</span>:<span class="number">01</span>,<span class="number">916</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |            <span class="number">266</span></span><br><span class="line"> Executing seq scan across <span class="number">4462</span> sstables <span class="keyword">for</span> [min(-<span class="number">9223372036854775808</span>), min(-<span class="number">9223372036854775808</span>)] | <span class="number">10</span>:<span class="number">11</span>:<span class="number">01</span>,<span class="number">944</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |          <span class="number">28404</span></span><br><span class="line">                                                        Seeking to partition beginning in data file | <span class="number">10</span>:<span class="number">11</span>:<span class="number">02</span>,<span class="number">864</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |         <span class="number">948532</span></span><br><span class="line">                                                                  Read <span class="number">1</span> live and <span class="number">0</span> tombstone cells | <span class="number">10</span>:<span class="number">11</span>:<span class="number">02</span>,<span class="number">864</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |         <span class="number">948932</span></span><br><span class="line">                                                        Seeking to partition beginning in data file | <span class="number">10</span>:<span class="number">11</span>:<span class="number">02</span>,<span class="number">865</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |         <span class="number">948996</span></span><br><span class="line">                                                                  Read <span class="number">1</span> live and <span class="number">0</span> tombstone cells | <span class="number">10</span>:<span class="number">11</span>:<span class="number">02</span>,<span class="number">865</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |         <span class="number">949034</span></span><br><span class="line">                                                                       Scanned <span class="number">1</span> rows and matched <span class="number">1</span> | <span class="number">10</span>:<span class="number">11</span>:<span class="number">02</span>,<span class="number">912</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |         <span class="number">996894</span></span><br><span class="line">                                                                                   Request complete | <span class="number">10</span>:<span class="number">11</span>:<span class="number">02</span>,<span class="number">913</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> |         <span class="number">997235</span></span><br></pre></td></tr></table></figure>
+<p>3.OpsCenter查看读写</p>
+<p>下面八个图分别是: 集群的写,读, 写延迟, 读延迟, forseti.velocity的写,读, forseti_fp.android_device_session_tmp的写,读  </p>
+<p><img src="http://img.blog.csdn.net/20150925110839329" alt="ops_metric1"></p>
+<p>对于forseti_fp的表, 只有三个节点(DC3)有读写  </p>
+<p><img src="http://img.blog.csdn.net/20150925110855836" alt="ops_metric2"></p>
+<p>对于forseti的表, 一共有10个节点(DC1)的读写, 而DC3的都没有在forseti中有读写.    </p>
+<p><img src="http://img.blog.csdn.net/20150925110914215" alt="ops_metric3"></p>
+<h3 id="后续">后续</h3><p>DC迁移之后就可以删除原DC中的forseti_fp文件夹了. 为了系统稳定,并没有立即删除,观察了几天. 发现存在一个问题:<br>在原DC中, 数据还是会少量地往forseti_fp中写入, 现象就是文件夹的最近日期在迁移之后. 25号迁移的, 但是28号竟然还有数据文件生成?  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@cass047221 api_invoke_result]$ ll -rth | grep Data</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">799</span>M <span class="number">9</span>月  <span class="number">24</span> <span class="number">08</span>:<span class="number">11</span> forseti_fp-api_invoke_result-jb-<span class="number">5996</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">209</span>M <span class="number">9</span>月  <span class="number">25</span> <span class="number">07</span>:<span class="number">49</span> forseti_fp-api_invoke_result-jb-<span class="number">6105</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">23</span>M <span class="number">9</span>月  <span class="number">28</span> <span class="number">06</span>:<span class="number">40</span> forseti_fp-api_invoke_result-jb-<span class="number">6118</span>-Data.db</span><br></pre></td></tr></table></figure>
+<p>原DC的其他节点都存在这样的问题:  </p>
+<figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@cass047202 ~]$ ./pssh.sh 'ls /home/<span class="literal">admin</span>/cassandra/data/forseti_fp -rthl | tail'</span><br><span class="line">[<span class="number">4</span>] <span class="number">09</span>:<span class="number">33</span>:<span class="number">05</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.221</span></span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span>  <span class="number">20</span>K <span class="number">9</span>月  <span class="number">25</span> <span class="number">13</span>:<span class="number">44</span> ios_device_info</span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span>  <span class="number">12</span>K <span class="number">9</span>月  <span class="number">25</span> <span class="number">13</span>:<span class="number">51</span> ip_device_id</span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span>  <span class="number">20</span>K <span class="number">9</span>月  <span class="number">25</span> <span class="number">21</span>:<span class="number">54</span> ios_device_session</span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span> <span class="number">176</span>K <span class="number">9</span>月  <span class="number">26</span> <span class="number">05</span>:<span class="number">51</span> device</span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span>  <span class="number">12</span>K <span class="number">9</span>月  <span class="number">26</span> <span class="number">05</span>:<span class="number">52</span> ios_device_index</span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span> <span class="number">4.0</span>K <span class="number">9</span>月  <span class="number">26</span> <span class="number">22</span>:<span class="number">27</span> android_device_index</span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span>  <span class="number">36</span>K <span class="number">9</span>月  <span class="number">27</span> <span class="number">17</span>:<span class="number">55</span> devicedbmap</span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span>  <span class="number">28</span>K <span class="number">9</span>月  <span class="number">27</span> <span class="number">17</span>:<span class="number">55</span> page_info</span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span>  <span class="number">20</span>K <span class="number">9</span>月  <span class="number">28</span> <span class="number">06</span>:<span class="number">40</span> api_invoke_result</span><br><span class="line">drwxr-xr-x. <span class="number">2</span> <span class="literal">admin</span> <span class="literal">admin</span> <span class="number">504</span>K <span class="number">9</span>月  <span class="number">28</span> <span class="number">06</span>:<span class="number">40</span> tcp_syn_data</span><br></pre></td></tr></table></figure>
+<p>那么这些数据都是什么数据? 将这些数据(最近的几个文件)导入到测试环境(sstableloader).  </p>
+<pre><code><span class="function">CREATE TABLE <span class="title">page_info</span> (<span class="params">
+  device_id text,
+  gmt_date text,
+  gmt_create bigint,
+  info_map map&lt;text, text&gt;,
+  PRIMARY KEY ((device_id, gmt_date</span>), gmt_create)
+)
+
+cqlsh:forseti_fp&gt; <span class="keyword">select</span> * <span class="keyword">from</span> page_info limit 1</span>;
+
+ device_id                        | gmt_date   | gmt_create    | info_map
+----------------------------------+------------+---------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ f04f171c3ebf55f6a1affc6dc5143aba | <span class="number">2015</span>-<span class="number">09</span>-<span class="number">25</span> | <span class="number">1443140042368</span> | {<span class="string">'domainName'</span>: <span class="string">'www.ixian.cn'</span>, <span class="string">'keyWords'</span>: <span class="string">'-'</span>, <span class="string">'referrer'</span>: <span class="string">'-'</span>, <span class="string">'title'</span>: <span class="string">'荣耀西安网|西安论坛-爱西安爱生活|西安第一人气社区!'</span>, <span class="string">'tokenId'</span>: <span class="string">'2d27a862a0fa6e775b17a675c21a02e1'</span>, <span class="string">'url'</span>: <span class="string">'http://www.ixian.cn/'</span>}
+
+查询<span class="number">26</span>号之后的有没有数据, 没有!  
+cqlsh:forseti_fp&gt; <span class="keyword">select</span> * <span class="keyword">from</span> page_info <span class="keyword">where</span> gmt_create &gt;= <span class="number">1443196800000</span> allow filtering;
+(<span class="number">0</span> rows)
+
+cqlsh:forseti_fp&gt; <span class="keyword">select</span> * <span class="keyword">from</span> api_invoke_result  <span class="keyword">where</span> gmt_create &gt;= <span class="number">1443196800000</span> allow filtering;
+(<span class="number">0</span> rows)
+
+说明数据确实没有往原DC写入. 这些最近生成的文件应该是Cassandra进行合并生成的.  所以是可以放心地删除了.  
+
+tcp_syn_data这张表时间相关的字段不是作为主键:  
+<span class="function">CREATE TABLE <span class="title">tcp_syn_data</span> (<span class="params">
+  address text,
+  id timeuuid,
+  gmt_create timestamp
+  PRIMARY KEY ((address</span>), id)
+)
+
+创建时间字段的索引:  
+CREATE INDEX tcp_syn_data_gmt_create_idx ON <span class="title">tcp_syn_data</span> (<span class="params">gmt_create</span>)</span>;
+
+创建索引后, 等于查询可以, 但是并没有结果:
+cqlsh:forseti_fp&gt; <span class="keyword">select</span> * <span class="keyword">from</span> tcp_syn_data limit <span class="number">1</span>;
+ address               | id                                   | gmt_create               | 
+-----------------------+--------------------------------------+--------------------------+
+ <span class="number">183.239</span><span class="number">.172</span><span class="number">.142</span>:<span class="number">52139</span> | c1a6f880-<span class="number">6310</span>-<span class="number">11e5</span>-<span class="number">9015</span>-c33247ef2c42 | <span class="number">2015</span>-<span class="number">09</span>-<span class="number">25</span> <span class="number">07</span>:<span class="number">05</span>:<span class="number">32</span>+<span class="number">0800</span> |
+(<span class="number">1</span> rows)
+
+cqlsh:forseti_fp&gt; <span class="keyword">select</span> * <span class="keyword">from</span> tcp_syn_data <span class="keyword">where</span> gmt_create = <span class="string">'2015-09-25 07:05:32+0800'</span>;
+(<span class="number">0</span> rows)
+
+范围查询直接报错:
+cqlsh:forseti_fp&gt; <span class="keyword">select</span> * <span class="keyword">from</span> tcp_syn_data <span class="keyword">where</span> gmt_create &gt;= <span class="string">'2015-09-25 07:05:32+0800'</span>;
+Bad Request: No indexed columns present <span class="keyword">in</span> by-columns clause with Equal <span class="keyword">operator</span>
+
+原因: 索引只能=号查询, 不能范围查询!  ??
+http:<span class="comment">//docs.datastax.com/en/cql/3.1/cql/cql_using/use_create_index_t.html 这里明显可以用&gt;=查询索引列嘛!</span>
+
+由于id是timeuuid类型, 所以可以利用函数进行时间范围查询:  
+http:<span class="comment">//docs.datastax.com/en/cql/3.0/cql/cql_reference/timeuuid_functions_r.html</span>
+
+cqlsh:forseti_fp&gt; <span class="keyword">select</span> * <span class="keyword">from</span> tcp_syn_data <span class="keyword">where</span> id&gt;maxTimeuuid(<span class="string">'2015-09-25 00:05+0000'</span>) limit <span class="number">1</span> allow filtering;
+ address             | id                                   | gmt_create               |
+---------------------+--------------------------------------+--------------------------+
+ <span class="number">182.242</span><span class="number">.135</span><span class="number">.86</span>:<span class="number">3786</span> | <span class="number">832401</span>b0-<span class="number">631</span>b-<span class="number">11e5</span>-<span class="number">9015</span>-c33247ef2c42 | <span class="number">2015</span>-<span class="number">09</span>-<span class="number">25</span> <span class="number">08</span>:<span class="number">22</span>:<span class="number">32</span>+<span class="number">0800</span> |
+(<span class="number">1</span> rows)
+
+cqlsh:forseti_fp&gt; <span class="keyword">select</span> * <span class="keyword">from</span> tcp_syn_data <span class="keyword">where</span> id&gt;maxTimeuuid(<span class="string">'2015-09-26 00:05+0000'</span>) limit <span class="number">1</span> allow filtering;
+(<span class="number">0</span> rows)
+</code></pre>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-08-28-Cassandra-Migration5_SplitTable" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/08/28/2015-08-28-Cassandra-Migration5_SplitTable/" class="article-date">
+  	<time datetime="2015-08-27T16:00:00.000Z" itemprop="datePublished">2015-08-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/28/2015-08-28-Cassandra-Migration5_SplitTable/">Cassandra数据迁移 分离表</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>根据查询维度分离业务表</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/08/28/2015-08-28-Cassandra-Migration5_SplitTable/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-08-28-Cassandra-Migration2_DC2" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/08/28/2015-08-28-Cassandra-Migration2_DC2/" class="article-date">
+  	<time datetime="2015-08-27T16:00:00.000Z" itemprop="datePublished">2015-08-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/28/2015-08-28-Cassandra-Migration2_DC2/">Cassandra数据迁移2 多数据中心数据迁移</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>迁移keyspace到同一个集群的多个数据中心, DC和原有keyspace有重复(DC1,DC2).  </p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/08/28/2015-08-28-Cassandra-Migration2_DC2/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-08-28-Cassandra-Migration1_NewCluster" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/08/28/2015-08-28-Cassandra-Migration1_NewCluster/" class="article-date">
+  	<time datetime="2015-08-27T16:00:00.000Z" itemprop="datePublished">2015-08-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/28/2015-08-28-Cassandra-Migration1_NewCluster/">Cassandra数据迁移1 新集群sstableloader</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>采用sstableloader迁移keyspace到新的集群</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/08/28/2015-08-28-Cassandra-Migration1_NewCluster/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-08-28-Cassandra-Migration3_TestSandbox" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/08/28/2015-08-28-Cassandra-Migration3_TestSandbox/" class="article-date">
+  	<time datetime="2015-08-27T16:00:00.000Z" itemprop="datePublished">2015-08-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/28/2015-08-28-Cassandra-Migration3_TestSandbox/">Cassandra数据迁移3 多数据中心数据迁移</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>接上文: 迁移keyspace到同一个集群的多个数据中心, DC和原有keyspace不重复(DC1,DC3).  </p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/08/28/2015-08-28-Cassandra-Migration3_TestSandbox/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-08-25-Apache-Cassandra" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/08/25/2015-08-25-Apache-Cassandra/" class="article-date">
+  	<time datetime="2015-08-24T16:00:00.000Z" itemprop="datePublished">2015-08-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/25/2015-08-25-Apache-Cassandra/">Apache Cassandra入门</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Hello Cassandra</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/08/25/2015-08-25-Apache-Cassandra/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
     <article id="post-2015-08-25-Cassandra-Architecture" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -188,7 +1457,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/25/2015-08-25-Cassandra-Architecture/">Apache Cassandra架构</a>
+      <a class="article-title" href="/2015/08/25/2015-08-25-Cassandra-Architecture/">Apache Cassandra架构理解</a>
     </h1>
   
 
@@ -197,132 +1466,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
-        <h2 id="架构">架构</h2><p><a href="http://docs.datastax.com/en/cassandra/2.0/cassandra/architecture/architectureTOC.html" target="_blank" rel="external">http://docs.datastax.com/en/cassandra/2.0/cassandra/architecture/architectureTOC.html</a><br><a href="http://yikebocai.com/2014/06/cassandra-principle/" target="_blank" rel="external">http://yikebocai.com/2014/06/cassandra-principle/</a>  </p>
-<p>点对点分布式系统，集群中各节点平等，数据分布于集群中各节点，各节点间每秒交换一次信息。<br>每个节点的<code>commit log提交日志</code>捕获写操作来确保数据持久性。<br>数据先被写入<code>memtable</code>–内存中的数据结构，待该结构满后数据被写入<code>SSTable</code>–硬盘中的数据文件。<br>所有的写内容被自动在集群中<code>partition分区</code>并<code>replicate复制</code>。  </p>
-<p>Cassandra数据库面向行。授权用户可连接至任意数据中心的任意节点，并通过类似SQL的CQL查询数据。集群中，一个应用一般包含一个keyspace，一个keyspace中包含多个表。<br>客户端连接到某一节点发起读或写请求时，该节点充当<code>客户端应用</code>与<code>拥有相应数据的节点</code>间的<code>coordinator协调者</code>以根据集群配置确定<code>环(ring)中的哪个节点</code>应当获取这个请求。</p>
-<p><img src="http://img.blog.csdn.net/20150829183000146" alt="c_write-path">  </p>
-<blockquote>
-<p>图解: 协调节点(10)负责和客户端的交互(这个节点并不一定拥有数据,类似于一个门面). 真正的数据在节点1,4,6上,分别表示数据的三个副本,最终只要节点1上的数据返回即可.  </p>
-</blockquote>
-<p><strong>关键词</strong>  </p>
-<table>
-<thead>
-<tr>
-<th>KeyWord</th>
-<th>Explain</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Gossip</code></td>
-<td>点对点通信协议，用以Cassandra集群中节点间交换位置和状态信息。  </td>
-</tr>
-<tr>
-<td><code>Partitioner</code></td>
-<td>决定如何在集群中的节点间分发数据，即在哪个节点放置数据的第一个replica。  </td>
-</tr>
-<tr>
-<td><code>Replica placement strategy</code></td>
-<td>决定在哪些节点放置每行数据的其他replica。Cassandra在集群中的多个节点存储数据的多份拷贝(replicas)来确保可靠和容错。  </td>
-</tr>
-<tr>
-<td><code>Snitch</code></td>
-<td>定义了复制策略用来放置replicas和路由请求所使用的拓扑信息  </td>
-</tr>
-<tr>
-<td><code>Virtual nodes</code></td>
-<td>虚拟节点, 指定数据与物理节点的所属关系   </td>
-</tr>
-<tr>
-<td><code>Ring</code></td>
-<td>环</td>
-</tr>
-<tr>
-<td><code>Token</code></td>
-<td>令牌</td>
-</tr>
-</tbody>
-</table>
-<p><strong>节点间通信gossip</strong><br>Cassandra使用点对点通讯协议gossip在集群中的节点间交换位置和状态信息。<br>gossip进程每秒运行一次，与至多3个其他节点交换信息，这样所有节点可很快了解集群中的其他节点信息</p>
-<p><strong>失败检测与恢复</strong><br>Ø  gossip可检测其他节点是否正常以避免将请求路由至不可达或者性能差的节点（后者需配置为dynamic snitch方可）。<br>Ø  可通过配置phi_convict_threshold来调整失败检测的敏感度。<br>Ø  对于失败的节点，其他节点会通过gossip定期与之联系以查看是否恢复而非简单将之移除。若需强制添加或移除集群中节点需使用nodetool工具。<br>Ø  一旦某节点被标记为失败，其<code>错过的写操作</code>会有其他replicas存储一段时间<br>     (需开启hinted handoff，若节点失败的时间超过了max_hint_window_in_ms，错过的写不再被存储)<br>     Down掉的节点经过一段时间恢复后需执行repair操作，一般在所有节点运行nodetool repair以确保数据一致。  </p>
-<p><strong>一致性哈希DHT</strong><br><img src="http://img.blog.csdn.net/20150830131517170" alt="hash">  </p>
-<blockquote>
-<p>图解: key的范围是0到2^32形成一个环, 叫做hash空间环, 即hash的值空间. 对集群的服务器(比如ip地址)进行hash,都能确定其在环空间上的位置.<br>定位数据访问到相应服务器的算法:将数据key使用相同的函数H计算出哈希值h，通根据h确定此数据在环上的位置，<br>从此位置沿环顺时针“行走”，第一台遇到的服务器就是其应该定位到的服务器   </p>
-</blockquote>
-<p><img src="http://img.blog.csdn.net/20150830133258811" alt="riak-ring">  </p>
-<blockquote>
-<p>图解: 由于一致性哈希算法在服务节点太少时，容易因为节点分部不均匀而造成数据倾斜问题,所以引入了虚拟节点:<br>把每台server分成v个虚拟节点，再把所有虚拟节点(n*v)随机分配到一致性哈希的圆环上，<br>这样所有的用户从自己圆环上的位置顺时针往下取到第一个vnode就是自己所属节点. 当此节点存在故障时，再顺时针取下一个作为替代节点.  </p>
-</blockquote>
-<p><img src="http://img.blog.csdn.net/20150830135418433" alt="riak-data-distribution">  </p>
-<blockquote>
-<p>图解: key经过hash会定位到hash环上的一个位置, 找到下一个vnode为数据的第一份存储节点. 接下来的两个vnode为另外两个副本.  </p>
-</blockquote>
-<p><strong>hash值空间&amp;token</strong><br>上面在计算key存在在哪个节点上是使用往前游走的方式找到环上的第一个节点. 游走是一个计算的过程.<br>如果能够事先计算好集群中的节点(vnodes)在整个hash环的值空间, 这样对key进行hash后,可以看它是落在哪个hash值空间上,<br>而值空间和节点的关系已经知道了,所以可以直接定位到key落在哪个节点上了. 这就是<code>token</code>的作用.  </p>
-<p>C<em>表中每行数据由<code>primary key</code>标识，C</em>为每个primarykey分配一个<code>hash</code>值，<code>集群中每个节点(vnode)拥有一个或多个hash值区间</code>。<br>这样便可根据<code>primary key对应的hash值</code>将<code>该条数据</code>放在<code>包含该hash值</code>的<code>hash值区间</code>对应的节点(vnode)中</p>
-<p><strong>虚拟节点</strong><br><img src="http://img.blog.csdn.net/20150829184538135" alt="c_vn-token">  </p>
-<blockquote>
-<p>图解: 没有使用虚拟节点, Ring环的tokens数量=集群的机器数量. 比如上面一共有6个节点,所以token数=6.<br>因为副本因子=3,一条记录要在集群中的三个节点存在. 简单地方式是计算rowkey的hash值,落在环中的哪个token上,<br>第一份数据就在那个节点上, 剩余两个副本落在这个节点在token环上的后两个节点.<br>图中的A,B,C,D,E,F是key的范围,真实的值是hash环空间,比如0~2^32区间分成10份.每一段是2^32的1/10.<br>节点1包含A,F,E表示key范围在A,F,E的数据会存储到节点1上.以此类推.  </p>
-</blockquote>
-<p>若不使用虚拟节点则需手工为集群中每个节点<code>计算和分配一个token</code>。<br>每个token决定了<code>节点在环中的位置</code>以及<code>节点应当承担的一段连续的数据hash值的范围</code>。<br>如上图上半部分，每个节点分配了一个单独的token代表环中的一个位置，每个节点存储将row key映射为hash值之后<br>落在该节点应当承担的唯一的一段连续的hash值范围内的数据。每个节点也包含来自其他节点的row的副本。  </p>
-<p>而使用虚拟节点允许每个节点拥有多个较小的不连续的hash值范围。<br>如上图中下半部分，集群中的节点使用了虚拟节点，虚拟节点随机选择且不连续。<br>数据的存放位置也由row key映射而得的hash值确定，但是是落在更小的分区范围内  </p>
-<p>使用虚拟节点的好处<br>Ø  无需为每个节点计算、分配token<br>Ø  添加移除节点后无需重新平衡集群负载<br>Ø  重建死掉的节点更快<br>Ø  改善了在同一集群使用异种机器  </p>
-<p><strong>数据复制</strong><br>当前有两种可用的复制策略：<br>Ø  SimpleStrategy：仅用于单数据中心，将第一个replica放在由partitioner确定的节点中，其余的replicas放在上述节点顺时针方向的后续节点中。<br>Ø  NetworkTopologyStrategy：可用于较复杂的多数据中心。可以指定在每个数据中心分别存储多少份replicas。  </p>
-<p>复制策略在创建keyspace时指定，如<br><code>CREATEKEYSPACE Excelsior WITH REPLICATION = { &#39;class&#39; : &#39;SimpleStrategy&#39;,&#39;replication_factor&#39; : 3 };</code><br><code>CREATEKEYSPACE Excalibur WITH REPLICATION = {&#39;class&#39; :&#39;NetworkTopologyStrategy&#39;, &#39;dc1&#39; : 3, &#39;dc2&#39; : 2};</code><br>其中dc1、dc2这些数据中心名称要与snitch中配置的名称一致.上面的拓扑策略表示在dc1配置3个副本,在dc2配置2个副本</p>
-<p><strong>Partitioners</strong><br>在Cassandra中，table的每行由唯一的primarykey标识，<code>partitioner</code>实际上为<code>一hash函数</code>用以<code>计算primary key的token</code>。Cassandra依据这个token值在集群中放置对应的行<br>注意：若使用虚拟节点(vnodes)则无需手工计算tokens。若不使用虚拟节点则必须手工计算tokens将所得的值指派给cassandra.ymal主配置文件中的initial_token参数  </p>
-<blockquote>
-<p>token和hash值的含义到底有什么区别? </p>
-</blockquote>
-<h3 id="客户端请求">客户端请求</h3><p>client连接至节点并发出read/write请求时，该节点充当client端应用与包含请求数据的节点(或replica)之间的协调者，<br>它利用配置的partitioner和replicaplacement策略确定那个节点当获取请求。</p>
-<p><strong>写请求</strong>  </p>
-<p><img src="http://img.blog.csdn.net/20150830123130980" alt="c_write_access">  </p>
-<ul>
-<li>协调者(coordinator)将write请求发送到拥有对应row的所有replica节点，只要节点可用便获取并执行写请求。  </li>
-<li>写一致性级别(write consistency level)确定要有多少个replica节点必须返回成功的确认信息。成功意味着数据被正确写入了commit log和memtable。  </li>
-<li>上例为单数据中心，11个节点(不是有12个吗?)，复制因子为3，写一致性等级为ONE的写情况(红色的箭头表示只要一个节点成功写入,便可立即返回给客户端)  </li>
-</ul>
-<blockquote>
-<p>客户端连接的那个节点是怎么指定的? 是addContactPoint指定的节点吗? 但是ContactPoint一般设置为种子节点中的一个.  </p>
-</blockquote>
-<p><strong>读请求</strong><br>Ø  直接读请求<br>Ø  后台读修复请求(read repair)  </p>
-<p><img src="http://img.blog.csdn.net/20150830123308292" alt="c_read-path">  </p>
-<p>与直接读请求[1]联系的replica数目由一致性级别确定。后台读修复请求[2]被发送到没有收到直接读请求的额外的replica，以确保请求的row在所有replica上一致。  </p>
-<ul>
-<li>协调者首先与一致性级别确定的所有replica联系，被联系的节点返回请求的数据，  </li>
-<li>若多个节点被联系，则来自各replica的row会在内存中作比较，若不一致，则协调者使用含最新数据的replica向client返回结果。  </li>
-<li>同时，协调者在后台联系和比较来自其余拥有对应row的replica的数据，若不一致，会向过时的replica发写请求用最新的数据进行更新。这一过程叫read repair。  </li>
-<li>上例为单数据中心，11个节点，复制因子为3，一致性级别为QUORUM的读情况  </li>
-</ul>
-<h3 id="读写流程">读写流程</h3><p><img src="http://img.blog.csdn.net/20150830130032129" alt="c_write">  </p>
-<blockquote>
-<p>图解: 上图表示写请求分别到MemTable和CommitLog, 并且MemTable的数据会刷写到磁盘上. 除了写数据,还有索引也会保存到磁盘上.<br>写流程: 先将数据写进内存中的数据结构memtable，同时追加到磁盘中的commitlog中。表使用的越多，对应的memtable应越大，cassandra动态的为memtable分配内存，也可自己手工指定。memtable内容超出指定容量后memtable数据（包括索引）被放进将被刷入磁盘的队列，可通过memtable_flush_queue_size配置队列长度。若将被刷入磁盘的数据超出了队列长度，cassandra会锁定写。memtable表中的数据由连续的I/O刷进磁盘中的SSTable，之后commit log被清空。每个表有独立的memtable和SSTable</p>
-</blockquote>
-<p><img src="http://img.blog.csdn.net/20150830142808484" alt="c_read-flow">  </p>
-<p>读流程: 首先检查Bloom filter，每个SSTable都有一个Bloomfilter，用以在进行任何磁盘I/O前检查请求的partition key对应的数据在SSTable中存在的可能性。<br>若数据很可能存在，则检查Partition key cache(Cassandra表partition index的缓存)，之后根据index条目是否在cache中找到而执行不同步骤：  </p>
-<p>Ø  找到  </p>
-<ul>
-<li>从compression offset map中查找拥有对应数据的压缩快。  </li>
-<li>从磁盘取出压缩的数据，返回结果集。  </li>
-</ul>
-<p>Ø  未找到 </p>
-<ul>
-<li>搜索Partition summary（partition index的样本集）确定index条目在磁盘中的近似位置。  </li>
-<li>从磁盘中SSTable内取出index条目。  </li>
-<li>从compression offset map中查找拥有对应数据的压缩快。  </li>
-<li>从磁盘取出压缩的数据，返回结果集。  </li>
-</ul>
-<p>读写过程的示例:   </p>
-<p><img src="http://img.blog.csdn.net/20150830143325616" alt="c_write-ex">  </p>
-<blockquote>
-<p>第一个SSTable文件是insert, 第二个SSTable是update的数据.  </p>
-</blockquote>
-<p><img src="http://img.blog.csdn.net/20150830142830995" alt="c_read-ex">  </p>
-<p>由insert/update过程可知，read请求到达某一节点后，必须结合所有包含请求的row中的column的SSTable以及memtable来产生请求的数据  </p>
-<p><img src="http://img.blog.csdn.net/20150830142843701" alt="c_read-ex2">  </p>
-<p>例如，要更新包含用户数据的某个row中的email 列，cassandra并不重写整个row到新的数据文件，<br>而仅仅将新的email写进新的数据文件，username等仍处于旧的数据文件中。<br>上图中红线表示Cassandra需要整合的row的片段用以产生用户请求的结果。<br>为节省CPU和磁盘I/O，Cassandra会缓存合并后的结果，且可直接在该cache中更新row而不用重新合并</p>
-<h2 id="参考文档">参考文档</h2><p>一致性哈希算法及其在分布式系统中的应用: <a href="http://blog.codinglabs.org/articles/consistent-hashing.html" target="_blank" rel="external">http://blog.codinglabs.org/articles/consistent-hashing.html</a><br>Riak Clusters: <a href="http://docs.basho.com/riak/latest/theory/concepts/Clusters/" target="_blank" rel="external">http://docs.basho.com/riak/latest/theory/concepts/Clusters/</a>  </p>
-<p>Cassandra研究报告: <a href="http://blog.csdn.net/zyz511919766/article/details/38683219" target="_blank" rel="external">http://blog.csdn.net/zyz511919766/article/details/38683219</a><br>Cassandra 分布式数据库详解，第 1 部分：配置、启动与集群 <a href="https://www.ibm.com/developerworks/cn/opensource/os-cn-cassandraxu1/" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/opensource/os-cn-cassandraxu1/</a><br>Cassandra 分布式数据库详解，第 2 部分：数据结构与数据读写 <a href="https://www.ibm.com/developerworks/cn/opensource/os-cn-cassandraxu2/" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/opensource/os-cn-cassandraxu2/</a>  </p>
-
+        <p>Cassandra的架构理解,关键概念,客户端请求,读写流程<br>
       
     </div>
     
@@ -339,6 +1483,10 @@
 		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
 	</div>
 
+      
+        <p class="article-more-link">
+          <a  href="/2015/08/25/2015-08-25-Cassandra-Architecture/#more">more >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -421,1085 +1569,6 @@
       
         <p class="article-more-link">
           <a  href="/2015/07/26/2015-07-26-drill-fragment-execute/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-09-11-Flowmix-CEP" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/07/26/2015-09-11-Flowmix-CEP/" class="article-date">
-  	<time datetime="2015-07-25T16:00:00.000Z" itemprop="datePublished">2015-07-26</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/07/26/2015-09-11-Flowmix-CEP/">Storm的CEP框架 flowmix</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Flowmix - A Flexible Event Processing Engine for Apache Storm: <a href="http://github.com/zqhxuyuan/bigdata/tree/master/storm/storm-flowmix">http://github.com/zqhxuyuan/bigdata/tree/master/storm/storm-flowmix</a></p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/storm/">storm</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/07/26/2015-09-11-Flowmix-CEP/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-07-15-drill-fragments" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/07/15/2015-07-15-drill-fragments/" class="article-date">
-  	<time datetime="2015-07-14T16:00:00.000Z" itemprop="datePublished">2015-07-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/07/15/2015-07-15-drill-fragments/">Apache Drill源码阅读(5) Fragment</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>大数据源码阅读系列之ApacheDrill: 什么是Fragment? 为什么要分成Fragment?  </p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/drill/">drill</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/07/15/2015-07-15-drill-fragments/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-07-14-drill-logical" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/07/14/2015-07-14-drill-logical/" class="article-date">
-  	<time datetime="2015-07-13T16:00:00.000Z" itemprop="datePublished">2015-07-14</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/07/14/2015-07-14-drill-logical/">Apache Drill源码阅读(4) 逻辑计划</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>大数据源码阅读系列之ApacheDrill: Apache Drill的逻辑计划</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/drill/">drill</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/07/14/2015-07-14-drill-logical/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-07-13-drill-phyplan" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/07/13/2015-07-13-drill-phyplan/" class="article-date">
-  	<time datetime="2015-07-12T16:00:00.000Z" itemprop="datePublished">2015-07-13</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/07/13/2015-07-13-drill-phyplan/">Apache Drill源码阅读(3) 物理计划</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>大数据源码阅读系列之ApacheDrill: Apache Drill的物理计划</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/drill/">drill</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/07/13/2015-07-13-drill-phyplan/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-07-12-drill-rpc" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/07/12/2015-07-12-drill-rpc/" class="article-date">
-  	<time datetime="2015-07-11T16:00:00.000Z" itemprop="datePublished">2015-07-12</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/07/12/2015-07-12-drill-rpc/">Apache Drill源码阅读(2) 分析一次查询过程以及RPC</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>大数据源码阅读系列之ApacheDrill: Apache Drill的RPC流程</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/drill/">drill</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/07/12/2015-07-12-drill-rpc/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-07-10-drill-log" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/07/10/2015-07-10-drill-log/" class="article-date">
-  	<time datetime="2015-07-09T16:00:00.000Z" itemprop="datePublished">2015-07-10</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/07/10/2015-07-10-drill-log/">Apache Drill源码阅读(1) 环境准备和查看日志</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>大数据源码阅读系列之ApacheDrill: 通过日志分析Apache Drill的主要流程</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/drill/">drill</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/07/10/2015-07-10-drill-log/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-07-07-Spark-HA-YARN" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/07/07/2015-07-07-Spark-HA-YARN/" class="article-date">
-  	<time datetime="2015-07-06T16:00:00.000Z" itemprop="datePublished">2015-07-07</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/07/07/2015-07-07-Spark-HA-YARN/">Spark HA和YARN模式</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Apache Spark的HA实验和SparkOnYarn模式</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/07/07/2015-07-07-Spark-HA-YARN/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-07-06-Spark-Streamming" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/07/06/2015-07-06-Spark-Streamming/" class="article-date">
-  	<time datetime="2015-07-05T16:00:00.000Z" itemprop="datePublished">2015-07-06</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/07/06/2015-07-06-Spark-Streamming/">Spark Stramming入门</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Apache Spark Streamming小白入门教程</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/07/06/2015-07-06-Spark-Streamming/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-07-05-Apache-Spark" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/07/05/2015-07-05-Apache-Spark/" class="article-date">
-  	<time datetime="2015-07-04T16:00:00.000Z" itemprop="datePublished">2015-07-05</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/07/05/2015-07-05-Apache-Spark/">Apache Spark入门</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Apache Spark小白入门教程</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/07/05/2015-07-05-Apache-Spark/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-07-05-Spark-SQL" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/07/05/2015-07-05-Spark-SQL/" class="article-date">
-  	<time datetime="2015-07-04T16:00:00.000Z" itemprop="datePublished">2015-07-05</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/07/05/2015-07-05-Spark-SQL/">Spark SQL入门</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Apache Spark SQL小白入门教程</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/07/05/2015-07-05-Spark-SQL/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-06-25-ES2HDFS" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/06/25/2015-06-25-ES2HDFS/" class="article-date">
-  	<time datetime="2015-06-24T16:00:00.000Z" itemprop="datePublished">2015-06-25</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/06/25/2015-06-25-ES2HDFS/">ES导入数据到HDFS</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>从ElasticSearch导入数据到HDFS的一些坑</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/elasticsearch/">elasticsearch</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/06/25/2015-06-25-ES2HDFS/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-06-20-ElasticSearch" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/06/20/2015-06-20-ElasticSearch/" class="article-date">
-  	<time datetime="2015-06-19T16:00:00.000Z" itemprop="datePublished">2015-06-20</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/06/20/2015-06-20-ElasticSearch/">ElasticSearch入门</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>You Know, For Search</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/elasticsearch/">elasticsearch</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/06/20/2015-06-20-ElasticSearch/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-06-20-Apache-Drill" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/06/20/2015-06-20-Apache-Drill/" class="article-date">
-  	<time datetime="2015-06-19T16:00:00.000Z" itemprop="datePublished">2015-06-20</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/06/20/2015-06-20-Apache-Drill/">Apache Drill入门</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Apache Drill: Schema-free SQL Query Engine for Hadoop, NoSQL and Cloud Storage</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/drill/">drill</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/06/20/2015-06-20-Apache-Drill/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

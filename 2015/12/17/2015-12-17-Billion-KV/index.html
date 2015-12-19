@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>千亿KV数据存储和查询方案 | zqhxuyuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="千亿数据,一次性批量大数据量存储,查询时间要求不是很严格,10万条一天内也可以接受.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="千亿KV数据存储和查询方案">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2015/12/17/2015-12-17-Billion-KV/index.html">
+<meta property="og:site_name" content="zqhxuyuan">
+<meta property="og:description" content="千亿数据,一次性批量大数据量存储,查询时间要求不是很严格,10万条一天内也可以接受.">
+<meta property="og:image" content="http://img.blog.csdn.net/20151217161207153">
+<meta property="og:updated_time" content="2015-12-18T10:22:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="千亿KV数据存储和查询方案">
+<meta name="twitter:description" content="千亿数据,一次性批量大数据量存储,查询时间要求不是很严格,10万条一天内也可以接受.">
+  
+    <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">任何忧伤,都抵不过世界的美丽</a></h1>
+		</hgroup>
+
+		
+				
+
+
+		
+			<div id="switch-btn" class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div id="switch-area" class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives/">归档</a></li>
+				        
+							<li><a href="/tags/">标签</a></li>
+				        
+							<li><a href="/about/">关于</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18px;">drill</a> <a href="/tags/druid/" style="font-size: 14px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 14px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/storm/" style="font-size: 16px;">storm</a> <a href="/tags/work/" style="font-size: 12px;">work</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">BIG(DATA)</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="/" class="profilepic">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			</a>
+			<hgroup>
+			  <h1 class="header-author"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives/">归档</a></li>
+		        
+					<li><a href="/tags/">标签</a></li>
+		        
+					<li><a href="/about/">关于</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-2015-12-17-Billion-KV" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/17/2015-12-17-Billion-KV/" class="article-date">
+  	<time datetime="2015-12-16T16:00:00.000Z" itemprop="datePublished">2015-12-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      千亿KV数据存储和查询方案
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/work/">work</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>千亿数据,一次性批量大数据量存储,查询时间要求不是很严格,10万条一天内也可以接受.<br><a id="more"></a></p>
+<h2 id="背景">背景</h2><p>md5是不可解密的. 通常网站<a href="http://www.cmd5.com/" target="_blank" rel="external">http://www.cmd5.com/</a>宣称的解密都是有一个MD5到值的映射数据库(彩虹表).<br>做法是提前将数据用MD5加密,然后保存成MD5到原数据的映射关系,解密时只要查询MD5对应的值就可以了.  </p>
+<p><img src="http://img.blog.csdn.net/20151217161207153" alt="cmd5"></p>
+<p>业务数据将近1000亿,估算下来大概占用6T. 由于MD5的数据是32位,而且每一位都属于0-f.<br>如果直接查询生成的6T数据,速度估计很慢. 于是想到分区, 比如以32位MD5的前几位相同的作为一个分区,<br>查询时首先将MD5路由到指定的分区, 再查询这个分区的所有数据,这样每个分区的数据量就会少很多.  </p>
+<p>原始文件data.txt(最后两个字段表示MD5的前四位):  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">111111111111111</span>,<span class="number">001e5</span>a2b1c68d7b7dddddddddddddddc,<span class="number">00</span>,<span class="number">1</span>e</span><br><span class="line"><span class="number">222222222222222</span>,<span class="number">01271</span>cc012464ae8ccccccccccccccce,<span class="number">01</span>,<span class="number">27</span></span><br></pre></td></tr></table></figure>
+<h2 id="Hive分区(×)">Hive分区(×)</h2><p>临时表和分区表:  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> <span class="string">`mob_mdf_tmp`</span>(</span><br><span class="line">  <span class="string">`mob`</span> <span class="keyword">string</span>,</span><br><span class="line">  <span class="string">`mdf`</span> <span class="keyword">string</span>,</span><br><span class="line">  <span class="string">`mdf_1`</span> <span class="keyword">string</span>,</span><br><span class="line">  <span class="string">`mdf_2`</span> <span class="keyword">string</span></span><br><span class="line">  )</span><br><span class="line"><span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">delimited</span> <span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">','</span></span><br><span class="line">LOCATION <span class="string">'hdfs://tdhdfs/user/tongdun/mob_mdf_tmp'</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> <span class="string">`mob_mdf`</span>(</span><br><span class="line">  <span class="string">`mob`</span> <span class="keyword">string</span>,</span><br><span class="line">  <span class="string">`mdf`</span> <span class="keyword">string</span></span><br><span class="line">  )</span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (</span><br><span class="line">  mdf_1 <span class="keyword">string</span>,</span><br><span class="line">  mdf_2 <span class="keyword">string</span>)</span><br><span class="line"><span class="keyword">stored</span> <span class="keyword">as</span> parquet</span><br><span class="line">LOCATION <span class="string">'hdfs://tdhdfs/user/tongdun/mob_mdf'</span>;</span></span><br></pre></td></tr></table></figure>
+<p>将原始文件导入到临时表(或者用hive的load命令),然后读取临时表,加载数据到分区表 </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">file=<span class="variable">$1</span></span><br><span class="line">/usr/install/hadoop/bin/hadoop fs -put <span class="variable">$file</span> /user/tongdun/mod_mdf_tmp</span><br><span class="line"><span class="comment">#LOAD DATA LOCAL INPATH 'id.txt' INTO TABLE id_mdf PARTITION(mdf_1='ab',mdf_2='cd');</span></span><br><span class="line"><span class="comment">#LOAD DATA LOCAL INPATH 'id.txt' INTO TABLE id_mdf_tmp;</span></span><br><span class="line"></span><br><span class="line">/usr/install/apache-hive/bin/hive <span class="operator">-e</span> <span class="string">"</span><br><span class="line">set hive.exec.dynamic.partition=true; </span><br><span class="line">set hive.exec.dynamic.partition.mode=nonstrict; </span><br><span class="line">SET hive.exec.max.dynamic.partitions=100000;</span><br><span class="line">SET hive.exec.max.dynamic.partitions.pernode=100000;</span><br><span class="line">set mapreduce.map.memory.mb=5120;</span><br><span class="line">set mapreduce.reduce.memory.mb=5120;</span><br><span class="line">INSERT into TABLE mod_mdf PARTITION (mdf_1,mdf_2) SELECT mod,mdf,mdf_1,mdf_2 FROM mod_mdf_tmp;</span><br><span class="line">msck repair table mod_mdf;</span><br><span class="line">"</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>问题:将原始文件导入到HDFS是很快的,基本分分钟搞定.但是转换成分区的Hive表,速度起慢无比. %&gt;<em>&lt;%</em></p>
+</blockquote>
+<h2 id="AWK脚本处理分区">AWK脚本处理分区</h2><p><strong>A.原始文件首先拆分成一级文件,再拆分成二级文件(×)</strong></p>
+<p>一级拆分:  <code>awk -F, &#39;{print &gt;&gt; $3}&#39; data.txt</code></p>
+<p>上面的awk命令会按照第三列即MD5的前两个字符分组生成不同的文件. 比如生成00,01文件.<br>然后进行二级拆分: 遍历所有的一级文件, 生成二级文件. 比如001e.txt, 0127.txt.  </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">nums=(<span class="string">'0'</span> <span class="string">'1'</span> <span class="string">'2'</span> <span class="string">'3'</span> <span class="string">'4'</span> <span class="string">'5'</span> <span class="string">'6'</span> <span class="string">'7'</span> <span class="string">'8'</span> <span class="string">'9'</span> <span class="string">'a'</span> <span class="string">'b'</span> <span class="string">'c'</span> <span class="string">'d'</span> <span class="string">'e'</span> <span class="string">'f'</span>)</span><br><span class="line"><span class="keyword">for</span> n1 <span class="keyword">in</span> <span class="variable">$&#123;nums[@]&#125;</span>;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  <span class="keyword">for</span> n2 <span class="keyword">in</span> <span class="variable">$&#123;nums[@]&#125;</span>;</span><br><span class="line">  <span class="keyword">do</span></span><br><span class="line">    var=<span class="variable">$n1</span><span class="variable">$n2</span></span><br><span class="line">    awk -F, <span class="string">'&#123;OFS=",";print $1,$2 &gt;&gt; $3_$4".txt"&#125;'</span> <span class="variable">$var</span></span><br><span class="line">  <span class="keyword">done</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"end."</span></span><br></pre></td></tr></table></figure>
+<p>缺点: 每个数据文件都必须在自己的范围内生成一级文件, 然后在自己的一级文件基础上生成二级文件.<br>最后所有的二级文件要合并为一个文件. 比较麻烦, %&gt;<em>&lt;%</em> </p>
+<p><strong>B.原始文件直接生成两级拆分文件</strong></p>
+<p>直接拆分成两级的:  <code>awk -F, &#39;{OFS=&quot;,&quot;;print $1,$2 &gt;&gt; $3_$4&quot;.txt&quot;}&#39; data.txt</code><br>优点: 由于有多个原始数据文件, 执行同样的awk命令, 生成最终结果不需要任何处理.<br>问题: 大文件分组,速度比较慢,而且不像上面的分成两次,0000.txt文件并不会立刻有数据生成.<br>同样还有一个问题: 如果多个文件一起追加<code>&gt;&gt;</code>数据, 会产生冲突,即写到同一行.  </p>
+<p><strong>C.切分原始大文件(×)</strong></p>
+<p>对原始大文件(20G~100G)先split: <code>split -C 2014m $file</code>,再进行上面的二级拆分过程.<br>结果: 27G切分成2G一个文件, 耗时538s. 估算6T数据需要500h~20D. %&gt;<em>&lt;%</em></p>
+<h2 id="paldb@linkedin(×)">paldb@linkedin(×)</h2><p>linkedin开源的<a href="https://github.com/linkedin/PalDB">paldb</a>声称对于写一次的kv存储读取性能很好. 但是一个严重的问题是不支持在已有的db文件中新增数据.  </p>
+<blockquote>
+<p>Can you open a store for writing subsequent times?<br>No, the final binary file is created when StoreWriter.close() is called.</p>
+</blockquote>
+<p>所以要读取所有的原始文件后,不能一个一个文件地处理. 这期间StoreWriter要一直打开,下面是索引文件的代码:    </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//直接读取所有原始文件, 生成paldb</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">indexRawFile</span><span class="params">(String[] files)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    List&lt;String&gt; prefix = generateFile();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//提前准备好Writer</span></span><br><span class="line">    Map&lt;String,StoreWriter&gt; maps = <span class="keyword">new</span> HashMap();</span><br><span class="line">    <span class="keyword">for</span>(String pref : prefix)&#123;</span><br><span class="line">        StoreWriter writer = PalDB.createWriter(<span class="keyword">new</span> File(folder + pref + <span class="string">".paldb"</span>));</span><br><span class="line">        maps.put(pref, writer);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(String filepath : files)&#123;</span><br><span class="line">        File file = <span class="keyword">new</span> File(folder + filepath);</span><br><span class="line">        BufferedInputStream fis = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(file));</span><br><span class="line">        BufferedReader reader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(fis,<span class="string">"utf-8"</span>),<span class="number">5</span>*<span class="number">1024</span>*<span class="number">1024</span>);<span class="comment">// 用5M的缓冲读取文本文件</span></span><br><span class="line"></span><br><span class="line">        String line = <span class="string">""</span>;</span><br><span class="line">        <span class="keyword">while</span>((line = reader.readLine()) != <span class="keyword">null</span>)&#123;</span><br><span class="line">            String[] data = line.split(<span class="string">","</span>);</span><br><span class="line">            <span class="comment">//根据前两位, 确定要使用哪个Writer. 相同2位前缀的记录写到同一个db文件里</span></span><br><span class="line">            String prefData = data[<span class="number">2</span>];</span><br><span class="line">            maps.get(prefData).put(data[<span class="number">1</span>], data[<span class="number">0</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        fis.close();</span><br><span class="line">        reader.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (Map.Entry&lt;String, StoreWriter&gt; entry : maps.entrySet()) &#123;</span><br><span class="line">        entry.getValue().close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>查询一条记录就很简单了, 首先解析出MD5的前两位, 找到对应的paldb文件, 直接读取:  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(<span class="string">"QUERYING&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;"</span>);</span><br><span class="line">String file = md5.substring(<span class="number">0</span>,<span class="number">2</span>) + <span class="string">".paldb"</span>;</span><br><span class="line">StoreReader reader = PalDB.createReader(<span class="keyword">new</span> File(folder + file));</span><br><span class="line">String id = reader.get(md5);</span><br><span class="line">System.out.println(id);</span><br></pre></td></tr></table></figure>
+<h2 id="sparkey@spotify">sparkey@spotify</h2><p><a href="https://github.com/spotify/sparkey">sparkey</a>也声称对于<code>read-heavy systems with infrequent large bulk inserts</code>对于经常读,不经常(大批量)写的性能很好.  </p>
+<p>sparkey有两种文件:索引文件(index file)和日志文件(log file). </p>
+<h2 id="Spark_BulkLoad">Spark BulkLoad</h2><ul>
+<li>HBaseRDD: <a href="https://github.com/unicredit/hbase-rdd">https://github.com/unicredit/hbase-rdd</a>  </li>
+<li>SparkOnHBase在最新的HBase版本中已经合并到了hbase代码中.  </li>
+</ul>
+<p>建立一个columnfamily=id. 并且在这个cf下有一个column=id存储id数据(cf必须事先建立,column则是动态的). </p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">create <span class="string">'data.md5_id'</span>,<span class="string">'id'</span></span><br><span class="line">put <span class="string">'data.md5_id'</span>,<span class="string">'a9fdddddddddddddddddddddddddddde'</span>,<span class="string">'id:id'</span>,<span class="string">'111111111111'</span></span><br><span class="line">get <span class="string">'data.md5_id'</span>,<span class="string">'a9fdddddddddddddddddddddddddddde'</span></span><br><span class="line">scan <span class="string">'data.md5_id'</span></span><br></pre></td></tr></table></figure>
+<p>Spark的基本思路是: 读取文本文件, 构造<code>RowKey -&gt; Map&lt;CF -&gt; Map&lt;Column -&gt; Value&gt;&gt;</code>的RDD:  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> rdd = sc.textFile(folder).map(&#123; line =&gt;</span><br><span class="line">  <span class="keyword">val</span> data = line split <span class="string">","</span></span><br><span class="line">  <span class="keyword">val</span> content = <span class="type">Map</span>(cf -&gt; <span class="type">Map</span>(column -&gt; data(<span class="number">0</span>)))</span><br><span class="line">  data(<span class="number">1</span>) -&gt; content</span><br><span class="line">&#125;)</span><br><span class="line">rdd.toHBaseBulk(table)</span><br></pre></td></tr></table></figure>
+<h2 id="HBase_BulkLoad">HBase BulkLoad</h2><p>HBase的BulkLoad分为两个节点: 运行MapReduce生成HFile文件, 导入到HBase集群</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2015/12/17/2015-12-17-Billion-KV/">千亿KV数据存储和查询方案</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2015年12月17日 - 00时00分</p>
+  <p><span>最后更新:</span>2015年12月18日 - 18时22分</p>
+  <p>
+    <span>原始链接:</span><a href="/2015/12/17/2015-12-17-Billion-KV/" title="千亿KV数据存储和查询方案">http://github.com/zqhxuyuan/2015/12/17/2015-12-17-Billion-KV/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/17/2015-12-17-Billion-KV/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
+
+
+
+<nav id="article-nav">
+  
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2015/12/18/2015-12-18-HBase-BulkLoad/">
+        HBase BulkLoad
+      </a>
+    </div>
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2015/12/16/2015-12-16-HBase/">
+        Hello HBase
+      </a>
+    </div>
+  
+</nav>
+
+  
+</article>
+
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hive分区(×)"><span class="toc-number">2.</span> <span class="toc-text">Hive分区(×)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AWK脚本处理分区"><span class="toc-number">3.</span> <span class="toc-text">AWK脚本处理分区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#paldb@linkedin(×)"><span class="toc-number">4.</span> <span class="toc-text">paldb@linkedin(×)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sparkey@spotify"><span class="toc-number">5.</span> <span class="toc-text">sparkey@spotify</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spark_BulkLoad"><span class="toc-number">6.</span> <span class="toc-text">Spark BulkLoad</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HBase_BulkLoad"><span class="toc-number">7.</span> <span class="toc-text">HBase BulkLoad</span></a></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+</script>
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+	</div>
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+</div>
+
+
+
+
+
+
+
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
+
+
+  
+  
+    
+    <div  class="post-nav-button">
+    <a href="/2015/12/18/2015-12-18-HBase-BulkLoad/" title="上一篇: HBase BulkLoad">
+    <i class="fa fa-angle-left"></i>
+    </a>
+    <a href="/2015/12/16/2015-12-16-HBase/" title="下一篇: Hello HBase">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2015 任何忧伤,都抵不过世界的美丽
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+        </div>
+    </div>
+    <div class="visit">
+      <span id="busuanzi_container_site_pv" style='display:none'>
+        <span id="site-visit" >本站到访数: 
+        <span id="busuanzi_value_site_uv"></span>
+        </span>
+      </span>
+      <span id="busuanzi_container_page_pv" style='display:none'>
+        <span id="page-visit">, 本页阅读量: 
+        <span id="busuanzi_value_page_pv"></span>
+        </span>
+      </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+<script>
+  var backgroundnum = 5;
+  var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+
+  $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+</script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+<a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+<a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

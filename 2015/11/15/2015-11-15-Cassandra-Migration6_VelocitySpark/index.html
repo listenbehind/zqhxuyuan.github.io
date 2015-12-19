@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Cassandra数据迁移 分离表 | zqhxuyuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="使用Spark读写Cassandra">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cassandra数据迁移 分离表">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2015/11/15/2015-11-15-Cassandra-Migration6_VelocitySpark/index.html">
+<meta property="og:site_name" content="zqhxuyuan">
+<meta property="og:description" content="使用Spark读写Cassandra">
+<meta property="og:image" content="http://img.blog.csdn.net/20151113113646444">
+<meta property="og:image" content="http://img.blog.csdn.net/20151113113659934">
+<meta property="og:image" content="http://img.blog.csdn.net/20151113113714599">
+<meta property="og:image" content="http://img.blog.csdn.net/20151113113729637">
+<meta property="og:image" content="http://img.blog.csdn.net/20151113114203999">
+<meta property="og:image" content="http://img.blog.csdn.net/20151113142047790">
+<meta property="og:image" content="http://img.blog.csdn.net/20151113131040855">
+<meta property="og:image" content="http://img.blog.csdn.net/20151113131025100">
+<meta property="og:image" content="http://img.blog.csdn.net/20151113145307894">
+<meta property="og:image" content="http://img.blog.csdn.net/20151113141743633">
+<meta property="og:image" content="http://img.blog.csdn.net/20151113143754231">
+<meta property="og:image" content="http://img.blog.csdn.net/20151106095032161">
+<meta property="og:image" content="http://img.blog.csdn.net/20151106094956874">
+<meta property="og:image" content="http://img.blog.csdn.net/20151106103704984">
+<meta property="og:image" content="http://img.blog.csdn.net/20151106103717592">
+<meta property="og:image" content="http://img.blog.csdn.net/20151106103734013">
+<meta property="og:image" content="http://img.blog.csdn.net/20151106103752066">
+<meta property="og:image" content="http://img.blog.csdn.net/20151106103803414">
+<meta property="og:image" content="http://img.blog.csdn.net/20151106151151894">
+<meta property="og:image" content="http://img.blog.csdn.net/20151106150110485">
+<meta property="og:image" content="http://img.blog.csdn.net/20151106150128990">
+<meta property="og:image" content="http://img.blog.csdn.net/20151106153724887">
+<meta property="og:image" content="http://img.blog.csdn.net/20151106153737180">
+<meta property="og:image" content="http://img.blog.csdn.net/20151112193605662">
+<meta property="og:image" content="http://img.blog.csdn.net/20151112223254928">
+<meta property="og:image" content="http://img.blog.csdn.net/20151113192439894">
+<meta property="og:image" content="http://img.blog.csdn.net/20151114152814639">
+<meta property="og:image" content="http://img.blog.csdn.net/20151114134415415">
+<meta property="og:image" content="http://img.blog.csdn.net/20151114134428750">
+<meta property="og:image" content="http://img.blog.csdn.net/20151115155713263">
+<meta property="og:image" content="http://img.blog.csdn.net/20151115155724683">
+<meta property="og:image" content="http://img.blog.csdn.net/20151116193938064">
+<meta property="og:updated_time" content="2015-12-19T06:49:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cassandra数据迁移 分离表">
+<meta name="twitter:description" content="使用Spark读写Cassandra">
+  
+    <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">任何忧伤,都抵不过世界的美丽</a></h1>
+		</hgroup>
+
+		
+				
+
+
+		
+			<div id="switch-btn" class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div id="switch-area" class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives/">归档</a></li>
+				        
+							<li><a href="/tags/">标签</a></li>
+				        
+							<li><a href="/about/">关于</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18px;">drill</a> <a href="/tags/druid/" style="font-size: 14px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 14px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/storm/" style="font-size: 16px;">storm</a> <a href="/tags/work/" style="font-size: 12px;">work</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">BIG(DATA)</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="/" class="profilepic">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			</a>
+			<hgroup>
+			  <h1 class="header-author"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives/">归档</a></li>
+		        
+					<li><a href="/tags/">标签</a></li>
+		        
+					<li><a href="/about/">关于</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-2015-11-15-Cassandra-Migration6_VelocitySpark" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/11/15/2015-11-15-Cassandra-Migration6_VelocitySpark/" class="article-date">
+  	<time datetime="2015-11-14T16:00:00.000Z" itemprop="datePublished">2015-11-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Cassandra数据迁移 分离表
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>使用Spark读写Cassandra</p>
+<a id="more"></a>
+<h2 id="Spark迁移Cassandra">Spark迁移Cassandra</h2><h3 id="1-处理全量数据很慢,_分析任务执行情况">1.处理全量数据很慢, 分析任务执行情况</h3><p>出现一个现象, 在数据差不多加载完毕后, 只完成了几个任务, 后面的基本都不再动了(Input Output size好久没有变化)  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Total Time Across All Tasks: <span class="number">16.5</span> h</span><br><span class="line">Input Size / Records: <span class="number">400.8</span> GB / <span class="number">996083631</span></span><br><span class="line">Output: <span class="number">389.6</span> GB / <span class="number">978067299</span></span><br></pre></td></tr></table></figure>
+<h4 id="A-任务分配出现Any:_Worker剩余内存不能满足Executor的申请内存">A.任务分配出现Any: Worker剩余内存不能满足Executor的申请内存</h4><p>为什么会出现这种Executor上没有Task的情况?  </p>
+<p>假设executors申请的内存是15G, 但是208节点的剩余内存不足15G(这个节点经常内存不足,因为它本身内存比较小)   </p>
+<p><img src="http://img.blog.csdn.net/20151113113646444" alt="15g_workers"></p>
+<p>这样208节点就不会被作为executor使用.  </p>
+<p><img src="http://img.blog.csdn.net/20151113113659934" alt="15g_executors"></p>
+<p>原先的13个任务, 由于208上没有Executor,就没有任务, 而读取208节点的数据的任务就会分配到其他节点上. 看到223有两个任务</p>
+<p><img src="http://img.blog.csdn.net/20151113113714599" alt="15g_exe"></p>
+<p>这样223上一个任务是LOCAL, 一个则是Any. 这个Any的数据就来自于208. 因为Cassandra的数据分布在所有Spark节点.<br>任务没有在208上启动, 所以必须要有其他任务来读取Cassandra上208的数据. 这个任务的本地性级别就是Any了.    </p>
+<p><img src="http://img.blog.csdn.net/20151113113729637" alt="15g_repartition"></p>
+<p>Cache也不会出现在208上(由于208内存不足没有Cache,如果208内存足够,也会Cache到208上).  </p>
+<p><img src="http://img.blog.csdn.net/20151113114203999" alt="15g_cache"></p>
+<h4 id="B-资源足够,_100%_Cache_PROCESS_LOCAL">B.资源足够, 100% Cache PROCESS_LOCAL</h4><p>一种解决方式: 既然208的内存比较小, 属于拖后腿的节点. 干脆把它从Cassandra集群中移走.<br>这样Spark读取的时候, 只会有12个节点(原先是13个节点), 任务只会有12个. 下图是并行执行.       </p>
+<p><img src="http://img.blog.csdn.net/20151113142047790" alt="15g_12par"></p>
+<p>由于只有12个Task,就不会存在Any的任务了(这种前提是这12个节点的内存足够,否则还是会出现Any的).  </p>
+<p><img src="http://img.blog.csdn.net/20151113131040855" alt="15g_12task"></p>
+<p>但是Cache的时候会将数据缓存到Spark的节点上, 包括208.  </p>
+<p><img src="http://img.blog.csdn.net/20151113131025100" alt="15g_12cache"></p>
+<p>现在数据都缓存在了Spark的节点上了, 写数据的时候就直接将数据从缓存中取出来操作.  </p>
+<blockquote>
+<p>如果208节点资源足够, 那么任务有可能调度到208上, 而208节点没有Cassandra数据. 它需要读取其他节点的数据, 就是Any类型了!  </p>
+</blockquote>
+<h4 id="C-资源短缺造成的Any任务">C.资源短缺造成的Any任务</h4><p>如果集群资源不足, 还是会出现Any的任务, 甚至会将任务也分配到208节点上.<br>因为任务起在208上, 而数据在Cassandra上,并没有在208节点上, 所以本地性级别为Any.<br>同样245有两个任务, 一个是PROCESS_LOCAL, 另一个是Any, 读取的也是其他节点的数据.<br>而下图中刚好没有243, 244节点的executor, 所以这两个Any分别读取的就是这两个节点.  </p>
+<p><img src="http://img.blog.csdn.net/20151113145307894" alt="resource_any"></p>
+<blockquote>
+<p>结论:<br>1.Spark读取Cassandra的任务数取决于Cassandra的节点数. Cassandra有几个节点, 任务就有几个.<br>2.由于Cassandra节点的数据不是很均匀, 有些节点只有100M, 有些则有好几个G. 所以最好重新分区repartition. 分区会占用一定时间.<br>3.对RDD进行Cache,然后Count,会写到缓存中, 再将RDD保存到Cassandra的三张表, 这时任务一般都是PROCESS_LOCAL.<br>  如果Cache后没有Count, 第一次写完到Cassandra,并不会写到缓存中(虽然是个Action操作), 这样后面的两次写Cassandra也都不会写缓存.  </p>
+<p>4.并行执行的时候, 有些任务仍然有可能是Any, 而串行执行的时候, 一般全是PROCESS_LOCAL. 而且并行并不会减少运行时间.<br>5.如果出现没有100% Cache, 加大Executor的内存参数, 但是加大Executor内存, 如果Worker剩余内存不足就不会被分配到任务.<br>6.如果某些节点的资源不足,会将任务调度到其他节点, 这种情况很容易造成Any类型的任务(一般是去读取Cass节点的数据).<br>7.Cache到Executor,跟Executor的内存也有关系,和是否是Cass节点没有关系,比如208不是Cass节点,也有可能Cache到208.</p>
+</blockquote>
+<h4 id="D-输入分片不同,_repartition时间不同">D.输入分片不同, repartition时间不同</h4><p>串行执行的任务,40Cores, <code>input.split.size=32M</code>    </p>
+<p><img src="http://img.blog.csdn.net/20151113141743633" alt="15g_12order"></p>
+<p><code>input.split.size=48M</code></p>
+<p><img src="http://img.blog.csdn.net/20151113143754231" alt="split_48"></p>
+<hr>
+<h3 id="2-分批处理+Cache缓存+没有repartition">2.分批处理+Cache缓存+没有repartition</h3><p>可以将数据分批处理. 因为不同的Data文件分开处理是不会影响数据的.  所以可以考虑将300G的数据一次只处理大概10G的数据.  </p>
+<ol>
+<li>将数据进行分组, 每个文件夹大概10G. 文件夹的名称为: indexNum/forseti/velocity</li>
+<li>先清空velocity表: truncate + clearsnapshot</li>
+<li>通过sstableloader一次只导入一个文件夹</li>
+<li>Spark处理这个velocity</li>
+</ol>
+<blockquote>
+<p>缺点: 一次只能处理一部分velocity数据,导致不能同时启动很多个任务一起执行.  </p>
+</blockquote>
+<p>由于文件夹的大小只有10G, 因此不需要在非常大的内存就可以, 所以可以考虑不用scp拷贝到spark集群, 而是直接在线上集群sstable导入到spark集群!<br>10G处理还是很慢, 逐渐减少到1G. 但是虽然文件夹只有1G, sstableloader到13台机器之后, 每台的velocity大小并不是1024/13:   </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/admin/cassandra/data/forseti/ &amp;&amp; sudo du -sh *</span><br></pre></td></tr></table></figure>
+<p>由于同一个RDD要写入到三张表, 所以先Cache, 再Count, 再依次写入三张表.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> velocityRows = getVelocityByQueryTTL()</span><br><span class="line"><span class="keyword">val</span> velocityRDD = repartition(velocityRows, partition)</span><br><span class="line">velocityRDD.cache</span><br><span class="line">velocityRDD.count</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> appCost = rddToCassandra(velocityRDD, <span class="string">"velocity_app"</span>)</span><br><span class="line"><span class="keyword">val</span> partnerCost = rddToCassandra(velocityRDD, <span class="string">"velocity_partner"</span>)</span><br><span class="line"><span class="keyword">val</span> globalCost = rddToCassandra(velocityRDD, <span class="string">"velocity_global"</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="A-第一个作业(cache_5-3G,_92%,_12_partitions)">A.第一个作业(cache 5.3G, 92%, 12 partitions)</h4><p>sstableloader导入13个节点的集群, 每个节点的数据大小并不是一样的, 下面是1G的原始文件导入到集群后的磁盘占用大小:  </p>
+<table>
+<thead>
+<tr>
+<th>table</th>
+<th>212</th>
+<th>215</th>
+<th>216</th>
+<th>217</th>
+<th>218</th>
+<th>219</th>
+<th>223</th>
+<th>208</th>
+<th>241</th>
+<th>242</th>
+<th>243</th>
+<th>244</th>
+<th>245</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>velocity(M)</td>
+<td>297</td>
+<td>66</td>
+<td>1.8</td>
+<td>16</td>
+<td>360</td>
+<td>157</td>
+<td>190</td>
+<td>19</td>
+<td>32</td>
+<td>9.8</td>
+<td>13</td>
+<td>31</td>
+<td>2.7</td>
+</tr>
+</tbody>
+</table>
+<p>Cache缓存了5.3G, 分布在12个节点上, Fraction Cached=92%.<br>内存的分布并不是很均匀; 内存所在的节点跟这个节点的数据大小没有关系, 比如208的velocity只有19M,但内存有161M. 貌似有5-10倍的关系.   </p>
+<p><img src="http://img.blog.csdn.net/20151106095032161" alt="1_cache"></p>
+<blockquote>
+<p>为什么没有Cache 100%? 因为有些节点的数据量太大, 放不进内存里, 可以考虑增大executore的内存.<br>为什么缓存完之后,还会有NODE_LOCAL的? 因为没有100%缓存!  </p>
+</blockquote>
+<ul>
+<li>写入到三张表, Locality Level=PROCSS_LOCAL表示使用的是Cache中的.  </li>
+<li>对下面的PROCESS_LOCAL的Input Size相加, 正好等于Cache的大小5.3G.  </li>
+<li>最长的任务是NODE_LOCAL.  </li>
+<li>Input Records和Output Records在PROCESS_LCOAL基本是相等的, NODE_LOCAL的输出记录数减少. </li>
+<li>(为什么: 因为读取C后过滤了部分数据,这阶段是Node_Local,输出会少数据的, 如果Cache后, 就是已经过滤完的数据, 这些数据都全部输出)</li>
+</ul>
+<p><img src="http://img.blog.csdn.net/20151106094956874" alt="1_app"></p>
+<table>
+<thead>
+<tr>
+<th>Stages</th>
+<th>Duration</th>
+<th>Input</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Count</td>
+<td>3.6min</td>
+<td>3.3G</td>
+<td>-</td>
+</tr>
+<tr>
+<td>app</td>
+<td>7.4min</td>
+<td>6.3G</td>
+<td>3.2G</td>
+</tr>
+<tr>
+<td>partner</td>
+<td>9.7min</td>
+</tr>
+<tr>
+<td>global</td>
+<td>7.3min</td>
+</tr>
+</tbody>
+</table>
+<h4 id="B-第二次作业_(Cache_8-5G,_100%,_13_partitions)">B.第二次作业 (Cache 8.5G, 100%, 13 partitions)</h4><p>Cache: 8.5G, 100%, 13 partitions. 但是有两个节点的数据只有16B, 几乎是没使用内存的.  </p>
+<blockquote>
+<p>其实上面第一个作业的Cache后, 每个Executor占用的内存也是不均匀的!  没有repartition就是这样的.<br>即从不同的Cass节点读取后, 因为每个Cass的数据大小不一样, 这个节点的内存也不一样. </p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20151106103704984" alt="2_cache"></p>
+<p>Count任务: 都是NodeLocal, 因为cache完第一次触发Action. 运行时间跟数据量有关系.  </p>
+<p><img src="http://img.blog.csdn.net/20151106103717592" alt="2_count"></p>
+<p>现在每个任务都是PROCESS_LOCAL了, 运行时间跟数据量也有关系, 因为要读取缓存中的内容, 然后写入到C*中, 数据越多, 写入时间越长.  </p>
+<p><img src="http://img.blog.csdn.net/20151106103734013" alt="2_app"></p>
+<p>每个任务刚开始的时候, Input是很快的, 因为Input直接从缓存中获取. 下图中Input 8.5G只花了11s. 剩下很长的时间都在写C*.  </p>
+<blockquote>
+<p>因为没有repartition操作, 所以cache操作并没有在Stages中(Cache不是一个Action), Stage分别是Count和三次runJob(saveToCassandra).  </p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20151106103752066" alt="2_job"></p>
+<p>比如写入global表:  </p>
+<p><img src="http://img.blog.csdn.net/20151106103803414" alt="2_global"></p>
+<p>如果全部Cache在内存里, Job的Input大小跟Cache的大小是一样的.<br>Cache到每个节点的内存大小, 跟每个Task对应到的节点executor的Input Size是一样的.<br>比如Cache到208是559.2M, 所以上面的任务中Index=0, Id=42, 12/cass47208的Input Size也是559.2M.<br>PROCESS_LOCAL表示使用的都是缓存中的数据, 所以InputRecords和OutputRecords是一样的,但是OutputSize减小了.  </p>
+<hr>
+<h3 id="3-Repartition+Cache_+_OutputTuning">3.Repartition+Cache + OutputTuning</h3><p>将原始SSTable数据分成1000M, 1500M, 2000M分别测试. 快照统一放在snapshot目录下, 比如snapshot/226_1105.  </p>
+<h4 id="0)-准备工作:文件分组">0).准备工作:文件分组</h4><p>A.将分组后的文件都还原到snapshot回去: <code>sh recover_snapshot.sh 226_1105</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">node=<span class="variable">$1</span></span><br><span class="line"><span class="keyword">for</span> fold <span class="keyword">in</span> `ls <span class="variable">$node</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  mv /home/qihuang.zheng/<span class="variable">$node</span>/<span class="variable">$fold</span>/forseti/velocity/forseti* /home/qihuang.zheng/snapshot/<span class="variable">$node</span>/</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line">rm -rf /home/qihuang.zheng/<span class="variable">$node</span></span><br></pre></td></tr></table></figure>
+<p>B.将snapshot下某个节点的文件进行分组: <code>sh filegroup.sh 226_1105 1500</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">node=<span class="variable">$1</span></span><br><span class="line">group=<span class="variable">$2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#从原来的分组中还原到snapshot</span></span><br><span class="line">sh recover_snapshot.sh <span class="variable">$node</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#从snapshot重新分组到子文件夹, 如果改动scala代码,先用scalac FileGroup编译</span></span><br><span class="line">scala FileGroup <span class="variable">$node</span> <span class="variable">$group</span></span><br></pre></td></tr></table></figure>
+<p>C.清空表数据: <code>sh truncate_table.sh velocity</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">tbl=<span class="variable">$1</span></span><br><span class="line">sparkNodes=(<span class="string">'192.168.47.212'</span> <span class="string">'192.168.47.215'</span> <span class="string">'192.168.47.216'</span> <span class="string">'192.168.47.217'</span> <span class="string">'192.168.47.218'</span> <span class="string">'192.168.47.219'</span> <span class="string">'192.168.47.208'</span> <span class="string">'192.168.47.223'</span> <span class="string">'192.168.47.241'</span> <span class="string">'192.168.47.242'</span> <span class="string">'192.168.47.243'</span> <span class="string">'192.168.47.244'</span> <span class="string">'192.168.47.245'</span>)</span><br><span class="line"></span><br><span class="line">/usr/install/cassandra/bin/cqlsh <span class="operator">-e</span> <span class="string">"truncate forseti.<span class="variable">$tbl</span>;"</span> <span class="number">192.168</span>.<span class="number">47.219</span></span><br><span class="line"><span class="keyword">for</span> spark <span class="keyword">in</span> <span class="variable">$&#123;sparkNodes[@]&#125;</span>;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="variable">$spark</span></span><br><span class="line">  /usr/install/cassandra/bin/nodetool clearsnapshot forseti -h <span class="variable">$spark</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"1.turncate complete."</span></span><br></pre></td></tr></table></figure>
+<p>D.分组并测试: <code>sh velocity_table_split.sh 226_1105 1500</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">node=<span class="variable">$1</span></span><br><span class="line">group=<span class="variable">$2</span></span><br><span class="line"><span class="comment">#清空三张表</span></span><br><span class="line">sh truncate_table.sh velocity_app</span><br><span class="line">sh truncate_table.sh velocity_partner</span><br><span class="line">sh truncate_table.sh velocity_global</span><br><span class="line"></span><br><span class="line"><span class="comment">#从原来的分组中还原到snapshot</span></span><br><span class="line">sh recover_snapshot.sh <span class="variable">$node</span></span><br><span class="line"><span class="comment">#从snapshot重新分组到子文件夹</span></span><br><span class="line">scala FileGroup <span class="variable">$node</span> <span class="variable">$group</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#取第一个文件夹测试</span></span><br><span class="line">nodes=`ls <span class="variable">$node</span>`</span><br><span class="line">nodes1=(<span class="variable">$&#123;nodes[0]&#125;</span>)</span><br><span class="line">fold=<span class="variable">$&#123;nodes1[1]&#125;</span></span><br><span class="line">start=$(date +%s)  </span><br><span class="line"><span class="comment">#清空velocity</span></span><br><span class="line">sh truncate_table.sh velocity</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"1.truncate complete."</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#导入数据到velocity</span></span><br><span class="line">/usr/install/cassandra/bin/sstableloader <span class="operator">-d</span> <span class="number">192.168</span>.<span class="number">47.219</span> <span class="variable">$node</span>/<span class="variable">$fold</span>/forseti/velocity</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"2.load new velocity data."</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#读取velocity, 写到三张表</span></span><br><span class="line">/usr/install/spark-<span class="number">1.4</span>.<span class="number">1</span>-bin-hadoop2.<span class="number">4</span>/bin/spark-submit \</span><br><span class="line">  --master spark://<span class="number">192.168</span>.<span class="number">47.209</span>:<span class="number">7077</span> \</span><br><span class="line">  --executor-memory <span class="number">6</span>g --total-executor-cores <span class="number">40</span> --driver-memory <span class="number">8</span>g \</span><br><span class="line">  --jars spark-cassandra-connector-assembly-<span class="number">1.4</span>.<span class="number">0</span>-SNAPSHOT.jar \</span><br><span class="line">  --conf spark.cassandra.connection.host=<span class="number">192.168</span>.<span class="number">47.219</span> \</span><br><span class="line">  --conf spark.cass.connect.dest.host=<span class="number">192.168</span>.<span class="number">47.219</span> \</span><br><span class="line">  --conf spark.cass.connect.dest.cluster=forseti_backup \</span><br><span class="line">  --class cn.fraudmetrix.cassandra.VelocityMigration \</span><br><span class="line">  --properties-file spark-defaults_backup.conf \</span><br><span class="line">  spark-app-<span class="number">1.0</span>-SNAPSHOT.jar cass1 <span class="number">40</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"3.spark data migration finish."</span></span><br><span class="line">end=$(date +%s)  </span><br><span class="line">time=$(( <span class="variable">$end</span> - <span class="variable">$start</span> ))  </span><br><span class="line"><span class="built_in">echo</span> <span class="string">"total cost: <span class="variable">$node</span>, <span class="variable">$fold</span>, <span class="variable">$time</span>"</span></span><br></pre></td></tr></table></figure>
+<h4 id="1)-BatchSize=2000M,_分区进行了18min都没完成,_放弃">1).BatchSize=2000M, 分区进行了18min都没完成, 放弃</h4><p><code>每个节点的Input都有数据</code>, 输入数据量和节点本身存储的SSTable也是有关系的(Cass的数据不均匀,导致Input也不均匀).<br>下面是repartition操作, OutputRecords会比InputRecords的记录要少, 因为读取Cassandra数据后进行了过滤.  </p>
+<p><img src="http://img.blog.csdn.net/20151106151151894" alt="2g_part"></p>
+<p>对应上面的InputSize排序, 节点的Load也是这个顺序. Load比较大, 则需要读取的数据也就比较多.  </p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@cass047208 data]$ /usr/install/cassandra/bin/nodetool status forseti</span><br><span class="line">--  Address         Load       Tokens  Owns (effective)  Host ID                               Rack</span><br><span class="line">UN  <span class="number">192.168.47.223</span>  81.17 MB   256     7.5%              a4b91faf-3e1f-46df-a1cc-39bb267bc683  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.242</span>  106.98 MB  256     7.9%              2bdcbef1-c<span class="number">562-412</span>c-b<span class="number">946-2a01</span>2060e52a  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.216</span>  127.94 MB  256     8.4%              5cf89951-a48e-<span class="number">4c86-9156</span>-d<span class="number">5656003b7</span>c9  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.215</span>  199.04 MB  256     7.5%              b9767b6c-dbc9-4ed5-b72c-7218ebda63f1  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.241</span>  200.79 MB  256     7.7%              cf<span class="number">509762-87</span>47-41c9-a7c3-be4009ce9f6d  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.244</span>  217.35 MB  256     8.2%              f3df981a-1d8c-4bb3-b317-f1cfb67af549  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.218</span>  271.28 MB  256     7.7%              42b8bfae-a6ee-439b-b<span class="number">101-4a0963</span>c9aaa0  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.243</span>  272.09 MB  256     7.2%              <span class="number">49b01677-84</span>a2-4ede-97d0-e<span class="number">6b9f7151</span>ed2  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.245</span>  246.23 MB  256     7.1%              73b63cfb-915a-4bf7-8c1b-591ddddbf4ae  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.212</span>  254.25 MB  256     8.2%              <span class="number">9a76336</span>f-add3-4349-bab<span class="number">9-0e946</span>d739cb1  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.217</span>  260.77 MB  256     7.3%              b6ca1df0-eb0f-4d82-a57a-<span class="number">9290d635</span>add2  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.219</span>  503.29 MB  256     7.2%              953dda8c-<span class="number">3908-401</span>f-9adb-aa59c4cb92d1  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.208</span>  575.95 MB  256     8.0%              <span class="number">7354d0a1</span>-<span class="number">7c05-428</span>e-b9df-c92c6f3ba65c  RAC1</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>一直以为是一次处理太多文件造成的,其实不是的,后面只处理160M的文件,总共6G都没有问题. 但是还是会遇到某些文件夹处理很慢的情况.</p>
+</blockquote>
+<h4 id="2)-BatchSize=1000M,_6min">2).BatchSize=1000M, 6min</h4><p><code>会有几个节点没有Input</code>.  </p>
+<p><img src="http://img.blog.csdn.net/20151106150110485" alt="1g_partition"></p>
+<p>分区会平衡每个节点的数据, 这样在count和写数据的时候就很快. 但是写的数据量还是不够快.  </p>
+<p><img src="http://img.blog.csdn.net/20151106150128990" alt="1g_8min"></p>
+<blockquote>
+<p>在每次runJob时, 都有一个Pending Stages: repartition, 这个操作因为之前已经执行过了,不会耗时.  </p>
+</blockquote>
+<h4 id="3)-BatchSize=1500M,_6min">3).BatchSize=1500M, 6min</h4><p>InputSize越大,需要Shuffle的数据量越大,时间就越长  </p>
+<p><img src="http://img.blog.csdn.net/20151106153724887" alt="15_part"></p>
+<p>不过总体时间跟1000M的差不多. repartition的时间增多, Count减少<br><img src="http://img.blog.csdn.net/20151106153737180" alt="15_8min"></p>
+<h4 id="4)-调整output-batch-size参数">4).调整output.batch.size参数</h4><p>如果使用了缓存之后, 时间主要在写入上. 虽然repartition会将数据均衡到每个Executor. 但是saveToCassandra操作还是需要一定的时间.<br>按照<a href="https://github.com/datastax/spark-cassandra-connector/blob/master/doc/5_saving.md">https://github.com/datastax/spark-cassandra-connector/blob/master/doc/5_saving.md</a>的Tuning更改参数貌似没什么卵用.    </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">--conf spark<span class="class">.cassandra</span><span class="class">.output</span><span class="class">.batch</span><span class="class">.grouping</span><span class="class">.key</span>=<span class="attribute">none</span> \</span><br><span class="line">--conf spark<span class="class">.cassandra</span><span class="class">.output</span><span class="class">.batch</span><span class="class">.size</span><span class="class">.bytes</span>=<span class="number">1024000</span> \</span><br><span class="line">--conf spark<span class="class">.cassandra</span><span class="class">.output</span><span class="class">.concurrent</span><span class="class">.writes</span>=<span class="number">15</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>BatchSize</th>
+<th>partitions</th>
+<th>CacheSize</th>
+<th>Cost</th>
+<th>Conf</th>
+<th>RepartitionInput</th>
+<th>Shuffle</th>
+<th>Input</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>100M</td>
+<td>40</td>
+<td>4G</td>
+<td>130s</td>
+</tr>
+<tr>
+<td>1000M</td>
+<td>40</td>
+<td>8G</td>
+<td>445s</td>
+<td>1M,15</td>
+<td>3.3G</td>
+<td>1321M</td>
+<td>8G</td>
+<td>3G</td>
+</tr>
+<tr>
+<td>2000M</td>
+<td>40</td>
+<td>-</td>
+<td>-</td>
+<td>1M,15</td>
+</tr>
+<tr>
+<td>1500M</td>
+<td>40</td>
+<td>10.9G</td>
+<td>429s</td>
+<td>1M,15</td>
+<td>4.5G</td>
+<td>1827M</td>
+<td>10.9G</td>
+<td>4.4G</td>
+</tr>
+<tr>
+<td>1500M</td>
+<td>40</td>
+<td>11G</td>
+<td>415s</td>
+<td>10M,15</td>
+</tr>
+<tr>
+<td>1500M</td>
+<td>40</td>
+<td>11G</td>
+<td>434s</td>
+<td>10M,30</td>
+</tr>
+<tr>
+<td><strong>1500M</strong></td>
+<td><strong>40</strong></td>
+<td><strong>10.9G</strong></td>
+<td><strong>415s</strong></td>
+<td><strong>默认</strong></td>
+</tr>
+<tr>
+<td>1500M</td>
+<td>40</td>
+<td>11.5G</td>
+<td>683s</td>
+<td>默认</td>
+<td>4.8G</td>
+<td>1964M</td>
+<td>11.5G</td>
+<td>4.7G</td>
+</tr>
+<tr>
+<td>1200M</td>
+<td>40</td>
+<td>7G</td>
+<td>487s</td>
+<td>默认</td>
+<td>3.3G</td>
+<td>1418M</td>
+<td>7G</td>
+<td>3.2G</td>
+</tr>
+</tbody>
+</table>
+<p>注:这里的Cost包括了truncate table, sstableloader, spark job.<br>结论: 100M需要2min, 1G的文件大概需要2<em>10=20分钟. 1000M只需要8min. 1500M也只需要8min. 所以选择1500M.<br>**采用1500M,保守估计10分钟. 300G需要10min×300G×1024M/1500M=35h=1.5.  7个节点需要1.5</em>7=10天**</p>
+<h4 id="5)-调整input-split-size参数">5).调整input.split.size参数</h4><p><a href="https://github.com/datastax/spark-cassandra-connector/blob/master/doc/2_loading.md">https://github.com/datastax/spark-cassandra-connector/blob/master/doc/2_loading.md</a><br><a href="https://github.com/datastax/spark-cassandra-connector/blob/master/doc/5_saving.md">https://github.com/datastax/spark-cassandra-connector/blob/master/doc/5_saving.md</a></p>
+<p>The following properties set in SparkConf can be used to fine-tune the saving process,<br>These values have been set to achieve stability and not performance.<br>Changing these values may increase your performance based on your workload:</p>
+<table>
+<thead>
+<tr>
+<th>ConfigProperties</th>
+<th>Exaplain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spark.cassandra.input.split.size_in_mb</td>
+<td>approx amount of data to be fetched into a Spark partition  64 MB</td>
+</tr>
+<tr>
+<td>spark.cassandra.input.fetch.size_in_rows</td>
+<td>number of CQL rows fetched per driver request 1000</td>
+</tr>
+<tr>
+<td>spark.cassandra.input.consistency.level</td>
+<td>consistency level to use when reading LOCAL_ONE</td>
+</tr>
+<tr>
+<td>spark.cassandra.output.batch.size.rows</td>
+<td>number of rows per single batch; default is ‘auto’ which means the connector will adjust the number of rows based on the amount of data in each row</td>
+</tr>
+<tr>
+<td>spark.cassandra.output.batch.size.bytes</td>
+<td>maximum total size of the batch in bytes; defaults to 1 kB.</td>
+</tr>
+<tr>
+<td>spark.cassandra.output.batch.grouping.key</td>
+<td>determines how insert statements are grouped into batches; available values are: <br>none: a batch may contain any statements<br>replica_set: a batch may contain only statements to be written to the same replica set<br>partition (default): a batch may contain only statements for rows sharing the same partition key value</td>
+</tr>
+<tr>
+<td>spark.cassandra.output.batch.buffer.size</td>
+<td>how many batches per single Spark task can be stored in memory before sending to Cassandra; default 1000</td>
+</tr>
+<tr>
+<td>spark.cassandra.output.concurrent.writes</td>
+<td>maximum number of batches executed in parallel by a single Spark task; defaults to 5</td>
+</tr>
+<tr>
+<td>spark.cassandra.output.consistency.level</td>
+<td>consistency level for writing; defaults to LOCAL_ONE.</td>
+</tr>
+<tr>
+<td>spark.cassandra.output.throughput_mb_per_sec</td>
+<td>(Floating points allowed) maximum write throughput allowed per single core in MB/s limit this on long (+8 hour) runs to 70% of your max throughput as seen on a smaller job for stability</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="4-Benchmark">4.Benchmark</h3><h4 id="1)-测试同一个文件夹用不同的inputSplitSize(顺序执行):_sh_velocity_test_1Folder-sh_226_1105">1).测试同一个文件夹用不同的inputSplitSize(<code>顺序</code>执行): <code>sh velocity_test_1Folder.sh 226_1105</code></h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">node=<span class="variable">$1</span></span><br><span class="line">nodes=`ls <span class="variable">$node</span>`</span><br><span class="line">nodes1=(<span class="variable">$&#123;nodes[0]&#125;</span>)</span><br><span class="line">fold=<span class="variable">$&#123;nodes1[10]&#125;</span></span><br><span class="line">inputSplit=(<span class="number">16</span> <span class="number">32</span> <span class="number">48</span> <span class="number">64</span> <span class="number">128</span> <span class="number">256</span>)</span><br><span class="line">partition=<span class="number">40</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> split <span class="keyword">in</span> <span class="variable">$&#123;inputSplit[@]&#125;</span>;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  start=$(date +%s)</span><br><span class="line">  /usr/install/spark-<span class="number">1.4</span>.<span class="number">1</span>-bin-hadoop2.<span class="number">4</span>/bin/spark-submit --master spark://<span class="number">192.168</span>.<span class="number">47.209</span>:<span class="number">7077</span> \</span><br><span class="line">    --executor-memory <span class="number">6</span>g --total-executor-cores <span class="number">40</span> --driver-memory <span class="number">8</span>g \</span><br><span class="line">    --jars spark-cassandra-connector-assembly-<span class="number">1.4</span>.<span class="number">0</span>-SNAPSHOT.jar \</span><br><span class="line">    --conf spark.cassandra.connection.host=<span class="number">192.168</span>.<span class="number">47.219</span> --conf spark.cass.connect.dest.host=<span class="number">192.168</span>.<span class="number">47.219</span> --conf spark.cass.connect.dest.cluster=forseti_backup \</span><br><span class="line">    --conf spark.cassandra.output.batch.grouping.key=none \</span><br><span class="line">    --conf spark.cassandra.input.split.size_<span class="keyword">in</span>_mb=<span class="variable">$split</span> \</span><br><span class="line">    --class cn.fraudmetrix.cassandra.VelocityMigration \</span><br><span class="line">    --properties-file spark-defaults_backup.conf \</span><br><span class="line">    spark-app-<span class="number">1.0</span>-SNAPSHOT.jar cass1 <span class="variable">$partition</span></span><br><span class="line">  end=$(date +%s)</span><br><span class="line">  time=$(( <span class="variable">$end</span> - <span class="variable">$start</span> ))</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"spark cost: <span class="variable">$split</span>, <span class="variable">$time</span>, <span class="variable">$end</span> - <span class="variable">$start</span>"</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>说明: 分区数量=40个, CPU数量=40个. 保存三张表的runJob是顺序执行的.  </p>
+</blockquote>
+<h4 id="2)-测试同一个文件夹用不同的inputSplitSize(并行执行):_nohup_sh_velocity_test_1Folder_p-sh_226_1105_80_&amp;">2).测试同一个文件夹用不同的inputSplitSize(<code>并行</code>执行): <code>nohup sh velocity_test_1Folder_p.sh 226_1105 80 &amp;</code></h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">node=<span class="variable">$1</span></span><br><span class="line">nodes=`ls <span class="variable">$node</span>`</span><br><span class="line">nodes1=(<span class="variable">$&#123;nodes[0]&#125;</span>)</span><br><span class="line">fold=<span class="variable">$&#123;nodes1[10]&#125;</span></span><br><span class="line">inputSplit=(<span class="number">16</span> <span class="number">32</span> <span class="number">48</span> <span class="number">64</span> <span class="number">128</span> <span class="number">256</span>)</span><br><span class="line">partition=<span class="number">40</span></span><br><span class="line">cores=<span class="variable">$2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> split <span class="keyword">in</span> <span class="variable">$&#123;inputSplit[@]&#125;</span>;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  start=$(date +%s)</span><br><span class="line">  /usr/install/spark-<span class="number">1.4</span>.<span class="number">1</span>-bin-hadoop2.<span class="number">4</span>/bin/spark-submit --master spark://<span class="number">192.168</span>.<span class="number">47.209</span>:<span class="number">7077</span> \</span><br><span class="line">    --executor-memory <span class="number">6</span>g --total-executor-cores <span class="variable">$cores</span> --driver-memory <span class="number">8</span>g \</span><br><span class="line">    --jars spark-cassandra-connector-assembly-<span class="number">1.4</span>.<span class="number">0</span>-SNAPSHOT.jar \</span><br><span class="line">    --conf spark.cassandra.connection.host=<span class="number">192.168</span>.<span class="number">47.219</span> --conf spark.cass.connect.dest.host=<span class="number">192.168</span>.<span class="number">47.219</span> --conf spark.cass.connect.dest.cluster=forseti_backup \</span><br><span class="line">    --conf spark.cassandra.output.batch.grouping.key=none \</span><br><span class="line">    --conf spark.cassandra.input.split.size_<span class="keyword">in</span>_mb=<span class="variable">$split</span> \</span><br><span class="line">    --class cn.fraudmetrix.cassandra.VelocityMigration \</span><br><span class="line">    --properties-file spark-defaults_backup.conf \</span><br><span class="line">    spark-app-<span class="number">1.0</span>-SNAPSHOT.jar cass2 <span class="variable">$partition</span></span><br><span class="line">  end=$(date +%s)</span><br><span class="line">  time=$(( <span class="variable">$end</span> - <span class="variable">$start</span> ))</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"spark cost: <span class="variable">$split</span>, <span class="variable">$time</span>, <span class="variable">$end</span> - <span class="variable">$start</span>"</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>说明: 分区数量=40个, Executors的CPU数量=80/120个. 保存三张表的runJob是并行执行的.   </p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>InputSplitSize(MB)</th>
+<th>顺序执行耗时(s)</th>
+<th>并行执行,80Cores耗时(s)</th>
+<th>并行执行,120Cores(s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>16</td>
+<td>476</td>
+<td>431 -</td>
+</tr>
+<tr>
+<td>32</td>
+<td>454</td>
+<td>465 ️+</td>
+</tr>
+<tr>
+<td>48</td>
+<td>559</td>
+<td>490 -</td>
+</tr>
+<tr>
+<td>64</td>
+<td>442</td>
+<td><strong>398</strong> -</td>
+</tr>
+<tr>
+<td>128</td>
+<td><strong>404</strong></td>
+<td>526 -</td>
+</tr>
+<tr>
+<td>256</td>
+<td>605</td>
+<td>495 -</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>只测试一个文件夹, 不能认为处理其他文件夹就都是这样的趋势. 所以用多个文件夹测试下.<br>而且不能只单单看InputSplitSize就认为作业执行时间有这样的关系, 有可能作业运行时集群的状态不一样导致的.  </p>
+</blockquote>
+<h4 id="3)-测试多个文件夹,_所以数据要先清空,然后导入:_nohup_sh_velocity_test_Nfolder-sh_226_1105_&amp;">3).测试多个文件夹, 所以数据要先清空,然后导入: <code>nohup sh velocity_test_Nfolder.sh 226_1105 &amp;</code></h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">node=<span class="variable">$1</span></span><br><span class="line">split=<span class="number">64</span></span><br><span class="line">partition=<span class="number">40</span></span><br><span class="line"><span class="keyword">for</span> fold <span class="keyword">in</span> $(seq <span class="number">1</span> <span class="number">10</span>)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  start1=$(date +%s)</span><br><span class="line">  sh truncate_table.sh velocity</span><br><span class="line">  /usr/install/cassandra/bin/sstableloader <span class="operator">-d</span> <span class="number">192.168</span>.<span class="number">47.219</span> <span class="variable">$node</span>/<span class="variable">$fold</span>/forseti/velocity</span><br><span class="line">  end1=$(date +%s)</span><br><span class="line">  time1=$(( <span class="variable">$end1</span> - <span class="variable">$start1</span> ))</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"sstableloader cost: <span class="variable">$fold</span>, <span class="variable">$time1</span>"</span></span><br><span class="line"></span><br><span class="line">  start=$(date +%s)</span><br><span class="line">  /usr/install/spark-<span class="number">1.4</span>.<span class="number">1</span>-bin-hadoop2.<span class="number">4</span>/bin/spark-submit \</span><br><span class="line">    --master spark://<span class="number">192.168</span>.<span class="number">47.209</span>:<span class="number">7077</span> --executor-memory <span class="number">6</span>g --total-executor-cores <span class="number">40</span> --driver-memory <span class="number">8</span>g \</span><br><span class="line">    --jars spark-cassandra-connector-assembly-<span class="number">1.4</span>.<span class="number">0</span>-SNAPSHOT.jar \</span><br><span class="line">    --conf spark.cassandra.connection.host=<span class="number">192.168</span>.<span class="number">47.219</span> \</span><br><span class="line">    --conf spark.cass.connect.dest.host=<span class="number">192.168</span>.<span class="number">47.219</span> \</span><br><span class="line">    --conf spark.cass.connect.dest.cluster=forseti_backup \</span><br><span class="line">    --conf spark.cassandra.output.batch.grouping.key=none \</span><br><span class="line">    --conf spark.cassandra.input.split.size_<span class="keyword">in</span>_mb=<span class="variable">$split</span> \</span><br><span class="line">    --class cn.fraudmetrix.cassandra.VelocityMigration \</span><br><span class="line">    --properties-file spark-defaults_backup.conf \</span><br><span class="line">    spark-app-<span class="number">1.0</span>-SNAPSHOT.jar cass1 <span class="variable">$partition</span></span><br><span class="line">  end=$(date +%s)</span><br><span class="line">  time=$(( <span class="variable">$end</span> - <span class="variable">$start</span> ))</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"spark cost: <span class="variable">$fold</span>, <span class="variable">$split</span>, <span class="variable">$time</span>"</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="问题1:_大文件不导到新集群处理">问题1: 大文件不导到新集群处理</h4><p>由于sstableloader数据导入的很不均匀(实际上不是导入的问题,是源文件就这么大)! 有些文件大小很大! 会导致repartition时处理很慢!   </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@spark047243 velocity]$ ll -rth | grep Data</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">46</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">18</span>:<span class="number">22</span> forseti-velocity-jb-<span class="number">21</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">156</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">18</span>:<span class="number">22</span> forseti-velocity-jb-<span class="number">22</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">2.6</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">18</span>:<span class="number">22</span> forseti-velocity-jb-<span class="number">23</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">162</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">18</span>:<span class="number">22</span> forseti-velocity-jb-<span class="number">24</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">1.5</span>G <span class="number">11</span>月 <span class="number">12</span> <span class="number">18</span>:<span class="number">22</span> forseti-velocity-jb-<span class="number">25</span>-Data.db  ⬅️大文件</span><br><span class="line"></span><br><span class="line">[qihuang.zheng@spark047215 ~]$ ll /home/admin/cassandra/data/forseti/velocity -rth | grep Data</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">59</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">18</span>:<span class="number">19</span> forseti-velocity-jb-<span class="number">9</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">115</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">18</span>:<span class="number">19</span> forseti-velocity-jb-<span class="number">10</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">19</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">18</span>:<span class="number">19</span> forseti-velocity-jb-<span class="number">11</span>-Data.db</span><br><span class="line"></span><br><span class="line">[qihuang.zheng@spark047217 ~]$ ll /home/admin/cassandra/data/forseti/velocity -rth | grep Data</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">128</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">18</span>:<span class="number">18</span> forseti-velocity-jb-<span class="number">20</span>-Data.db</span><br><span class="line"></span><br><span class="line">[qihuang.zheng@spark047223 ~]$ ll /home/admin/cassandra/data/forseti/velocity -rth | grep Data</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">161</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">18</span>:<span class="number">18</span> forseti-velocity-jb-<span class="number">16</span>-Data.db</span><br><span class="line"></span><br><span class="line">[qihuang.zheng@spark047242 ~]$ ll /home/admin/cassandra/data/forseti/velocity -rth | grep Data</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">36</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">18</span>:<span class="number">18</span> forseti-velocity-jb-<span class="number">20</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">66</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">18</span>:<span class="number">18</span> forseti-velocity-jb-<span class="number">21</span>-Data.db</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.blog.csdn.net/20151112193605662" alt="long_task"></p>
+<p>找出大文件(如果太大): </p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">线上集群snapshot</span><br><span class="line"><span class="keyword">find</span> /home/admin/cassandra/data/forseti/velocity/snapshots -<span class="built_in">type</span> <span class="keyword">f</span> -size +<span class="number">1000</span>M  -print0 | xargs -<span class="number">0</span> <span class="keyword">ls</span> -<span class="keyword">lh</span></span><br><span class="line"></span><br><span class="line"><span class="number">219</span>测试文件夹</span><br><span class="line"><span class="keyword">find</span> <span class="number">226</span>_1105 -<span class="built_in">type</span> <span class="keyword">f</span> -size +<span class="number">200</span>M  -print0 | xargs -<span class="number">0</span> <span class="keyword">ls</span> -<span class="keyword">lh</span></span><br></pre></td></tr></table></figure>
+<p>sstablesplit会将指定要切分的文件在当前目录下新建snapshot②. 快照同样是硬连接③. 但是速度很慢!    </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@spark047219 <span class="number">226</span>_1105]$ sstablesplit -s <span class="number">160</span> <span class="number">5</span>/forseti/velocity/forseti-velocity-jb-<span class="number">103631</span>-Data.db</span><br><span class="line">Pre-split sstables snapshotted into snapshot pre-split-<span class="number">1447332978792</span></span><br><span class="line"></span><br><span class="line">[qihuang.zheng@spark047219 ~]$ ll <span class="number">226</span>_1105/<span class="number">5</span>/forseti/velocity/snapshots/</span><br><span class="line">总用量 <span class="number">4</span></span><br><span class="line">drwxr-xr-x. <span class="number">2</span> qihuang.zheng users <span class="number">4096</span> <span class="number">11</span>月 <span class="number">12</span> <span class="number">20</span>:<span class="number">56</span> pre-split-<span class="number">1447332978792</span>  ②</span><br><span class="line"></span><br><span class="line">[qihuang.zheng@spark047219 ~]$ ll <span class="number">226</span>_1105/<span class="number">5</span>/forseti/velocity/snapshots/pre-split-<span class="number">1447332978792</span>/ -h | grep Data</span><br><span class="line">-rw-r--r--. <span class="number">2</span> qihuang.zheng users <span class="number">1.5</span>G <span class="number">10</span>月 <span class="number">28</span> <span class="number">14</span>:<span class="number">49</span> forseti-velocity-jb-<span class="number">103631</span>-Data.db ③</span><br></pre></td></tr></table></figure>
+<p>由此可见, 因为原来的文件就很大, 用sstableloader后导入到集群后, 某个不幸的节点就会收到这个很大的文件.<br>那么虽然sstableloader按照文档说不是仅仅拷贝, 但是貌似还是会跟原来的文件有关系的. 而不会说将原来很大的文件导入后就变成小文件了.  </p>
+<p>本来想在sstableloader之后, 过滤大文件:将大文件移动到某个临时目录, 但是由于数据文件在/home/admin下,还需要输入密码.<br>干脆就在源文件还没导入到sstableloader之前就进行了过滤, 这样子sstableloader本身的数据量就小了很多.  </p>
+<p>大文件可以通过hadoop-sstable处理. 不过官方的建议是1G以上. 而这里显然Spark在读取500M都有问题. 所以大于500M的都另当别论.  </p>
+<h4 id="问题2:_How_Big_is_Big">问题2: How Big is Big</h4><p>原始数据:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@spark047219 <span class="number">226</span>_1105]$ ll <span class="number">2</span>/forseti/velocity/ -h | grep Data</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users <span class="number">158</span>M <span class="number">10</span>月 <span class="number">28</span> <span class="number">15</span>:<span class="number">03</span> forseti-velocity-jb-<span class="number">102486</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users <span class="number">161</span>M <span class="number">10</span>月 <span class="number">28</span> <span class="number">16</span>:<span class="number">28</span> forseti-velocity-jb-<span class="number">103911</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users <span class="number">161</span>M <span class="number">10</span>月 <span class="number">28</span> <span class="number">14</span>:<span class="number">23</span> forseti-velocity-jb-<span class="number">103920</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users <span class="number">370</span>M <span class="number">10</span>月 <span class="number">28</span> <span class="number">14</span>:<span class="number">10</span> forseti-velocity-jb-<span class="number">105829</span>-Data.db  ⬅️ A Big File ①</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users <span class="number">161</span>M <span class="number">10</span>月 <span class="number">28</span> <span class="number">14</span>:<span class="number">07</span> forseti-velocity-jb-<span class="number">107113</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users <span class="number">160</span>M <span class="number">10</span>月 <span class="number">28</span> <span class="number">15</span>:<span class="number">53</span> forseti-velocity-jb-<span class="number">73122</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users <span class="number">161</span>M <span class="number">10</span>月 <span class="number">28</span> <span class="number">14</span>:<span class="number">46</span> forseti-velocity-jb-<span class="number">85829</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users <span class="number">161</span>M <span class="number">10</span>月 <span class="number">28</span> <span class="number">15</span>:<span class="number">29</span> forseti-velocity-jb-<span class="number">87661</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users <span class="number">161</span>M <span class="number">10</span>月 <span class="number">28</span> <span class="number">15</span>:<span class="number">05</span> forseti-velocity-jb-<span class="number">93091</span>-Data.db</span><br></pre></td></tr></table></figure>
+<p>导入到新集群后,每个节点的数据文件大小:  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@cass047202 ~]$ ./psshA<span class="class">.sh</span> ip_spark<span class="class">.txt</span> <span class="string">'ls /home/admin/cassandra/data/forseti/velocity -hl |grep Data'</span></span><br><span class="line">[<span class="number">1</span>] <span class="number">22</span>:<span class="number">29</span>:<span class="number">43</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.208</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">365</span>K <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">10</span> forseti-velocity-jb-<span class="number">20</span>-Data<span class="class">.db</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">370</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">10</span> forseti-velocity-jb-<span class="number">21</span>-Data<span class="class">.db</span>  ⬅️ File Still Large! and same size as ①</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">11</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">10</span> forseti-velocity-jb-<span class="number">22</span>-Data<span class="class">.db</span></span><br><span class="line">[<span class="number">2</span>] <span class="number">22</span>:<span class="number">29</span>:<span class="number">43</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.212</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">146</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">09</span> forseti-velocity-jb-<span class="number">22</span>-Data<span class="class">.db</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">3.7</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">09</span> forseti-velocity-jb-<span class="number">23</span>-Data<span class="class">.db</span></span><br><span class="line">[<span class="number">3</span>] <span class="number">22</span>:<span class="number">29</span>:<span class="number">43</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.215</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">916</span>K <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">09</span> forseti-velocity-jb-<span class="number">14</span>-Data<span class="class">.db</span></span><br><span class="line">[<span class="number">4</span>] <span class="number">22</span>:<span class="number">29</span>:<span class="number">43</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.242</span>                                         ⬅️ Almost Go To This Node!</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">106</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">10</span> forseti-velocity-jb-<span class="number">24</span>-Data<span class="class">.db</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">160</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">10</span> forseti-velocity-jb-<span class="number">25</span>-Data<span class="class">.db</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">158</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">10</span> forseti-velocity-jb-<span class="number">26</span>-Data<span class="class">.db</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">160</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">10</span> forseti-velocity-jb-<span class="number">27</span>-Data<span class="class">.db</span></span><br><span class="line">[<span class="number">5</span>] <span class="number">22</span>:<span class="number">29</span>:<span class="number">43</span> [FAILURE] <span class="number">192.168</span>.<span class="number">47.223</span> Exited with error <span class="tag">code</span> <span class="number">1</span>                ⬅️ This Node has None Files!</span><br><span class="line">[<span class="number">6</span>] <span class="number">22</span>:<span class="number">29</span>:<span class="number">43</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.244</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">111</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">09</span> forseti-velocity-jb-<span class="number">18</span>-Data<span class="class">.db</span></span><br><span class="line">[<span class="number">7</span>] <span class="number">22</span>:<span class="number">29</span>:<span class="number">43</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.245</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">50</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">09</span> forseti-velocity-jb-<span class="number">22</span>-Data<span class="class">.db</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">170</span>K <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">09</span> forseti-velocity-jb-<span class="number">23</span>-Data<span class="class">.db</span></span><br><span class="line">[<span class="number">8</span>] <span class="number">22</span>:<span class="number">29</span>:<span class="number">43</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.241</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">7.5</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">09</span> forseti-velocity-jb-<span class="number">30</span>-Data<span class="class">.db</span></span><br><span class="line">[<span class="number">9</span>] <span class="number">22</span>:<span class="number">29</span>:<span class="number">43</span> [FAILURE] <span class="number">192.168</span>.<span class="number">47.218</span> Exited with error <span class="tag">code</span> <span class="number">1</span>                ⬅️ No Files</span><br><span class="line">[<span class="number">10</span>] <span class="number">22</span>:<span class="number">29</span>:<span class="number">43</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.243</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">15</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">09</span> forseti-velocity-jb-<span class="number">29</span>-Data<span class="class">.db</span></span><br><span class="line">[<span class="number">11</span>] <span class="number">22</span>:<span class="number">29</span>:<span class="number">43</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.219</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">160</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">09</span> forseti-velocity-jb-<span class="number">23</span>-Data<span class="class">.db</span></span><br><span class="line">[<span class="number">12</span>] <span class="number">22</span>:<span class="number">29</span>:<span class="number">43</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.217</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">30</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">09</span> forseti-velocity-jb-<span class="number">22</span>-Data<span class="class">.db</span></span><br><span class="line">[<span class="number">13</span>] <span class="number">22</span>:<span class="number">29</span>:<span class="number">44</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">47.216</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">3.5</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">09</span> forseti-velocity-jb-<span class="number">20</span>-Data<span class="class">.db</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">161</span>M <span class="number">11</span>月 <span class="number">12</span> <span class="number">22</span>:<span class="number">09</span> forseti-velocity-jb-<span class="number">21</span>-Data.db</span><br></pre></td></tr></table></figure>
+<p>Spark读取repartition:  </p>
+<p><img src="http://img.blog.csdn.net/20151112223254928" alt="howbigisbig"></p>
+<p>208节点有一个300多M的文件读起来都这么费劲!  </p>
+<h4 id="问题3:_Some_Task_never_end">问题3: Some Task never end</h4><p>但是即使分成160M的文件, 有些任务执行起来还是耗时很长.<br><img src="http://img.blog.csdn.net/20151113192439894" alt="task_long"></p>
+<p>243的数据比较大都能完成, 但是219和244数据文件不是很大, 却执行了很长都没完成(看起来是完不成了!).  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">12</span>] <span class="number">19</span>:<span class="number">23</span>:<span class="number">32</span> [SUCCESS] <span class="number">192.168</span><span class="number">.47</span><span class="number">.243</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">46</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">43</span> forseti-velocity-jb-<span class="number">77</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">151</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">43</span> forseti-velocity-jb-<span class="number">78</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">156</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">43</span> forseti-velocity-jb-<span class="number">79</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">19</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">43</span> forseti-velocity-jb-<span class="number">80</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">162</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">43</span> forseti-velocity-jb-<span class="number">81</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">75</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">43</span> forseti-velocity-jb-<span class="number">82</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">13</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">43</span> forseti-velocity-jb-<span class="number">83</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">114</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">43</span> forseti-velocity-jb-<span class="number">84</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">146</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">43</span> forseti-velocity-jb-<span class="number">85</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">161</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">43</span> forseti-velocity-jb-<span class="number">86</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">17</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">43</span> forseti-velocity-jb-<span class="number">87</span>-Data.db</span><br><span class="line"></span><br><span class="line">[<span class="number">8</span>] <span class="number">19</span>:<span class="number">23</span>:<span class="number">32</span> [SUCCESS] <span class="number">192.168</span><span class="number">.47</span><span class="number">.244</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">136</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">41</span> forseti-velocity-jb-<span class="number">42</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">56</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">41</span> forseti-velocity-jb-<span class="number">43</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">68</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">41</span> forseti-velocity-jb-<span class="number">44</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">60</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">41</span> forseti-velocity-jb-<span class="number">45</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">6.3</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">41</span> forseti-velocity-jb-<span class="number">46</span>-Data.db</span><br><span class="line"></span><br><span class="line">[<span class="number">5</span>] <span class="number">19</span>:<span class="number">23</span>:<span class="number">32</span> [SUCCESS] <span class="number">192.168</span><span class="number">.47</span><span class="number">.219</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">161</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">42</span> forseti-velocity-jb-<span class="number">64</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">20</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">42</span> forseti-velocity-jb-<span class="number">65</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">2.7</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">42</span> forseti-velocity-jb-<span class="number">66</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  <span class="number">16</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">42</span> forseti-velocity-jb-<span class="number">67</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">5.6</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">42</span> forseti-velocity-jb-<span class="number">68</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">161</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">42</span> forseti-velocity-jb-<span class="number">69</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">103</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">42</span> forseti-velocity-jb-<span class="number">70</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">7.8</span>M <span class="number">11</span>月 <span class="number">13</span> <span class="number">18</span>:<span class="number">42</span> forseti-velocity-jb-<span class="number">71</span>-Data.db</span><br></pre></td></tr></table></figure>
+<h4 id="解决方法1:读取超时后放弃">解决方法1:读取超时后放弃</h4><p>repartition动作是很快的. 但是count会很慢.  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Original Partitions Size:<span class="number">12</span>,take <span class="number">3</span> seconds</span><br><span class="line">Repartition take <span class="number">72</span> seconds</span><br></pre></td></tr></table></figure>
+<p>如果仅仅把repartition放在future里, 则还是会超时: </p>
+<p><img src="http://img.blog.csdn.net/20151114152814639" alt="count_timeout"></p>
+<p>需要把repartition和count一起都放在future里: </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> future = <span class="type">Future</span>&#123;</span><br><span class="line">  <span class="comment">//把repartition,count操作都放在future里面.因为如果partition=0,count操作也会很耗时</span></span><br><span class="line">  <span class="keyword">val</span> velocityRDD = repartition(getVelocityByQueryTTL(), partition)</span><br><span class="line">  velocityRDD.cache</span><br><span class="line">  velocityRDD.count</span><br><span class="line">  velocityRDD</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="keyword">val</span> velocityRDD = <span class="type">Await</span>.result(future, <span class="number">10</span> minutes)</span><br><span class="line">  rddToCassandra(velocityRDD, <span class="string">"velocity_app"</span>)</span><br><span class="line">  rddToCassandra(velocityRDD, <span class="string">"velocity_partner"</span>)</span><br><span class="line">  rddToCassandra(velocityRDD, <span class="string">"velocity_global"</span>)</span><br><span class="line">  velocityRDD.unpersist()</span><br><span class="line">&#125;<span class="keyword">catch</span> &#123;</span><br><span class="line">  <span class="keyword">case</span> _ =&gt; println(<span class="string">"spark cost: repartition timeout...."</span> + current)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>那么如果rddToCassandra动作超时呢? 一般如果repartition没有超时, 保存到C中耗时不会很久的.  </p>
+</blockquote>
+<p>注意页面显示的repartition stage很长. 而repartition完之后的count操作很快. 这和代码中打印的cost time貌似不符合.  </p>
+<p>下面表示文件夹=1的超时了, 从运行时间也可以看到程序运行的时间≈代码中设置的超时时间10min.<br>(下面的日志来自于脚本统计打印的信息,当然会比10min多一点,因为它把spark启动都算在内).   </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sstableloader cost: <span class="number">1</span>, <span class="number">313</span></span><br><span class="line">spark cost: repartition timeout...<span class="number">.201511141533</span></span><br><span class="line">spark cost: <span class="number">1</span>, <span class="number">32</span>, <span class="number">616</span></span><br><span class="line">sstableloader cost: <span class="number">2</span>, <span class="number">372</span></span><br><span class="line">spark cost: repartition timeout...<span class="number">.201511141549</span></span><br><span class="line">spark cost: <span class="number">2</span>, <span class="number">32</span>, <span class="number">633</span></span><br><span class="line">sstableloader cost: <span class="number">3</span>, <span class="number">386</span></span><br><span class="line">spark cost: repartition timeout...<span class="number">.201511141606</span></span><br><span class="line">spark cost: <span class="number">3</span>, <span class="number">32</span>, <span class="number">613</span></span><br></pre></td></tr></table></figure>
+<p>这种超时本身带来很多问题:  </p>
+<ul>
+<li>在spark中由于读取超时,就不能对返回的RDD进行操作了.   </li>
+<li>在spark中不能确定是哪个任务超时, 哪个节点超时, 幸好可以在脚本中知道是哪个文件夹超时. 后面专门对这个文件夹再次处理  </li>
+<li>由于超时, 之前的sstableloader将近有5min都白白浪费了.  </li>
+</ul>
+<blockquote>
+<p>上面的日志中看到貌似每个文件夹都超时了!!! 不过减少处理的文件夹大小就不会有什么任务超时了.<br>之前是160<em>3</em>13=6G, <strong>更改设置分组的大小为160*13M=2G. 基本上repartition都能在5min内完成了.</strong>  </p>
+<p>所以很重要的一点是: 要根据spark能处理的容量来调整sstable的分组. 具体还跟Cassandra的集群数量有关.  </p>
+</blockquote>
+<p><strong>只处理小于200M的文件, 并提高每次处理的数据量</strong>:  </p>
+<p>由于Cassandra的每个Data.db文件在160M左右, 对于Spark的处理来说是比较快的. 所以过滤200M以上的文件.  </p>
+<ul>
+<li>1.恢复数据到snapshot:  <code>sh recover_snapshot.sh 226_1105</code>  </li>
+<li>2.重新分组数据,过滤大文件: <code>scala FileGroup</code>  </li>
+<li>3.清空原先的数据: <code>sh truncate_table.sh velocity &amp;&amp; sh truncate_table.sh velocity_app &amp;&amp; sh truncate_table.sh velocity_partner &amp;&amp; sh truncate_table.sh velocity_global</code>  </li>
+<li>4.重新导入一个文件夹测试: <code>sstableloader -d 192.168.47.219 226_1105/0/forseti/velocity</code>  </li>
+<li>5.串行执行一个文件夹(多个split测试): <code>nohup sh velocity_test_1Folder.sh 226_1105 40 &amp;</code>  </li>
+<li>6.并行执行一个文件夹(多个split测试): <code>nohup sh velocity_test_1Folder_p.sh 226_1105 80 &amp;</code>  </li>
+<li>7.串行执行多个文件夹(固定split): <code>nohup sh velocity_test_Nfolder.sh 226_1105 &amp;</code>  </li>
+<li>8.查看spark作业运行耗时: <code>tail -f nohup.out | grep &quot;cost:&quot;</code>  </li>
+</ul>
+<h4 id="解决方法2:hadoop-sstable可以处理这种跑不完的任务">解决方法2:hadoop-sstable可以处理这种跑不完的任务</h4><p>放到hadoop中跑下看行不行(上传文件, 构建索引, 读取HDFS的sstable输出结果):  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -put velocity <span class="number">219</span>_tooslow</span><br><span class="line"></span><br><span class="line">hadoop jar hadoop-sstable-<span class="number">2.0</span><span class="number">.0</span>.jar com.fullcontact.sstable.index.SSTableIndexIndexer /user/qihuang.zheng/<span class="number">219</span>_tooslow</span><br><span class="line"></span><br><span class="line">nohup /usr/install/hadoop/bin/hadoop jar hadoop-sstable-<span class="number">2.0</span><span class="number">.0</span>.jar com.fullcontact.sstable.velocity.VelocityReadJobTest \</span><br><span class="line">    -libjars guava-<span class="number">16.0</span><span class="number">.1</span>.jar \</span><br><span class="line">    -D mapreduce.job.user.classpath.first=<span class="literal">true</span> \</span><br><span class="line">    -D hadoop.sstable.cql=<span class="string">"CREATE TABLE velocity (attribute text,partner_code text,app_name text,type text,&amp;timestamp&amp; bigint,event text,sequence_id text,PRIMARY KEY ((attribute), partner_code, app_name, type, &amp;timestamp&amp;)) WITH bloom_filter_fp_chance=0.100000 AND caching='ALL' AND comment='' AND dclocal_read_repair_chance=0.000000 AND gc_grace_seconds=0 AND index_interval=128 AND read_repair_chance=0.100000 AND replicate_on_write='true' AND populate_io_cache_on_flush='false' AND default_time_to_live=0 AND speculative_retry='99.0PERCENTILE' AND memtable_flush_period_in_ms=0 AND compaction=&#123;'unchecked_tombstone_compaction': 'true', 'tombstone_threshold': '0.1', 'class': 'LeveledCompactionStrategy'&#125; AND compression=&#123;'sstable_compression': 'LZ4Compressor'&#125;"</span> \</span><br><span class="line">    -D mapred.task.timeout=<span class="number">21600000</span> \</span><br><span class="line">    -D mapred.<span class="built_in">map</span>.tasks.speculative.execution=<span class="literal">false</span> \</span><br><span class="line">    -D mapred.job.reuse.jvm.num.tasks=<span class="number">1</span> \</span><br><span class="line">    -D io.sort.mb=<span class="number">1000</span> \</span><br><span class="line">    -D io.sort.factor=<span class="number">100</span> \</span><br><span class="line">    -D hadoop.sstable.split.mb=<span class="number">200</span> \</span><br><span class="line">    -D mapred.reduce.tasks=<span class="number">0</span> \</span><br><span class="line">    -D mapred.child.java.opts=<span class="string">"-Xms6G -Xmx6G -XX:MaxPermSize=256m"</span> \</span><br><span class="line">    -D hadoop.sstable.keyspace=<span class="string">"forseti"</span> \</span><br><span class="line">    -D hadoop.sstable.column.family.name=<span class="string">"velocity"</span> \</span><br><span class="line">    /user/qihuang.zheng/<span class="number">219</span>_tooslow /user/qihuang.zheng/velocity_1114_01 &amp;</span><br><span class="line"><span class="number">15</span>/<span class="number">11</span>/<span class="number">14</span> <span class="number">13</span>:<span class="number">40</span>:<span class="number">54</span> INFO velocity.VelocityReadJobTest: Total runtime: <span class="number">280</span>s</span><br><span class="line"></span><br><span class="line">hadoop fs -ls /user/qihuang.zheng/velocity_1114_01</span><br><span class="line"></span><br><span class="line">[qihuang.zheng@spark047219 ~]$ hadoop fs -ls /user/qihuang.zheng/velocity_1114_01</span><br><span class="line">-rw-r--r--   <span class="number">3</span> qihuang.zheng supergroup          <span class="number">0</span> <span class="number">2015</span>-<span class="number">11</span>-<span class="number">14</span> <span class="number">13</span>:<span class="number">40</span> /user/qihuang.zheng/velocity_1114_01/_SUCCESS</span><br><span class="line">-rw-r--r--   <span class="number">3</span> qihuang.zheng supergroup   <span class="number">55825231</span> <span class="number">2015</span>-<span class="number">11</span>-<span class="number">14</span> <span class="number">13</span>:<span class="number">40</span> /user/qihuang.zheng/velocity_1114_01/part-m-<span class="number">00000</span></span><br><span class="line">-rw-r--r--   <span class="number">3</span> qihuang.zheng supergroup   <span class="number">49753251</span> <span class="number">2015</span>-<span class="number">11</span>-<span class="number">14</span> <span class="number">13</span>:<span class="number">39</span> /user/qihuang.zheng/velocity_1114_01/part-m-<span class="number">00001</span></span><br><span class="line">-rw-r--r--   <span class="number">3</span> qihuang.zheng supergroup   <span class="number">35642414</span> <span class="number">2015</span>-<span class="number">11</span>-<span class="number">14</span> <span class="number">13</span>:<span class="number">40</span> /user/qihuang.zheng/velocity_1114_01/part-m-<span class="number">00002</span></span><br><span class="line">-rw-r--r--   <span class="number">3</span> qihuang.zheng supergroup    <span class="number">4238789</span> <span class="number">2015</span>-<span class="number">11</span>-<span class="number">14</span> <span class="number">13</span>:<span class="number">38</span> /user/qihuang.zheng/velocity_1114_01/part-m-<span class="number">00003</span></span><br><span class="line">-rw-r--r--   <span class="number">3</span> qihuang.zheng supergroup    <span class="number">5495677</span> <span class="number">2015</span>-<span class="number">11</span>-<span class="number">14</span> <span class="number">13</span>:<span class="number">37</span> /user/qihuang.zheng/velocity_1114_01/part-m-<span class="number">00004</span></span><br><span class="line">-rw-r--r--   <span class="number">3</span> qihuang.zheng supergroup    <span class="number">2704661</span> <span class="number">2015</span>-<span class="number">11</span>-<span class="number">14</span> <span class="number">13</span>:<span class="number">37</span> /user/qihuang.zheng/velocity_1114_01/part-m-<span class="number">00005</span></span><br><span class="line">-rw-r--r--   <span class="number">3</span> qihuang.zheng supergroup    <span class="number">1879455</span> <span class="number">2015</span>-<span class="number">11</span>-<span class="number">14</span> <span class="number">13</span>:<span class="number">37</span> /user/qihuang.zheng/velocity_1114_01/part-m-<span class="number">00006</span></span><br><span class="line">-rw-r--r--   <span class="number">3</span> qihuang.zheng supergroup     <span class="number">925837</span> <span class="number">2015</span>-<span class="number">11</span>-<span class="number">14</span> <span class="number">13</span>:<span class="number">36</span> /user/qihuang.zheng/velocity_1114_01/part-m-<span class="number">00007</span></span><br></pre></td></tr></table></figure>
+<p>看到结果输出中最大的才50M, 说明有好些数据都是有问题的被过滤掉了. 任务基本在5min内完成了(还只是219一个节点的数据).   </p>
+<p><img src="http://img.blog.csdn.net/20151114134415415" alt="219_mr">  </p>
+<p><img src="http://img.blog.csdn.net/20151114134428750" alt="219_5min"></p>
+<hr>
+<h3 id="5-大文件使用HDFS-MR,_小文件sstable使用Spark">5.大文件使用HDFS-MR, 小文件sstable使用Spark</h3><blockquote>
+<p>采用spark的方案步骤比较多:  </p>
+</blockquote>
+<ul>
+<li>源集群scp到spark集群. 处理时对文件夹分组,而且不能并行.  </li>
+<li>处理包括sstable到spark集群,读取然后写入到spark集群  </li>
+<li>再通过sstable导入到目标集群(因为不能直接写入到目标spark集群)  </li>
+<li>也可以直接在源集群sstable到spark集群,但是会有点影响线上, 而scp方式也需要一定时间  </li>
+</ul>
+<blockquote>
+<p>采用spark方式存在的缺点:  </p>
+</blockquote>
+<ul>
+<li>不能将全部数据都sstable到spark集群后再用spark读取, 那样子spark处理不了这么多  </li>
+<li><code>由于要分批处理,每次只能处理一个文件夹的内容,导入到spark集群,处理完清空再处理下一个</code>  </li>
+<li><code>即使过滤了大文件,也要对sstable的大文件进行切片,这个速度也很慢</code>  </li>
+</ul>
+<blockquote>
+<p>采用hadoop-sstable的方式:  </p>
+</blockquote>
+<ul>
+<li>直接在源Cassandra集群将sstable上传到HDFS  </li>
+<li>使用HadoopMR作业处理,并将数据写到HDFS.  </li>
+<li>使用Spark读取HDFS,写到目标Cassandra集群.  </li>
+</ul>
+<blockquote>
+<p>采用hadoop-sstable方式的缺点:  </p>
+</blockquote>
+<ul>
+<li>每个sstable的文件大概是160M超过HDFS的Block大小. 所以一个sstable文件就是一个MapTask, 会导致任务很多.  </li>
+<li><code>现在每个节点的Data文件都有将近3000个, 所以MapTask数量有2万个</code>  </li>
+</ul>
+<blockquote>
+<p>所以采用两种方式同时处理:  </p>
+</blockquote>
+<ul>
+<li><strong>对于小文件,直接交给spark串行处理. 对于大文件交给hadoopMR并行处理.</strong>  </li>
+</ul>
+<h4 id="1)-理想是很美好的">1).理想是很美好的</h4><blockquote>
+<p>注: 并不需要在Cassandra节点启动Spark程序, 可以通过远程执行219上的命令就可以了!  </p>
+</blockquote>
+<p>👉 <code>A0</code>.在219上跑spark程序: <code>sh velocity_spark.sh</code>  </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"spark begin"</span></span><br><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">/usr/install/spark-<span class="number">1.4</span>.<span class="number">1</span>-bin-hadoop2.<span class="number">4</span>/bin/spark-submit \</span><br><span class="line">    --master spark://<span class="number">192.168</span>.<span class="number">47.209</span>:<span class="number">7077</span> \</span><br><span class="line">    --executor-memory <span class="number">12</span>g --total-executor-cores <span class="number">45</span> --driver-memory <span class="number">8</span>g \</span><br><span class="line">    --jars spark-cassandra-connector-assembly-<span class="number">1.4</span>.<span class="number">0</span>-SNAPSHOT.jar \</span><br><span class="line">    --conf spark.cassandra.connection.host=<span class="number">192.168</span>.<span class="number">47.219</span> \</span><br><span class="line">    --conf spark.cass.connect.dest.host=<span class="number">192.168</span>.<span class="number">47.219</span> \</span><br><span class="line">    --conf spark.cass.connect.dest.cluster=forseti_backup \</span><br><span class="line">    --conf spark.cassandra.output.batch.grouping.key=none \</span><br><span class="line">    --conf spark.cassandra.input.split.size_<span class="keyword">in</span>_mb=<span class="number">32</span> \</span><br><span class="line">    --class cn.fraudmetrix.cassandra.VelocityMigration \</span><br><span class="line">    --properties-file spark-defaults_backup.conf \</span><br><span class="line">    spark-app-<span class="number">1.0</span>-SNAPSHOT.jar cass1 <span class="number">40</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"spark end"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#清空Cassandra的velocity表数据</span></span><br><span class="line">sh truncate_table.sh velocity</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>由于线上Cassandra要能远程执行219上的spark程序, 需要事先免密码登陆到219: 将Cassandra每台节点的id_rsa.pub拷贝到219上. </p>
+</blockquote>
+<p>👉 <code>A1</code>.在219清空之前的测试数据:  </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">sh truncate_table.sh velocity</span><br><span class="line">sh truncate_table.sh velocity_app</span><br><span class="line">sh truncate_table.sh velocity_partner</span><br><span class="line">sh truncate_table.sh velocity_global</span><br><span class="line"></span><br><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">tbl=<span class="variable">$1</span></span><br><span class="line">sparkNodes=(<span class="string">'192.168.47.212'</span> <span class="string">'192.168.47.215'</span> <span class="string">'192.168.47.216'</span> <span class="string">'192.168.47.217'</span> <span class="string">'192.168.47.218'</span> <span class="string">'192.168.47.219'</span> <span class="string">'192.168.47.223'</span> <span class="string">'192.168.47.241'</span> <span class="string">'192.168.47.242'</span> <span class="string">'192.168.47.243'</span> <span class="string">'192.168.47.244'</span> <span class="string">'192.168.47.245'</span>)</span><br><span class="line"></span><br><span class="line">/usr/install/cassandra/bin/cqlsh <span class="operator">-e</span> <span class="string">"truncate forseti.<span class="variable">$tbl</span>;"</span> <span class="number">192.168</span>.<span class="number">47.219</span></span><br><span class="line"><span class="keyword">for</span> spark <span class="keyword">in</span> <span class="variable">$&#123;sparkNodes[@]&#125;</span>;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="variable">$spark</span></span><br><span class="line">  /usr/install/cassandra/bin/nodetool clearsnapshot forseti -h <span class="variable">$spark</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"1.turncate complete."</span></span><br></pre></td></tr></table></figure>
+<p>👉 <code>B1</code>.在202上准备以下文件,再由202拷贝到其他节点(因为202可以免密码登陆其他节点)  </p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">hadoop-2</span><span class="class">.4</span><span class="class">.1</span>                大文件上传到<span class="tag">HDFS</span></span><br><span class="line"><span class="tag">scala-2</span><span class="class">.10</span><span class="class">.5</span>                运行<span class="tag">Scala</span>分组程序</span><br><span class="line"><span class="tag">velocity_group</span><span class="class">.sh</span>           分组脚本</span><br><span class="line"><span class="tag">FileGroup</span><span class="class">.scala</span>             对<span class="tag">sstable</span>文件夹进行分组和大文件过滤   </span><br><span class="line"><span class="tag">velocity_migration</span><span class="class">.sh</span>       数据迁移(<span class="tag">sstable</span>在这里导入到<span class="tag">spark</span>集群,但<span class="tag">spark</span>任务还是在219启动)</span><br></pre></td></tr></table></figure>
+<p>👉 <code>B2</code>.在202上一键分发准备文件到集群: <code>sh velocity_prepare.sh</code><br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">cassNodes=(<span class="string">'192.168.47.203'</span> <span class="string">'192.168.47.204'</span> <span class="string">'192.168.47.205'</span> <span class="string">'192.168.47.206'</span> <span class="string">'192.168.47.221'</span> <span class="string">'192.168.47.222'</span> <span class="string">'192.168.47.224'</span> <span class="string">'192.168.47.225'</span>)</span><br><span class="line"><span class="keyword">for</span> cass <span class="keyword">in</span> <span class="variable">$&#123;cassNodes[@]&#125;</span>;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  scp -r hadoop-<span class="number">2.4</span>.<span class="number">1</span> <span class="variable">$cass</span>:~/ &amp;&amp; scp -r scala-<span class="number">2.10</span>.<span class="number">5</span> <span class="variable">$cass</span>:~/</span><br><span class="line">  scp FileGroup.scala <span class="variable">$cass</span>:~/ &amp;&amp; scp velocity_group.sh <span class="variable">$cass</span>:~/</span><br><span class="line">  scp velocity_migration.sh <span class="variable">$cass</span>:~/</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>拷贝快照文件夹snapshots到home目录,并更改文件夹权限(snapshots下还有一个时间撮文件夹)<br>对快照文件夹进行分组,为了在多台机器上处理方便, 统一将快照时间戳文件夹改名为velocity_snapshot  </p>
+</blockquote>
+<p>👉 <code>C1</code>.在每个节点执行velocity文件夹分组和大文件上传到HDFS: <code>sh velocity_group.sh</code>  </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">sudo mv /home/admin/cassandra/data/forseti/velocity/snapshots ~/ &amp;&amp;</span><br><span class="line">sudo chown qihuang.zheng:users -R snapshots &amp;&amp;</span><br><span class="line">scala-<span class="number">2.10</span>.<span class="number">5</span>/bin/scalac FileGroup.scala &amp;&amp;</span><br><span class="line">scala-<span class="number">2.10</span>.<span class="number">5</span>/bin/scala FileGroup</span><br></pre></td></tr></table></figure>
+<p>👉 <code>C2</code>.上传HDFS文件比较耗时, 使用后台方式运行:   </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup hadoop-<span class="number">2.4</span><span class="number">.1</span>/bin/hadoop fs -put <span class="number">192.168</span><span class="number">.47</span><span class="number">.2</span>XX forseti_velocity &amp;</span><br></pre></td></tr></table></figure>
+<p>👉 <code>D1</code>.每个Cassandra节点负责<strong>顺序执行</strong>spark的数据迁移任务: <code>velocity_migration.sh</code>, 但统一由202调度.   </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line"><span class="keyword">for</span> fold <span class="keyword">in</span> `ls velocity_snapshot`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"BEGIN <span class="variable">$fold</span> cost: "</span> </span><br><span class="line">  <span class="comment">#1.导入每个velocity子文件夹到线下Cassandra. 因为直接在线上Cassandra集群使用sstable,最好要进行限速</span></span><br><span class="line">  start1=$(date +%s)  </span><br><span class="line">  /usr/install/cassandra/bin/sstableloader <span class="operator">-d</span> <span class="number">192.168</span>.<span class="number">47.219</span> -t <span class="number">45</span> velocity_snapshot/<span class="variable">$fold</span>/forseti/velocity</span><br><span class="line">  end1=$(date +%s)  </span><br><span class="line">  time1=$(( <span class="variable">$end1</span> - <span class="variable">$start1</span> ))  </span><br><span class="line">  <span class="built_in">echo</span> <span class="operator">-e</span> <span class="string">"\n sstable cost: <span class="variable">$fold</span>, <span class="variable">$time1</span>"</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">#2.spark作业读取velocity, 写到三张表. 执行spark作业在219上,不需要在Cassandra节点上执行! 况且线上也不允许安装Spark! </span></span><br><span class="line">  start=$(date +%s)  </span><br><span class="line">  ssh <span class="number">192.168</span>.<span class="number">47.219</span> <span class="string">'sh velocity_spark.sh'</span></span><br><span class="line">  end=$(date +%s)  </span><br><span class="line">  time=$(( <span class="variable">$end</span> - <span class="variable">$start</span> ))  </span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"spark cost: <span class="variable">$fold</span>, <span class="variable">$time</span>"</span>  </span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>之前是将truncate velocity表都放在这里, 但是发现Cassandra节点的/etc/hosts都需要添加Spark节点才可以执行nodetool命令.<br>而sstableloader命令并不需要在hosts中添加目标节点. 所以可以把truncate velocity的工作都移到velocity_spark.sh中.  </p>
+<p>13个目标节点,阈值控制=15M时, 平均只有1M/s. 15M指的是当前传输节点的带宽, 比如原先节点的带宽占用10M,跑sstableloader时就是25M.<br>因此增加带宽也要根据节点的能力. 假设平均5M, 则需要带宽45M.</p>
+</blockquote>
+<p>🈲 <code>D2</code>.由于在202上可以免密码登陆其他节点, 所以可以直接在202上统一控制任务的执行: <code>nohup velocity_all.sh &amp;</code>  </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line"><span class="comment">#不要忘了还有202自己</span></span><br><span class="line">cassNodes=(<span class="string">'192.168.47.221'</span> <span class="string">'192.168.47.222'</span> <span class="string">'192.168.47.225'</span> <span class="string">'192.168.47.203'</span> <span class="string">'192.168.47.204'</span> <span class="string">'192.168.47.205'</span> <span class="string">'192.168.47.206'</span> )</span><br><span class="line"><span class="keyword">for</span> cass <span class="keyword">in</span> <span class="variable">$&#123;cassNodes[@]&#125;</span>;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"BEGIN <span class="variable">$cass</span> cost:"</span></span><br><span class="line">  startT=$(date +%s)  </span><br><span class="line">  <span class="comment">#登陆远程服务器, 执行远程服务器的脚本</span></span><br><span class="line">  ssh <span class="variable">$cass</span> <span class="string">'sh velocity_migration.sh'</span></span><br><span class="line">  endT=$(date +%s)  </span><br><span class="line">  timeT=$(( <span class="variable">$endT</span> - <span class="variable">$startT</span> ))  </span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"END cost: <span class="variable">$cass</span>, <span class="variable">$timeT</span>"</span>  </span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>远程执行命令需要在当前节点能够免密码登陆到目标节点. 比如202要控制其他C节点的velocity_migration.sh, 所以202免密码登陆到其他C节点.<br>每个C节点在sstableloader完一个文件夹之后,都要远程执行219的spark作业,所以每个C节点都要免密码登陆到219.  </p>
+<p>调试的时候如果由202统一控制, 杀进程会很麻烦. 要在202上杀velocity_all.sh, 在Cassandra节点杀velocity_migration.sh,在219上杀velocity_spark.sh<br>所以最后还是交给各个Cassandra节点自己启动比较方便!  </p>
+</blockquote>
+<p>👉 <code>E1</code>.大文件采用hadoop-sstable, 在219上执行HadoopMR作业(后面…)</p>
+<h4 id="2)-走了一些弯路">2).走了一些弯路</h4><p>1.不需要通过scp将线上Cassandra拷贝到Spark集群, 而且拷贝过后还是要进行sstable操作,<br>何不如直接在线上Cassandra直接sstable到Spark集群, 而且因为这个时候已经分成小文件夹了, 不会对线上造成压力.  </p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#好吧, 如果一开始命名好,就不需要重命名了. </span><br><span class="line">mv velocity_snapshot 224_1115</span><br><span class="line"></span><br><span class="line"><span class="string">[qihuang.zheng@cass047224 ~]</span>$ nohup scp -l <span class="number">20000</span> -r 224_1115 <span class="number">192.168.47.219</span>:~/snapshot &gt; nohup.out <span class="number">2</span>&gt;&amp;<span class="number">1</span></span><br><span class="line">qihuang.zheng@<span class="number">192.168.47.219</span>'s password:</span><br><span class="line">^Z</span><br><span class="line"><span class="string">[1]</span>+  Stopped                 nohup scp -l <span class="number">20000</span> -r 224_1115 <span class="number">192.168.47.219</span>:~/snapshot &gt; nohup.out <span class="number">2</span>&gt;&amp;<span class="number">1</span></span><br><span class="line"><span class="string">[qihuang.zheng@cass047224 ~]</span>$ bg</span><br><span class="line"><span class="string">[1]</span>+ nohup scp -l <span class="number">20000</span> -r 224_1115 <span class="number">192.168.47.219</span>:~/snapshot &gt; nohup.out <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br><span class="line"><span class="string">[qihuang.zheng@cass047224 ~]</span>$ jobs</span><br><span class="line"><span class="string">[1]</span>+  Running                 nohup scp -l <span class="number">20000</span> -r 224_1115 <span class="number">192.168.47.219</span>:~/snapshot &gt; nohup.out <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br></pre></td></tr></table></figure>
+<p>限速: 20000表示最大带宽=20M, 上传速度=20/8=2M. 一秒钟2M, 100G,需要100*1000/2/60/60=9h, 400G需要1.5day.  </p>
+<p><img src="http://img.blog.csdn.net/20151115155713263" alt="iftop">  </p>
+<p>查看zabbix上的网卡监控信息, 因为本身224就占用大概10M, scp再用20M, 总共30M.  </p>
+<p><img src="http://img.blog.csdn.net/20151115155724683" alt="224_net1"></p>
+<p>2.在线上的Cassandra每个节点都添加线下Spark/Cassandra节点的host, 否则执行nodetool命令会报错未知host:  </p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[qihuang.zheng@cass047224 ~]</span>$ nodetool status -h <span class="number">192.168.47.212</span></span><br><span class="line">Cannot resolve '<span class="number">192.168.47.212</span>': unknown host</span><br><span class="line"></span><br><span class="line"><span class="number">192.168.47.212</span>  spark047212</span><br><span class="line"><span class="number">192.168.47.215</span>  spark047215</span><br><span class="line"><span class="number">192.168.47.216</span>  spark047216</span><br><span class="line"><span class="number">192.168.47.217</span>  spark047217</span><br><span class="line"><span class="number">192.168.47.218</span>  spark047218</span><br><span class="line"><span class="number">192.168.47.219</span>  spark047219</span><br><span class="line"><span class="number">192.168.47.223</span>  spark047223</span><br><span class="line"><span class="number">192.168.47.241</span>  spark047241</span><br><span class="line"><span class="number">192.168.47.242</span>  spark047242</span><br><span class="line"><span class="number">192.168.47.243</span>  spark047243</span><br><span class="line"><span class="number">192.168.47.244</span>  spark047244</span><br><span class="line"><span class="number">192.168.47.245</span>  spark047245</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>解决: 实际上nodetool命令可以放在219节点执行, 而不需要在原先的Cassandra集群去执行线下的Spark/Cassandra集群</p>
+</blockquote>
+<p>3.之前想在线上Cassandra导入到线下Cassandra之后, 并直接在线上Cassandra执行spark作业.<br>这就要求在线上Cassandra安装Spark并启动Worker才能运行spark-submit. 但这实际上是不现实的. 所以下面的几个文件是不需要的,</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">spark-1</span><span class="class">.4</span><span class="class">.1-bin-hadoop2</span><span class="class">.4</span></span><br><span class="line"><span class="tag">spark-app-1</span><span class="class">.0-SNAPSHOT</span><span class="class">.jar</span>  </span><br><span class="line"><span class="tag">spark-cassandra-connector-assembly-1</span><span class="class">.4</span><span class="class">.0-SNAPSHOT</span><span class="class">.jar</span></span><br><span class="line"><span class="tag">spark-defaults_backup</span><span class="class">.conf</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>解决: 线上的每个Cassandra节点可以远程登陆到219上, 在219上执行spark作业!  </p>
+</blockquote>
+<h4 id="3)-现实是很残酷的">3).现实是很残酷的</h4><p>小于161M的文件仍然跑不完:  </p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">--  Address         Load       Tokens  Owns   Host ID                               Rack</span><br><span class="line">UN  <span class="number">192.168.47.223</span>  <span class="number">168</span>.<span class="number">67</span> MB  <span class="number">256</span>     <span class="number">7</span>.<span class="number">7</span>%   cf72179d-29c9-41ca-832e-51b4c204c5b2  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.219</span>  <span class="number">116</span>.<span class="number">3</span> MB   <span class="number">256</span>     <span class="number">8</span>.<span class="number">2</span>%   34e5317d-<span class="number">1468</span>-<span class="number">4303</span>-8e5a-71abcf8d8e69  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.218</span>  <span class="number">146</span>.<span class="number">15</span> MB  <span class="number">256</span>     <span class="number">8</span>.<span class="number">9</span>%   ba1aa6f7-<span class="number">5045</span>-4c6a-ab22-0731cc87880c  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.217</span>  <span class="number">143</span>.<span class="number">66</span> KB  <span class="number">256</span>     <span class="number">7</span>.<span class="number">9</span>%   a0a41c8b-c91b-438f-a3a7-9a09887c09fb  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.216</span>  <span class="number">156</span>.<span class="number">77</span> MB  <span class="number">256</span>     <span class="number">8</span>.<span class="number">4</span>%   8347f992-<span class="number">0345</span>-4a43-<span class="number">9066</span>-efbcee8adc83  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.245</span>  <span class="number">60</span>.<span class="number">16</span> MB   <span class="number">256</span>     <span class="number">8</span>.<span class="number">9</span>%   293de5b6-ab28-4f2d-839b-28b65c20551a  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.215</span>  <span class="number">92</span>.<span class="number">68</span> MB   <span class="number">256</span>     <span class="number">8</span>.<span class="number">2</span>%   030d39aa-6b36-4b88-92ab-f61bbad90bf9  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.244</span>  <span class="number">22</span>.<span class="number">51</span> MB   <span class="number">256</span>     <span class="number">9</span>.<span class="number">2</span>%   5f248950-<span class="number">4795</span>-4ac2-a2a2-e25c881e1ada  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.212</span>  <span class="number">109</span>.<span class="number">74</span> MB  <span class="number">256</span>     <span class="number">8</span>.<span class="number">4</span>%   9c7cbf1c-7a70-4e35-a5d8-505c41bb238f  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.241</span>  <span class="number">161</span>.<span class="number">44</span> MB  <span class="number">256</span>     <span class="number">8</span>.<span class="number">0</span>%   2ec8f7da-2a45-4eec-b254-90f28a7f2899  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.243</span>  <span class="number">52</span>.<span class="number">99</span> MB   <span class="number">256</span>     <span class="number">8</span>.<span class="number">1</span>%   70a595f5-34ea-48f9-87e3-654e73c119b0  RAC1</span><br><span class="line">UN  <span class="number">192.168.47.242</span>  <span class="number">138</span>.<span class="number">35</span> KB  <span class="number">256</span>     <span class="number">8</span>.<span class="number">2</span>%   9f153377-291e-<span class="number">4006</span>-9cda-cb0a6a0911ab  RAC1</span><br><span class="line"></span><br><span class="line"><span class="string">[qihuang.zheng@cass047202 ~]</span>$ ./pssh.sh ip_spark.txt 'ls /home/admin/cassandra/data/forseti/velocity -lh | grep Data'</span><br><span class="line"><span class="string">[1]</span> <span class="number">19</span>:<span class="number">23</span>:<span class="number">38</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.212</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin 104M <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">22</span> forseti-velocity-jb-<span class="number">5</span>-Data.db</span><br><span class="line"><span class="string">[2]</span> <span class="number">19</span>:<span class="number">23</span>:<span class="number">38</span> <span class="string">[FAILURE]</span> <span class="number">192.168.47.217</span> Exited with error code <span class="number">1</span></span><br><span class="line"><span class="string">[3]</span> <span class="number">19</span>:<span class="number">23</span>:<span class="number">38</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.218</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin 138M <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">23</span> forseti-velocity-jb-<span class="number">4</span>-Data.db</span><br><span class="line"><span class="string">[4]</span> <span class="number">19</span>:<span class="number">23</span>:<span class="number">38</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.216</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin 149M <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">23</span> forseti-velocity-jb-<span class="number">3</span>-Data.db   ⬅️ 并没有超过161M,但是也很慢</span><br><span class="line"><span class="string">[5]</span> <span class="number">19</span>:<span class="number">23</span>:<span class="number">38</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.219</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin 110M <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">22</span> forseti-velocity-jb-<span class="number">4</span>-Data.db</span><br><span class="line"><span class="string">[6]</span> <span class="number">19</span>:<span class="number">23</span>:<span class="number">38</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.241</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin 131M <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">23</span> forseti-velocity-jb-<span class="number">7</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  23M <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">23</span> forseti-velocity-jb-<span class="number">8</span>-Data.db</span><br><span class="line"><span class="string">[7]</span> <span class="number">19</span>:<span class="number">23</span>:<span class="number">38</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.245</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  57M <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">21</span> forseti-velocity-jb-<span class="number">4</span>-Data.db</span><br><span class="line"><span class="string">[8]</span> <span class="number">19</span>:<span class="number">23</span>:<span class="number">38</span> <span class="string">[FAILURE]</span> <span class="number">192.168.47.242</span> Exited with error code <span class="number">1</span></span><br><span class="line"><span class="string">[9]</span> <span class="number">19</span>:<span class="number">23</span>:<span class="number">38</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.215</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  88M <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">22</span> forseti-velocity-jb-<span class="number">5</span>-Data.db</span><br><span class="line"><span class="string">[10]</span> <span class="number">19</span>:<span class="number">23</span>:<span class="number">38</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.244</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  22M <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">20</span> forseti-velocity-jb-<span class="number">6</span>-Data.db</span><br><span class="line"><span class="string">[11]</span> <span class="number">19</span>:<span class="number">23</span>:<span class="number">38</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.223</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin 161M <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">23</span> forseti-velocity-jb-<span class="number">3</span>-Data.db</span><br><span class="line"><span class="string">[12]</span> <span class="number">19</span>:<span class="number">23</span>:<span class="number">38</span> <span class="string">[SUCCESS]</span> <span class="number">192.168.47.243</span></span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">7</span>.1K <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">21</span> forseti-velocity-jb-<span class="number">4</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  51M <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">21</span> forseti-velocity-jb-<span class="number">5</span>-Data.db</span><br><span class="line"></span><br><span class="line"><span class="string">[qihuang.zheng@spark047216 velocity]</span>$ ll -h</span><br><span class="line">总用量 157M</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  83K <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">23</span> forseti-velocity-jb-<span class="number">3</span>-CompressionInfo.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin 149M <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">23</span> forseti-velocity-jb-<span class="number">3</span>-Data.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  68K <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">23</span> forseti-velocity-jb-<span class="number">3</span>-Filter.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">7</span>.5M <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">23</span> forseti-velocity-jb-<span class="number">3</span>-Index.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin <span class="number">6</span>.0K <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">23</span> forseti-velocity-jb-<span class="number">3</span>-Statistics.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin  74K <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">23</span> forseti-velocity-jb-<span class="number">3</span>-Summary.db</span><br><span class="line">-rw-r--r--. <span class="number">1</span> admin admin   <span class="number">79</span> <span class="number">11</span>月 <span class="number">16</span> <span class="number">19</span>:<span class="number">23</span> forseti-velocity-jb-<span class="number">3</span>-TOC.txt</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.blog.csdn.net/20151116193938064" alt="small_but_slow"></p>
+<blockquote>
+<p>没辙了! 小文件都读不动, 而且一次只处理1G. 看来只能用hadoop-sstable了. 尽管它比较慢,但至少能算出来!</p>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2015/11/15/2015-11-15-Cassandra-Migration6_VelocitySpark/">Cassandra数据迁移 分离表</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2015年11月15日 - 00时00分</p>
+  <p><span>最后更新:</span>2015年12月19日 - 14时49分</p>
+  <p>
+    <span>原始链接:</span><a href="/2015/11/15/2015-11-15-Cassandra-Migration6_VelocitySpark/" title="Cassandra数据迁移 分离表">http://github.com/zqhxuyuan/2015/11/15/2015-11-15-Cassandra-Migration6_VelocitySpark/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/11/15/2015-11-15-Cassandra-Migration6_VelocitySpark/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
+
+
+
+<nav id="article-nav">
+  
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2015/11/17/2015-11-17-Cassandra-Migration7_VelocityHadoop/">
+        Cassandra数据迁移 分离表
+      </a>
+    </div>
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2015/11/10/2015-11-10-Cassandra-Client/">
+        Cassandra Client查询优化
+      </a>
+    </div>
+  
+</nav>
+
+  
+</article>
+
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spark迁移Cassandra"><span class="toc-number">1.</span> <span class="toc-text">Spark迁移Cassandra</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-处理全量数据很慢,_分析任务执行情况"><span class="toc-number">1.1.</span> <span class="toc-text">1.处理全量数据很慢, 分析任务执行情况</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#A-任务分配出现Any:_Worker剩余内存不能满足Executor的申请内存"><span class="toc-number">1.1.1.</span> <span class="toc-text">A.任务分配出现Any: Worker剩余内存不能满足Executor的申请内存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#B-资源足够,_100%_Cache_PROCESS_LOCAL"><span class="toc-number">1.1.2.</span> <span class="toc-text">B.资源足够, 100% Cache PROCESS_LOCAL</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#C-资源短缺造成的Any任务"><span class="toc-number">1.1.3.</span> <span class="toc-text">C.资源短缺造成的Any任务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#D-输入分片不同,_repartition时间不同"><span class="toc-number">1.1.4.</span> <span class="toc-text">D.输入分片不同, repartition时间不同</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-分批处理+Cache缓存+没有repartition"><span class="toc-number">1.2.</span> <span class="toc-text">2.分批处理+Cache缓存+没有repartition</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#A-第一个作业(cache_5-3G,_92%,_12_partitions)"><span class="toc-number">1.2.1.</span> <span class="toc-text">A.第一个作业(cache 5.3G, 92%, 12 partitions)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#B-第二次作业_(Cache_8-5G,_100%,_13_partitions)"><span class="toc-number">1.2.2.</span> <span class="toc-text">B.第二次作业 (Cache 8.5G, 100%, 13 partitions)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Repartition+Cache_+_OutputTuning"><span class="toc-number">1.3.</span> <span class="toc-text">3.Repartition+Cache + OutputTuning</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#0)-准备工作:文件分组"><span class="toc-number">1.3.1.</span> <span class="toc-text">0).准备工作:文件分组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1)-BatchSize=2000M,_分区进行了18min都没完成,_放弃"><span class="toc-number">1.3.2.</span> <span class="toc-text">1).BatchSize=2000M, 分区进行了18min都没完成, 放弃</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2)-BatchSize=1000M,_6min"><span class="toc-number">1.3.3.</span> <span class="toc-text">2).BatchSize=1000M, 6min</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3)-BatchSize=1500M,_6min"><span class="toc-number">1.3.4.</span> <span class="toc-text">3).BatchSize=1500M, 6min</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4)-调整output-batch-size参数"><span class="toc-number">1.3.5.</span> <span class="toc-text">4).调整output.batch.size参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5)-调整input-split-size参数"><span class="toc-number">1.3.6.</span> <span class="toc-text">5).调整input.split.size参数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Benchmark"><span class="toc-number">1.4.</span> <span class="toc-text">4.Benchmark</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1)-测试同一个文件夹用不同的inputSplitSize(顺序执行):_sh_velocity_test_1Folder-sh_226_1105"><span class="toc-number">1.4.1.</span> <span class="toc-text">1).测试同一个文件夹用不同的inputSplitSize(顺序执行): sh velocity_test_1Folder.sh 226_1105</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2)-测试同一个文件夹用不同的inputSplitSize(并行执行):_nohup_sh_velocity_test_1Folder_p-sh_226_1105_80_&"><span class="toc-number">1.4.2.</span> <span class="toc-text">2).测试同一个文件夹用不同的inputSplitSize(并行执行): nohup sh velocity_test_1Folder_p.sh 226_1105 80 &</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3)-测试多个文件夹,_所以数据要先清空,然后导入:_nohup_sh_velocity_test_Nfolder-sh_226_1105_&"><span class="toc-number">1.4.3.</span> <span class="toc-text">3).测试多个文件夹, 所以数据要先清空,然后导入: nohup sh velocity_test_Nfolder.sh 226_1105 &</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#问题1:_大文件不导到新集群处理"><span class="toc-number">1.4.4.</span> <span class="toc-text">问题1: 大文件不导到新集群处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#问题2:_How_Big_is_Big"><span class="toc-number">1.4.5.</span> <span class="toc-text">问题2: How Big is Big</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#问题3:_Some_Task_never_end"><span class="toc-number">1.4.6.</span> <span class="toc-text">问题3: Some Task never end</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#解决方法1:读取超时后放弃"><span class="toc-number">1.4.7.</span> <span class="toc-text">解决方法1:读取超时后放弃</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#解决方法2:hadoop-sstable可以处理这种跑不完的任务"><span class="toc-number">1.4.8.</span> <span class="toc-text">解决方法2:hadoop-sstable可以处理这种跑不完的任务</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-大文件使用HDFS-MR,_小文件sstable使用Spark"><span class="toc-number">1.5.</span> <span class="toc-text">5.大文件使用HDFS-MR, 小文件sstable使用Spark</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1)-理想是很美好的"><span class="toc-number">1.5.1.</span> <span class="toc-text">1).理想是很美好的</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2)-走了一些弯路"><span class="toc-number">1.5.2.</span> <span class="toc-text">2).走了一些弯路</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3)-现实是很残酷的"><span class="toc-number">1.5.3.</span> <span class="toc-text">3).现实是很残酷的</span></a></li></ol></li></ol></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+</script>
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+	</div>
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+</div>
+
+
+
+
+
+
+
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
+
+
+  
+  
+    
+    <div  class="post-nav-button">
+    <a href="/2015/11/17/2015-11-17-Cassandra-Migration7_VelocityHadoop/" title="上一篇: Cassandra数据迁移 分离表">
+    <i class="fa fa-angle-left"></i>
+    </a>
+    <a href="/2015/11/10/2015-11-10-Cassandra-Client/" title="下一篇: Cassandra Client查询优化">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2015 任何忧伤,都抵不过世界的美丽
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+        </div>
+    </div>
+    <div class="visit">
+      <span id="busuanzi_container_site_pv" style='display:none'>
+        <span id="site-visit" >本站到访数: 
+        <span id="busuanzi_value_site_uv"></span>
+        </span>
+      </span>
+      <span id="busuanzi_container_page_pv" style='display:none'>
+        <span id="page-visit">, 本页阅读量: 
+        <span id="busuanzi_value_page_pv"></span>
+        </span>
+      </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+<script>
+  var backgroundnum = 5;
+  var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+
+  $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+</script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+<a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+<a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
