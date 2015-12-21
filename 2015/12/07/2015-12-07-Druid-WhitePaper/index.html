@@ -5,12 +5,12 @@
   
   <title>Druid White Paper(大数据实时统计分析数据存储) | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Druid is a fast column-oriented distributed data store. http://druid.io/">
+  <meta name="description" content="原文: Druid White Paper 转载自: druid_cn">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Druid White Paper(大数据实时统计分析数据存储)">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/12/07/2015-12-07-Druid-WhitePaper/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="Druid is a fast column-oriented distributed data store. http://druid.io/">
+<meta property="og:description" content="原文: Druid White Paper 转载自: druid_cn">
 <meta property="og:image" content="https://raw.githubusercontent.com/QLeelulu/research/master/druid/White_Paper/1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/QLeelulu/research/master/druid/White_Paper/2.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/QLeelulu/research/master/druid/White_Paper/3.png">
@@ -18,10 +18,10 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/QLeelulu/research/master/druid/White_Paper/5.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/QLeelulu/research/master/druid/White_Paper/6.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/QLeelulu/research/master/druid/White_Paper/7.png">
-<meta property="og:updated_time" content="2015-12-08T07:05:21.000Z">
+<meta property="og:updated_time" content="2015-12-19T13:08:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Druid White Paper(大数据实时统计分析数据存储)">
-<meta name="twitter:description" content="Druid is a fast column-oriented distributed data store. http://druid.io/">
+<meta name="twitter:description" content="原文: Druid White Paper 转载自: druid_cn">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -219,7 +219,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>Druid is a fast column-oriented distributed data store. <a href="http://druid.io/" target="_blank" rel="external">http://druid.io/</a></p>
+        <p>原文: <a href="http://static.druid.io/docs/druid.pdf" target="_blank" rel="external">Druid White Paper</a> 转载自: <a href="https://github.com/QLeelulu/research/blob/master/druid/White_Paper/druid_cn.md">druid_cn</a></p>
 <a id="more"></a>
 <h2 id="摘要">摘要</h2><p><a href="http://druid.io" target="_blank" rel="external">Druid</a>是一个为在大数据集之上做实时统计分析而设计的开源数据存储。这个系统集合了一个面向列存储的层，一个分布式、shared-nothing的架构，和一个高级的索引结构，来达成在秒级以内对十亿行级别的表进行任意的探索分析。在这篇论文里面，我们会描述Druid的架构，和怎样支持快速聚合、灵活的过滤、和低延迟数据导入的一些细节。</p>
 <h2 id="1-_介绍">1. 介绍</h2><p>在最近几年，互联网技术的快速增长已经产生了大量由机器产生的数据。单独来看，这些数据包含很少的有用信息，价值都是很低的。从这些巨大的数据里面分析出有用的信息需要大量的时间和资源，很多公司都选择了放弃这些数据。虽然已有基础设施来处理这些居于事件的数据（例如IBM的Netezza，惠普的Vertica，EMC的Green-plum），但它们大多以高价售卖，那些负担得起的公司才是他们的目标客户。</p>
@@ -339,8 +339,7 @@
 <p>In the unsorted case, the total Concise size was 53,451,144 bytes and the total integer array size was 127,248,520 bytes. Overall, Concise compressed sets are about 42% smaller than integer ar- rays. In the sorted case, the total Concise compressed size was 43,832,884 bytes and the total integer array size was 127,248,520 bytes. What is interesting to note is that after sorting, global com- pression only increased minimally.</p>
 <h2 id="4-2_Storage_Engine">4.2 Storage Engine</h2><p>Druid的持久化组件允许不同的存储引擎以插件的方式接入，类似于<a href="http://en.wikipedia.org/wiki/Dynamo_(storage_system)" target="_blank" rel="external">Dynamo</a>。这些存储引擎可以将数据存储在一个完全的in-memory结构的引擎中，例如JVM heap，或者是存储于 memory-mapped 结构的存储中。Druid中存储引擎可配置更换的这个能力依赖于一个特定的应用规范。一个in-memory的存储引擎要比memory-mapped存储引擎的成本昂贵得多，但是如果对于性能特别敏感的话，in-memory存储引擎则是更好的选择。默认情况下使用的是memory-mapped存储引擎。</p>
 <p>当使用一个memory-mapped存储引擎的时候，Druid依赖于操作系统来对segment在内存中进行换入和换出操作。因为只有当segment加载到内存中了才可以被查询，所以memory-mapped存储引擎允许将最近的segment保留在内存中，而那些不会再被查询的segment则被换出。使用memory-mapped的主要缺点是当一个查询需要更多的segment并且已经超出了节点的内存容量时，在这种情况下，查询性能将会因为不断的在在内存中进行segment的换入和换出而下降。</p>
-<h2 id="5-_查询API">5. 查询API</h2><p><strong><em>原文见此</em></strong>: <a href="http://static.druid.io/docs/druid.pdf" target="_blank" rel="external">Druid White Paper</a><br>非原创,转载自: <a href="https://github.com/QLeelulu/research/blob/master/druid/White_Paper/druid_cn.md">https://github.com/QLeelulu/research/blob/master/druid/White_Paper/druid_cn.md</a></p>
-
+<h2 id="5-_查询API">5. 查询API</h2>
       
     </div>
     
@@ -351,7 +350,7 @@
   <p><span>本文标题:</span><a href="/2015/12/07/2015-12-07-Druid-WhitePaper/">Druid White Paper(大数据实时统计分析数据存储)</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月07日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月08日 - 15时05分</p>
+  <p><span>最后更新:</span>2015年12月19日 - 21时08分</p>
   <p>
     <span>原始链接:</span><a href="/2015/12/07/2015-12-07-Druid-WhitePaper/" title="Druid White Paper(大数据实时统计分析数据存储)">http://github.com/zqhxuyuan/2015/12/07/2015-12-07-Druid-WhitePaper/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/07/2015-12-07-Druid-WhitePaper/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
