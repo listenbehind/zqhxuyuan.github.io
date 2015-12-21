@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20151217221834509">
 <meta property="og:image" content="http://img.blog.csdn.net/20151217221852624">
 <meta property="og:image" content="http://img.blog.csdn.net/20151218215321046">
-<meta property="og:updated_time" content="2015-12-20T04:07:52.000Z">
+<meta property="og:updated_time" content="2015-12-21T11:22:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HBase BulkLoad">
 <meta name="twitter:description" content="HBase的BulkLoad分成了两个过程: MR生成HFile, 导入HFile到HBase集群">
@@ -118,7 +118,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18px;">drill</a> <a href="/tags/druid/" style="font-size: 14px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 14px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/storm/" style="font-size: 16px;">storm</a> <a href="/tags/work/" style="font-size: 12px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
 					</div>
 				</section>
 				
@@ -272,16 +272,12 @@
 <h3 id="导入HBase集群和验证数据">导入HBase集群和验证数据</h3><blockquote>
 <p>completebulkload tool is used to import the data into the running cluster: iterates through the prepared data files, and for each one determines the region the file belongs to. It then contacts the appropriate RegionServer which adopts the HFile, moving it into its storage directory and making the data available to clients.<br>循环每个HFile文件,决定这个文件属于哪个Region,联系对应的RegionServer,移动到RS的存储目录,客户端查询数据.  </p>
 </blockquote>
-<p>A.将生成的HFile导入到HBase集群中可以用hbase的增量加载:   </p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">output=<span class="variable">$1</span></span><br><span class="line">hbase org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles <span class="variable">$output</span> data.md5_id2</span><br></pre></td></tr></table></figure>
-<p>B.仍然使用hadoop命令,但和前面创建HFile不同,这是一个hdfs的mv操作,并不会启动MapReduce </p>
-<p><code>sh importhbase.sh /user/tongdun/id_hbase/id_hbase1_1</code></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">output=<span class="variable">$1</span></span><br><span class="line">HADOOP_CLASSPATH=`hbase classpath` hadoop jar <span class="variable">$&#123;HBASE_HOME&#125;</span>/lib/hbase-server-<span class="number">1.0</span>.<span class="number">2</span>.jar completebulkload <span class="variable">$output</span> data.md5_id2</span><br></pre></td></tr></table></figure>
-<p>测试一个文件夹能否成功导入到HBase集群中:  </p>
+<p>A.将生成的HFile导入到HBase集群中可以用hbase的增量加载: <code>hbase org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles $output data.md5_id2</code><br>B.仍然使用hadoop命令,但和前面创建HFile不同,这是一个hdfs的mv操作,并不会启动MapReduce: <code>HADOOP_CLASSPATH=</code>hbase classpath<code>hadoop jar ${HBASE_HOME}/lib/hbase-server-1.0.2.jar completebulkload $output data.md5_id2</code></p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">HADOOP_CLASSPATH</span>=<span class="string">`hbase classpath`</span> hadoop jar <span class="variable">$&#123;</span><span class="constant">HBASE_HOME</span>&#125;/lib/hbase-server-<span class="number">1.0</span>.<span class="number">2</span>.jar completebulkload /user/tongdun/id_hbase/id_hbase1_1 data.md5_id2</span><br><span class="line"></span><br><span class="line"><span class="prompt">hbase(main):001:0&gt;</span> list</span><br><span class="line"><span class="constant">TABLE</span></span><br><span class="line">data.md5_id</span><br><span class="line">data.md5_id2</span><br><span class="line"><span class="number">2</span> row(s) <span class="keyword">in</span> <span class="number">0</span>.<span class="number">9380</span> seconds</span><br><span class="line"><span class="status"></span><br><span class="line">=&gt;</span> [<span class="string">"data.md5_id"</span>, <span class="string">"data.md5_id2"</span>]</span><br><span class="line"><span class="prompt">hbase(main):002:0&gt;</span> get <span class="string">"data.md5_id2"</span>,<span class="string">"000045d573fb248697bb9c3f8536c1b5"</span></span><br><span class="line"><span class="constant">COLUMN</span>                                             <span class="constant">CELL</span></span><br><span class="line"> <span class="symbol">id:</span>c1                                             timestamp=<span class="number">1450359965709</span>, value=<span class="number">00</span></span><br><span class="line"> <span class="symbol">id:</span>c2                                             timestamp=<span class="number">1450359965709</span>, value=<span class="number">00</span></span><br><span class="line"> <span class="symbol">id:</span>id                                             timestamp=<span class="number">1450359965709</span>, value=<span class="number">110100195503206224</span></span><br><span class="line"><span class="number">3</span> row(s) <span class="keyword">in</span> <span class="number">1.0650</span> seconds</span><br><span class="line"></span><br><span class="line"><span class="prompt">hbase(main):004:0&gt;</span> get <span class="string">"data.md5_id2"</span>,<span class="string">"ddd5df06f27f9e127eb5816b338970dd"</span></span><br><span class="line"><span class="constant">COLUMN</span>                                             <span class="constant">CELL</span></span><br><span class="line"> <span class="symbol">id:</span>id                                             timestamp=<span class="number">1450359965709</span>, value=<span class="number">110100195512089920</span></span><br><span class="line"><span class="number">3</span> row(s) <span class="keyword">in</span> <span class="number">0</span>.<span class="number">1520</span> seconds</span><br></pre></td></tr></table></figure>
 <p>由于是移动文件, /user/tongdun/id_hbase/id_hbase1_1会被移动到HDFS中hbase的存储路径: 但是貌似名字不是一样的 </p>
 <p><img src="http://img.blog.csdn.net/20151218215321046" alt="hbase-path"></p>
-<h3 id="全量数据查询速度">全量数据查询速度</h3><p>验证全部6T的数据在HBase中的查询速度.  </p>
+<p>由于completebulkload的文件夹下级必须是column-family:id,批量导入脚本:  </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line"><span class="keyword">for</span> f <span class="keyword">in</span> `hadoop fs -ls /user/tongdun/id_hbase | awk <span class="string">'&#123;print $8&#125;'</span>`</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  HADOOP_CLASSPATH=`hbase classpath` hadoop jar <span class="variable">$&#123;HBASE_HOME&#125;</span>/lib/hbase-server-<span class="number">1.0</span>.<span class="number">2</span>.jar completebulkload <span class="variable">$f</span> data.md5_id2</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
 <h3 id="修改副本数">修改副本数</h3><table>
 <thead>
 <tr>
@@ -314,7 +310,7 @@
 </table>
 <p>数据量有点大,所以考虑把这些数据的副本数都设置为1,减少数据的占用空间.    </p>
 <p>To set replication of an individual file to 4:  <code>hadoop fs -setrep -w 4 /path/to/file</code><br>You can also do this recursively. To change replication of entire HDFS to 1: <code>hadoop fs -setrep -R -w 1 /</code></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -setrep -R -w <span class="number">1</span> /hbase/data/<span class="keyword">default</span>/data.md5_id2</span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /user/tongdun/id_mdf* &amp;</span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /user/tongdun/id_hbase* &amp;</span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /user/tongdun/mob_mdf_tmp* &amp; </span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /user/tongdun/mob_hbase &amp;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /hbase/data/<span class="keyword">default</span>/data.md5_mob2 &amp;</span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /hbase/data/<span class="keyword">default</span>/data.md5_id2 &amp;</span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /user/tongdun/id_mdf* &amp;</span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /user/tongdun/id_hbase* &amp;</span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /user/tongdun/mob_mdf_tmp* &amp; </span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /user/tongdun/mob_hbase &amp;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>-R选项表示递归,所以最后面的参数可以是文件夹.  </p>
 </blockquote>
@@ -336,7 +332,7 @@
   <p><span>本文标题:</span><a href="/2015/12/19/2015-12-19-HBase-BulkLoad/">HBase BulkLoad</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月19日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月20日 - 12时07分</p>
+  <p><span>最后更新:</span>2015年12月21日 - 19时22分</p>
   <p>
     <span>原始链接:</span><a href="/2015/12/19/2015-12-19-HBase-BulkLoad/" title="HBase BulkLoad">http://github.com/zqhxuyuan/2015/12/19/2015-12-19-HBase-BulkLoad/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/19/2015-12-19-HBase-BulkLoad/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -364,6 +360,12 @@
 
 <nav id="article-nav">
   
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2015/12/19/2015-12-21-HBase-Query/">
+        HBase多线程Query优化查询速度
+      </a>
+    </div>
+  
   
     <div id="article-nav-older" class="article-nav-title">
       <a href="/2015/12/18/2015-12-18-Spark-HBase-RDD/">
@@ -380,7 +382,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HBase_BulkLoad"><span class="toc-number">1.</span> <span class="toc-text">HBase BulkLoad</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HBase_&_MapReduce"><span class="toc-number">1.1.</span> <span class="toc-text">HBase & MapReduce</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MR作业生成HFile"><span class="toc-number">1.2.</span> <span class="toc-text">MR作业生成HFile</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#问题:建表失败"><span class="toc-number">1.3.</span> <span class="toc-text">问题:建表失败</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MR任务内存不足"><span class="toc-number">1.4.</span> <span class="toc-text">MR任务内存不足</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MR任务内存调优"><span class="toc-number">1.5.</span> <span class="toc-text">MR任务内存调优</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#生成HFile文件"><span class="toc-number">1.6.</span> <span class="toc-text">生成HFile文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#导入HBase集群和验证数据"><span class="toc-number">1.7.</span> <span class="toc-text">导入HBase集群和验证数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#全量数据查询速度"><span class="toc-number">1.8.</span> <span class="toc-text">全量数据查询速度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改副本数"><span class="toc-number">1.9.</span> <span class="toc-text">修改副本数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ref"><span class="toc-number">1.10.</span> <span class="toc-text">Ref</span></a></li></ol></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HBase_BulkLoad"><span class="toc-number">1.</span> <span class="toc-text">HBase BulkLoad</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HBase_&_MapReduce"><span class="toc-number">1.1.</span> <span class="toc-text">HBase & MapReduce</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MR作业生成HFile"><span class="toc-number">1.2.</span> <span class="toc-text">MR作业生成HFile</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#问题:建表失败"><span class="toc-number">1.3.</span> <span class="toc-text">问题:建表失败</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MR任务内存不足"><span class="toc-number">1.4.</span> <span class="toc-text">MR任务内存不足</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MR任务内存调优"><span class="toc-number">1.5.</span> <span class="toc-text">MR任务内存调优</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#生成HFile文件"><span class="toc-number">1.6.</span> <span class="toc-text">生成HFile文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#导入HBase集群和验证数据"><span class="toc-number">1.7.</span> <span class="toc-text">导入HBase集群和验证数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改副本数"><span class="toc-number">1.8.</span> <span class="toc-text">修改副本数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ref"><span class="toc-number">1.9.</span> <span class="toc-text">Ref</span></a></li></ol></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -449,14 +451,16 @@
 
   
   
+    
     <div  class="post-nav-button">
-    <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+    <a href="/2015/12/19/2015-12-21-HBase-Query/" title="上一篇: HBase多线程Query优化查询速度">
+    <i class="fa fa-angle-left"></i>
+    </a>
     <a href="/2015/12/18/2015-12-18-Spark-HBase-RDD/" title="下一篇: HBase-RDD">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
   
-    
 
 
 
