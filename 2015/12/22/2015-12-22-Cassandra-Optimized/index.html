@@ -3,17 +3,30 @@
 <head>
   <meta charset="utf-8">
   
-  <title>zqhxuyuan</title>
+  <title>Cassandra优化 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="zqhxuyuan">
-<meta property="og:url" content="http://github.com/zqhxuyuan/page/4/index.html">
+  <meta name="description" content="Compaction没有Compaction的缺点:  
+
+Row fragmentation would result in dramatically increased read latency.
+Increased file count would increase memory usage.
+Overwrites and deletions would result in wasted d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cassandra优化">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2015/12/22/2015-12-22-Cassandra-Optimized/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description">
+<meta property="og:description" content="Compaction没有Compaction的缺点:  
+
+Row fragmentation would result in dramatically increased read latency.
+Increased file count would increase memory usage.
+Overwrites and deletions would result in wasted d">
+<meta property="og:updated_time" content="2015-12-22T09:29:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="zqhxuyuan">
-<meta name="twitter:description">
+<meta name="twitter:title" content="Cassandra优化">
+<meta name="twitter:description" content="Compaction没有Compaction的缺点:  
+
+Row fragmentation would result in dramatically increased read latency.
+Increased file count would increase memory usage.
+Overwrites and deletions would result in wasted d">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -169,13 +182,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap">
-  
-    <article id="post-2015-06-25-Spark-SQL" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-2015-12-22-Cassandra-Optimized" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/06/25/2015-06-25-Spark-SQL/" class="article-date">
-  	<time datetime="2015-06-24T16:00:00.000Z" itemprop="datePublished">2015-06-25</time>
+      <a href="/2015/12/22/2015-12-22-Cassandra-Optimized/" class="article-date">
+  	<time datetime="2015-12-21T16:00:00.000Z" itemprop="datePublished">2015-12-22</time>
 </a>
     </div>
   
@@ -187,128 +198,141 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/06/25/2015-06-25-Spark-SQL/">Spark SQL入门</a>
+    <h1 class="article-title" itemprop="name">
+      Cassandra优化
     </h1>
   
 
       </header>
       
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Apache Spark SQL小白入门教程</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
+      <div class="article-info article-info-post">
+        
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	<a class="article-category-link" href="/categories/work/">work</a>
 	</div>
 
 
-      
+        
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
 	</div>
 
-      
-        <p class="article-more-link">
-          <a  href="/2015/06/25/2015-06-25-Spark-SQL/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-06-20-Apache-Spark" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/06/20/2015-06-20-Apache-Spark/" class="article-date">
-  	<time datetime="2015-06-19T16:00:00.000Z" itemprop="datePublished">2015-06-20</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/06/20/2015-06-20-Apache-Spark/">Apache Spark入门</a>
-    </h1>
-  
-
-      </header>
+        <div class="clearfix"></div>
+      </div>
       
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Apache Spark小白入门教程</p>
+        
+        <h2 id="Compaction">Compaction</h2><p>没有Compaction的缺点:  </p>
+<ul>
+<li>Row fragmentation would result in dramatically increased read latency.</li>
+<li>Increased file count would increase memory usage.</li>
+<li>Overwrites and deletions would result in wasted disk space.</li>
+</ul>
+<h2 id="Read_Repair">Read Repair</h2><h2 id="HintOff">HintOff</h2>
       
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/06/20/2015-06-20-Apache-Spark/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
     </div>
     
   </div>
   
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2015/12/22/2015-12-22-Cassandra-Optimized/">Cassandra优化</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2015年12月22日 - 00时00分</p>
+  <p><span>最后更新:</span>2015年12月22日 - 17时29分</p>
+  <p>
+    <span>原始链接:</span><a href="/2015/12/22/2015-12-22-Cassandra-Optimized/" title="Cassandra优化">http://github.com/zqhxuyuan/2015/12/22/2015-12-22-Cassandra-Optimized/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/22/2015-12-22-Cassandra-Optimized/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
+
+
+
+<nav id="article-nav">
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2015/12/21/2015-12-21-HBase-Query/">
+        HBase多线程Query优化查询速度
+      </a>
+    </div>
+  
+</nav>
+
+  
 </article>
 
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Compaction"><span class="toc-number">1.</span> <span class="toc-text">Compaction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Read_Repair"><span class="toc-number">2.</span> <span class="toc-text">Read Repair</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HintOff"><span class="toc-number">3.</span> <span class="toc-text">HintOff</span></a></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+</script>
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+	</div>
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+</div>
 
 
 
@@ -316,6 +340,28 @@
 
 
 
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
+
+
+  
+  
+    <div  class="post-nav-button">
+    <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+    <a href="/2015/12/21/2015-12-21-HBase-Query/" title="下一篇: HBase多线程Query优化查询速度">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+    
 
 
 
@@ -326,8 +372,8 @@
         fancybox: true,
         mathjax: true,
         animate: true,
-        isHome: true,
-        isPost: false,
+        isHome: false,
+        isPost: true,
         isArchive: false,
         isTag: false,
         isCategory: false,
@@ -335,88 +381,6 @@
         }
         </script>
         
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/05/01/hello-world/" class="article-date">
-  	<time datetime="2015-04-30T16:00:00.000Z" itemprop="datePublished">2015-05-01</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/05/01/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Hello, Hexo</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-      
-        <p class="article-more-link">
-          <a  href="/2015/05/01/hello-world/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-  
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
-    </nav>
-  
 </div>
       <footer id="footer">
   <div class="outer">
@@ -444,20 +408,6 @@
 </footer>
     </div>
     
-	<script>
-		var yiliaConfig = {
-			fancybox: false,
-			mathjax: true,
-			animate: true,
-			isHome: true,
-			isPost: false,
-			isArchive: false,
-			isTag: false,
-			isCategory: false,
-			open_in_new: false
-		}
-	</script>
-
 
 <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
 <script src="/js/main.js" type="text/javascript"></script>

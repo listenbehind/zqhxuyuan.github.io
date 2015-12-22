@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="千亿数据,一次性批量大数据量存储,查询时间要求不是很严格,10万条一天内也可以接受.">
 <meta property="og:image" content="http://img.blog.csdn.net/20151217161207153">
-<meta property="og:updated_time" content="2015-12-18T10:22:46.000Z">
+<meta property="og:updated_time" content="2015-12-22T12:48:03.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="千亿KV数据存储和查询方案">
 <meta name="twitter:description" content="千亿数据,一次性批量大数据量存储,查询时间要求不是很严格,10万条一天内也可以接受.">
@@ -253,7 +253,82 @@
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">create <span class="string">'data.md5_id'</span>,<span class="string">'id'</span></span><br><span class="line">put <span class="string">'data.md5_id'</span>,<span class="string">'a9fdddddddddddddddddddddddddddde'</span>,<span class="string">'id:id'</span>,<span class="string">'111111111111'</span></span><br><span class="line">get <span class="string">'data.md5_id'</span>,<span class="string">'a9fdddddddddddddddddddddddddddde'</span></span><br><span class="line">scan <span class="string">'data.md5_id'</span></span><br></pre></td></tr></table></figure>
 <p>Spark的基本思路是: 读取文本文件, 构造<code>RowKey -&gt; Map&lt;CF -&gt; Map&lt;Column -&gt; Value&gt;&gt;</code>的RDD:  </p>
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> rdd = sc.textFile(folder).map(&#123; line =&gt;</span><br><span class="line">  <span class="keyword">val</span> data = line split <span class="string">","</span></span><br><span class="line">  <span class="keyword">val</span> content = <span class="type">Map</span>(cf -&gt; <span class="type">Map</span>(column -&gt; data(<span class="number">0</span>)))</span><br><span class="line">  data(<span class="number">1</span>) -&gt; content</span><br><span class="line">&#125;)</span><br><span class="line">rdd.toHBaseBulk(table)</span><br></pre></td></tr></table></figure>
-<h2 id="HBase_BulkLoad">HBase BulkLoad</h2><p>HBase的BulkLoad分为两个节点: 运行MapReduce生成HFile文件, 导入到HBase集群</p>
+<h2 id="HBase_BulkLoad">HBase BulkLoad</h2><p>HBase的BulkLoad分为两个节点: 运行MapReduce生成HFile文件, 导入到HBase集群  </p>
+<p>存储: <a href="http://zqhxuyuan.github.io/2015/12/19/2015-12-19-HBase-BulkLoad/" target="_blank" rel="external">http://zqhxuyuan.github.io/2015/12/19/2015-12-19-HBase-BulkLoad/</a>  </p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Output</th>
+<th>Time</th>
+<th>multi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>26G</td>
+<td>87.3G</td>
+<td>20min</td>
+<td>3.3</td>
+</tr>
+<tr>
+<td>806.5G</td>
+<td>2.6T</td>
+<td>10h</td>
+<td>3.3</td>
+</tr>
+<tr>
+<td>6T</td>
+<td>18T</td>
+<td>…</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p>查询(多线程): <a href="http://zqhxuyuan.github.io/2015/12/21/2015-12-21-HBase-Query/" target="_blank" rel="external">http://zqhxuyuan.github.io/2015/12/21/2015-12-21-HBase-Query/</a>   </p>
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Storage</th>
+<th>Query</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mob</td>
+<td>35亿</td>
+<td>18万</td>
+<td>15min</td>
+</tr>
+<tr>
+<td>id</td>
+<td>1000亿</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Cassandra">Cassandra</h2><p>Cassandra和HBase都是列式数据库.HBase因为使用MapReduce,所以读取HDFS上的大文件时,会分成多个Map任务.<br>Cassandra导入数据不可避免的是需要读取原始的大文件,一种直接生成SSTable,一种是读取后直接写入到集群中.  </p>
+<h3 id="SSTable_Writer">SSTable Writer</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//构造Cassandra的Writer对象</span></span><br><span class="line">CQLSSTableWriter.Builder builder = CQLSSTableWriter.builder();</span><br><span class="line">builder.inDirectory(outputDir).forTable(SCHEMA).using(INSERT_STMT).withPartitioner(<span class="keyword">new</span> Murmur3Partitioner());</span><br><span class="line">CQLSSTableWriter writer = builder.build();</span><br><span class="line"></span><br><span class="line"><span class="comment">//读取大文件,写入到Writer对象,最终会生成SSTable文件</span></span><br><span class="line"><span class="keyword">while</span> ((line = reader.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">    writer.addRow(line.split(<span class="string">","</span>)[<span class="number">1</span>],line.split(<span class="string">","</span>)[<span class="number">0</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>默认生成的每个Data文件是72MB.  </p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Output</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4.8G*2=9G</td>
+<td>19G</td>
+<td>12min*2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Driver_API">Driver API</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">  List&lt;Statement&gt; statementList = <span class="keyword">new</span> ArrayList();</span><br><span class="line">  <span class="keyword">while</span> ((line = reader.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">      BoundStatement bound = insert.bind(line.split(<span class="string">","</span>)[<span class="number">1</span>],line.split(<span class="string">","</span>)[<span class="number">0</span>]);</span><br><span class="line">      statementList.add(bound);</span><br><span class="line">      <span class="keyword">if</span>(statementList.size() &gt;= <span class="number">65535</span>)&#123;</span><br><span class="line">          flush(statementList);</span><br><span class="line">          statementList.clear();</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 批量写入</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">flush</span><span class="params">(List&lt;Statement&gt; buffer)</span> </span>&#123;</span><br><span class="line">    BatchStatement batch = <span class="keyword">new</span> BatchStatement(BatchStatement.Type.UNLOGGED);</span><br><span class="line">    <span class="keyword">for</span> (Statement bound : buffer) &#123;</span><br><span class="line">        batch.add(bound);</span><br><span class="line">    &#125;</span><br><span class="line">    client.execute(batch);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="KV_DataBase">KV DataBase</h2><p>其实我们的业务中只是KeyValue,最适合的不是列式数据库,而是KV数据库.常见的KV数据库有:MemCache,Redis,LevelDB/RocksDB,Riak.  </p>
 
       
     </div>
@@ -265,7 +340,7 @@
   <p><span>本文标题:</span><a href="/2015/12/17/2015-12-17-Billion-KV/">千亿KV数据存储和查询方案</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月17日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月18日 - 18时22分</p>
+  <p><span>最后更新:</span>2015年12月22日 - 20时48分</p>
   <p>
     <span>原始链接:</span><a href="/2015/12/17/2015-12-17-Billion-KV/" title="千亿KV数据存储和查询方案">http://github.com/zqhxuyuan/2015/12/17/2015-12-17-Billion-KV/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/17/2015-12-17-Billion-KV/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -301,8 +376,8 @@
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/12/16/2015-12-16-HBase-Optimize/">
-        HBase性能优化方法总结
+      <a href="/2015/12/16/2015-12-16-Apache-HBase/">
+        Hello HBase
       </a>
     </div>
   
@@ -315,7 +390,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hive分区(×)"><span class="toc-number">2.</span> <span class="toc-text">Hive分区(×)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AWK脚本处理分区"><span class="toc-number">3.</span> <span class="toc-text">AWK脚本处理分区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#paldb@linkedin(×)"><span class="toc-number">4.</span> <span class="toc-text">paldb@linkedin(×)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sparkey@spotify"><span class="toc-number">5.</span> <span class="toc-text">sparkey@spotify</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spark_BulkLoad"><span class="toc-number">6.</span> <span class="toc-text">Spark BulkLoad</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HBase_BulkLoad"><span class="toc-number">7.</span> <span class="toc-text">HBase BulkLoad</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hive分区(×)"><span class="toc-number">2.</span> <span class="toc-text">Hive分区(×)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AWK脚本处理分区"><span class="toc-number">3.</span> <span class="toc-text">AWK脚本处理分区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#paldb@linkedin(×)"><span class="toc-number">4.</span> <span class="toc-text">paldb@linkedin(×)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sparkey@spotify"><span class="toc-number">5.</span> <span class="toc-text">sparkey@spotify</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spark_BulkLoad"><span class="toc-number">6.</span> <span class="toc-text">Spark BulkLoad</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HBase_BulkLoad"><span class="toc-number">7.</span> <span class="toc-text">HBase BulkLoad</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cassandra"><span class="toc-number">8.</span> <span class="toc-text">Cassandra</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SSTable_Writer"><span class="toc-number">8.1.</span> <span class="toc-text">SSTable Writer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Driver_API"><span class="toc-number">8.2.</span> <span class="toc-text">Driver API</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KV_DataBase"><span class="toc-number">9.</span> <span class="toc-text">KV DataBase</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -389,7 +464,7 @@
     <a href="/2015/12/18/2015-12-18-Spark-HBase-RDD/" title="上一篇: HBase-RDD">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/12/16/2015-12-16-HBase-Optimize/" title="下一篇: HBase性能优化方法总结">
+    <a href="/2015/12/16/2015-12-16-Apache-HBase/" title="下一篇: Hello HBase">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

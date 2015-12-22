@@ -11,7 +11,10 @@
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/12/21/2015-12-21-HBase-Query/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="HBase多线程查询">
-<meta property="og:updated_time" content="2015-12-21T11:38:33.000Z">
+<meta property="og:image" content="http://img.blog.csdn.net/20151221195016867">
+<meta property="og:image" content="http://img.blog.csdn.net/20151221195749623">
+<meta property="og:image" content="http://img.blog.csdn.net/20151221201152363">
+<meta property="og:updated_time" content="2015-12-21T12:12:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HBase多线程Query优化查询速度">
 <meta name="twitter:description" content="HBase多线程查询">
@@ -235,9 +238,16 @@ d4da62ff5a0cda<span class="number">04921b16426</span>c5c853f,<span class="number
 de<span class="number">12f0a204f35</span><span class="number">6f89f37,132</span><span class="number">00003898</span>
 </code></pre><p>问题的原因是: 每个线程并发调用selectByKeys追加到同一个文件造成的. 所以解决方式是不要在selectByKeys直接追加.<br>而是让selectByKeys返回List<string>表示这一个线程的结果. 最后在future.get时才追加到文件中. </string></p>
 <h2 id="多线程2">多线程2</h2><p>由于selectByKeys有返回值,所以要用Callable,而不是前面的Runnable了.  </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//future callable</span></span><br><span class="line">List&lt;Future&lt;List&lt;String&gt;&gt;&gt; futures = <span class="keyword">new</span> ArrayList&lt;Future&lt;List&lt;String&gt;&gt;&gt;(tableN);</span><br><span class="line"><span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">final</span> Map.Entry&lt;String, List&lt;String&gt;&gt; entry : maps.entrySet()) &#123;</span><br><span class="line">    <span class="comment">//不同的回调使用不同的HTable实例. 如果需要返回值用Callable,不需要返回值直接用Runnable</span></span><br><span class="line">    MyCallable callable = <span class="keyword">new</span> MyCallable(entry.getValue(), readTables[i++]);</span><br><span class="line">    FutureTask&lt;List&lt;String&gt;&gt; future = (FutureTask&lt;List&lt;String&gt;&gt;) executor.submit(callable);</span><br><span class="line">    futures.add(future);</span><br><span class="line">&#125;</span><br><span class="line">executor.shutdown();</span><br><span class="line"><span class="keyword">while</span> (!executor.isTerminated()) &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> (Future f : futures) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(f.get() != <span class="keyword">null</span>) &#123;</span><br><span class="line">            List&lt;String&gt; result = (List&lt;String&gt;)f.get();</span><br><span class="line">            StringBuffer sb = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">            <span class="keyword">for</span>(String row : result)&#123;</span><br><span class="line">                sb.append(row).append(<span class="string">"\n"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            append(fileResultPath, sb.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.currentThread().interrupt();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e1) &#123;</span><br><span class="line">            e1.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ExecutionException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(<span class="string">"Finished all threads"</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//future callable</span></span><br><span class="line">List&lt;Future&lt;List&lt;String&gt;&gt;&gt; futures = <span class="keyword">new</span> ArrayList&lt;Future&lt;List&lt;String&gt;&gt;&gt;(tableN);</span><br><span class="line"><span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">final</span> Map.Entry&lt;String, List&lt;String&gt;&gt; entry : maps.entrySet()) &#123;</span><br><span class="line">    <span class="comment">//不同的回调使用不同的HTable实例. 如果需要返回值用Callable,不需要返回值直接用Runnable</span></span><br><span class="line">    MyCallable callable = <span class="keyword">new</span> MyCallable(entry.getValue(), readTables[i++]);</span><br><span class="line">    FutureTask&lt;List&lt;String&gt;&gt; future = (FutureTask&lt;List&lt;String&gt;&gt;) executor.submit(callable);</span><br><span class="line">    futures.add(future);</span><br><span class="line">&#125;</span><br><span class="line">executor.shutdown();</span><br><span class="line"><span class="keyword">while</span> (!executor.isTerminated()) &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> (Future f : futures) &#123;</span><br><span class="line">    <span class="keyword">if</span>(f.get() != <span class="keyword">null</span>) &#123;</span><br><span class="line">        List&lt;String&gt; result = (List&lt;String&gt;)f.get();</span><br><span class="line">        StringBuffer sb = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">        <span class="keyword">for</span>(String row : result)&#123;</span><br><span class="line">            sb.append(row).append(<span class="string">"\n"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        append(fileResultPath, sb.toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(<span class="string">"Finished all threads"</span>);</span><br></pre></td></tr></table></figure>
 <p>自定义的Callable的keys是这个线程要处理的查询键列表, HTable是为了多线程查询HBase.  </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyCallable</span> <span class="keyword">implements</span> <span class="title">Callable</span>&lt;<span class="title">List</span>&lt;<span class="title">String</span>&gt;&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; keys;</span><br><span class="line">    <span class="keyword">private</span> HTable table;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyCallable</span><span class="params">(List&lt;String&gt; lstKeys, HTable table)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.keys = lstKeys;</span><br><span class="line">        <span class="keyword">this</span>.table = table;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> HBaseQuery.selectByKeys(keys, table);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用优化后的多线程查询, 18万的数据耗时800多秒.  </p>
+<h2 id="RegionSplit">RegionSplit</h2><p>在建表时指定了md5_id2预分配成16个Region,但是在导入了部分数据后,Region个数增加到了700多个,平均每个节点分布了有50多个Region.  </p>
+<p><img src="http://img.blog.csdn.net/20151221195016867" alt="mob_regions"></p>
+<p>同样的情况发生在md5_mob2(建表时16个,现在变成了67个). 有些Region的(查询)请求为0.  </p>
+<p><img src="http://img.blog.csdn.net/20151221195749623" alt="mob_request"></p>
+<p>查询每个RegionServer的情况, 分布也很不均匀. <code>是不是跟我们副本数设置为1有关系?</code>  </p>
+<p><img src="http://img.blog.csdn.net/20151221201152363" alt="regionserver_request"></p>
 
       
     </div>
@@ -249,7 +259,7 @@ de<span class="number">12f0a204f35</span><span class="number">6f89f37,132</span>
   <p><span>本文标题:</span><a href="/2015/12/21/2015-12-21-HBase-Query/">HBase多线程Query优化查询速度</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月21日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月21日 - 19时38分</p>
+  <p><span>最后更新:</span>2015年12月21日 - 20时12分</p>
   <p>
     <span>原始链接:</span><a href="/2015/12/21/2015-12-21-HBase-Query/" title="HBase多线程Query优化查询速度">http://github.com/zqhxuyuan/2015/12/21/2015-12-21-HBase-Query/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/21/2015-12-21-HBase-Query/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -277,6 +287,12 @@ de<span class="number">12f0a204f35</span><span class="number">6f89f37,132</span>
 
 <nav id="article-nav">
   
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2015/12/22/2015-12-22-Cassandra-Optimized/">
+        Cassandra优化
+      </a>
+    </div>
+  
   
     <div id="article-nav-older" class="article-nav-title">
       <a href="/2015/12/19/2015-12-19-HBase-BulkLoad/">
@@ -293,7 +309,7 @@ de<span class="number">12f0a204f35</span><span class="number">6f89f37,132</span>
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#查询方式"><span class="toc-number">1.</span> <span class="toc-text">查询方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#单线程"><span class="toc-number">2.</span> <span class="toc-text">单线程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多线程1"><span class="toc-number">3.</span> <span class="toc-text">多线程1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多线程2"><span class="toc-number">4.</span> <span class="toc-text">多线程2</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#查询方式"><span class="toc-number">1.</span> <span class="toc-text">查询方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#单线程"><span class="toc-number">2.</span> <span class="toc-text">单线程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多线程1"><span class="toc-number">3.</span> <span class="toc-text">多线程1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#多线程2"><span class="toc-number">4.</span> <span class="toc-text">多线程2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RegionSplit"><span class="toc-number">5.</span> <span class="toc-text">RegionSplit</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -362,14 +378,16 @@ de<span class="number">12f0a204f35</span><span class="number">6f89f37,132</span>
 
   
   
+    
     <div  class="post-nav-button">
-    <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+    <a href="/2015/12/22/2015-12-22-Cassandra-Optimized/" title="上一篇: Cassandra优化">
+    <i class="fa fa-angle-left"></i>
+    </a>
     <a href="/2015/12/19/2015-12-19-HBase-BulkLoad/" title="下一篇: HBase BulkLoad">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
   
-    
 
 
 
