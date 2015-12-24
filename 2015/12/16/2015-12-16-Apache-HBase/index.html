@@ -12,8 +12,7 @@
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Meet HBase Again, also Phoenix.">
 <meta property="og:image" content="http://img.blog.csdn.net/20151216161855376">
-<meta property="og:image" content="http://img.blog.csdn.net/20151216203616868">
-<meta property="og:updated_time" content="2015-12-18T16:08:45.000Z">
+<meta property="og:updated_time" content="2015-12-23T09:10:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hello HBase">
 <meta name="twitter:description" content="Meet HBase Again, also Phoenix.">
@@ -112,7 +111,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18px;">drill</a> <a href="/tags/druid/" style="font-size: 14px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/storm/" style="font-size: 16px;">storm</a> <a href="/tags/work/" style="font-size: 12px;">work</a>
 					</div>
 				</section>
 				
@@ -234,6 +233,14 @@
 <p>C.分发hbase目录到集群中所有节点</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp -qr hbase-<span class="number">1.0</span><span class="number">.2</span> <span class="number">192.168</span><span class="number">.47</span><span class="number">.241</span>:~/</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 <p>D.启动HBase集群: <code>start-hbase.sh</code>  </p>
+<ul>
+<li>单独启动HMaster: hbase-daemon.sh start master  </li>
+<li>单独启动所有的RegionServer: hbase-daemons.sh start regionserver</li>
+<li>单独启动一个RegionServer: hbase-daemon.sh start regionserver</li>
+</ul>
+<blockquote>
+<p>修改conf/hbase-env.sh的pid文件夹路径,默认是在/tmp下</p>
+</blockquote>
 <p>E.测试HBase的CRUD: <code>hbase shell</code> </p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">create</span> <span class="string">'table'</span>,<span class="string">'cf'</span></span><br><span class="line">put <span class="string">'table'</span>,<span class="string">'rowkey1'</span>,<span class="string">'cf:column'</span>,<span class="string">'value'</span></span><br><span class="line"><span class="keyword">get</span> <span class="string">'table'</span>,<span class="string">'rowkey1'</span></span><br><span class="line">put <span class="string">'table'</span>,<span class="string">'rowkey1'</span>,<span class="string">'cf:'</span>,<span class="string">'value'</span></span><br><span class="line"><span class="keyword">scan</span> <span class="string">'table'</span></span></span><br></pre></td></tr></table></figure>
 <p>F.查看HBase进程. HMaster和HRegionServer</p>
@@ -252,20 +259,10 @@
 <p>实际上sqlline.py后面跟的地址可以只有一个ZooKeeper的地址,可以不需要端口号和后面的/hbase</p>
 </blockquote>
 <p>如果启动sqlline.py进不了&gt;提示符, 可以修改log级别为DEBUG,查看在哪里出错了.  </p>
-<h3 id="问题1:_没有设置HADOOP_HOME">问题1: 没有设置HADOOP_HOME</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">15</span>/<span class="number">12</span>/<span class="number">16</span> <span class="number">18</span>:<span class="number">03</span>:<span class="number">17</span> DEBUG util<span class="class">.Shell</span>: Failed to detect <span class="tag">a</span> valid hadoop home directory</span><br><span class="line">java<span class="class">.io</span><span class="class">.IOException</span>: HADOOP_HOME or hadoop<span class="class">.home</span><span class="class">.dir</span> are not set.</span><br><span class="line">    at org<span class="class">.apache</span><span class="class">.hadoop</span><span class="class">.util</span><span class="class">.Shell</span><span class="class">.checkHadoopHome</span>(Shell<span class="class">.java</span>:<span class="number">302</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">15</span>/<span class="number">12</span>/<span class="number">16</span> <span class="number">18</span>:<span class="number">03</span>:<span class="number">17</span> DEBUG util<span class="class">.Shell</span>: Failed to detect <span class="tag">a</span> valid hadoop home directory</span><br><span class="line">java<span class="class">.io</span><span class="class">.IOException</span>: HADOOP_HOME or hadoop<span class="class">.home</span><span class="class">.dir</span> are not set.</span><br><span class="line">    at org<span class="class">.apache</span><span class="class">.hadoop</span><span class="class">.util</span><span class="class">.Shell</span><span class="class">.checkHadoopHome</span>(Shell<span class="class">.java</span>:<span class="number">302</span>)</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>解决办法给每个节点的.bashrc加上HADOOP_HOME环境变量,并重启HBase集群</p>
+<p>给每个节点的.bashrc加上HADOOP_HOME环境变量,并重启HBase集群</p>
 </blockquote>
-<h3 id="问题2:_SYSTEM-FUNCTION表损坏">问题2: SYSTEM.FUNCTION表损坏</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">15</span>/<span class="number">12</span>/<span class="number">16</span> <span class="number">19</span>:<span class="number">16</span>:<span class="number">14</span> DEBUG client.ConnectionManager$HConnectionImplementation: </span><br><span class="line">locateRegionInMeta parentTable=hbase:meta, metaLocation=, attempt=<span class="number">6</span> of <span class="number">35</span> failed; retrying after sleep of <span class="number">4039</span> because: </span><br><span class="line">No server address listed in hbase:meta <span class="keyword">for</span> region SYSTEM.FUNCTION,,<span class="number">1450264148924.1125</span>a5495cbbf583864609c67a2b804b. containing row</span><br></pre></td></tr></table></figure>
-<p>修复元数据,SYSTEM.FUNCTION表在HBase中不一致性</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@spark047213 bin]$ hbase hbck -fixMeta -fixAssignments</span><br><span class="line">Number of empty REGIONINFO_QUALIFIER rows in hbase:meta: 0</span><br><span class="line">Number of Tables: 6</span><br><span class="line">ERROR: There is a hole in the region chain between  and .  You need to <span class="operator"><span class="keyword">create</span> a <span class="keyword">new</span> .regioninfo <span class="keyword">and</span> region dir <span class="keyword">in</span> hdfs <span class="keyword">to</span> plug the hole.</span><br><span class="line"><span class="keyword">ERROR</span>: <span class="keyword">Found</span> inconsistency <span class="keyword">in</span> <span class="keyword">table</span> <span class="keyword">SYSTEM</span>.<span class="keyword">FUNCTION</span></span><br><span class="line">Summary:</span><br><span class="line">  hbase:meta <span class="keyword">is</span> okay.</span><br><span class="line">    <span class="built_in">Number</span> <span class="keyword">of</span> regions: <span class="number">1</span></span><br><span class="line">    Deployed <span class="keyword">on</span>:  spark047245,<span class="number">16020</span>,<span class="number">1450263724611</span></span><br><span class="line">  <span class="keyword">SYSTEM</span>.<span class="keyword">CATALOG</span> <span class="keyword">is</span> okay.</span><br><span class="line">    <span class="built_in">Number</span> <span class="keyword">of</span> regions: <span class="number">1</span></span><br><span class="line">    Deployed <span class="keyword">on</span>:  spark047243,<span class="number">16020</span>,<span class="number">1450263724657</span></span><br><span class="line">  <span class="keyword">table</span> <span class="keyword">is</span> okay.</span><br><span class="line">    <span class="built_in">Number</span> <span class="keyword">of</span> regions: <span class="number">1</span></span><br><span class="line">    Deployed <span class="keyword">on</span>:  spark047244,<span class="number">16020</span>,<span class="number">1450263724611</span></span><br><span class="line">  hbase:namespace <span class="keyword">is</span> okay.</span><br><span class="line">    <span class="built_in">Number</span> <span class="keyword">of</span> regions: <span class="number">1</span></span><br><span class="line">    Deployed <span class="keyword">on</span>:  spark047244,<span class="number">16020</span>,<span class="number">1450263724611</span></span><br><span class="line">  <span class="keyword">SYSTEM</span>.<span class="keyword">SEQUENCE</span> <span class="keyword">is</span> okay.</span><br><span class="line">    <span class="built_in">Number</span> <span class="keyword">of</span> regions: <span class="number">256</span></span><br><span class="line">    Deployed <span class="keyword">on</span>:  spark047241,<span class="number">16020</span>,<span class="number">1450263725671</span> spark047242,<span class="number">16020</span>,<span class="number">1450263724591</span> spark047243,<span class="number">16020</span>,<span class="number">1450263724657</span> spark047244,<span class="number">16020</span>,<span class="number">1450263724611</span> spark047245,<span class="number">16020</span>,<span class="number">1450263724611</span></span><br><span class="line">  <span class="keyword">SYSTEM</span>.<span class="keyword">FUNCTION</span> <span class="keyword">is</span> okay.</span><br><span class="line">    <span class="built_in">Number</span> <span class="keyword">of</span> regions: <span class="number">0</span></span><br><span class="line">    Deployed <span class="keyword">on</span>:</span><br><span class="line">  <span class="keyword">SYSTEM</span>.STATS <span class="keyword">is</span> okay.</span><br><span class="line">    <span class="built_in">Number</span> <span class="keyword">of</span> regions: <span class="number">1</span></span><br><span class="line">    Deployed <span class="keyword">on</span>:  spark047242,<span class="number">16020</span>,<span class="number">1450263724591</span></span><br><span class="line"><span class="number">1</span> inconsistencies detected.</span><br><span class="line"><span class="keyword">Status</span>: INCONSISTENT</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>HBase启动的时候, 用hbase shell的list是看不到任何table的. 启动sqlline后, phoenix会创建上面的四张系统表.<br>下面的第一行SYSTEM.FUNCTION标记为红色的. 正常的话如果表没有损坏,是不会出现Regions in Transition</p>
-</blockquote>
-<p><img src="http://img.blog.csdn.net/20151216203616868" alt="hbase_function"></p>
-<p>解决方式: 删除ZooKeeper中的/hbase文件夹, 并重启HBase集群.  </p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@spark047213 ~]$ hbase zkcli</span><br><span class="line">[zk: <span class="number">192.168</span><span class="number">.47</span><span class="number">.84</span>:<span class="number">2181</span>,<span class="number">192.168</span><span class="number">.47</span><span class="number">.83</span>:<span class="number">2181</span>,<span class="number">192.168</span><span class="number">.47</span><span class="number">.86</span>:<span class="number">2181</span>(CONNECTED) <span class="number">10</span>] rmr /hbase</span><br></pre></td></tr></table></figure>
-<p>注意只是删除FUNCTION表貌似不起作用. <code>delete /hbase/table/SYSTEM.FUNCTION</code>  </p>
 <h3 id="CRUD">CRUD</h3><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="header">0: jdbc:phoenix:192.168.47.83,192.168.47.84,1&gt; !tables</span><br><span class="line">+------------------------------------------+------------------------------------------+------------------------------------------+------------------------------------------+------------------------+</span></span><br><span class="line"><span class="header">|                TABLE_CAT                 |               TABLE_SCHEM                |                TABLE_NAME                |                TABLE_TYPE                |                 REMARK |</span><br><span class="line">+------------------------------------------+------------------------------------------+------------------------------------------+------------------------------------------+------------------------+</span></span><br><span class="line">|                                          | SYSTEM                                   | CATALOG                                  | SYSTEM TABLE                             |                        |</span><br><span class="line">|                                          | SYSTEM                                   | FUNCTION                                 | SYSTEM TABLE                             |                        |</span><br><span class="line">|                                          | SYSTEM                                   | SEQUENCE                                 | SYSTEM TABLE                             |                        |</span><br><span class="line"><span class="header">|                                          | SYSTEM                                   | STATS                                    | SYSTEM TABLE                             |                        |</span><br><span class="line">+------------------------------------------+------------------------------------------+------------------------------------------+------------------------------------------+------------------------+</span></span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>貌似之前启动HBase之后用hbase shell测试的table并没有在这里被查询到.  </p>
@@ -287,7 +284,7 @@
   <p><span>本文标题:</span><a href="/2015/12/16/2015-12-16-Apache-HBase/">Hello HBase</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月16日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月19日 - 00时08分</p>
+  <p><span>最后更新:</span>2015年12月23日 - 17时10分</p>
   <p>
     <span>原始链接:</span><a href="/2015/12/16/2015-12-16-Apache-HBase/" title="Hello HBase">http://github.com/zqhxuyuan/2015/12/16/2015-12-16-Apache-HBase/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/16/2015-12-16-Apache-HBase/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -316,15 +313,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2015/12/17/2015-12-17-Billion-KV/">
-        千亿KV数据存储和查询方案
+      <a href="/2015/12/16/2015-12-16-HBase-Optimize/">
+        HBase性能优化方法总结
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/12/16/2015-12-16-HBase-Optimize/">
-        HBase性能优化方法总结
+      <a href="/2015/12/12/2015-12-12-Apache-Geode/">
+        Apache GEODE 一致性数据库
       </a>
     </div>
   
@@ -337,7 +334,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_HBase"><span class="toc-number">1.</span> <span class="toc-text">Install HBase</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_Phoenix"><span class="toc-number">2.</span> <span class="toc-text">Install Phoenix</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#问题1:_没有设置HADOOP_HOME"><span class="toc-number">2.1.</span> <span class="toc-text">问题1: 没有设置HADOOP_HOME</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#问题2:_SYSTEM-FUNCTION表损坏"><span class="toc-number">2.2.</span> <span class="toc-text">问题2: SYSTEM.FUNCTION表损坏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CRUD"><span class="toc-number">2.3.</span> <span class="toc-text">CRUD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell创建的表在Phoenix中看不见"><span class="toc-number">2.4.</span> <span class="toc-text">shell创建的表在Phoenix中看不见</span></a></li></ol></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_HBase"><span class="toc-number">1.</span> <span class="toc-text">Install HBase</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_Phoenix"><span class="toc-number">2.</span> <span class="toc-text">Install Phoenix</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CRUD"><span class="toc-number">2.1.</span> <span class="toc-text">CRUD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell创建的表在Phoenix中看不见"><span class="toc-number">2.2.</span> <span class="toc-text">shell创建的表在Phoenix中看不见</span></a></li></ol></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -408,10 +405,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2015/12/17/2015-12-17-Billion-KV/" title="上一篇: 千亿KV数据存储和查询方案">
+    <a href="/2015/12/16/2015-12-16-HBase-Optimize/" title="上一篇: HBase性能优化方法总结">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/12/16/2015-12-16-HBase-Optimize/" title="下一篇: HBase性能优化方法总结">
+    <a href="/2015/12/12/2015-12-12-Apache-Geode/" title="下一篇: Apache GEODE 一致性数据库">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

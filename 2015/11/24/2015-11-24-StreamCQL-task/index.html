@@ -5,20 +5,20 @@
   
   <title>StreamCQL源码阅读(1) 提交任务 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="大数据上的流式SQL引擎—StreamCQL: http://www.csdn.net/article/2015-11-13/2826204">
+  <meta name="description" content="大数据上的流式SQL引擎—StreamCQL: http://www.csdn.net/article/2015-11-13/2826204http://www.csdn.net/article/2015-12-22/2826541">
 <meta property="og:type" content="article">
 <meta property="og:title" content="StreamCQL源码阅读(1) 提交任务">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/11/24/2015-11-24-StreamCQL-task/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="大数据上的流式SQL引擎—StreamCQL: http://www.csdn.net/article/2015-11-13/2826204">
+<meta property="og:description" content="大数据上的流式SQL引擎—StreamCQL: http://www.csdn.net/article/2015-11-13/2826204http://www.csdn.net/article/2015-12-22/2826541">
 <meta property="og:image" content="http://img.blog.csdn.net/20151125162710289">
 <meta property="og:image" content="http://img.blog.csdn.net/20151125162722310">
 <meta property="og:image" content="http://img.blog.csdn.net/20151126091936179">
 <meta property="og:image" content="http://img.blog.csdn.net/20151125203206771">
-<meta property="og:updated_time" content="2015-12-02T12:36:07.000Z">
+<meta property="og:updated_time" content="2015-12-22T14:05:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="StreamCQL源码阅读(1) 提交任务">
-<meta name="twitter:description" content="大数据上的流式SQL引擎—StreamCQL: http://www.csdn.net/article/2015-11-13/2826204">
+<meta name="twitter:description" content="大数据上的流式SQL引擎—StreamCQL: http://www.csdn.net/article/2015-11-13/2826204http://www.csdn.net/article/2015-12-22/2826541">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -114,7 +114,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18px;">drill</a> <a href="/tags/druid/" style="font-size: 14px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/storm/" style="font-size: 16px;">storm</a> <a href="/tags/work/" style="font-size: 12px;">work</a>
 					</div>
 				</section>
 				
@@ -216,8 +216,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>大数据上的流式SQL引擎—StreamCQL: <a href="http://www.csdn.net/article/2015-11-13/2826204" target="_blank" rel="external">http://www.csdn.net/article/2015-11-13/2826204</a></p>
-<a id="more"></a>
+        <p>大数据上的流式SQL引擎—StreamCQL: <a href="http://www.csdn.net/article/2015-11-13/2826204" target="_blank" rel="external">http://www.csdn.net/article/2015-11-13/2826204</a><br><a href="http://www.csdn.net/article/2015-12-22/2826541" target="_blank" rel="external">http://www.csdn.net/article/2015-12-22/2826541</a><br><a id="more"></a></p>
 <h1 id="Introduce">Introduce</h1><p>CQL（Continuous Query Language），持续查询语言，用于数据流上的查询语言。相对于传统的SQL，CQL加入了窗口的概念，使得数据可以一直保存在内存中，由此可以快速进行大量内存计算，CQL的输出结果为数据流在某一时刻的计算结果。  </p>
 <p>CQL是建立在Storm基础上的类SQL查询语言，它解决了Storm原生API使用复杂，上手难度高，很多基本功能缺失的问题，提升了流处理产品的易用性。  </p>
 <p>在CQL设计语法之初，通过参考市面上现有的CEP产品的语法，发现这些产品都不算是全部的SQL语句，即仅仅使用SQL语句还不能运行，还必须依靠一些客户端的代码。 这样就给使用带来了一些不便， 用户必须学习客户端API，比较繁琐，上手难度也比较大。  </p>
@@ -329,7 +328,7 @@
   <p><span>本文标题:</span><a href="/2015/11/24/2015-11-24-StreamCQL-task/">StreamCQL源码阅读(1) 提交任务</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年11月24日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月02日 - 20时36分</p>
+  <p><span>最后更新:</span>2015年12月22日 - 22时05分</p>
   <p>
     <span>原始链接:</span><a href="/2015/11/24/2015-11-24-StreamCQL-task/" title="StreamCQL源码阅读(1) 提交任务">http://github.com/zqhxuyuan/2015/11/24/2015-11-24-StreamCQL-task/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/11/24/2015-11-24-StreamCQL-task/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
