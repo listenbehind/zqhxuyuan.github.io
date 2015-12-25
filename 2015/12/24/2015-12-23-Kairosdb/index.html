@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/12/24/2015-12-23-Kairosdb/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="A time series is a sequence of data points, typically consisting of successive measurements made over a time interval.">
-<meta property="og:updated_time" content="2015-12-24T13:17:37.000Z">
+<meta property="og:updated_time" content="2015-12-24T15:56:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kairosdb">
 <meta name="twitter:description" content="A time series is a sequence of data points, typically consisting of successive measurements made over a time interval.">
@@ -269,12 +269,65 @@
 <li>string_index - used to answer the query of what tags and metrics are in the system.</li>
 </ul>
 <p>data_points是存储原始数据, row_key_index是row_key的索引, 实际上索引的是data_points的数据. string_index没什么用.  </p>
+<p>data_points的row-key由下面几个部分组成:  </p>
 <ul>
 <li>Metric name (UTF-8)</li>
 <li>Row time stamp. The time stamp for the row to begin at.</li>
 <li>Datastore type.</li>
 <li>Concatenated string of tags (tag1=val1:tag2=val2…)</li>
 </ul>
+<p>列名是相对row-key中的timestamp的time offset. 列的值是指标的值.  </p>
+<p>|row-key|time1(0)|time2(1000)|…|<br>|——-|————|————|…|<br>|load:12345678000:host=server1|20|45|…|<br>|load:12345678000:host=server2|10|43|…|<br>|cpu:12345678000:host=server1|33|57|…|</p>
+<blockquote>
+<p>row-key中的timestamp记录的是第一条记录的时间撮,所以time1(0)表示的是12345678000时刻, 这个点的load=20.<br>time2(100)表示的是12345678000+100=123456781000时刻, 主机为server1的指标load值为45.<br>这种存储方式对于同一个tag,相同的指标(metric_name),即使每一毫秒记录一次,最长能记录3周(如果一秒一条,则3000周!).<br>注意到列名是时间撮的偏移量(毫秒). 并不是相同指标相同tag分成多行,这里分成多列!  </p>
+</blockquote>
+<p>row_key_index表的row_key是metric_name. 列名是data_points的row_key.  </p>
+<table>
+<thead>
+<tr>
+<th>row-key</th>
+<th>load:12345678000:host=server1</th>
+<th>load:12345678000:host=server2</th>
+<th>…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>load</td>
+</tr>
+<tr>
+<td></td>
+<td>cpu:12345678000:host=server1</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr>
+<td>cpu</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>因为row_key是metric_name. 所以上面data_points的三条记录有两个row_key: load和cpu.<br>相同metric_name的不同tag会作为这个row_key的多个列. 实际上因为data_points的row_key不多,<br>所以这里的列也不会很多. 即data_points的列跟时间有关,这里只跟指标有关(尤其是tag)  </p>
+<p>When a query comes in a column slice of the row key index is done for the particular metric,<br>this returns the rows that will contain the data. The row keys are then filtered based on if any tags were specified.<br>A multi get hector call is made to fetch the data from the various rows.<br>If any row has more data then the remainder is fetched individually using a larger buffer.</p>
+</blockquote>
+<p>查询一般会给出metric_name,所以先在row_key_index中查询metric_name对应的列.<br>如果查询时指定了tag,会只过滤出来指定tag的row_keys. 得到row_keys后会多线程读取data_points中的记录.<br>从上面的表结构可以看出row_key_index的列相当于外键. 不过index这个词也很符合,是对row_key进行索引.  </p>
+<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">             row_key_index            data_points</span><br><span class="line">metric_name  ============&gt;  row_key   ===========&gt; query time-range metric <span class="keyword">value</span></span><br></pre></td></tr></table></figure>
+<h2 id="数据存储流程">数据存储流程</h2><p>KairosDatastore的putDataPoint会调用底层存储,首先写到缓冲区,待缓冲区满了再刷新到存储层.<br>添加一个数据点: 指标名称metric_name, tag标签集合, 数据点(数据类型,指标的具体值). </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">putDataPoint</span><span class="params">(String metricName, ImmutableSortedMap&lt;String, String&gt; tags, DataPoint dataPoint, <span class="keyword">int</span> ttl)</span> <span class="keyword">throws</span> DatastoreException </span>&#123;</span><br><span class="line">  m_datastore.putDataPoint(metricName, tags, dataPoint, ttl);</span><br><span class="line">  <span class="keyword">for</span> (DataPointListener dataPointListener : m_dataPointListeners) &#123;</span><br><span class="line">    dataPointListener.dataPoint(metricName, tags, dataPoint);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>底层存储是Cassandra,对应的存储实现是CassandraDatastore. 由于一条记录要写到三张表中.<br>分别使用了三个缓冲区m_rowKeyWriteBuffer,m_stringIndexWriteBuffer,m_dataPointWriteBuffer.  </p>
+<p>DataPointsRowKey表示的是data_points表的row_key, 组成格式:  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rowKey = <span class="keyword">new</span> DataPointsRowKey(metricName, rowTime, dataPoint.getDataStoreDataType(), tags);</span><br></pre></td></tr></table></figure>
+<p>row_key_index的row_key是metricName. value是data_points的rowKey.    </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">m_rowKeyWriteBuffer.addData(metricName, rowKey, <span class="string">""</span>, now, rowKeyTtl);</span><br></pre></td></tr></table></figure>
+<p>第一个参数是rowKey, 接下来两个分别是列和值.  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addData</span><span class="params">(RowKeyType rowKey,ColumnKeyType columnKey,ValueType value,<span class="keyword">long</span> timestamp,<span class="keyword">int</span> ttl)</span> </span>&#123;</span><br><span class="line">    m_mutatorLock.lock();</span><br><span class="line">    waitOnBufferFull();</span><br><span class="line">    m_bufferCount ++;</span><br><span class="line">    <span class="keyword">if</span> (columnKey.toString().length() &gt; <span class="number">0</span>)&#123;</span><br><span class="line">      m_buffer.add(<span class="keyword">new</span> Triple&lt;RowKeyType, ColumnKeyType, ValueType&gt;(rowKey, columnKey, value, timestamp, ttl));</span><br><span class="line">    &#125; </span><br><span class="line">    m_mutatorLock.unlock();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在添加数据之前会先判断缓冲区是否已满,如果没有,则缓冲区计数器加1(累加到一定程序一定会满的), 并将数据添加到缓冲区中.<br>当缓冲区计数器达到阈值, 或者可重入锁的引用计数=0, 就启动提交作业的任务WriteDataJob.  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">submitJob</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  Mutator&lt;RowKeyType&gt; pendingMutations = <span class="keyword">null</span>;</span><br><span class="line">  List&lt;Triple&lt;RowKeyType, ColumnKeyType, ValueType&gt;&gt; buffer = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//创建新的变量, 将原变量值赋值给新变量, 重置原变量, 接下来的操作都是在新变量上进行</span></span><br><span class="line">  pendingMutations = m_mutator;</span><br><span class="line">  buffer = m_buffer;</span><br><span class="line">  m_mutator = <span class="keyword">new</span> MutatorImpl&lt;RowKeyType&gt;(m_keyspace, m_rowKeySerializer);</span><br><span class="line">  m_buffer = <span class="keyword">new</span> ArrayList&lt;Triple&lt;RowKeyType, ColumnKeyType, ValueType&gt;&gt;();</span><br><span class="line">  m_bufferCount = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  WriteDataJob writeDataJob = <span class="keyword">new</span> WriteDataJob(pendingMutations, buffer);</span><br><span class="line">  m_executorService.submit(writeDataJob);</span><br><span class="line">  writeDataJob.waitTillStarted();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>写入Cassandra,这里用的客户端是hector. 跟官方的drive一样,先构造INSERT语句,然后调用客户端的execute就插入数据到C了.<br>由于缓冲区是有很多条记录的,所以这里用批量插入的方式,先依次加入到Mutator:m_pendingMutations中. 最后执行这个Mutator.  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (m_pendingMutations != <span class="keyword">null</span>) &#123;</span><br><span class="line">  <span class="keyword">for</span> (Triple&lt;RowKeyType, ColumnKeyType, ValueType&gt; data : m_buffer) &#123;</span><br><span class="line">    HColumnImpl&lt;ColumnKeyType, ValueType&gt; col = <span class="keyword">new</span> HColumnImpl(data.getSecond(), data.getThird(), data.getTime(), m_columnKeySerializer, m_valueSerializer);</span><br><span class="line">    m_pendingMutations.addInsertion(data.getFirst(), m_cfName, col);</span><br><span class="line">  &#125;</span><br><span class="line">  m_pendingMutations.execute();</span><br><span class="line">&#125;</span><br><span class="line">m_pendingMutations = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
+<p>由于m_buffer缓冲区包含了Row, ColumnName, ColumnValue. 构造的HColumn是列信息(包括了列名和列值),<br>addInsertion的第一个和第三个参数分别是Row和Column(Name和Value). 第二个参数是ColumnFamilyName,即表名.  </p>
+<h2 id="数据查询流程">数据查询流程</h2><p>queryDatabase需要提供DatastoreMetricQuery指标查询对象,有两个实现类DatastoreMetricQueryImpl和QueryMetric.<br>都能够对应到前面我们的示例查询JSON串. 比如分组, 聚合, 起止时间, tags等.    </p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -286,7 +339,7 @@
   <p><span>本文标题:</span><a href="/2015/12/24/2015-12-23-Kairosdb/">Kairosdb</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月24日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月24日 - 21时17分</p>
+  <p><span>最后更新:</span>2015年12月24日 - 23时56分</p>
   <p>
     <span>原始链接:</span><a href="/2015/12/24/2015-12-23-Kairosdb/" title="Kairosdb">http://github.com/zqhxuyuan/2015/12/24/2015-12-23-Kairosdb/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/24/2015-12-23-Kairosdb/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -330,7 +383,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#存储"><span class="toc-number">1.</span> <span class="toc-text">存储</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DataPoints"><span class="toc-number">2.</span> <span class="toc-text">DataPoints</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查询"><span class="toc-number">3.</span> <span class="toc-text">查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聚合"><span class="toc-number">4.</span> <span class="toc-text">聚合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cassandra_Schema"><span class="toc-number">5.</span> <span class="toc-text">Cassandra Schema</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#存储"><span class="toc-number">1.</span> <span class="toc-text">存储</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DataPoints"><span class="toc-number">2.</span> <span class="toc-text">DataPoints</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查询"><span class="toc-number">3.</span> <span class="toc-text">查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聚合"><span class="toc-number">4.</span> <span class="toc-text">聚合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cassandra_Schema"><span class="toc-number">5.</span> <span class="toc-text">Cassandra Schema</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据存储流程"><span class="toc-number">6.</span> <span class="toc-text">数据存储流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据查询流程"><span class="toc-number">7.</span> <span class="toc-text">数据查询流程</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
