@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="千亿数据,一次性批量大数据量存储,查询时间要求不是很严格,10万条一天内也可以接受.">
 <meta property="og:image" content="http://img.blog.csdn.net/20151217161207153">
-<meta property="og:updated_time" content="2015-12-24T06:04:44.000Z">
+<meta property="og:updated_time" content="2015-12-25T07:59:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="千亿KV数据存储和查询方案">
 <meta name="twitter:description" content="千亿数据,一次性批量大数据量存储,查询时间要求不是很严格,10万条一天内也可以接受.">
@@ -111,7 +111,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18px;">drill</a> <a href="/tags/druid/" style="font-size: 14px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/storm/" style="font-size: 16px;">storm</a> <a href="/tags/work/" style="font-size: 12px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/timeseries/" style="font-size: 13.33px;">timeseries</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
 					</div>
 				</section>
 				
@@ -339,7 +339,8 @@
 <p>一个数据库一次只能被一个进程打开。leveldb的实现要求使用来自操作系统的锁来阻止对数据库的滥用。在单进程中，同一个leveldb::DB对象可以被多个并发线程安全地共享。即，针对同一个数据库，在没有任何外部同步措施的前提下（leveldb实现本身将会自动去做所需要的同步过程），不同的线程可以写入迭代器或者获取迭代器或者调用Get方法。但是，其它的对象（比如Iterator和WriteBatch）可能需要外部的同步过程。如果两个线程共享一个这样的对象，这俩线程必须通过它们各自的加锁协议（locking protocol）来保护对这个对象的访问。</p>
 </blockquote>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users     <span class="number">0</span> <span class="number">12</span>月 <span class="number">24</span> <span class="number">11</span>:<span class="number">44</span> <span class="number">000003.l</span>og</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users    <span class="number">16</span> <span class="number">12</span>月 <span class="number">24</span> <span class="number">11</span>:<span class="number">44</span> CURRENT</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users     <span class="number">0</span> <span class="number">12</span>月 <span class="number">24</span> <span class="number">11</span>:<span class="number">44</span> LOCK</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users    <span class="number">57</span> <span class="number">12</span>月 <span class="number">24</span> <span class="number">11</span>:<span class="number">44</span> LOG</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users <span class="number">65536</span> <span class="number">12</span>月 <span class="number">24</span> <span class="number">11</span>:<span class="number">44</span> MANIFEST-<span class="number">000002</span></span><br><span class="line">⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users <span class="number">2116214</span> <span class="number">12</span>月 <span class="number">24</span> <span class="number">11</span>:<span class="number">49</span> <span class="number">000408.</span>sst</span><br><span class="line">...</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users <span class="number">3080192</span> <span class="number">12</span>月 <span class="number">24</span> <span class="number">11</span>:<span class="number">55</span> <span class="number">001210.</span>sst</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users      <span class="number">16</span> <span class="number">12</span>月 <span class="number">24</span> <span class="number">11</span>:<span class="number">44</span> CURRENT</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users       <span class="number">0</span> <span class="number">12</span>月 <span class="number">24</span> <span class="number">11</span>:<span class="number">44</span> LOCK</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users  <span class="number">215845</span> <span class="number">12</span>月 <span class="number">24</span> <span class="number">11</span>:<span class="number">55</span> LOG</span><br><span class="line">-rw-r--r--. <span class="number">1</span> qihuang.zheng users  <span class="number">196608</span> <span class="number">12</span>月 <span class="number">24</span> <span class="number">11</span>:<span class="number">55</span> MANIFEST-<span class="number">000002</span></span><br></pre></td></tr></table></figure>
-<p>可以看到旧的sst(SSTable)不断被删除,并用新的sst文件代替.  </p>
+<p>可以看到旧的sst(SSTable)不断被删除,并用新的sst文件代替. 但是速度在处理大文件时依旧很慢.  </p>
+<p>结论: 涉及到要读取原始文件,遍历每一行,然后调用存储的写入方式即使采用批量,也会很慢.<br>而HBase的BulkLoad会开启多个Map任务读取大文件,因此速度会比遍历读取大文件要快.   </p>
 
       
     </div>
@@ -351,7 +352,7 @@
   <p><span>本文标题:</span><a href="/2015/12/17/2015-12-17-Billion-KV/">千亿KV数据存储和查询方案</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月17日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月24日 - 14时04分</p>
+  <p><span>最后更新:</span>2015年12月25日 - 15时59分</p>
   <p>
     <span>原始链接:</span><a href="/2015/12/17/2015-12-17-Billion-KV/" title="千亿KV数据存储和查询方案">http://github.com/zqhxuyuan/2015/12/17/2015-12-17-Billion-KV/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/17/2015-12-17-Billion-KV/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -387,8 +388,8 @@
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/12/16/2015-12-16-HBase-Optimize/">
-        HBase性能优化方法总结
+      <a href="/2015/12/16/2015-12-16-Apache-HBase/">
+        Hello HBase
       </a>
     </div>
   
@@ -475,7 +476,7 @@
     <a href="/2015/12/18/2015-12-18-Spark-HBase-RDD/" title="上一篇: HBase-RDD">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/12/16/2015-12-16-HBase-Optimize/" title="下一篇: HBase性能优化方法总结">
+    <a href="/2015/12/16/2015-12-16-Apache-HBase/" title="下一篇: Hello HBase">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

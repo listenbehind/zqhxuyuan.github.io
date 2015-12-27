@@ -16,7 +16,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20151217221834509">
 <meta property="og:image" content="http://img.blog.csdn.net/20151217221852624">
 <meta property="og:image" content="http://img.blog.csdn.net/20151218215321046">
-<meta property="og:updated_time" content="2015-12-23T09:44:00.000Z">
+<meta property="og:updated_time" content="2015-12-25T14:31:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HBase BulkLoad">
 <meta name="twitter:description" content="HBase的BulkLoad分成了两个过程: MR生成HFile, 导入HFile到HBase集群">
@@ -115,7 +115,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18px;">drill</a> <a href="/tags/druid/" style="font-size: 14px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/storm/" style="font-size: 16px;">storm</a> <a href="/tags/work/" style="font-size: 12px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/timeseries/" style="font-size: 13.33px;">timeseries</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
 					</div>
 				</section>
 				
@@ -230,7 +230,10 @@
 <p>MR输出的每个HFile文件正好对应了HBase每个Region的KeyRange.这样文件只要直接拷贝就可以使用.  </p>
 </blockquote>
 <p>在建表的时候预先分配Split: <a href="http://grokbase.com/t/hbase/user/145bkvaq0x/how-to-pre-split-a-table-whose-row-key-is-md5-url" target="_blank" rel="external">http://grokbase.com/t/hbase/user/145bkvaq0x/how-to-pre-split-a-table-whose-row-key-is-md5-url</a>  </p>
-<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create <span class="symbol">'data</span>.md5_id2', <span class="symbol">'id'</span>, &#123;<span class="type">NUMREGIONS</span> =&gt; <span class="number">16</span>, <span class="type">SPLITALGO</span> =&gt; <span class="symbol">'HexStringSplit'</span>&#125;</span><br><span class="line">create <span class="symbol">'data</span>.md5_id3', <span class="symbol">'id'</span>, &#123;<span class="type">SPLITS_FILE</span> =&gt; <span class="symbol">'split3</span>.txt'&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">create <span class="symbol">'data</span>.md5_id2', <span class="symbol">'id'</span>, &#123;<span class="type">NUMREGIONS</span> =&gt; <span class="number">16</span>, <span class="type">SPLITALGO</span> =&gt; <span class="symbol">'HexStringSplit'</span>&#125;</span><br><span class="line">create <span class="symbol">'data</span>.md5_id2', <span class="symbol">'id'</span>, &#123;<span class="type">SPLITS_FILE</span> =&gt; <span class="symbol">'split32</span>.txt'&#125;</span><br><span class="line">create <span class="symbol">'data</span>.md5_id4', <span class="symbol">'id'</span>, &#123;<span class="type">SPLITS_FILE</span> =&gt; <span class="symbol">'split32</span>.txt', <span class="type">REGION_REPLICATION</span> =&gt; <span class="number">1</span>, <span class="type">CONFIGURATION</span> =&gt; &#123;<span class="symbol">'hbase</span>.regionserver.region.split.policy' =&gt; <span class="symbol">'KeyPrefixRegionSplitPolicy'</span>, <span class="symbol">'prefix_split_key_policy</span>.prefix_length' =&gt; <span class="char">'3'</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>假设按照3位(0-f),则分区数=16^3=4096,在建表时会有问题. 于是改成了16<em>16</em>8=2048个Region(实际上会多一个Region的).  </p>
+</blockquote>
 <p><code>sh hfile.sh id_mdf_tmp1 id_hbase1</code></p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line"><span class="comment">#Usage: importtsv -Dimporttsv.columns=a,b,c &lt;tablename&gt; &lt;inputdir&gt;</span></span><br><span class="line">input=<span class="variable">$1</span></span><br><span class="line">output=<span class="variable">$2</span></span><br><span class="line">HADOOP_CLASSPATH=`hbase classpath` hadoop jar <span class="variable">$&#123;HBASE_HOME&#125;</span>/lib/hbase-server-<span class="number">1.0</span>.<span class="number">2</span>.jar importtsv \</span><br><span class="line">-Dimporttsv.columns=id:id,HBASE_ROW_KEY,id:c1,id:c2 \</span><br><span class="line">-Dimporttsv.separator=, \</span><br><span class="line">-Dimporttsv.bulk.output=/user/tongdun/<span class="variable">$output</span> \</span><br><span class="line">-Dcreate.table=no \</span><br><span class="line">-Dno.strict=<span class="literal">true</span> \</span><br><span class="line">-Dmapreduce.map.speculative=<span class="literal">false</span> \</span><br><span class="line">-Dmapreduce.reduce.speculative=<span class="literal">false</span> \</span><br><span class="line">data.md5_id2 /user/tongdun/<span class="variable">$input</span></span><br></pre></td></tr></table></figure>
 <blockquote>
@@ -309,6 +312,7 @@
 <li><a href="http://hbase.apache.org/book.html#importtsv" target="_blank" rel="external">http://hbase.apache.org/book.html#importtsv</a> </li>
 <li><a href="http://hbase.apache.org/book.html#arch.bulk.load.arch" target="_blank" rel="external">http://hbase.apache.org/book.html#arch.bulk.load.arch</a></li>
 <li><a href="http://blog.csdn.net/samhacker/article/details/21282243" target="_blank" rel="external">http://blog.csdn.net/samhacker/article/details/21282243</a>  </li>
+<li><a href="http://my.oschina.net/leejun2005/blog/187309" target="_blank" rel="external">http://my.oschina.net/leejun2005/blog/187309</a></li>
 </ul>
 
       
@@ -321,7 +325,7 @@
   <p><span>本文标题:</span><a href="/2015/12/19/2015-12-19-HBase-BulkLoad/">HBase BulkLoad</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月19日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月23日 - 17时44分</p>
+  <p><span>最后更新:</span>2015年12月25日 - 22时31分</p>
   <p>
     <span>原始链接:</span><a href="/2015/12/19/2015-12-19-HBase-BulkLoad/" title="HBase BulkLoad">http://github.com/zqhxuyuan/2015/12/19/2015-12-19-HBase-BulkLoad/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/19/2015-12-19-HBase-BulkLoad/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">

@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>tags | zqhxuyuan</title>
+  <title>时间序列数据库之OpenTSDB | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://github.com/zqhxuyuan/tags/index.html">
+  <meta name="description" content="OpenTSDB was written on top of HBase, address a common need: store, index and serve metrics collected from computer systems (network gear, operating systems, applications) at a large scale, and make t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="时间序列数据库之OpenTSDB">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2015/12/24/2015-12-25-TSDB-OpenTSDB/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description">
-<meta property="og:updated_time" content="2015-12-02T05:55:05.000Z">
+<meta property="og:description" content="OpenTSDB was written on top of HBase, address a common need: store, index and serve metrics collected from computer systems (network gear, operating systems, applications) at a large scale, and make t">
+<meta property="og:updated_time" content="2015-12-27T08:36:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="tags">
-<meta name="twitter:description">
+<meta name="twitter:title" content="时间序列数据库之OpenTSDB">
+<meta name="twitter:description" content="OpenTSDB was written on top of HBase, address a common need: store, index and serve metrics collected from computer systems (network gear, operating systems, applications) at a large scale, and make t">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -170,11 +170,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="page-undefined" class="article article-type-page" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-2015-12-25-TSDB-OpenTSDB" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/tags/index.html" class="article-date">
-  	<time datetime="2015-12-02T05:55:05.000Z" itemprop="datePublished">2015-12-02</time>
+      <a href="/2015/12/24/2015-12-25-TSDB-OpenTSDB/" class="article-date">
+  	<time datetime="2015-12-23T16:00:00.000Z" itemprop="datePublished">2015-12-24</time>
 </a>
     </div>
   
@@ -187,7 +187,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      tags
+      时间序列数据库之OpenTSDB
     </h1>
   
 
@@ -195,8 +195,16 @@
       
       <div class="article-info article-info-post">
         
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
 
         
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/timeseries/">timeseries</a></li></ul>
+	</div>
+
         <div class="clearfix"></div>
       </div>
       
@@ -204,122 +212,100 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-          <style>
-	.article-meta {
-		display: none;
-	}
-	#container .article .article-title {
-		padding-right: 0;
-	}
-	.article-header {
-		padding: 0;
-		padding-top: 26px;
-		border-left: none;
-		text-align: center;
-	}
-	.article-header:hover {
-		border-left: none;
-	}
-	.article-title {
-		font-size: 1.6em
-	}
-	.article-meta {
-		display: none;
-	}
-	.article-entry hr {
-		margin: 0;
-	}
-	#container .article-info-post.article-info {
-  	display: none;
-  	}
-	#container .article .article-title {
-	padding: 0;
-	}
-</style>
+        <p>OpenTSDB was written on top of HBase, address a common need: store, index and serve metrics collected from computer systems (network gear, operating systems, applications) at a large scale, and make this data easily accessible and graphable.<br><a id="more"></a></p>
 
-
-	<!-- Tag Cloud Page -->
-	<hr>
-	<br>
-	<ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Source/">Source</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/bigdata/">bigdata</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/work/">work</a><span class="category-list-count">14</span></li></ul>
-
-	<p class="count"></p>
-
-	<div class="tags">
-	  <a href="/tags/apex/" style="font-size: 16px; color: #808080">apex</a> <a href="/tags/cassandra/" style="font-size: 35px; color: #000">cassandra</a> <a href="/tags/drill/" style="font-size: 31.83px; color: #151515">drill</a> <a href="/tags/druid/" style="font-size: 25.5px; color: #404040">druid</a> <a href="/tags/elasticsearch/" style="font-size: 16px; color: #808080">elasticsearch</a> <a href="/tags/geode/" style="font-size: 16px; color: #808080">geode</a> <a href="/tags/hbase/" style="font-size: 28.67px; color: #2b2b2b">hbase</a> <a href="/tags/ignite/" style="font-size: 16px; color: #808080">ignite</a> <a href="/tags/spark/" style="font-size: 25.5px; color: #404040">spark</a> <a href="/tags/storm/" style="font-size: 28.67px; color: #2b2b2b">storm</a> <a href="/tags/timeseries/" style="font-size: 22.33px; color: #555">timeseries</a> <a href="/tags/work/" style="font-size: 19.17px; color: #6b6b6b">work</a>
-	</div>
-	<style type="text/css">
-		.category-list li{
-			display: inline-block;
-			font-size: 1.2em;
-			margin: 0 1em .5em 0;
-			border: 1px solid lightgray;
-			padding: 4px;
-		}
-		.category-list a {
-			color: gray;
-		}
-		.category-list-item:hover a {
-			color: gray;
-			text-decoration: none;
-			font-weight: bold;
-		}
-		.category-list-count {
-			margin-left: 2px;
-			font-size: .9em;
-		}
-		.article-entry ul li:before{
-			display: none;
-		}
-		.article-inner  {
-			text-align: center;
-		}
-		.tags {
-			max-width: 40em;
-			margin: 2em auto;
-			margin-top: 0em;
-		}
-		.tags a {
-			margin-right: 1em;
-			line-height: 65px;
-			border-bottom: 1px solid gray;
-			white-space: nowrap;
-		}
-		.tags a:hover {
-			font-style: italic;
-			border-bottom: 2px solid black;
-			text-decoration: none;
-		}
-		#count > span {
-			margin: auto .2em;
-			font-weight: bold;
-		}
-	</style>
-
-	<!-- Count tags and categories -->
-	<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
-	<p id="count">
-			已有<span><script>document.write($(".category-list-item").length)</script></span>个分类，
-			共计<span><script>document.write($(".tags > a").length)</script></span>个标签。
-	</p>
-	<script>
-	$('#count').appendTo('.count');
-	</script>
-
-
-        
-        
       
     </div>
     
   </div>
   
     
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2015/12/24/2015-12-25-TSDB-OpenTSDB/">时间序列数据库之OpenTSDB</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2015年12月24日 - 00时00分</p>
+  <p><span>最后更新:</span>2015年12月27日 - 16时36分</p>
+  <p>
+    <span>原始链接:</span><a href="/2015/12/24/2015-12-25-TSDB-OpenTSDB/" title="时间序列数据库之OpenTSDB">http://github.com/zqhxuyuan/2015/12/24/2015-12-25-TSDB-OpenTSDB/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/24/2015-12-25-TSDB-OpenTSDB/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
 
 
+
+<nav id="article-nav">
+  
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2015/12/25/2015-12-25-TSDB-InfluxDB/">
+        时间序列数据库之InfluxDB
+      </a>
+    </div>
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2015/12/24/2015-12-23-TSDB-Kairosdb/">
+        时间序列数据库之Kairosdb
+      </a>
+    </div>
+  
+</nav>
 
   
 </article>
+
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+</script>
 
 
 <div class="share">
@@ -355,6 +341,19 @@
     </div>
 
 
+  
+  
+    
+    <div  class="post-nav-button">
+    <a href="/2015/12/25/2015-12-25-TSDB-InfluxDB/" title="上一篇: 时间序列数据库之InfluxDB">
+    <i class="fa fa-angle-left"></i>
+    </a>
+    <a href="/2015/12/24/2015-12-23-TSDB-Kairosdb/" title="下一篇: 时间序列数据库之Kairosdb">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+
 
 
     
@@ -365,7 +364,7 @@
         mathjax: true,
         animate: true,
         isHome: false,
-        isPost: false,
+        isPost: true,
         isArchive: false,
         isTag: false,
         isCategory: false,

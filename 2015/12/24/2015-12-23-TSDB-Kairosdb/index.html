@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Kairosdb | zqhxuyuan</title>
+  <title>时间序列数据库之Kairosdb | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="A time series is a sequence of data points, typically consisting of successive measurements made over a time interval.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kairosdb">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2015/12/24/2015-12-23-Kairosdb/index.html">
+<meta property="og:title" content="时间序列数据库之Kairosdb">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2015/12/24/2015-12-23-TSDB-Kairosdb/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="A time series is a sequence of data points, typically consisting of successive measurements made over a time interval.">
-<meta property="og:updated_time" content="2015-12-24T15:56:16.000Z">
+<meta property="og:updated_time" content="2015-12-27T08:35:18.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kairosdb">
+<meta name="twitter:title" content="时间序列数据库之Kairosdb">
 <meta name="twitter:description" content="A time series is a sequence of data points, typically consisting of successive measurements made over a time interval.">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
@@ -110,7 +110,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18px;">drill</a> <a href="/tags/druid/" style="font-size: 14px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/storm/" style="font-size: 16px;">storm</a> <a href="/tags/work/" style="font-size: 12px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/timeseries/" style="font-size: 13.33px;">timeseries</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
 					</div>
 				</section>
 				
@@ -170,10 +170,10 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-2015-12-23-Kairosdb" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-2015-12-23-TSDB-Kairosdb" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/12/24/2015-12-23-Kairosdb/" class="article-date">
+      <a href="/2015/12/24/2015-12-23-TSDB-Kairosdb/" class="article-date">
   	<time datetime="2015-12-23T16:00:00.000Z" itemprop="datePublished">2015-12-24</time>
 </a>
     </div>
@@ -187,7 +187,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Kairosdb
+      时间序列数据库之Kairosdb
     </h1>
   
 
@@ -202,7 +202,7 @@
 
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/timeseries/">timeseries</a></li></ul>
 	</div>
 
         <div class="clearfix"></div>
@@ -212,20 +212,49 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>A time series is a sequence of data points, typically consisting of successive measurements made over a time interval.<br><a id="more"></a><br>there are two major types of time-series data:  </p>
-<ul>
-<li>Regular – data that is sampled at regular intervals. For example every second, or every hour.</li>
-<li>Irregular – data that is only recorded when an event occurs, which might happen frequently, but always at completely random times.</li>
-</ul>
-<blockquote>
-<p>规则: 定时比如每秒钟,每小时抽样数据.<br>不规则: 当事件发生时才记录.  </p>
-</blockquote>
+        <p>A time series is a sequence of data points, typically consisting of successive measurements made over a time interval.<br><a id="more"></a></p>
 <h2 id="存储">存储</h2><p>添加数据支持telnet的4242端口或者rest的8080端口. 添加数据表示将要存储的指标数据入库.<br>telnet的格式: <code>put &lt;metric name&gt; &lt;time stamp&gt; &lt;value&gt; &lt;tag&gt; &lt;tag&gt;... \n</code>  </p>
 <p>比如要监控主机的load:  </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">now=$(($(date +%s%N)/<span class="number">1000000</span>))</span><br><span class="line">metric=load_value_<span class="built_in">test</span></span><br><span class="line">value=<span class="number">42</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"put <span class="variable">$metric</span> <span class="variable">$now</span> <span class="variable">$value</span> host=A"</span> | nc -w <span class="number">30</span> localhost <span class="number">4242</span></span><br></pre></td></tr></table></figure>
 <p>上面表示: 在主机host为A的机器上, 指标名称load_value_test, 在某个时间点(入库时一般是当前时间)的值是42.<br>对于相同的指标名称, 会收集很多个机器. 同样对于一台机器, 收集的指标也不止load,还有CPU等.  </p>
 <figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">put load <span class="variable">$now</span> <span class="number">42</span> host=<span class="number">192.168</span>.<span class="number">0</span>.<span class="number">10</span></span><br><span class="line">put load <span class="variable">$now</span> <span class="number">55</span> host=<span class="number">192.168</span>.<span class="number">0</span>.<span class="number">11</span></span><br><span class="line">put load <span class="variable">$now</span> <span class="number">60</span> host=<span class="number">192.168</span>.<span class="number">0</span>.<span class="number">12</span></span><br><span class="line"></span><br><span class="line">put cpu <span class="variable">$now</span> <span class="number">10</span> host=<span class="number">192.168</span>.<span class="number">0</span>.<span class="number">10</span></span><br><span class="line">put cpu <span class="variable">$now</span> <span class="number">29</span> host=<span class="number">192.168</span>.<span class="number">0</span>.<span class="number">11</span></span><br><span class="line">put cpu <span class="variable">$now</span> <span class="number">99</span> host=<span class="number">192.168</span>.<span class="number">0</span>.<span class="number">12</span></span><br></pre></td></tr></table></figure>
-<p>如果用rest方式表示:  </p>
+<blockquote>
+<p>下面的语法是InfluxDB和KairosDB的对比(针对指标只有一个值)</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>KairosDB</th>
+<th>InfluxDB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cpu 1434067467000 0.64 host=serverA,region=us_west</td>
+<td>cpu,host=serverA,region=us_west value=0.64 1434067467000</td>
+</tr>
+</tbody>
+</table>
+<p>其中对应的Schema:  </p>
+<table>
+<thead>
+<tr>
+<th>metric_name</th>
+<th>timestamp</th>
+<th>tags</th>
+<th>fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cpu</td>
+<td>1434067467000</td>
+<td>host=serverA,region=us_west</td>
+<td>0.64/value=0.64</td>
+</tr>
+</tbody>
+</table>
+<p>KairosDB也支持rest方式表示(HTTP POST)存储数据:  </p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[&#123;</span><br><span class="line">    "<span class="attribute">name</span>": <span class="value"><span class="string">"load"</span></span>,</span><br><span class="line">    "<span class="attribute">timestamp</span>": <span class="value"><span class="number">1349109376</span></span>,</span><br><span class="line">    "<span class="attribute">type</span>": <span class="value"><span class="string">"long"</span></span>,</span><br><span class="line">    "<span class="attribute">value</span>": <span class="value"><span class="number">42</span></span>,</span><br><span class="line">    "<span class="attribute">tags</span>":<span class="value">&#123;"<span class="attribute">host</span>":<span class="value"><span class="string">"192.168.0.10"</span></span>&#125;</span><br><span class="line"></span>&#125;,</span><br><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">name</span>": <span class="value"><span class="string">"cpu"</span></span>,</span><br><span class="line">    "<span class="attribute">timestamp</span>": <span class="value"><span class="number">1349109376</span></span>,</span><br><span class="line">    "<span class="attribute">type</span>": <span class="value"><span class="string">"long"</span></span>,</span><br><span class="line">    "<span class="attribute">value</span>": <span class="value"><span class="number">10</span></span>,</span><br><span class="line">    "<span class="attribute">tags</span>":<span class="value">&#123;"<span class="attribute">host</span>":<span class="value"><span class="string">"192.168.0.10"</span></span>&#125;</span><br><span class="line"></span>&#125;]</span><br></pre></td></tr></table></figure>
 <h2 id="DataPoints">DataPoints</h2><blockquote>
 <p>Data points have a metric name, a value, a timestamp, and a list of one or more tags.<br>Tags are named properties that identify the data, such as its type and where it comes from.<br>You can either use “timestamp” with “value” for a single data point or you can use “datapoints” to post multiple data points.  </p>
@@ -236,6 +265,8 @@
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">name</span>": <span class="value"><span class="string">"load"</span></span>,</span><br><span class="line">    "<span class="attribute">datapoints</span>": <span class="value">[[<span class="number">1359788400000</span>, <span class="number">123</span>], [<span class="number">1359788300000</span>, <span class="number">13.2</span>], [<span class="number">1359788410000</span>, <span class="number">23.1</span>]]</span>,</span><br><span class="line">    "<span class="attribute">tags</span>": <span class="value">&#123;</span><br><span class="line">        "<span class="attribute">host</span>": <span class="value"><span class="string">"server1"</span></span>,</span><br><span class="line">        "<span class="attribute">data_center</span>": <span class="value"><span class="string">"DC1"</span></span><br><span class="line">    </span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
 <p>如果指标名称对应的值有多个组成, datapoints的value也可以用多个来表示:<br>下面表示指标名称为阻抗,指标值是一个复数(实数和虚数). 所以每个时间点的value又是一个json结构.  </p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">name</span>": <span class="value"><span class="string">"impedance"</span></span>,</span><br><span class="line">    "<span class="attribute">type</span>": <span class="value"><span class="string">"complex-number"</span></span>,</span><br><span class="line">    "<span class="attribute">datapoints</span>": <span class="value">[</span><br><span class="line">        [<span class="number">1359788400000</span>,&#123;"<span class="attribute">real</span>": <span class="value"><span class="number">2.3</span></span>,"<span class="attribute">imaginary</span>": <span class="value"><span class="number">3.4</span></span>&#125;],</span><br><span class="line">        [<span class="number">1359788300000</span>,&#123;"<span class="attribute">real</span>": <span class="value"><span class="number">1.1</span></span>,"<span class="attribute">imaginary</span>": <span class="value"><span class="number">5.2</span></span>&#125;]</span><br><span class="line">    ]</span>,</span><br><span class="line">    "<span class="attribute">tags</span>": <span class="value">&#123;</span><br><span class="line">        "<span class="attribute">host</span>": <span class="value"><span class="string">"server1"</span></span>,</span><br><span class="line">        "<span class="attribute">data_center</span>": <span class="value"><span class="string">"DC1"</span></span><br><span class="line">    </span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<p>如果用InfluxDB的Schema表示:  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">impedance,host=server1,data_center=DC1 real=<span class="number">2.3</span>,imaginary=<span class="number">3.4</span> <span class="number">1359788400000</span></span><br><span class="line">impedance,host=server1,data_center=DC1 real=<span class="number">1.1</span>,imaginary=<span class="number">5.2</span> <span class="number">1359788300000</span></span><br></pre></td></tr></table></figure>
 <h2 id="查询">查询</h2><p>假设前面要监控的所有主机都存储有load这个指标.下面查询过去20分钟内指标名称为”负载”的记录,就会把所有主机的负载都显示出来.  </p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">start_relative</span>":<span class="value">&#123;"<span class="attribute">value</span>":<span class="value"><span class="number">20</span></span>,"<span class="attribute">unit</span>":<span class="value"><span class="string">"minutes"</span></span>&#125;</span>,</span><br><span class="line">  "<span class="attribute">metrics</span>": <span class="value">[</span><br><span class="line">    &#123;</span><br><span class="line">      "<span class="attribute">name</span>": <span class="value"><span class="string">"load"</span></span><br><span class="line">    </span>&#125;</span><br><span class="line">  ]</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
@@ -264,12 +295,12 @@
 <p>由于每一个时刻都会有data point数据点产生,sampling是对数据进行取样.假设sampling是一分钟.则如何把每个时刻的数据点放在对应的Range里.<br>以监控为例,监控图要展示一分钟的CPU,Load,IO等信息. 由于每个时间点(假设每秒钟)都会产生一条数据.聚合时要对属于同一分钟的数据进行聚合.  </p>
 <h2 id="Cassandra_Schema">Cassandra Schema</h2><p>有三张表(ColumnFamily)来存储时间序列数据.   </p>
 <ul>
-<li>data_points - where the data is kept.</li>
-<li>row_key_index - index to lookup what rows to get during a query.</li>
-<li>string_index - used to answer the query of what tags and metrics are in the system.</li>
+<li><code>data_points</code> - where the data is kept.</li>
+<li><code>row_key_index</code> - index to lookup what rows to get during a query.</li>
+<li><code>string_index</code> - used to answer the query of what tags and metrics are in the system.</li>
 </ul>
-<p>data_points是存储原始数据, row_key_index是row_key的索引, 实际上索引的是data_points的数据. string_index没什么用.  </p>
-<p>data_points的row-key由下面几个部分组成:  </p>
+<p><code>data_points</code>是存储原始数据, <code>row_key_index</code>是row_key的索引, 实际上索引的是<code>data_points</code>的数据. <code>string_index</code>没什么用.  </p>
+<p><code>data_points</code>的row-key由下面几个部分组成:  </p>
 <ul>
 <li>Metric name (UTF-8)</li>
 <li>Row time stamp. The time stamp for the row to begin at.</li>
@@ -277,11 +308,11 @@
 <li>Concatenated string of tags (tag1=val1:tag2=val2…)</li>
 </ul>
 <p>列名是相对row-key中的timestamp的time offset. 列的值是指标的值.  </p>
-<p>|row-key|time1(0)|time2(1000)|…|<br>|——-|————|————|…|<br>|load:12345678000:host=server1|20|45|…|<br>|load:12345678000:host=server2|10|43|…|<br>|cpu:12345678000:host=server1|33|57|…|</p>
+<p>|row-key|time1(0)|time2(1000)|…|<br>|——-|——–|———–|…|<br>|load:12345678000:host=server1|20|45|…|<br>|load:12345678000:host=server2|10|43|…|<br>|cpu:12345678000:host=server1|33|57|…|</p>
 <blockquote>
 <p>row-key中的timestamp记录的是第一条记录的时间撮,所以time1(0)表示的是12345678000时刻, 这个点的load=20.<br>time2(100)表示的是12345678000+100=123456781000时刻, 主机为server1的指标load值为45.<br>这种存储方式对于同一个tag,相同的指标(metric_name),即使每一毫秒记录一次,最长能记录3周(如果一秒一条,则3000周!).<br>注意到列名是时间撮的偏移量(毫秒). 并不是相同指标相同tag分成多行,这里分成多列!  </p>
 </blockquote>
-<p>row_key_index表的row_key是metric_name. 列名是data_points的row_key.  </p>
+<p><code>row_key_index</code>表的row_key是metric_name. 列名是data_points的row_key.  </p>
 <table>
 <thead>
 <tr>
@@ -312,6 +343,9 @@
 </blockquote>
 <p>查询一般会给出metric_name,所以先在row_key_index中查询metric_name对应的列.<br>如果查询时指定了tag,会只过滤出来指定tag的row_keys. 得到row_keys后会多线程读取data_points中的记录.<br>从上面的表结构可以看出row_key_index的列相当于外键. 不过index这个词也很符合,是对row_key进行索引.  </p>
 <figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">             row_key_index            data_points</span><br><span class="line">metric_name  ============&gt;  row_key   ===========&gt; query time-range metric <span class="keyword">value</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>对比InfluxDB, Influx中把每个metric_name当做一个Table. 类似于这里的row_key_index表(主键是metric_name).<br>不同的是data_points表. K的row_key包含了metric_name,时间撮,tag. 列名是timestamp,列的值是指标值.<br>而InfluxDB表的row_key是timestamp, 而tag和field都作为列.<br>K如果相同metric相同timestamp, 但是有多个tag,最终会形成多条row_key记录.<br>而I对于同一个row_key(相同timestamp), 多个tag会形成多个列, 但只有一行.  </p>
+</blockquote>
 <h2 id="数据存储流程">数据存储流程</h2><p>KairosDatastore的putDataPoint会调用底层存储,首先写到缓冲区,待缓冲区满了再刷新到存储层.<br>添加一个数据点: 指标名称metric_name, tag标签集合, 数据点(数据类型,指标的具体值). </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">putDataPoint</span><span class="params">(String metricName, ImmutableSortedMap&lt;String, String&gt; tags, DataPoint dataPoint, <span class="keyword">int</span> ttl)</span> <span class="keyword">throws</span> DatastoreException </span>&#123;</span><br><span class="line">  m_datastore.putDataPoint(metricName, tags, dataPoint, ttl);</span><br><span class="line">  <span class="keyword">for</span> (DataPointListener dataPointListener : m_dataPointListeners) &#123;</span><br><span class="line">    dataPointListener.dataPoint(metricName, tags, dataPoint);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>底层存储是Cassandra,对应的存储实现是CassandraDatastore. 由于一条记录要写到三张表中.<br>分别使用了三个缓冲区m_rowKeyWriteBuffer,m_stringIndexWriteBuffer,m_dataPointWriteBuffer.  </p>
@@ -336,13 +370,13 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2015/12/24/2015-12-23-Kairosdb/">Kairosdb</a></p>
+  <p><span>本文标题:</span><a href="/2015/12/24/2015-12-23-TSDB-Kairosdb/">时间序列数据库之Kairosdb</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月24日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月24日 - 23时56分</p>
+  <p><span>最后更新:</span>2015年12月27日 - 16时35分</p>
   <p>
-    <span>原始链接:</span><a href="/2015/12/24/2015-12-23-Kairosdb/" title="Kairosdb">http://github.com/zqhxuyuan/2015/12/24/2015-12-23-Kairosdb/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/24/2015-12-23-Kairosdb/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2015/12/24/2015-12-23-TSDB-Kairosdb/" title="时间序列数据库之Kairosdb">http://github.com/zqhxuyuan/2015/12/24/2015-12-23-TSDB-Kairosdb/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/24/2015-12-23-TSDB-Kairosdb/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -366,6 +400,12 @@
 
 
 <nav id="article-nav">
+  
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2015/12/24/2015-12-25-TSDB-OpenTSDB/">
+        时间序列数据库之OpenTSDB
+      </a>
+    </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
@@ -452,14 +492,16 @@
 
   
   
+    
     <div  class="post-nav-button">
-    <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+    <a href="/2015/12/24/2015-12-25-TSDB-OpenTSDB/" title="上一篇: 时间序列数据库之OpenTSDB">
+    <i class="fa fa-angle-left"></i>
+    </a>
     <a href="/2015/12/23/2015-12-23-HBase-QA/" title="下一篇: HBase QA">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
   
-    
 
 
 
