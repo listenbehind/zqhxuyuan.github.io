@@ -16,7 +16,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20151217221834509">
 <meta property="og:image" content="http://img.blog.csdn.net/20151217221852624">
 <meta property="og:image" content="http://img.blog.csdn.net/20151218215321046">
-<meta property="og:updated_time" content="2015-12-25T14:31:38.000Z">
+<meta property="og:updated_time" content="2015-12-29T01:42:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HBase BulkLoad">
 <meta name="twitter:description" content="HBase的BulkLoad分成了两个过程: MR生成HFile, 导入HFile到HBase集群">
@@ -302,7 +302,7 @@
 </table>
 <p>数据量有点大,所以考虑把这些数据的副本数都设置为1,减少数据的占用空间.    </p>
 <p>To set replication of an individual file to 4:  <code>hadoop fs -setrep -w 4 /path/to/file</code><br>You can also do this recursively. To change replication of entire HDFS to 1: <code>hadoop fs -setrep -R -w 1 /</code></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /hbase/data/<span class="keyword">default</span>/data.md5_mob2 &amp;</span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /hbase/data/<span class="keyword">default</span>/data.md5_id2 &amp;</span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /user/tongdun/id_mdf* &amp;</span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /user/tongdun/id_hbase* &amp;</span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /user/tongdun/mob_mdf_tmp* &amp; </span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /user/tongdun/mob_hbase &amp;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /hbase/data/<span class="keyword">default</span> &amp;</span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /user/tongdun/id_mdf* &amp;</span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /user/tongdun/id_hbase* &amp;</span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /user/tongdun/mob_mdf_tmp* &amp; </span><br><span class="line">nohup hadoop fs -setrep -R -w <span class="number">1</span> /user/tongdun/mob_hbase &amp;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>-R选项表示递归,所以最后面的参数可以是文件夹.  </p>
 </blockquote>
@@ -325,7 +325,7 @@
   <p><span>本文标题:</span><a href="/2015/12/19/2015-12-19-HBase-BulkLoad/">HBase BulkLoad</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月19日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月25日 - 22时31分</p>
+  <p><span>最后更新:</span>2015年12月29日 - 09时42分</p>
   <p>
     <span>原始链接:</span><a href="/2015/12/19/2015-12-19-HBase-BulkLoad/" title="HBase BulkLoad">http://github.com/zqhxuyuan/2015/12/19/2015-12-19-HBase-BulkLoad/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/19/2015-12-19-HBase-BulkLoad/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
