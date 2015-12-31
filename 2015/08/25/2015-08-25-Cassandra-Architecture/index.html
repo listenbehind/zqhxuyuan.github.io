@@ -23,7 +23,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20150830143325616">
 <meta property="og:image" content="http://img.blog.csdn.net/20150830142830995">
 <meta property="og:image" content="http://img.blog.csdn.net/20150830142843701">
-<meta property="og:updated_time" content="2015-12-19T06:29:15.000Z">
+<meta property="og:updated_time" content="2015-12-30T13:41:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Apache Cassandra架构理解">
 <meta name="twitter:description" content="Cassandra的架构理解,关键概念,客户端请求,读写流程">
@@ -122,7 +122,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/timeseries/" style="font-size: 13.33px;">timeseries</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/drill/" style="font-size: 18px;">drill</a> <a href="/tags/druid/" style="font-size: 14px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/storm/" style="font-size: 16px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12px;">timeseries</a> <a href="/tags/work/" style="font-size: 12px;">work</a>
 					</div>
 				</section>
 				
@@ -317,7 +317,7 @@
 <li>NetworkTopologyStrategy：可用于较复杂的多数据中心。可以指定在每个数据中心分别存储多少份replicas。  </li>
 </ul>
 <p>复制策略在创建keyspace时指定，如  </p>
-<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CREATEKEYSPACE Excelsior <span class="keyword">WITH</span> REPLICATION = &#123; <span class="string">'class'</span> : <span class="string">'SimpleStrategy'</span>,<span class="string">'replication_factor'</span> : <span class="number">3</span> &#125;<span class="comment">;  </span></span><br><span class="line">CREATEKEYSPACE Excalibur <span class="keyword">WITH</span> REPLICATION = &#123;<span class="string">'class'</span> :<span class="string">'NetworkTopologyStrategy'</span>, <span class="string">'dc1'</span> : <span class="number">3</span>, <span class="string">'dc2'</span> : <span class="number">2</span>&#125;<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> KEYSPACE Excelsior <span class="keyword">WITH</span> <span class="keyword">REPLICATION</span> = &#123; <span class="string">'class'</span> : <span class="string">'SimpleStrategy'</span>,<span class="string">'replication_factor'</span> : <span class="number">3</span> &#125;;</span>  </span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> KEYSPACE Excalibur <span class="keyword">WITH</span> <span class="keyword">REPLICATION</span> = &#123;<span class="string">'class'</span> :<span class="string">'NetworkTopologyStrategy'</span>, <span class="string">'dc1'</span> : <span class="number">3</span>, <span class="string">'dc2'</span> : <span class="number">2</span>&#125;;</span></span><br></pre></td></tr></table></figure>
 <p>其中dc1、dc2这些数据中心名称要与snitch中配置的名称一致.上面的拓扑策略表示在dc1配置3个副本,在dc2配置2个副本</p>
 <h3 id="Partitioners">Partitioners</h3><p>在Cassandra中，table的每行由唯一的primarykey标识，<code>partitioner</code>实际上为<code>一hash函数</code>用以<code>计算primary key的token</code>。Cassandra依据这个token值在集群中放置对应的行<br>注意：若使用虚拟节点(vnodes)则无需手工计算tokens。若不使用虚拟节点则必须手工计算tokens将所得的值指派给cassandra.ymal主配置文件中的initial_token参数  </p>
 <h2 id="客户端请求">客户端请求</h2><p>client连接至节点并发出read/write请求时，该节点充当client端应用与包含请求数据的节点(或replica)之间的协调者，<br>它利用配置的partitioner和replicaplacement策略确定那个节点当获取请求。</p>
@@ -388,7 +388,7 @@
   <p><span>本文标题:</span><a href="/2015/08/25/2015-08-25-Cassandra-Architecture/">Apache Cassandra架构理解</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年08月25日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月19日 - 14时29分</p>
+  <p><span>最后更新:</span>2015年12月30日 - 21时41分</p>
   <p>
     <span>原始链接:</span><a href="/2015/08/25/2015-08-25-Cassandra-Architecture/" title="Apache Cassandra架构理解">http://github.com/zqhxuyuan/2015/08/25/2015-08-25-Cassandra-Architecture/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/08/25/2015-08-25-Cassandra-Architecture/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -417,8 +417,8 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2015/08/28/2015-08-28-Cassandra-Migration1_NewCluster/">
-        Cassandra数据迁移1 新集群sstableloader
+      <a href="/2015/08/28/2015-08-28-Cassandra-Migration2_DC2/">
+        Cassandra数据迁移2 多数据中心数据迁移
       </a>
     </div>
   
@@ -509,7 +509,7 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2015/08/28/2015-08-28-Cassandra-Migration1_NewCluster/" title="上一篇: Cassandra数据迁移1 新集群sstableloader">
+    <a href="/2015/08/28/2015-08-28-Cassandra-Migration2_DC2/" title="上一篇: Cassandra数据迁移2 多数据中心数据迁移">
     <i class="fa fa-angle-left"></i>
     </a>
     <a href="/2015/08/25/2015-08-25-Apache-Cassandra/" title="下一篇: Apache Cassandra入门">
