@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Kafka源码分析 Producer客户端 | zqhxuyuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Kafka的Producer新旧客户端API实现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka源码分析 Producer客户端">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/01/06/2016-01-06-Kafka/index.html">
+<meta property="og:site_name" content="zqhxuyuan">
+<meta property="og:description" content="Kafka的Producer新旧客户端API实现">
+<meta property="og:image" content="http://kafka.apache.org/images/producer_consumer.png">
+<meta property="og:updated_time" content="2016-01-08T09:05:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kafka源码分析 Producer客户端">
+<meta name="twitter:description" content="Kafka的Producer新旧客户端API实现">
+  
+    <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">任何忧伤,都抵不过世界的美丽</a></h1>
+		</hgroup>
+
+		
+				
+
+
+		
+			<div id="switch-btn" class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div id="switch-area" class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives/">归档</a></li>
+				        
+							<li><a href="/tags/">标签</a></li>
+				        
+							<li><a href="/about/">关于</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 18px;">drill</a> <a href="/tags/druid/" style="font-size: 14px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 10px;">kafka</a> <a href="/tags/scala/" style="font-size: 12px;">scala</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/storm/" style="font-size: 16px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12px;">timeseries</a> <a href="/tags/work/" style="font-size: 12px;">work</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">BIG(DATA)</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="/" class="profilepic">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			</a>
+			<hgroup>
+			  <h1 class="header-author"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives/">归档</a></li>
+		        
+					<li><a href="/tags/">标签</a></li>
+		        
+					<li><a href="/about/">关于</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-2016-01-06-Kafka" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/06/2016-01-06-Kafka/" class="article-date">
+  	<time datetime="2016-01-05T16:00:00.000Z" itemprop="datePublished">2016-01-06</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Kafka源码分析 Producer客户端
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Source/">Source</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>Kafka的Producer新旧客户端API实现<br><a id="more"></a></p>
+<h2 id="Producer">Producer</h2><p>生产者线程:异步发送消息,提供一个Callback;同步发送消息,则调用Future.get()会Block住直到结果返回.  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Producer</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> KafkaProducer&lt;Integer, String&gt; producer;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String topic;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Boolean isAsync;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Producer</span><span class="params">(String topic, Boolean isAsync)</span> </span>&#123;</span><br><span class="line">        Properties props = <span class="keyword">new</span> Properties();</span><br><span class="line">        props.put(<span class="string">"bootstrap.servers"</span>, <span class="string">"localhost:9092"</span>);</span><br><span class="line">        props.put(<span class="string">"client.id"</span>, <span class="string">"DemoProducer"</span>);</span><br><span class="line">        props.put(<span class="string">"key.serializer"</span>, <span class="string">"org.apache.kafka.common.serialization.IntegerSerializer"</span>);</span><br><span class="line">        props.put(<span class="string">"value.serializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringSerializer"</span>);</span><br><span class="line">        producer = <span class="keyword">new</span> KafkaProducer&lt;Integer, String&gt;(props);</span><br><span class="line">        <span class="keyword">this</span>.topic = topic;</span><br><span class="line">        <span class="keyword">this</span>.isAsync = isAsync;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> messageNo = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            String messageStr = <span class="string">"Message_"</span> + messageNo;</span><br><span class="line">            <span class="keyword">if</span> (isAsync) &#123;  <span class="comment">// Send asynchronously</span></span><br><span class="line">                producer.send(<span class="keyword">new</span> ProducerRecord&lt;Integer, String&gt;(topic, messageNo, messageStr), <span class="keyword">new</span> Callback() &#123;</span><br><span class="line">                        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCompletion</span><span class="params">(RecordMetadata metadata, Exception e)</span> </span>&#123;</span><br><span class="line">                            System.out.println(<span class="string">"The offset of the record we just sent is: "</span> + metadata.offset());</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;        <span class="comment">// Send synchronously</span></span><br><span class="line">                producer.send(<span class="keyword">new</span> ProducerRecord&lt;Integer, String&gt;(topic, messageNo, messageStr)).get();</span><br><span class="line">            &#125;</span><br><span class="line">            ++messageNo;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>KafkaProducer需要指定消息Key,Value的类型<integer,string>. ProducerRecord还需要指定topic.</integer,string></li>
+<li>根据配置文件创建KafkaProducer, 指定了Broker地址, Key,Value的序列化方式, 消息必须要指定topic</li>
+<li>发送消息的返回结果RecordMetadata记录元数据包括了消息的offset(在哪个partition的哪里offset)</li>
+</ul>
+<p><strong>blocking vs non-blocking</strong>  </p>
+<p>KafkaProducer.send方法返回的是一个Future,那么它如何同时实现blocking方式和non-blocking方式.  </p>
+<ul>
+<li>blocking: 在调用send返回Future时, 立即调用get, 因为Future.get在没有返回结果时会一直阻塞</li>
+<li>non-block: 提供一个callback,调用send后,可以继续发送消息而不用等之前的消息返回结果.当有结果返回时,callback会被自动通知执行</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Future&lt;RecordMetadata&gt; <span class="title">send</span><span class="params">(ProducerRecord&lt;K, V&gt; record, Callback callback)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// first make sure the metadata for the topic is available</span></span><br><span class="line">        <span class="keyword">long</span> waitedOnMetadataMs = waitOnMetadata(record.topic(), <span class="keyword">this</span>.maxBlockTimeMs);</span><br><span class="line">        <span class="keyword">long</span> remainingWaitMs = Math.max(<span class="number">0</span>, <span class="keyword">this</span>.maxBlockTimeMs - waitedOnMetadataMs);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//序列化key和value</span></span><br><span class="line">        <span class="keyword">byte</span>[] serializedKey= keySerializer.serialize(record.topic(), record.key());</span><br><span class="line">        <span class="keyword">byte</span>[] serializedValue = valueSerializer.serialize(record.topic(), record.value());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> partition = partition(record, serializedKey, serializedValue, metadata.fetch());</span><br><span class="line">        TopicPartition tp = <span class="keyword">new</span> TopicPartition(record.topic(), partition);</span><br><span class="line">        RecordAccumulator.RecordAppendResult result = accumulator.append(tp, serializedKey, serializedValue, callback, remainingWaitMs);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (result.batchIsFull || result.newBatchCreated) &#123;</span><br><span class="line">            log.trace(<span class="string">"Waking up the sender since topic &#123;&#125; partition &#123;&#125; is either full or getting a new batch"</span>, record.topic(), partition);</span><br><span class="line">            <span class="keyword">this</span>.sender.wakeup();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result.future;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在发送消息前, 消息所属的topic是已经建好的. 我们知道topic会分成多个partition,所以每一条消息都只会存储在指定的partition中.<br>所以<code>Topic</code>, <code>Partition</code>, <code>Key</code>, <code>Value</code>就能表示<code>消息</code>发送到哪个<code>topic</code>的哪个<code>partition</code>上. </p>
+<p><strong>partition</strong>  </p>
+<p>消息所属的partition,需要知道topic一共有多少个partition,而这是在创建topic时就指定好的.<br>所以metadata.fetch获得的Cluster信息中有topic-&gt;partitions的映射关系.<br>消息有key的话,对key进行hash,然后和partitions数量取模,类似于round-robin的方式来确定key所在的partition达到负载均衡.<br>如果消息没有key, 会根据递增的counter的值确定partition, count不断递增,确保消息不会都发到同一个partition里.  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(String topic, Object key, <span class="keyword">byte</span>[] keyBytes, Object value, <span class="keyword">byte</span>[] valueBytes, Cluster cluster)</span> </span>&#123;</span><br><span class="line">    List&lt;PartitionInfo&gt; partitions = cluster.partitionsForTopic(topic);</span><br><span class="line">    <span class="keyword">int</span> numPartitions = partitions.size();</span><br><span class="line">    <span class="keyword">if</span> (keyBytes == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> nextValue = counter.getAndIncrement();</span><br><span class="line">        List&lt;PartitionInfo&gt; availablePartitions = cluster.availablePartitionsForTopic(topic);</span><br><span class="line">        <span class="keyword">if</span> (availablePartitions.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> part = DefaultPartitioner.toPositive(nextValue) % availablePartitions.size();</span><br><span class="line">            <span class="keyword">return</span> availablePartitions.get(part).partition();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// no partitions are available, give a non-available partition</span></span><br><span class="line">            <span class="keyword">return</span> DefaultPartitioner.toPositive(nextValue) % numPartitions;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// hash the keyBytes to choose a partition</span></span><br><span class="line">        <span class="keyword">return</span> DefaultPartitioner.toPositive(Utils.murmur2(keyBytes)) % numPartitions;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>RecordAccumulator</strong>  </p>
+<p>由于生产者发送消息是异步地,所以可以将多条消息缓存起来,等到一定时机批量地写入到Kafka集群中,RecordAccumulator就扮演了缓冲者的角色.<br>生产者每生产一条消息,就向accumulator中追加一条消息,并且要返回本次追加是否导致batch满了,如果batch满了,则开始发送这一批数据.  </p>
+<p><strong>Sender</strong></p>
+<p>RecordAccumulator.RecordAppendResult的batch满了,唤醒Sender线程.Sender线程的启动在创建KafkaProducer时.<br>Sender再唤醒NetworkClient(不是线程,相当于通知客户端开始服务了),client也唤醒Selector,最终唤醒NIO的Selector.  </p>
+<blockquote>
+<p>为什么需要有wakeup动作:因为可能有线程在select等待事件被阻塞了(没有事件),通过wakeup唤醒那个线程开始工作(有事件进来了)</p>
+</blockquote>
+<p>Sender不仅承载了RecordAccumulator记录的收集器,也要通知客户端服务:把Accumulator收集的批记录通过客户端发送出去.<br>Sender作为一个线程,是在后台不断运行的,如果线程被停止,可能RecordAccumulator中还有数据没有发送出去,所以要优雅地停止.  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (running) &#123;</span><br><span class="line">        run(time.milliseconds());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (!forceClose &amp;&amp; (<span class="keyword">this</span>.accumulator.hasUnsent() || <span class="keyword">this</span>.client.inFlightRequestCount() &gt; <span class="number">0</span>)) &#123;</span><br><span class="line">        run(time.milliseconds());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.client.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>发送消息的工作统一由Sender来控制.上面的wakeup只是一个通知,实际的工作还是有线程的run方法来控制的.<br>同样调用client.send也只是把请求先放到队列中, client.poll才是会将读写真正发送到socket链路上.  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">(<span class="keyword">long</span> now)</span> </span>&#123;</span><br><span class="line">    Cluster cluster = metadata.fetch();</span><br><span class="line">    <span class="comment">// get the list of partitions with data ready to send</span></span><br><span class="line">    RecordAccumulator.ReadyCheckResult result = <span class="keyword">this</span>.accumulator.ready(cluster, now);</span><br><span class="line">    <span class="comment">// remove any nodes we aren't ready to send to</span></span><br><span class="line">    Iterator&lt;Node&gt; iter = result.readyNodes.iterator();</span><br><span class="line">    <span class="keyword">long</span> notReadyTimeout = Long.MAX_VALUE;</span><br><span class="line">    <span class="keyword">while</span> (iter.hasNext()) &#123;</span><br><span class="line">        Node node = iter.next();</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.client.ready(node, now)) &#123;    <span class="comment">// 这里会建立到Leader的Socket连接!</span></span><br><span class="line">            iter.remove();</span><br><span class="line">            notReadyTimeout = Math.min(notReadyTimeout, <span class="keyword">this</span>.client.connectionDelay(node, now));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// create produce requests</span></span><br><span class="line">    Map&lt;Integer, List&lt;RecordBatch&gt;&gt; batches = <span class="keyword">this</span>.accumulator.drain(cluster, result.readyNodes, <span class="keyword">this</span>.maxRequestSize, now);</span><br><span class="line">    <span class="comment">// Transfer the record batches into a list of produce requests on a per-node basis</span></span><br><span class="line">    List&lt;ClientRequest&gt; requests = createProduceRequests(batches, now);</span><br><span class="line">    <span class="keyword">long</span> pollTimeout = Math.min(result.nextReadyCheckDelayMs, notReadyTimeout);</span><br><span class="line">    <span class="comment">// Queue up the given request for sending. Requests can only be sent out to ready nodes.</span></span><br><span class="line">    <span class="keyword">for</span> (ClientRequest request : requests)</span><br><span class="line">        client.send(request, now);</span><br><span class="line">    <span class="comment">// Do actual reads and writes to sockets.</span></span><br><span class="line">    <span class="keyword">this</span>.client.poll(pollTimeout, now);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>发送线程要能够正常发送数据给集群节点,首先需要建立到Leader的连接,所以判断目标节点是否准备好就是直接让客户端连接节点</p>
+</blockquote>
+<p>accumulator在之前一直append数据,到真正要发送一批数据时, 先准备(ready)需要发送的partitions到哪些Nodes上.<br>然后构造每个Node需要的RecordBatch列表(一个节点同时可以接受多批数据),并转换为ClientRequest(&lt;-RequestSend&lt;-ProduceRequest).<br>RequestSend需要指定目标节点(partition的Leader节点),请求头(header:ApiKeys.PRODUCE),请求内容(struct:ProduceRequest).  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> ClientRequest <span class="title">produceRequest</span><span class="params">(<span class="keyword">long</span> now, <span class="keyword">int</span> destination, <span class="keyword">short</span> acks, <span class="keyword">int</span> timeout, List&lt;RecordBatch&gt; batches)</span> </span>&#123;</span><br><span class="line">    Map&lt;TopicPartition, ByteBuffer&gt; produceRecordsByPartition = <span class="keyword">new</span> HashMap&lt;TopicPartition, ByteBuffer&gt;(batches.size());</span><br><span class="line">    <span class="keyword">final</span> Map&lt;TopicPartition, RecordBatch&gt; recordsByPartition = <span class="keyword">new</span> HashMap&lt;TopicPartition, RecordBatch&gt;(batches.size());</span><br><span class="line">    <span class="keyword">for</span> (RecordBatch batch : batches) &#123;</span><br><span class="line">        TopicPartition tp = batch.topicPartition;</span><br><span class="line">        produceRecordsByPartition.put(tp, batch.records.buffer());</span><br><span class="line">        recordsByPartition.put(tp, batch);</span><br><span class="line">    &#125;</span><br><span class="line">    ProduceRequest request = <span class="keyword">new</span> ProduceRequest(acks, timeout, produceRecordsByPartition);</span><br><span class="line">    RequestSend send = <span class="keyword">new</span> RequestSend(Integer.toString(destination), <span class="keyword">this</span>.client.nextRequestHeader(ApiKeys.PRODUCE), request.toStruct());</span><br><span class="line">    RequestCompletionHandler callback = <span class="keyword">new</span> RequestCompletionHandler() &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onComplete</span><span class="params">(ClientResponse response)</span> </span>&#123;</span><br><span class="line">            handleProduceResponse(response, recordsByPartition, time.milliseconds());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ClientRequest(now, acks != <span class="number">0</span>, send, callback);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>NetworkClient</strong>  </p>
+<p>send动作将ClientRequest添加到队列inFlightRequests用来缓冲请求,<br>然后触发Selector-&gt;KafkaChannel-&gt;transportLayer添加<code>OP_WRITE</code>写事件通知<br>poll动作也将实际处理交给Selector,客户端服务于读和写,即发送和接收.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">doSend</span><span class="params">(ClientRequest request, <span class="keyword">long</span> now)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.inFlightRequests.add(request);</span><br><span class="line">    selector.send(request.request());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;ClientResponse&gt; <span class="title">poll</span><span class="params">(<span class="keyword">long</span> timeout, <span class="keyword">long</span> now)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">long</span> metadataTimeout = metadataUpdater.maybeUpdate(now);</span><br><span class="line">    <span class="keyword">this</span>.selector.poll(Utils.min(timeout, metadataTimeout, requestTimeoutMs));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// process completed actions</span></span><br><span class="line">    <span class="keyword">long</span> updatedNow = <span class="keyword">this</span>.time.milliseconds();</span><br><span class="line">    List&lt;ClientResponse&gt; responses = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    handleCompletedSends(responses, updatedNow);    <span class="comment">//完成发送的handler</span></span><br><span class="line">    handleCompletedReceives(responses, updatedNow); <span class="comment">//完成接收的handler</span></span><br><span class="line">    handleDisconnections(responses, updatedNow);    <span class="comment">//断开连接的handler</span></span><br><span class="line">    handleConnections();                            <span class="comment">//处理连接的handler</span></span><br><span class="line">    handleTimedOutRequests(responses, updatedNow);  <span class="comment">//超时请求的handler</span></span><br><span class="line">    <span class="comment">// invoke callbacks</span></span><br><span class="line">    <span class="keyword">for</span> (ClientResponse response : responses) &#123;     <span class="comment">//触发回调函数的调用</span></span><br><span class="line">        <span class="keyword">if</span> (response.request().hasCallback()) &#123;</span><br><span class="line">            response.request().callback().onComplete(response);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> responses;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Selector在每次轮询调用之后,都会触发读写请求的完成handler,并添加到responses,用于回调函数的参数.  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Handle any completed request send. In particular if no response is expected consider the request complete.</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">handleCompletedSends</span><span class="params">(List&lt;ClientResponse&gt; responses, <span class="keyword">long</span> now)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// if no response is expected then when the send is completed, return it</span></span><br><span class="line">    <span class="keyword">for</span> (Send send : <span class="keyword">this</span>.selector.completedSends()) &#123;</span><br><span class="line">        ClientRequest request = <span class="keyword">this</span>.inFlightRequests.lastSent(send.destination());</span><br><span class="line">        <span class="keyword">if</span> (!request.expectResponse()) &#123;</span><br><span class="line">            <span class="keyword">this</span>.inFlightRequests.completeLastSent(send.destination());</span><br><span class="line">            responses.add(<span class="keyword">new</span> ClientResponse(request, now, <span class="keyword">false</span>, <span class="keyword">null</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Handle any completed receives and update the response list with the responses received.</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">handleCompletedReceives</span><span class="params">(List&lt;ClientResponse&gt; responses, <span class="keyword">long</span> now)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (NetworkReceive receive : <span class="keyword">this</span>.selector.completedReceives()) &#123;</span><br><span class="line">        String source = receive.source();</span><br><span class="line">        ClientRequest req = inFlightRequests.completeNext(source);</span><br><span class="line">        ResponseHeader header = ResponseHeader.parse(receive.payload());</span><br><span class="line">        <span class="comment">// Always expect the response version id to be the same as the request version id</span></span><br><span class="line">        <span class="keyword">short</span> apiKey = req.request().header().apiKey();</span><br><span class="line">        <span class="keyword">short</span> apiVer = req.request().header().apiVersion();</span><br><span class="line">        Struct body = ProtoUtils.responseSchema(apiKey, apiVer).read(receive.payload());</span><br><span class="line">        correlate(req.request().header(), header);</span><br><span class="line">        <span class="keyword">if</span> (!metadataUpdater.maybeHandleCompletedReceive(req, now, body))</span><br><span class="line">            responses.add(<span class="keyword">new</span> ClientResponse(req, now, <span class="keyword">false</span>, body));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Selector</strong></p>
+<p>轮询的策略是如果有数据(timeout=0)直接调用nioSelector.selectNow,否则每隔一定时间触发一次select调用.<br>绑定到SelectionKey上的是KafkaChannel,基于Kafka的传输层TransportLayer包含了IO通信的SelectionKey,SocketChannel  </p>
+<blockquote>
+<p>poll轮询.一次轮询调用是不断地while循环,如果数据没有处理完,则SelectionKey的事件不会被注销</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">poll</span><span class="params">(<span class="keyword">long</span> timeout)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    clear();</span><br><span class="line">    <span class="keyword">if</span> (hasStagedReceives()) timeout = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> readyKeys = select(timeout);                <span class="comment">//选择器,触发立即调用,或者定时调用</span></span><br><span class="line">    <span class="keyword">if</span> (readyKeys &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        Set&lt;SelectionKey&gt; keys = <span class="keyword">this</span>.nioSelector.selectedKeys();</span><br><span class="line">        Iterator&lt;SelectionKey&gt; iter = keys.iterator();</span><br><span class="line">        <span class="keyword">while</span> (iter.hasNext()) &#123;</span><br><span class="line">            SelectionKey key = iter.next();</span><br><span class="line">            iter.remove();</span><br><span class="line">            KafkaChannel channel = channel(key);    <span class="comment">//获得绑定到SelectionKey的通道</span></span><br><span class="line">            <span class="comment">/* complete any connections that have finished their handshake */</span></span><br><span class="line">            <span class="keyword">if</span> (key.isConnectable()) channel.finishConnect();</span><br><span class="line">            <span class="comment">/* if channel is not ready finish prepare */</span></span><br><span class="line">            <span class="keyword">if</span> (channel.isConnected() &amp;&amp; !channel.ready()) channel.prepare();</span><br><span class="line"></span><br><span class="line">            <span class="comment">/* if channel is ready read from any connections that have readable data */</span></span><br><span class="line">            <span class="keyword">if</span> (channel.ready() &amp;&amp; key.isReadable() &amp;&amp; !hasStagedReceive(channel)) &#123;</span><br><span class="line">                NetworkReceive networkReceive;</span><br><span class="line">                <span class="keyword">while</span> ((networkReceive = channel.read()) != <span class="keyword">null</span>)</span><br><span class="line">                    addToStagedReceives(channel, networkReceive);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">/* if channel is ready write to any sockets that have space in their buffer and for which we have data */</span></span><br><span class="line">            <span class="keyword">if</span> (channel.ready() &amp;&amp; key.isWritable()) &#123;</span><br><span class="line">                Send send = channel.write();</span><br><span class="line">                <span class="keyword">if</span> (send != <span class="keyword">null</span>) <span class="keyword">this</span>.completedSends.add(send);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">/* cancel any defunct sockets */</span></span><br><span class="line">            <span class="keyword">if</span> (!key.isValid()) close(channel);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    addToCompletedReceives();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于生产者而言,RequestSend注册了OP_WRITE,所以发生在KafkaChannel的SelectionKey是Writable事件.<br>如果是消费者,要拉取数据,则客户端会接收到Readable事件. 读取将NetworkReceive添加到stagedReceives<br>写操作会将当前发送的Send加入到completedSends. 在最后会将stagedReceives添加到completedReceives  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addToCompletedReceives</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.stagedReceives.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        Iterator&lt;Map.Entry&lt;KafkaChannel, Deque&lt;NetworkReceive&gt;&gt;&gt; iter = <span class="keyword">this</span>.stagedReceives.entrySet().iterator();</span><br><span class="line">        <span class="keyword">while</span> (iter.hasNext()) &#123;</span><br><span class="line">            Map.Entry&lt;KafkaChannel, Deque&lt;NetworkReceive&gt;&gt; entry = iter.next();</span><br><span class="line">            KafkaChannel channel = entry.getKey();</span><br><span class="line">            <span class="keyword">if</span> (!channel.isMute()) &#123;</span><br><span class="line">                Deque&lt;NetworkReceive&gt; deque = entry.getValue();</span><br><span class="line">                NetworkReceive networkReceive = deque.poll();</span><br><span class="line">                <span class="keyword">this</span>.completedReceives.add(networkReceive);</span><br><span class="line">                <span class="keyword">if</span> (deque.size() == <span class="number">0</span>) iter.remove();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>completedSends和completedReceives分别表示在Selector端已经发送的和接收到的请求.<br>它们会在NetworkClient的poll调用之后被不同的handleCompleteXXX使用.  </p>
+<p><strong>KafkaChannel</strong></p>
+<p>write()方法会使用之前doSend方法设置的RequestSend(继承ByteBufferSend)作为send的参数,向传输层通道写数据  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">send</span><span class="params">(Send send)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    send.writeTo(transportLayer);       <span class="comment">//transportLayer有SocketChannel,所以是真正发生写的地方</span></span><br><span class="line">    <span class="keyword">if</span> (send.completed())               <span class="comment">//只有Sender说没有数据需要写了,才对transportLayer取消WRITE事件</span></span><br><span class="line">        transportLayer.removeInterestOps(SelectionKey.OP_WRITE);</span><br><span class="line">    <span class="keyword">return</span> send.completed();            <span class="comment">//如果Sender说还没完成,则SelectionKey还会监听到Writable事件的</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSend</span><span class="params">(Send send)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.send = send;</span><br><span class="line">    <span class="keyword">this</span>.transportLayer.addInterestOps(SelectionKey.OP_WRITE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="OldProducer">OldProducer</h2><p>core下也有Producer和Consumer.scala, 和clients中的KafkaProducer,KafkaConsumer有什么区别?<br>从ConsoleProducer看到两种不同的实现:OldProducer-&gt;scala的Producer,NewShinyProducer-&gt;KafkaProducer</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> producer = <span class="keyword">if</span>(config.useOldProducer) &#123;</span><br><span class="line">    <span class="keyword">new</span> <span class="type">OldProducer</span>(getOldProducerProps(config))</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">new</span> <span class="type">NewShinyProducer</span>(getNewProducerProps(config))</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>旧的Producer消息用KeyedMessage,新的用ProducerRecord.不同的Producer实现,用trait定义共同的send接口.</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">trait</span> <span class="title">BaseProducer</span> &#123;</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">send</span>(</span>topic: <span class="type">String</span>, key: <span class="type">Array</span>[<span class="type">Byte</span>], value: <span class="type">Array</span>[<span class="type">Byte</span>])</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">close</span>(</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>用scala实现的Producer构造方式是一样的,需要指定分区方式,Key,Value的序列化.如果是异步还有一个发送线程.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Producer</span>[</span><span class="type">K</span>,<span class="type">V</span>](<span class="keyword">val</span> config: <span class="type">ProducerConfig</span>, <span class="keyword">private</span> <span class="keyword">val</span> eventHandler: <span class="type">EventHandler</span>[<span class="type">K</span>,<span class="type">V</span>]) <span class="keyword">extends</span> <span class="type">Logging</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">val</span> queue = <span class="keyword">new</span> <span class="type">LinkedBlockingQueue</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>,<span class="type">V</span>]](config.queueBufferingMaxMessages)</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">var</span> producerSendThread: <span class="type">ProducerSendThread</span>[<span class="type">K</span>,<span class="type">V</span>] = <span class="literal">null</span></span><br><span class="line">  config.producerType <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"sync"</span> =&gt;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"async"</span> =&gt;</span><br><span class="line">      sync = <span class="literal">false</span></span><br><span class="line">      producerSendThread = <span class="keyword">new</span> <span class="type">ProducerSendThread</span>[<span class="type">K</span>,<span class="type">V</span>](<span class="string">"ProducerSendThread-"</span>+config.clientId, queue, eventHandler,config.queueBufferingMaxMs, config.batchNumMessages, config.clientId)</span><br><span class="line">      producerSendThread.start()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">this</span>(</span>config: <span class="type">ProducerConfig</span>) = <span class="keyword">this</span>(config, <span class="keyword">new</span> <span class="type">DefaultEventHandler</span>[<span class="type">K</span>,<span class="type">V</span>](config,</span><br><span class="line">                                      <span class="type">CoreUtils</span>.createObject[<span class="type">Partitioner</span>](config.partitionerClass, config.props),</span><br><span class="line">                                      <span class="type">CoreUtils</span>.createObject[<span class="type">Encoder</span>[<span class="type">V</span>]](config.serializerClass, config.props),</span><br><span class="line">                                      <span class="type">CoreUtils</span>.createObject[<span class="type">Encoder</span>[<span class="type">K</span>]](config.keySerializerClass, config.props),</span><br><span class="line">                                      <span class="keyword">new</span> <span class="type">ProducerPool</span>(config)))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同步发送消息直接调用事件处理器, 异步发送消息则会加入到阻塞队列BlockingQueue,<br>通过后台ProducerSendThread线程完成异步发送,类似于KafkaProducer的Sender线程  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">send</span>(</span>messages: <span class="type">KeyedMessage</span>[<span class="type">K</span>,<span class="type">V</span>]*) &#123;</span><br><span class="line">  lock synchronized &#123;</span><br><span class="line">    sync <span class="keyword">match</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="literal">true</span> =&gt; eventHandler.handle(messages)</span><br><span class="line">      <span class="keyword">case</span> <span class="literal">false</span> =&gt; asyncSend(messages)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同时注意ProducerSendThread线程处理消息也是通过事件处理器eventHandler的,当然少不了阻塞队列queue.  </p>
+<p><strong>ProducerSendThread</strong>  </p>
+<p>批处理的方式是在每次从queue中poll一条消息,先加入到一个数组events中,并在每次加入之后判断是否超过batchSize.<br>如果超过batchSize,则进行一次批处理,同时重置events数组和设置最后一次发送的时间.最后还需要有一次handl处理.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">processEvents</span>(</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> lastSend = <span class="type">SystemTime</span>.milliseconds</span><br><span class="line">  <span class="keyword">var</span> events = <span class="keyword">new</span> <span class="type">ArrayBuffer</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>,<span class="type">V</span>]]</span><br><span class="line">  <span class="keyword">var</span> full: <span class="type">Boolean</span> = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// drain the queue until you get a shutdown command</span></span><br><span class="line">  <span class="type">Iterator</span>.continually(queue.poll(scala.math.max(<span class="number">0</span>, (lastSend + queueTime) - <span class="type">SystemTime</span>.milliseconds), <span class="type">TimeUnit</span>.<span class="type">MILLISECONDS</span>))</span><br><span class="line">                    .takeWhile(item =&gt; <span class="keyword">if</span>(item != <span class="literal">null</span>) item ne shutdownCommand <span class="keyword">else</span> <span class="literal">true</span>).foreach &#123;</span><br><span class="line">    currentQueueItem =&gt;</span><br><span class="line">      <span class="keyword">val</span> expired = currentQueueItem == <span class="literal">null</span></span><br><span class="line">      <span class="keyword">if</span>(currentQueueItem != <span class="literal">null</span>) &#123;</span><br><span class="line">        events += currentQueueItem    <span class="comment">// 加入到临时数组中</span></span><br><span class="line">      &#125; </span><br><span class="line">      full = events.size &gt;= batchSize <span class="comment">// check if the batch size is reached</span></span><br><span class="line">      <span class="keyword">if</span>(full || expired) &#123;           <span class="comment">// 除了batch满了,还可能是没有消息了     </span></span><br><span class="line">        tryToHandle(events)           <span class="comment">// 开始批处理</span></span><br><span class="line">        events = <span class="keyword">new</span> <span class="type">ArrayBuffer</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>,<span class="type">V</span>]]</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  tryToHandle(events)                 <span class="comment">// send the last batch of events</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>DefaultEventHandler</strong>  </p>
+<p>事件处理器首先序列化,然后通过dispatchSerializedData发送消息,这里还带了重试发送功能.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handle</span>(</span>events: <span class="type">Seq</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>,<span class="type">V</span>]]) &#123;</span><br><span class="line">  <span class="keyword">val</span> serializedData = serialize(events)</span><br><span class="line">  <span class="keyword">var</span> outstandingProduceRequests = serializedData</span><br><span class="line">  <span class="keyword">var</span> remainingRetries = config.messageSendMaxRetries + <span class="number">1</span></span><br><span class="line">  <span class="keyword">while</span> (remainingRetries &gt; <span class="number">0</span> &amp;&amp; outstandingProduceRequests.size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    outstandingProduceRequests = dispatchSerializedData(outstandingProduceRequests)</span><br><span class="line">    <span class="keyword">if</span> (outstandingProduceRequests.size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      remainingRetries -= <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为什么要重新组织数据,因为消息发送到Kafka集群,根据分配的partition,落到不同的节点(写到partition的Leader节点)<br>通过将乱序的消息按照BrokerId进行分组,这样可以将属于某个Broker的消息一次性发送过去.Int就是BrokerId/NodeId.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">partitionAndCollate</span>(</span>messages: <span class="type">Seq</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>,<span class="type">Message</span>]]): <span class="type">Option</span>[<span class="type">Map</span>[<span class="type">Int</span>, collection.mutable.<span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">Seq</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>,<span class="type">Message</span>]]]]] = &#123;</span><br><span class="line">    <span class="keyword">val</span> ret = <span class="keyword">new</span> <span class="type">HashMap</span>[<span class="type">Int</span>, collection.mutable.<span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">Seq</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>,<span class="type">Message</span>]]]]</span><br><span class="line">    <span class="keyword">for</span> (message &lt;- messages) &#123;</span><br><span class="line">      <span class="comment">//一个topic有多个partition</span></span><br><span class="line">      <span class="keyword">val</span> topicPartitionsList = getPartitionListForTopic(message)</span><br><span class="line">      <span class="comment">//一条消息只会写到一个partition</span></span><br><span class="line">      <span class="keyword">val</span> partitionIndex = getPartition(message.topic, message.partitionKey, topicPartitionsList)</span><br><span class="line">      <span class="comment">//一个partition因为有副本,所以有多个broker,但是写的时候只写到Leader</span></span><br><span class="line">      <span class="keyword">val</span> brokerPartition = topicPartitionsList(partitionIndex)</span><br><span class="line">      <span class="comment">// postpone the failure until the send operation, so that requests for other brokers are handled correctly</span></span><br><span class="line">      <span class="keyword">val</span> leaderBrokerId = brokerPartition.leaderBrokerIdOpt.getOrElse(-<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 每个Broker的data,即组织成一个Broker对应多条消息    </span></span><br><span class="line">      <span class="keyword">var</span> dataPerBroker: <span class="type">HashMap</span>[<span class="type">TopicAndPartition</span>, <span class="type">Seq</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>,<span class="type">Message</span>]]] = <span class="literal">null</span></span><br><span class="line">      ret.get(leaderBrokerId) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">Some</span>(element) =&gt;</span><br><span class="line">          dataPerBroker = element.asInstanceOf[<span class="type">HashMap</span>[<span class="type">TopicAndPartition</span>, <span class="type">Seq</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>,<span class="type">Message</span>]]]]</span><br><span class="line">        <span class="keyword">case</span> <span class="type">None</span> =&gt;</span><br><span class="line">          dataPerBroker = <span class="keyword">new</span> <span class="type">HashMap</span>[<span class="type">TopicAndPartition</span>, <span class="type">Seq</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>,<span class="type">Message</span>]]]</span><br><span class="line">          ret.put(leaderBrokerId, dataPerBroker)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 构造Topic和Partition对象    </span></span><br><span class="line">      <span class="keyword">val</span> topicAndPartition = <span class="type">TopicAndPartition</span>(message.topic, brokerPartition.partitionId)</span><br><span class="line">      <span class="comment">// Broker对应的消息集合, 即使是相同的Broker, Topic-Partition组合也不一定一样 </span></span><br><span class="line">      <span class="keyword">var</span> dataPerTopicPartition: <span class="type">ArrayBuffer</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>,<span class="type">Message</span>]] = <span class="literal">null</span></span><br><span class="line">      dataPerBroker.get(topicAndPartition) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">Some</span>(element) =&gt;</span><br><span class="line">          dataPerTopicPartition = element.asInstanceOf[<span class="type">ArrayBuffer</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>,<span class="type">Message</span>]]]</span><br><span class="line">        <span class="keyword">case</span> <span class="type">None</span> =&gt;</span><br><span class="line">          dataPerTopicPartition = <span class="keyword">new</span> <span class="type">ArrayBuffer</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>,<span class="type">Message</span>]]</span><br><span class="line">          dataPerBroker.put(topicAndPartition, dataPerTopicPartition)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 到这里,才是真正将消息添加到集合中</span></span><br><span class="line">      dataPerTopicPartition.append(message)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">Some</span>(ret)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在发送消息过程中,只要有失败的消息就加入到failedProduceRequests,这样返回的集合不为空,就会重试  </p>
+<ul>
+<li>partitionAndCollate: 重新组织数据, 格式: <code>BrokerId -&gt; (TopicAndPartition -&gt; Seq[KeyedMessage])</code></li>
+<li>groupMessagesToSet:  将Message集合转成更加紧凑的MessageSet</li>
+<li>send: 向BrokerId节点发送消息集MessageSet</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">dispatchSerializedData</span>(</span>messages: <span class="type">Seq</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>,<span class="type">Message</span>]]): <span class="type">Seq</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>, <span class="type">Message</span>]] = &#123;</span><br><span class="line">  <span class="keyword">val</span> partitionedDataOpt = partitionAndCollate(messages)  <span class="comment">// 重新组织消息</span></span><br><span class="line">  partitionedDataOpt <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Some</span>(partitionedData) =&gt;</span><br><span class="line">      <span class="keyword">val</span> failedProduceRequests = <span class="keyword">new</span> <span class="type">ArrayBuffer</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>, <span class="type">Message</span>]]</span><br><span class="line">      <span class="keyword">for</span> ((brokerid, messagesPerBrokerMap) &lt;- partitionedData) &#123;</span><br><span class="line">        <span class="keyword">val</span> messageSetPerBrokerOpt = groupMessagesToSet(messagesPerBrokerMap)</span><br><span class="line">        messageSetPerBrokerOpt <span class="keyword">match</span> &#123;</span><br><span class="line">          <span class="keyword">case</span> <span class="type">Some</span>(messageSetPerBroker) =&gt;</span><br><span class="line">            <span class="keyword">val</span> failedTopicPartitions = send(brokerid, messageSetPerBroker)</span><br><span class="line">            failedTopicPartitions.foreach(topicPartition =&gt; &#123;</span><br><span class="line">              messagesPerBrokerMap.get(topicPartition) <span class="keyword">match</span> &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="type">Some</span>(data) =&gt; failedProduceRequests.appendAll(data)</span><br><span class="line">                <span class="keyword">case</span> <span class="type">None</span> =&gt; <span class="comment">// nothing, 所有的消息都发送成功</span></span><br><span class="line">              &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">          <span class="keyword">case</span> <span class="type">None</span> =&gt; <span class="comment">// failed to group messages</span></span><br><span class="line">            messagesPerBrokerMap.values.foreach(m =&gt; failedProduceRequests.appendAll(m))</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      failedProduceRequests</span><br><span class="line">    <span class="keyword">case</span> <span class="type">None</span> =&gt; messages <span class="comment">// failed to collate messages</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>分组会将原始的Message如果有压缩格式,转换成压缩后的MessageSet. Key在分组中并没有发生变化.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">groupMessagesToSet</span>(</span>messagesPerTopicAndPartition: collection.mutable.<span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">Seq</span>[<span class="type">KeyedMessage</span>[<span class="type">K</span>, <span class="type">Message</span>]]]) = &#123;</span><br><span class="line">    <span class="keyword">val</span> messagesPerTopicPartition = messagesPerTopicAndPartition.map &#123; <span class="keyword">case</span> (topicAndPartition, messages) =&gt;</span><br><span class="line">      <span class="comment">// KeyedMessage包括了Key,Value, 其中message就是value原始数据</span></span><br><span class="line">      <span class="keyword">val</span> rawMessages = messages.map(_.message)</span><br><span class="line">      <span class="comment">// 输入是个Map(用case元组匹配),返回值也是元组,也会转成Map: key没有变化,value将Seq[Message]转成了MessageSet</span></span><br><span class="line">      (topicAndPartition,</span><br><span class="line">        config.compressionCodec <span class="keyword">match</span> &#123;</span><br><span class="line">          <span class="keyword">case</span> <span class="type">NoCompressionCodec</span> =&gt;</span><br><span class="line">            <span class="keyword">new</span> <span class="type">ByteBufferMessageSet</span>(<span class="type">NoCompressionCodec</span>, rawMessages: _*)</span><br><span class="line">        &#125;</span><br><span class="line">      )</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">Some</span>(messagesPerTopicPartition)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>发送消息,从生产者池中获取SyncProducer(每个Broker一个Producer),将消息集封装到ProducerRequest,调用Producer.send发送请求  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">send</span>(</span>brokerId: <span class="type">Int</span>, messagesPerTopic: collection.mutable.<span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">ByteBufferMessageSet</span>]) = &#123;</span><br><span class="line">    <span class="keyword">val</span> currentCorrelationId = correlationId.getAndIncrement</span><br><span class="line">    <span class="keyword">val</span> producerRequest = <span class="keyword">new</span> <span class="type">ProducerRequest</span>(currentCorrelationId, config.clientId, config.requestRequiredAcks, config.requestTimeoutMs, messagesPerTopic)</span><br><span class="line">    <span class="keyword">val</span> syncProducer = producerPool.getProducer(brokerId)</span><br><span class="line">    <span class="keyword">val</span> response = syncProducer.send(producerRequest)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>SyncProducer</strong>  </p>
+<p>如果请求需要ack,则需要返回ProducerResponse给客户端(返回的消息内容放在response的payload字节缓冲区中).  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">send</span>(</span>producerRequest: <span class="type">ProducerRequest</span>): <span class="type">ProducerResponse</span> = &#123;</span><br><span class="line">  <span class="keyword">var</span> response: <span class="type">NetworkReceive</span> = doSend(producerRequest, <span class="keyword">if</span>(producerRequest.requiredAcks == <span class="number">0</span>) <span class="literal">false</span> <span class="keyword">else</span> <span class="literal">true</span>)</span><br><span class="line">  <span class="keyword">if</span>(producerRequest.requiredAcks != <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="type">ProducerResponse</span>.readFrom(response.payload)</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">doSend</span>(</span>request: <span class="type">RequestOrResponse</span>, readResponse: <span class="type">Boolean</span> = <span class="literal">true</span>): <span class="type">NetworkReceive</span> = &#123;</span><br><span class="line">    verifyRequest(request)</span><br><span class="line">    getOrMakeConnection()</span><br><span class="line">    <span class="keyword">var</span> response: <span class="type">NetworkReceive</span> = <span class="literal">null</span></span><br><span class="line">    blockingChannel.send(request)</span><br><span class="line">    <span class="keyword">if</span>(readResponse)</span><br><span class="line">      response = blockingChannel.receive()</span><br><span class="line">    response</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实际的发送请求是交给BlockingChannel,它实现了I/O中的连接connect,发送请求send,接收响应receive<br>从它的名字看出这是一个阻塞类型的Channel,所以并没有用到NIO的多路选择特性,难怪这是Old的设计.<br>KafkaProducer构造的请求是RequestSend,这里是RequestOrResponseSend,不过都是ByteBufferSend</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">send</span>(</span>request: <span class="type">RequestOrResponse</span>): <span class="type">Long</span> = &#123;</span><br><span class="line">  <span class="keyword">val</span> send = <span class="keyword">new</span> <span class="type">RequestOrResponseSend</span>(connectionId, request)</span><br><span class="line">  send.writeCompletely(writeChannel)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">receive</span>(</span>): <span class="type">NetworkReceive</span> = &#123;</span><br><span class="line">  <span class="keyword">val</span> response = readCompletely(readChannel)</span><br><span class="line">  response.payload().rewind()     <span class="comment">//读取到响应的ByteBuffer,回到缓冲区的最开始,便于读取</span></span><br><span class="line">  response                        <span class="comment">//返回响应, 如果客户端需要ack,则直接使用response.payload即可</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Consumer">Consumer</h2><p>生产者向topic推送消息,消费者订阅了topic后,一旦topic有消息,消费者要么会被通知,要么自己去拉数据.<br>生产者将一条消息封装成ProducerRecord, 消费者获取到的批量消息是ConsumerRecords</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">KafkaConsumer&lt;Integer, String&gt; consumer = <span class="keyword">new</span> KafkaConsumer&lt;&gt;(props);</span><br><span class="line">consumer.subscribe(Collections.singletonList(<span class="keyword">this</span>.topic));</span><br><span class="line">ConsumerRecords&lt;Integer, String&gt; records = consumer.poll(<span class="number">1000</span>);</span><br><span class="line"><span class="keyword">for</span> (ConsumerRecord&lt;Integer, String&gt; record : records) &#123;</span><br><span class="line">    System.out.println(<span class="string">"Received message: ("</span> + record.key() + <span class="string">", "</span> + record.value() + <span class="string">") at offset "</span> + record.offset());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>客户端的设计在0.9中被重新设计了:<a href="https://cwiki.apache.org/confluence/display/KAFKA/Consumer+Client+Re-Design" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Consumer+Client+Re-Design</a> </p>
+<h2 id="KafkaServer">KafkaServer</h2><p>上面的Producer和Consumer都不是作为Kafka的内置服务,而是一种客户端(所以它们都在clients包).<br>客户端可以独立于Kafka,和Kafka服务所在的节点互相隔离.Producer和Consumer和Kafka集群进行交互.<br>每个Kafka节点都有一些自己内置的服务进程,比如Broker,KafkaController,GroupCoordinator,ReplicaManager</p>
+<p><img src="http://kafka.apache.org/images/producer_consumer.png" alt="p_c_k"></p>
+<h2 id="Ref">Ref</h2><ul>
+<li><a href="http://blog.csdn.net/lizhitao/article/details/39499283" target="_blank" rel="external">http://blog.csdn.net/lizhitao/article/details/39499283</a>  </li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2016/01/06/2016-01-06-Kafka/">Kafka源码分析 Producer客户端</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2016年01月06日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年01月08日 - 17时05分</p>
+  <p>
+    <span>原始链接:</span><a href="/2016/01/06/2016-01-06-Kafka/" title="Kafka源码分析 Producer客户端">http://github.com/zqhxuyuan/2016/01/06/2016-01-06-Kafka/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/06/2016-01-06-Kafka/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
+
+
+
+<nav id="article-nav">
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2016/01/05/Note_Clojure_macro/">
+        Clojure宏剖析
+      </a>
+    </div>
+  
+</nav>
+
+  
+</article>
+
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Producer"><span class="toc-number">1.</span> <span class="toc-text">Producer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OldProducer"><span class="toc-number">2.</span> <span class="toc-text">OldProducer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Consumer"><span class="toc-number">3.</span> <span class="toc-text">Consumer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KafkaServer"><span class="toc-number">4.</span> <span class="toc-text">KafkaServer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">5.</span> <span class="toc-text">Ref</span></a></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+</script>
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+	</div>
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+</div>
+
+
+
+
+
+
+
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
+
+
+  
+  
+    <div  class="post-nav-button">
+    <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+    <a href="/2016/01/05/Note_Clojure_macro/" title="下一篇: Clojure宏剖析">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+    
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2016 任何忧伤,都抵不过世界的美丽
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+        </div>
+    </div>
+    <div class="visit">
+      <span id="busuanzi_container_site_pv" style='display:none'>
+        <span id="site-visit" >本站到访数: 
+        <span id="busuanzi_value_site_uv"></span>
+        </span>
+      </span>
+      <span id="busuanzi_container_page_pv" style='display:none'>
+        <span id="page-visit">, 本页阅读量: 
+        <span id="busuanzi_value_page_pv"></span>
+        </span>
+      </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+<script>
+  var backgroundnum = 5;
+  var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+
+  $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+</script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+<a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+<a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
