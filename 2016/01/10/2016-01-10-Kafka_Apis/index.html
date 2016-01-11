@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Kafka源码分析 KafkaApis | zqhxuyuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="KafkaApis源码分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka源码分析 KafkaApis">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/01/10/2016-01-10-Kafka_Apis/index.html">
+<meta property="og:site_name" content="zqhxuyuan">
+<meta property="og:description" content="KafkaApis源码分析">
+<meta property="og:image" content="http://img.blog.csdn.net/20160111130308041">
+<meta property="og:image" content="http://img.blog.csdn.net/20160111120400346">
+<meta property="og:image" content="http://img.blog.csdn.net/20160111135542050">
+<meta property="og:image" content="http://img.blog.csdn.net/20160111143238708">
+<meta property="og:updated_time" content="2016-01-11T06:44:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kafka源码分析 KafkaApis">
+<meta name="twitter:description" content="KafkaApis源码分析">
+  
+    <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">任何忧伤,都抵不过世界的美丽</a></h1>
+		</hgroup>
+
+		
+				
+
+
+		
+			<div id="switch-btn" class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div id="switch-area" class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives/">归档</a></li>
+				        
+							<li><a href="/tags/">标签</a></li>
+				        
+							<li><a href="/about/">关于</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 20px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 18px;">drill</a> <a href="/tags/druid/" style="font-size: 14px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 12px;">kafka</a> <a href="/tags/scala/" style="font-size: 12px;">scala</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/storm/" style="font-size: 16px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12px;">timeseries</a> <a href="/tags/work/" style="font-size: 12px;">work</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">BIG(DATA)</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="/" class="profilepic">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			</a>
+			<hgroup>
+			  <h1 class="header-author"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives/">归档</a></li>
+		        
+					<li><a href="/tags/">标签</a></li>
+		        
+					<li><a href="/about/">关于</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-2016-01-10-Kafka_Apis" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/10/2016-01-10-Kafka_Apis/" class="article-date">
+  	<time datetime="2016-01-09T16:00:00.000Z" itemprop="datePublished">2016-01-10</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Kafka源码分析 KafkaApis
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Source/">Source</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>KafkaApis源码分析<br><a id="more"></a></p>
+<h2 id="KafkaApis">KafkaApis</h2><p>上篇KafkaRequestHandler会将Request请求转发给KafkaApis处理:根据不同的请求类型调用不同的方法进行处理.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">KafkaApis</span>(</span><span class="keyword">val</span> requestChannel: <span class="type">RequestChannel</span>, <span class="keyword">val</span> replicaManager: <span class="type">ReplicaManager</span>, <span class="keyword">val</span> coordinator: <span class="type">GroupCoordinator</span>,</span><br><span class="line">                <span class="keyword">val</span> controller: <span class="type">KafkaController</span>, <span class="keyword">val</span> zkUtils: <span class="type">ZkUtils</span>, <span class="keyword">val</span> brokerId: <span class="type">Int</span>, <span class="keyword">val</span> config: <span class="type">KafkaConfig</span>, <span class="keyword">val</span> metadataCache: <span class="type">MetadataCache</span>, <span class="keyword">val</span> metrics: <span class="type">Metrics</span>, <span class="keyword">val</span> authorizer: <span class="type">Option</span>[<span class="type">Authorizer</span>]) &#123;</span><br><span class="line">  <span class="comment">// Top-level method that handles all requests and multiplexes to the right api</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">handle</span>(</span>request: <span class="type">RequestChannel</span>.<span class="type">Request</span>) &#123;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">      <span class="type">ApiKeys</span>.forId(request.requestId) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">ApiKeys</span>.<span class="type">PRODUCE</span> =&gt; handleProducerRequest(request)</span><br><span class="line">        <span class="keyword">case</span> <span class="type">ApiKeys</span>.<span class="type">FETCH</span> =&gt; handleFetchRequest(request)</span><br><span class="line">        <span class="comment">//....</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> e: <span class="type">Throwable</span> =&gt;</span><br><span class="line">        <span class="keyword">if</span> ( request.requestObj == <span class="literal">null</span>) &#123;</span><br><span class="line">          <span class="keyword">val</span> response = request.body.getErrorResponse(request.header.apiVersion, e)</span><br><span class="line">          <span class="keyword">val</span> respHeader = <span class="keyword">new</span> <span class="type">ResponseHeader</span>(request.header.correlationId)</span><br><span class="line">          <span class="comment">// If request doesn't have a default error response, we just close the connection. For example, when produce request has acks set to 0 */</span></span><br><span class="line">          <span class="keyword">if</span> (response == <span class="literal">null</span>) requestChannel.closeConnection(request.processor, request)</span><br><span class="line">          <span class="keyword">else</span> requestChannel.sendResponse(<span class="keyword">new</span> <span class="type">Response</span>(request, <span class="keyword">new</span> <span class="type">ResponseSend</span>(request.connectionId, respHeader, response)))</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>SocketChannel的RequestChannel用于KafkaApis,因为响应和请求都需要放到RequestChannel的队列中被处理.<br>比如在handle出现异常时,会将Response加入到requestChannel的请求队列中(closeConnection也是一种Resp).</p>
+<h2 id="handleProducerRequest">handleProducerRequest</h2><p>有两个Callback, 但是真正调用是通过replicaManager.appendMessages触发的:sendResponseCallback<br>–&gt; produceResponseCallback –&gt; ProducerResponse –&gt; requestChannel.sendResponse<br>真正的发送ProducerResponse是在produceResponseCallback中:如果不需要ack,则这一整条链路都不会调用.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handleProducerRequest</span>(</span>request: <span class="type">RequestChannel</span>.<span class="type">Request</span>) &#123;</span><br><span class="line">  <span class="keyword">val</span> produceRequest = request.requestObj.asInstanceOf[<span class="type">ProducerRequest</span>]</span><br><span class="line">  <span class="keyword">val</span> numBytesAppended = produceRequest.sizeInBytes</span><br><span class="line"></span><br><span class="line">  <span class="comment">//partition是对Map分成两组:有授权的(true)和没有授权的(false).返回值类型是Map(TopicAndPartition-&gt;MessageSet),因为是根据data进行分区的</span></span><br><span class="line">  <span class="keyword">val</span> (authorizedRequestInfo, unauthorizedRequestInfo) =  produceRequest.data.partition  &#123;</span><br><span class="line">    <span class="comment">//data是TopicAndPartition-&gt;MessageSet, 在判断是否授权时不需要MessageSet  </span></span><br><span class="line">    <span class="keyword">case</span> (topicAndPartition, _) =&gt; authorize(request.session, <span class="type">Write</span>, <span class="keyword">new</span> <span class="type">Resource</span>(<span class="type">Topic</span>, topicAndPartition.topic))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// the callback for sending a produce response 发送Producer的Response</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">sendResponseCallback</span>(</span>responseStatus: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">ProducerResponseStatus</span>]) &#123;</span><br><span class="line">    <span class="comment">// 生成Response的Callback, 即将Response放入RequestChannel的responseQueue中  </span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">produceResponseCallback</span>(</span>delayTimeMs: <span class="type">Int</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (produceRequest.requiredAcks != <span class="number">0</span>) &#123;  <span class="comment">// Producer请求需要等待ack, 才需要发送ProducerResponse</span></span><br><span class="line">        <span class="keyword">val</span> response = <span class="type">ProducerResponse</span>(produceRequest.correlationId, mergedResponseStatus, produceRequest.versionId, delayTimeMs)</span><br><span class="line">        requestChannel.sendResponse(<span class="keyword">new</span> <span class="type">RequestChannel</span>.<span class="type">Response</span>(request, <span class="keyword">new</span> <span class="type">RequestOrResponseSend</span>(request.connectionId, response)))</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//quotaManagers会调用produceResponseCallback, 它本身做了一些quota限额的工作</span></span><br><span class="line">    quotaManagers(<span class="type">ApiKeys</span>.<span class="type">PRODUCE</span>.id).recordAndMaybeThrottle(produceRequest.clientId, numBytesAppended, produceResponseCallback)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (authorizedRequestInfo.isEmpty) sendResponseCallback(<span class="type">Map</span>.empty)  <span class="comment">//authorizedRequestInfo是个Map,为空的话,说明没有消息,就不需要append</span></span><br><span class="line">  <span class="keyword">else</span> &#123; <span class="comment">// call the replica manager to append messages to the replicas</span></span><br><span class="line">    replicaManager.appendMessages(produceRequest.ackTimeoutMs.toLong, produceRequest.requiredAcks, internalTopicsAllowed, authorizedRequestInfo, sendResponseCallback)</span><br><span class="line">    produceRequest.emptyData()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>handleProducerRequest处理Producer的请求: 将Request请求转换为ProducerRequest.<br>ProducerRequest含有生产者的<code>Partition-&gt;消息集</code>:authorizedRequestInfo,会被写入到日志中.  </p>
+<h3 id="ReplicaManager-appendMessages">ReplicaManager.appendMessages</h3><ul>
+<li>将消息追加到Partition的leader replicas, 并且等待它们复制到其他副本上.</li>
+<li>回调函数只有在超时或者需要acks时才会被调用</li>
+</ul>
+<p>由于Producer客户端在发送ClientRequest的时候已经根据Partition找到了所属的Leader,<br>所以ClientRequest一定是发送给Leader节点的SocketServer的(也是KafkaServer节点),<br>所以接收ProducerRequest一定是消息的Partition对应的Leader节点,可以放心地往本地写数据.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">appendMessages</span>(</span>timeout: <span class="type">Long</span>, requiredAcks: <span class="type">Short</span>, internalTopicsAllowed: <span class="type">Boolean</span>, messagesPerPartition: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">MessageSet</span>], responseCallback: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">ProducerResponseStatus</span>] =&gt; <span class="type">Unit</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (isValidRequiredAcks(requiredAcks)) &#123;</span><br><span class="line">    <span class="comment">// 添加到本地日志(为什么是本地? 本地指的是KafkaServer节点, 同时也是TopicAndPartition的Leader节点)   </span></span><br><span class="line">    <span class="keyword">val</span> localProduceResults = appendToLocalLog(internalTopicsAllowed, messagesPerPartition, requiredAcks)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 下面是response的一些处理, 数据在appendToLocalLog方法中已经被成功地写入到Leader节点了...</span></span><br><span class="line">    <span class="keyword">val</span> produceStatus = localProduceResults.map &#123; <span class="keyword">case</span> (topicAndPartition, result) =&gt;</span><br><span class="line">      topicAndPartition -&gt; <span class="type">ProducePartitionStatus</span>(result.info.lastOffset + <span class="number">1</span>, <span class="type">ProducerResponseStatus</span>(result.errorCode, result.info.firstOffset)) <span class="comment">// required offset, response status</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (delayedRequestRequired(requiredAcks, messagesPerPartition, localProduceResults)) &#123;</span><br><span class="line">      <span class="comment">// create delayed produce operation</span></span><br><span class="line">      <span class="keyword">val</span> produceMetadata = <span class="type">ProduceMetadata</span>(requiredAcks, produceStatus)</span><br><span class="line">      <span class="keyword">val</span> delayedProduce = <span class="keyword">new</span> <span class="type">DelayedProduce</span>(timeout, produceMetadata, <span class="keyword">this</span>, responseCallback)</span><br><span class="line">      <span class="comment">// create a list of (topic, partition) pairs to use as keys for this delayed produce operation</span></span><br><span class="line">      <span class="keyword">val</span> producerRequestKeys = messagesPerPartition.keys.map(<span class="keyword">new</span> <span class="type">TopicPartitionOperationKey</span>(_)).toSeq</span><br><span class="line">      <span class="comment">// try to complete the request immediately, otherwise put it into the purgatory</span></span><br><span class="line">      <span class="comment">// this is because while the delayed produce operation is being created, new</span></span><br><span class="line">      <span class="comment">// requests may arrive and hence make this operation completable.</span></span><br><span class="line">      delayedProducePurgatory.tryCompleteElseWatch(delayedProduce, producerRequestKeys)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// we can respond immediately</span></span><br><span class="line">      <span class="keyword">val</span> produceResponseStatus = produceStatus.mapValues(status =&gt; status.responseStatus)</span><br><span class="line">      responseCallback(produceResponseStatus)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>messagesPerPartition因为是TopicAndPartition到消息集的映射, topic用于验证是否能够允许写.<br>Partition是消息最终存储的所在文件夹,调用partition.appendMessagesToLeader(messages),<br>表示将消息messages追加到指定的这个partition(而这个Partition一定是Leader replicas).  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">appendToLocalLog</span>(</span>internalTopicsAllowed: <span class="type">Boolean</span>, messagesPerPartition: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">MessageSet</span>],</span><br><span class="line">                             requiredAcks: <span class="type">Short</span>): <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">LogAppendResult</span>] = &#123;</span><br><span class="line">  messagesPerPartition.map &#123; <span class="keyword">case</span> (topicAndPartition, messages) =&gt;</span><br><span class="line">    <span class="comment">// reject appending to internal topics if it is not allowed. </span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="type">Topic</span>.<span class="type">InternalTopics</span>.contains(topicAndPartition.topic) || internalTopicsAllowed) &#123;</span><br><span class="line">        <span class="keyword">val</span> partitionOpt = getPartition(topicAndPartition.topic, topicAndPartition.partition)</span><br><span class="line">        <span class="keyword">val</span> info = partitionOpt <span class="keyword">match</span> &#123;</span><br><span class="line">          <span class="keyword">case</span> <span class="type">Some</span>(partition) =&gt; partition.appendMessagesToLeader(messages.asInstanceOf[<span class="type">ByteBufferMessageSet</span>], requiredAcks)</span><br><span class="line">        &#125;</span><br><span class="line">        (topicAndPartition, <span class="type">LogAppendResult</span>(info))</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>topicAndPartition的源头是由Producer客户端构造的,服务端需要根据topic和partitionId构造出属于自己的Partition用于写日志<br>Partition是怎么来的:getOrCreatePartition的调用链=<code>becomeLeaderOrFollower</code>&lt;-KafkaApis.handleLeaderAndIsrRequest</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">val</span> allPartitions = <span class="keyword">new</span> <span class="type">Pool</span>[(<span class="type">String</span>, <span class="type">Int</span>), <span class="type">Partition</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getOrCreatePartition</span>(</span>topic: <span class="type">String</span>, partitionId: <span class="type">Int</span>): <span class="type">Partition</span> = &#123;</span><br><span class="line">  <span class="keyword">var</span> partition = allPartitions.get((topic, partitionId))</span><br><span class="line">  <span class="keyword">if</span> (partition == <span class="literal">null</span>) &#123;</span><br><span class="line">    allPartitions.putIfNotExists((topic, partitionId), <span class="keyword">new</span> <span class="type">Partition</span>(topic, partitionId, time, <span class="keyword">this</span>))</span><br><span class="line">    partition = allPartitions.get((topic, partitionId))</span><br><span class="line">  &#125;</span><br><span class="line">  partition</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPartition</span>(</span>topic: <span class="type">String</span>, partitionId: <span class="type">Int</span>): <span class="type">Option</span>[<span class="type">Partition</span>] = &#123;</span><br><span class="line">  <span class="keyword">val</span> partition = allPartitions.get((topic, partitionId))</span><br><span class="line">  <span class="keyword">if</span> (partition == <span class="literal">null</span>) <span class="type">None</span></span><br><span class="line">  <span class="keyword">else</span> <span class="type">Some</span>(partition)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Partition-appendMessagesToLeader">Partition.appendMessagesToLeader</h3><p>消息写到Partition的Leader replica,在确定Partition的Replica后,往Replication的Log实例追加数据.<br>调用链从ReplicationManager -&gt; Partition -&gt; Replica -&gt; Log, 消息messages最终写到日志文件中.  </p>
+<p><img src="http://img.blog.csdn.net/20160111130308041" alt="k_append"></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">appendMessagesToLeader</span>(</span>messages: <span class="type">ByteBufferMessageSet</span>, requiredAcks: <span class="type">Int</span> = <span class="number">0</span>) = &#123;</span><br><span class="line">  <span class="keyword">val</span> (info, leaderHWIncremented) = inReadLock(leaderIsrUpdateLock) &#123;</span><br><span class="line">    <span class="keyword">val</span> leaderReplicaOpt = leaderReplicaIfLocal()</span><br><span class="line">    leaderReplicaOpt <span class="keyword">match</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="type">Some</span>(leaderReplica) =&gt;</span><br><span class="line">        <span class="keyword">val</span> log = leaderReplica.log.get</span><br><span class="line">        <span class="keyword">val</span> minIsr = log.config.minInSyncReplicas</span><br><span class="line">        <span class="keyword">val</span> inSyncSize = inSyncReplicas.size</span><br><span class="line">        <span class="comment">// Avoid writing to leader if there are not enough insync replicas to make it safe</span></span><br><span class="line">        <span class="keyword">if</span> (inSyncSize &lt; minIsr &amp;&amp; requiredAcks == -<span class="number">1</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">NotEnoughReplicasException</span>(<span class="string">"Number of insync replicas below required minimum"</span>)</span><br><span class="line">        <span class="keyword">val</span> info = log.append(messages, assignOffsets = <span class="literal">true</span>)</span><br><span class="line">        <span class="comment">// probably unblock some follower fetch requests since log end offset has been updated</span></span><br><span class="line">        replicaManager.tryCompleteDelayedFetch(<span class="keyword">new</span> <span class="type">TopicPartitionOperationKey</span>(<span class="keyword">this</span>.topic, <span class="keyword">this</span>.partitionId))</span><br><span class="line">        <span class="comment">// we may need to increment high watermark since ISR could be down to 1</span></span><br><span class="line">        (info, maybeIncrementLeaderHW(leaderReplica))</span><br><span class="line">      <span class="keyword">case</span> <span class="type">None</span> =&gt; <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">NotLeaderForPartitionException</span>(<span class="string">"Leader not local for partition [%s,%d] on broker %d"</span>.format(topic, partitionId, localBrokerId))</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (leaderHWIncremented) tryCompleteDelayedRequests()   <span class="comment">// some delayed operations may be unblocked after HW changed</span></span><br><span class="line">  info</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>leaderReplicaIfLocal</strong>  </p>
+<p>判断leaderReplica是否是本地的, 是比较leaderReplicaIdOpt(这个变量是volatile)和localBrokerId是否相同.<br>localBrokerId在Kafka节点启动时就是确定的,即同一个KafkaServer节点的所有Partition的BrokerId都是相等的.<br>而leaderReplicaIdOpt会在<code>makeLeader</code>和<code>makeFollower</code>中被修改(也都被becomeLeaderOrFollower调用)  </p>
+<p>assignedReplicaMap是一个Map:<brokerid, replica="">.因为一个Partition的Replication有Leader和Follower.<br>它们都是分布在不同的Broker节点上.所以Partition持有所有这些Replication,就可以知道Replication的分布情况.</brokerid,></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Partition</span>(</span><span class="keyword">val</span> topic: <span class="type">String</span>, <span class="keyword">val</span> partitionId: <span class="type">Int</span>, time: <span class="type">Time</span>, replicaManager: <span class="type">ReplicaManager</span>) &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">val</span> localBrokerId = replicaManager.config.brokerId    <span class="comment">//KafkaServer当前节点的BrokerId</span></span><br><span class="line">  <span class="annotation">@volatile</span> <span class="keyword">var</span> leaderReplicaIdOpt: <span class="type">Option</span>[<span class="type">Int</span>] = <span class="type">None</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">val</span> assignedReplicaMap = <span class="keyword">new</span> <span class="type">Pool</span>[<span class="type">Int</span>, <span class="type">Replica</span>]</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">leaderReplicaIfLocal</span>(</span>): <span class="type">Option</span>[<span class="type">Replica</span>] = &#123;</span><br><span class="line">    leaderReplicaIdOpt <span class="keyword">match</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="type">Some</span>(leaderReplicaId) =&gt; <span class="keyword">if</span> (leaderReplicaId == localBrokerId) getReplica(localBrokerId) <span class="keyword">else</span> <span class="type">None</span></span><br><span class="line">      <span class="keyword">case</span> <span class="type">None</span> =&gt; <span class="type">None</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;  </span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">getReplica</span>(</span>replicaId: <span class="type">Int</span> = localBrokerId): <span class="type">Option</span>[<span class="type">Replica</span>] = &#123;</span><br><span class="line">    <span class="keyword">val</span> replica = assignedReplicaMap.get(replicaId)</span><br><span class="line">    <span class="keyword">if</span> (replica == <span class="literal">null</span>) <span class="type">None</span></span><br><span class="line">    <span class="keyword">else</span> <span class="type">Some</span>(replica)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Log-append">Log.append</h3><p>将消息转换为LogAppendInfo,并交给Log中最新的Segment处理,因为一个Partition的Log分成多个Segment.<br>追加消息只到最新的Segment中,旧的Segment一旦关闭后,就不能再添加数据.所以必要的话会创建新的Segment.</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">append</span>(</span>messages: <span class="type">ByteBufferMessageSet</span>, assignOffsets: <span class="type">Boolean</span> = <span class="literal">true</span>): <span class="type">LogAppendInfo</span> = &#123;</span><br><span class="line">  <span class="keyword">val</span> appendInfo = analyzeAndValidateMessageSet(messages)</span><br><span class="line">  <span class="comment">// trim any invalid bytes or partial messages before appending it to the on-disk log</span></span><br><span class="line">  <span class="keyword">var</span> validMessages = trimInvalidBytes(messages, appendInfo)</span><br><span class="line">  <span class="comment">// they are valid, insert them in the log</span></span><br><span class="line">  lock synchronized &#123;</span><br><span class="line">      appendInfo.firstOffset = nextOffsetMetadata.messageOffset</span><br><span class="line">      <span class="keyword">if</span>(assignOffsets) &#123;</span><br><span class="line">        <span class="comment">// assign offsets to the message set</span></span><br><span class="line">        <span class="keyword">val</span> offset = <span class="keyword">new</span> <span class="type">AtomicLong</span>(nextOffsetMetadata.messageOffset)</span><br><span class="line">        validMessages = validMessages.validateMessagesAndAssignOffsets(offset, appendInfo.sourceCodec, appendInfo.targetCodec, config.compact)</span><br><span class="line">        appendInfo.lastOffset = offset.get - <span class="number">1</span></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// maybe roll the log if this segment is full</span></span><br><span class="line">      <span class="keyword">val</span> segment = maybeRoll(validMessages.sizeInBytes)</span><br><span class="line">      <span class="comment">// now append to the log</span></span><br><span class="line">      segment.append(appendInfo.firstOffset, validMessages)</span><br><span class="line">      <span class="comment">// increment the log end offset</span></span><br><span class="line">      updateLogEndOffset(appendInfo.lastOffset + <span class="number">1</span>)</span><br><span class="line">      trace(<span class="string">"Appended message set to log %s with first offset: %d, next offset: %d, and messages: %s"</span>.format(<span class="keyword">this</span>.name, appendInfo.firstOffset, nextOffsetMetadata.messageOffset, validMessages))</span><br><span class="line">      <span class="keyword">if</span>(unflushedMessages &gt;= config.flushInterval) flush()</span><br><span class="line">      appendInfo</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在分析和验证MessageSet(analyzeAndValidateMessageSet)时,会遍历ByteBufferMessageSet的每条MessageAndOffset<br>MessageAndOffset包括了消息Message和Offset. 这个Offset不是只有Log写入时才分配的吗,为什么客户端能决定offset?  </p>
+<h4 id="MessageSet">MessageSet</h4><p><code>MessageSet</code>: A set of messages with offsets. The format of each message is as follows:</p>
+<ul>
+<li>8 byte message <code>offset</code> number</li>
+<li>4 byte <code>size</code> containing an integer N</li>
+<li>N byte <code>message</code></li>
+</ul>
+<p><code>Message</code>: The format of an N byte message is the following:</p>
+<ul>
+<li>4 byte CRC32 of the message</li>
+<li>1 byte “magic” identifier to allow format changes, value is 0 currently</li>
+<li>1 byte “attributes” identifier(compression enabled, type of codec used)</li>
+<li>4 byte <code>key length</code>, containing length K</li>
+<li>K byte <code>key</code></li>
+<li>4 byte <code>payload length</code>, containing length V</li>
+<li>V byte <code>payload</code></li>
+</ul>
+<p><img src="http://img.blog.csdn.net/20160111120400346" alt="k_messageset"></p>
+<p>ByteBufferMessageSet的shallowIterator返回MessageAndOffset迭代器,验证集合中的每条消息是否合法.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">shallowIterator</span>:</span> <span class="type">Iterator</span>[<span class="type">MessageAndOffset</span>] = internalIterator(<span class="literal">true</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">internalIterator</span>(</span>isShallow: <span class="type">Boolean</span> = <span class="literal">false</span>): <span class="type">Iterator</span>[<span class="type">MessageAndOffset</span>] = &#123;</span><br><span class="line">  <span class="keyword">new</span> <span class="type">IteratorTemplate</span>[<span class="type">MessageAndOffset</span>] &#123;</span><br><span class="line">    <span class="keyword">var</span> topIter = buffer.slice()                      <span class="comment">// buffer是MessageSetByteBuffer</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">makeNextOuter</span>:</span> <span class="type">MessageAndOffset</span> = &#123;</span><br><span class="line">      <span class="keyword">if</span> (topIter.remaining &lt; <span class="number">12</span>) <span class="keyword">return</span> allDone()    <span class="comment">// if there isn't at least an offset and size, we are done. 至少要有8+4=12bytes</span></span><br><span class="line">      <span class="keyword">val</span> offset = topIter.getLong()                  <span class="comment">// 读取8bytes(Long类型)的offset的值</span></span><br><span class="line">      <span class="keyword">val</span> size = topIter.getInt()                     <span class="comment">// 读取4bytes(Int类型)的size的值, 这个值是Message的字节大小</span></span><br><span class="line">      <span class="keyword">if</span>(size &lt; <span class="type">Message</span>.<span class="type">MinHeaderSize</span>) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">InvalidMessageException</span>()    <span class="comment">// Message的Header部分(除了Key,Value的内容). 即size必须&gt;=HeaderSize</span></span><br><span class="line">      <span class="keyword">if</span>(topIter.remaining &lt; size) <span class="keyword">return</span> allDone()   <span class="comment">// we have an incomplete message</span></span><br><span class="line">      <span class="keyword">val</span> message = topIter.slice()                   <span class="comment">// read the current message and check correctness</span></span><br><span class="line">      message.limit(size)                             <span class="comment">// size表示消息的大小(N)</span></span><br><span class="line">      topIter.position(topIter.position + size)       <span class="comment">// 通过上面的slice,已经定位到这条消息的头部,再加上size, 定位到的是下一条消息的位置</span></span><br><span class="line">      <span class="keyword">val</span> newMessage = <span class="keyword">new</span> <span class="type">Message</span>(message)           <span class="comment">// 已经得到了Message的完整内容了(ByteBuffer)</span></span><br><span class="line">      <span class="keyword">new</span> <span class="type">MessageAndOffset</span>(newMessage, offset)        <span class="comment">// Message和offset组合成MessageAndOffset</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">makeNext</span>(</span>): <span class="type">MessageAndOffset</span> = makeNextOuter</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="analyzeAndValidateMessageSet">analyzeAndValidateMessageSet</h4><p>除了检查每条消息是否和CRC匹配,消息的大小是否有效,还返回了如下信息:  </p>
+<ul>
+<li>First offset in the message set 第一个offset</li>
+<li>Last offset in the message set 最后一个offset</li>
+<li>Number of messages 消息数量</li>
+<li>Number of valid bytes 有效字节数</li>
+<li>Whether the offsets are monotonically increasing 偏移量是否单调递增</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">analyzeAndValidateMessageSet</span>(</span>messages: <span class="type">ByteBufferMessageSet</span>): <span class="type">LogAppendInfo</span> = &#123;</span><br><span class="line">  <span class="keyword">var</span> shallowMessageCount = <span class="number">0</span>             <span class="comment">// 消息数量</span></span><br><span class="line">  <span class="keyword">var</span> validBytesCount = <span class="number">0</span>                 <span class="comment">// 有效字节数</span></span><br><span class="line">  <span class="keyword">var</span> firstOffset, lastOffset = -<span class="number">1</span>L       <span class="comment">// 第一条消息和最后一条(在循环时表示上一条消息的offset)消息的offset</span></span><br><span class="line">  <span class="keyword">var</span> monotonic = <span class="literal">true</span>                    <span class="comment">// 是否单调变化(单调递增)</span></span><br><span class="line">  <span class="keyword">for</span>(messageAndOffset &lt;- messages.shallowIterator) &#123;</span><br><span class="line">    <span class="keyword">if</span>(firstOffset &lt; <span class="number">0</span>) firstOffset = messageAndOffset.offset     <span class="comment">// update the first offset if on the first message</span></span><br><span class="line">    <span class="keyword">if</span>(lastOffset &gt;= messageAndOffset.offset) monotonic = <span class="literal">false</span>   <span class="comment">// check that offsets are monotonically increasing</span></span><br><span class="line">    lastOffset = messageAndOffset.offset                          <span class="comment">// update the last offset seen</span></span><br><span class="line">    <span class="keyword">val</span> m = messageAndOffset.message</span><br><span class="line">    <span class="keyword">val</span> messageSize = <span class="type">MessageSet</span>.entrySize(m)                     <span class="comment">// Check if the message sizes are valid.</span></span><br><span class="line">    m.ensureValid()                                               <span class="comment">// check the validity of the message by checking CRC      </span></span><br><span class="line">    shallowMessageCount += <span class="number">1</span></span><br><span class="line">    validBytesCount += messageSize</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="type">LogAppendInfo</span>(firstOffset, lastOffset, sourceCodec, targetCodec, shallowMessageCount, validBytesCount, monotonic)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为MessageSet包含多条Message.firstoOffset&lt;0只会在第一条消息时执行,firstOffset=第一条消息的offset.<br>lastOffset在遍历每条消息时,都更改为当前消息的offset. 初始时为-1,不执行if, 并赋值为第一条消息的offset,<br>第二条消息时,lastOffset是第一条消息的offset,messageAndOffset现在是第二条消息,如果是单调递增的offset,<br>越往后消息的offset都比前一条offset要高,则if语句同样都不会执行.直到最后一条消息的offset设置为lastOffset.  </p>
+<p><img src="http://img.blog.csdn.net/20160111135542050" alt="k_msgvalid"></p>
+<h4 id="validateMessagesAndAssignOffsets">validateMessagesAndAssignOffsets</h4><p>LogAppendInfo的firstOffset虽然上面已经计算出来了,但是真正是由LogOffsetMetadata.messageOffset确定的<br>同样lastOffset也需要根据初始化值重新计算:offsetCounter在每条消息不断循环时不断递增1.  </p>
+<p><img src="http://img.blog.csdn.net/20160111143238708" alt="k_offsetcounter"></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[kafka] <span class="function"><span class="keyword">def</span> <span class="title">validateMessagesAndAssignOffsets</span>(</span>offsetCounter: <span class="type">AtomicLong</span>, sourceCodec: <span class="type">CompressionCodec</span>, targetCodec: <span class="type">CompressionCodec</span>, compactedTopic: <span class="type">Boolean</span> = <span class="literal">false</span>): <span class="type">ByteBufferMessageSet</span> = &#123;</span><br><span class="line">  <span class="keyword">if</span>(sourceCodec == <span class="type">NoCompressionCodec</span> &amp;&amp; targetCodec == <span class="type">NoCompressionCodec</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> messagePosition = <span class="number">0</span></span><br><span class="line">    buffer.mark()         <span class="comment">// 先标记</span></span><br><span class="line">    <span class="keyword">while</span>(messagePosition &lt; sizeInBytes - <span class="type">MessageSet</span>.<span class="type">LogOverhead</span>) &#123;</span><br><span class="line">      buffer.position(messagePosition)                            <span class="comment">// 定位到MessageSet中代表每条消息的开头位置,从0开始</span></span><br><span class="line">      buffer.putLong(offsetCounter.getAndIncrement())             <span class="comment">// offsetCounter是每条消息都增加1(8bytes), 现在指针到了size的开头</span></span><br><span class="line">      <span class="keyword">val</span> messageSize = buffer.getInt()                           <span class="comment">// offset后面跟的是消息的大小size(4bytes), 读取出值=是消息的字节数</span></span><br><span class="line">      <span class="keyword">val</span> positionAfterKeySize = buffer.position + <span class="type">Message</span>.<span class="type">KeySizeOffset</span> + <span class="type">Message</span>.<span class="type">KeySizeLength</span>  <span class="comment">// pos是Message消息的位置,就size的末尾 </span></span><br><span class="line">      <span class="keyword">if</span> (compactedTopic &amp;&amp; positionAfterKeySize &lt; sizeInBytes) &#123;  </span><br><span class="line">        buffer.position(buffer.position() + <span class="type">Message</span>.<span class="type">KeySizeOffset</span>)<span class="comment">// 放到Message消息的Key-Length的开头     </span></span><br><span class="line">        <span class="keyword">val</span> keySize = buffer.getInt()                             <span class="comment">// 读取4bytes,即key-length的内容 </span></span><br><span class="line">      &#125;</span><br><span class="line">      messagePosition += <span class="type">MessageSet</span>.<span class="type">LogOverhead</span> + messageSize     <span class="comment">// 更新messagePosition为下一条消息做准备(8+消息大小表示MessageSet中一条完整的消息)</span></span><br><span class="line">    &#125;</span><br><span class="line">    buffer.reset()        <span class="comment">// 重置的时候, 回到最开始标记的地方</span></span><br><span class="line">    <span class="keyword">this</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在遍历完MessageSet后,offset的值是初始值+所有消息数量, 最后更新下LogAppendInfo的lastOffset.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">appendInfo.firstOffset = nextOffsetMetadata.messageOffset</span><br><span class="line"><span class="keyword">if</span>(assignOffsets) &#123; <span class="comment">// assign offsets to the message set</span></span><br><span class="line">  <span class="keyword">val</span> offset = <span class="keyword">new</span> <span class="type">AtomicLong</span>(nextOffsetMetadata.messageOffset)</span><br><span class="line">  validMessages = validMessages.validateMessagesAndAssignOffsets(offset, appendInfo.sourceCodec, appendInfo.targetCodec, config.compact)</span><br><span class="line">  appendInfo.lastOffset = offset.get - <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为什么在最后要减去1: 因为每条消息的offsetCounter在获取后就递增1,所以它表示的是下一条消息的offset.<br>假设初始值nextOffsetMetadata的offset=10,第一条消息的offset=10,递增1;第二条消息的offset=11,递增1.<br>假设有5条消息,最后的offset返回值=15,而实际上最有一条消息的offset=lastOffset应该是15-1=14  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">            |message1|message2|message3|message4|message5</span><br><span class="line">offset      <span class="number">10</span>        <span class="number">11</span>       <span class="number">12</span>       <span class="number">13</span>       <span class="number">14</span></span><br><span class="line">increment   <span class="number">11</span>        <span class="number">12</span>       <span class="number">13</span>       <span class="number">14</span>       <span class="number">15</span></span><br></pre></td></tr></table></figure>
+<h4 id="Segment_Roll">Segment Roll</h4><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">maybeRoll</span>(</span>messagesSize: <span class="type">Int</span>): <span class="type">LogSegment</span> = &#123;</span><br><span class="line">  <span class="keyword">val</span> segment = activeSegment</span><br><span class="line">  <span class="keyword">if</span> (segment.size &gt; config.segmentSize - messagesSize || segment.index.isFull || segment.size &gt; <span class="number">0</span> &amp;&amp; time.milliseconds - segment.created &gt; config.segmentMs - segment.rollJitterMs) &#123;</span><br><span class="line">    roll()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    segment</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2016/01/10/2016-01-10-Kafka_Apis/">Kafka源码分析 KafkaApis</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2016年01月10日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年01月11日 - 14时44分</p>
+  <p>
+    <span>原始链接:</span><a href="/2016/01/10/2016-01-10-Kafka_Apis/" title="Kafka源码分析 KafkaApis">http://github.com/zqhxuyuan/2016/01/10/2016-01-10-Kafka_Apis/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/10/2016-01-10-Kafka_Apis/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
+
+
+
+<nav id="article-nav">
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2016/01/08/2016-01-08-Kafka_SocketServer/">
+        Kafka源码分析 SocketServer
+      </a>
+    </div>
+  
+</nav>
+
+  
+</article>
+
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#KafkaApis"><span class="toc-number">1.</span> <span class="toc-text">KafkaApis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#handleProducerRequest"><span class="toc-number">2.</span> <span class="toc-text">handleProducerRequest</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ReplicaManager-appendMessages"><span class="toc-number">2.1.</span> <span class="toc-text">ReplicaManager.appendMessages</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Partition-appendMessagesToLeader"><span class="toc-number">2.2.</span> <span class="toc-text">Partition.appendMessagesToLeader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Log-append"><span class="toc-number">2.3.</span> <span class="toc-text">Log.append</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#MessageSet"><span class="toc-number">2.3.1.</span> <span class="toc-text">MessageSet</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#analyzeAndValidateMessageSet"><span class="toc-number">2.3.2.</span> <span class="toc-text">analyzeAndValidateMessageSet</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#validateMessagesAndAssignOffsets"><span class="toc-number">2.3.3.</span> <span class="toc-text">validateMessagesAndAssignOffsets</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Segment_Roll"><span class="toc-number">2.3.4.</span> <span class="toc-text">Segment Roll</span></a></li></ol></li></ol></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+</script>
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+	</div>
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+</div>
+
+
+
+
+
+
+
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
+
+
+  
+  
+    <div  class="post-nav-button">
+    <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+    <a href="/2016/01/08/2016-01-08-Kafka_SocketServer/" title="下一篇: Kafka源码分析 SocketServer">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+    
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2016 任何忧伤,都抵不过世界的美丽
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+        </div>
+    </div>
+    <div class="visit">
+      <span id="busuanzi_container_site_pv" style='display:none'>
+        <span id="site-visit" >本站到访数: 
+        <span id="busuanzi_value_site_uv"></span>
+        </span>
+      </span>
+      <span id="busuanzi_container_page_pv" style='display:none'>
+        <span id="page-visit">, 本页阅读量: 
+        <span id="busuanzi_value_page_pv"></span>
+        </span>
+      </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+<script>
+  var backgroundnum = 5;
+  var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+
+  $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+</script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+<a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+<a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
