@@ -11,7 +11,18 @@
 <meta property="og:url" content="http://github.com/zqhxuyuan/2016/01/13/2016-01-13-Kafka-Picture/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Kafka图文详解">
-<meta property="og:updated_time" content="2016-01-13T05:58:48.000Z">
+<meta property="og:image" content="http://img.blog.csdn.net/20160113140504014">
+<meta property="og:image" content="http://img.blog.csdn.net/20160113140517311">
+<meta property="og:image" content="http://img.blog.csdn.net/20160113140530210">
+<meta property="og:image" content="http://img.blog.csdn.net/20160113140543591">
+<meta property="og:image" content="http://img.blog.csdn.net/20160113142058239">
+<meta property="og:image" content="http://img.blog.csdn.net/20160113143518688">
+<meta property="og:image" content="http://img.blog.csdn.net/20160113143543700">
+<meta property="og:image" content="http://img.blog.csdn.net/20160113143556365">
+<meta property="og:image" content="http://img.blog.csdn.net/20160113143607573">
+<meta property="og:image" content="http://img.blog.csdn.net/20160113143921352">
+<meta property="og:image" content="http://img.blog.csdn.net/20160113144003091">
+<meta property="og:updated_time" content="2016-01-13T06:40:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka图文详解">
 <meta name="twitter:description" content="Kafka图文详解">
@@ -213,9 +224,44 @@
       
         
         <p>Kafka图文详解<br><a id="more"></a></p>
-<h2 id="ISR">ISR</h2><h2 id="Replication">Replication</h2><p>Leader宕机, 新的Leader一定是从先前Leader的ISR中选举出来的<br>ISR是所有副本的子集, 是那些能够及时地复制Leader日志的节点  </p>
+<h2 id="From_Quorum_to_ISR">From Quorum to ISR</h2><p>Every write operation goes to all replicas, but only responses<br>from a <strong>majority quorum</strong> are necessary to commit the write.<br>每一次写操作都分发到所有副本,只有大部分节点应答才能提交写<br>缺点:随着副本数的增加,集群中需要ack的节点数量比较多(n/2-1)<br>存储元数据,数据量不是很大,使用ZooKeeper比较合适  </p>
+<p><img src="http://img.blog.csdn.net/20160113140504014" alt="quorum"></p>
+<p>The ISR scheme of Kafka requires <strong>all the members</strong> of the current <code>ISR</code> to respond<br>对于一次写的提交,要求当前ISR中的所有成员都ack, 才算提交写成功<br>ISR的大小是可配置的,和副本数量没有关系.比如11个副本可以配置ISR=3, 如果用quorum,则需要6个节点ack  </p>
+<p><img src="http://img.blog.csdn.net/20160113140517311" alt="isr"></p>
+<p>场景1: 节点挂掉后重新和Leader同步数据</p>
+<p><img src="http://img.blog.csdn.net/20160113140530210" alt="isr_1"></p>
+<p>场景2: 普通节点和Leader节点都挂了,选举新的Leader</p>
+<p><img src="http://img.blog.csdn.net/20160113140543591" alt="isr_2"></p>
+<h2 id="Partition">Partition</h2><p>每条消息都有一个唯一的offset. 一个Topic分成多个Partition<br>每个Partition中消息offset都是一直增加, LEO表示最后一条消息的offset  </p>
+<p>可以认为一个Partition内的offset是全局有序的,一个Partition分成多个Segment, 每个Segment的offset也都是有序的<br>Segment与Segment之间的offset也是有序的, 所有这些Segment组成的一个Partition就是全局有序的  </p>
+<p><img src="http://img.blog.csdn.net/20160113142058239" alt="k_partition"></p>
+<h2 id="Replication">Replication</h2><p>Leader宕机, 新的Leader一定是从先前Leader的ISR中选举出来的<br>ISR是所有副本的子集, 是那些能够及时地复制Leader日志的节点  </p>
+<p><img src="http://img.blog.csdn.net/20160113143518688" alt="k_leader_follower"></p>
 <p>每个Partition的Leader通过计算每个副本和它相比落后的数量来跟踪(更新)ISR列表<br>当生产者生产一条消息给Broker,写到Leader节点, 并且复制到Partition的所有副本<br>但只有全部复制到ISR列表中的每个节点(ISR节点必须都ack), 这条消息才算被提交<br>复制到一个不在ISR列表中的节点, 即使没有ack也没有关系(因为它本身就比较慢了)  </p>
 <p>如果一个节点落后太多, 就会从ISR中移除. 这样复制延迟取决于ISR中最慢的节点<br>所以如果ISR中最慢的节点还不争气,也会被剔除掉, 最终在ISR中的节点一般都很快  </p>
+<p>假设副本数=3, 有三个Broker, 已经有三条消息committed了, 初始时所有的副本(包括Leader)都在ISR中<br>并且replica.lag.max.messages=4, 只要follower落后于Leader不超过3条消息, 就不会从ISR中移除<br>replica.lag.time.max.ms=500, 只要follower每隔500ms(或者更快)向Leader获取消息(fetch request)<br>就不会被标记为DEAD, 也就不会从ISR中移除(如果没有落后太多,但是长时间没fetch,也会被移除的).  </p>
+<ul>
+<li>lag.max.messages: detect slow replicas  </li>
+<li>lag.time.max: detect halted or dead replicas</li>
+</ul>
+<p><img src="http://img.blog.csdn.net/20160113143543700" alt="leo_1"></p>
+<p>Producer向Leader发送了一条消息, Leader的LEO增加了一.<br>这个时候Broker3由于某种原因卡住了, 无法从Leader上及时获取这条消息<br>而Broker2则正常地从Leader上同步了这条消息到自己本地.    </p>
+<p>由于一条消息被成功地提交的必要条件是: 在ISR中的所有节点都复制了这条消息.<br>Broker3还在ISR中, 只要它没有复制这条消息, 那么这条消息就不会被committed.  </p>
+<p>由于现在Broker3才落后Leader一条消息 &lt; replica.lag.max.messages=4<br>所以它并不会从ISR中移除, 所以只能静静地等Broker3…<br>要么再多落后几条消息, 从ISR中移除<br>要么赶快恢复过来, 然后从Leader复制消息, 及时赶上Leader,不要落后太多  </p>
+<p><img src="http://img.blog.csdn.net/20160113143556365" alt="leo_2"></p>
+<p>假设Broker3在100ms后恢复过来, 然后从Leader同步这条稍微延迟的消息<br>现在两个follower都复制了消息3, 由于ISR的所有节点都复制了消息3,<br>现在Leader的committed(HW)可以向后移动到消息3了.  </p>
+<p><img src="http://img.blog.csdn.net/20160113143607573" alt="leo_3"></p>
+<p>如果Producer发送一批4条消息 = lag.max.messages = 4<br>所有的follower都落后于leader太多了, 它们会从ISR中删除  </p>
+<p><img src="http://img.blog.csdn.net/20160113143921352" alt="leo_4"></p>
+<p>由于所有的follower都是alive的, 它们会在下次fetch request时赶上Leader的LEO<br>即复制这批消息, 现在落后的消息已经被补上了, 于是就会被重新加入到ISR中,<br>于此同时由于follower都复制了这批消息, committed也增加到最新的便宜位置  </p>
+<p><img src="http://img.blog.csdn.net/20160113144003091" alt="leo_5"></p>
+<p>这种大批量的生产消息, 造成follower不断地shuttle in and out of ISR (移除后又添加)<br>而且需要根据topic的期望流量猜测正确的值, 看起来并不是很好控制!  </p>
+<p><strong>现在统一只使用一个配置: replica.lag.time.max.ms 来控制stuck和slow的replica.</strong><br>不过它的含义变为: <strong>follower上的副本和Leader相比out-of-sync的时间</strong>  </p>
+<ul>
+<li>stuck replica含义仍然不变:如果没有及时发送fetch request, 会被认为Dead,并移除  </li>
+<li>slow replica: 副本从刚开始落后与Leader, 直到超过这个时间,说明它太慢了也会移除  </li>
+</ul>
+<p>这样即使有突增流量或一直都是大批消息, 除非副本一直落后与Leader太长的时间<br>否则如果副本只要在这个时间内能赶上Leader, 就不会出现删除后又添加到ISR的现象  </p>
 <h2 id="Ref">Ref</h2><ul>
 <li><a href="http://www.confluent.io/blog/distributed-consensus-reloaded-apache-zookeeper-and-replication-in-kafka" target="_blank" rel="external">http://www.confluent.io/blog/distributed-consensus-reloaded-apache-zookeeper-and-replication-in-kafka</a></li>
 <li><a href="http://www.confluent.io/blog/hands-free-kafka-replication-a-lesson-in-operational-simplicity/" target="_blank" rel="external">http://www.confluent.io/blog/hands-free-kafka-replication-a-lesson-in-operational-simplicity/</a></li>
@@ -231,7 +277,7 @@
   <p><span>本文标题:</span><a href="/2016/01/13/2016-01-13-Kafka-Picture/">Kafka图文详解</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年01月13日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年01月13日 - 13时58分</p>
+  <p><span>最后更新:</span>2016年01月13日 - 14时40分</p>
   <p>
     <span>原始链接:</span><a href="/2016/01/13/2016-01-13-Kafka-Picture/" title="Kafka图文详解">http://github.com/zqhxuyuan/2016/01/13/2016-01-13-Kafka-Picture/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/13/2016-01-13-Kafka-Picture/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -275,7 +321,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ISR"><span class="toc-number">1.</span> <span class="toc-text">ISR</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Replication"><span class="toc-number">2.</span> <span class="toc-text">Replication</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">3.</span> <span class="toc-text">Ref</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#From_Quorum_to_ISR"><span class="toc-number">1.</span> <span class="toc-text">From Quorum to ISR</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Partition"><span class="toc-number">2.</span> <span class="toc-text">Partition</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Replication"><span class="toc-number">3.</span> <span class="toc-text">Replication</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">4.</span> <span class="toc-text">Ref</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
