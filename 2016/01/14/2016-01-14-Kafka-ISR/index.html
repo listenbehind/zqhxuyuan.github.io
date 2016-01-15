@@ -16,7 +16,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160114153213150">
 <meta property="og:image" content="http://img.blog.csdn.net/20160114163702208">
 <meta property="og:image" content="http://img.blog.csdn.net/20160114094002808">
-<meta property="og:updated_time" content="2016-01-14T15:43:41.000Z">
+<meta property="og:updated_time" content="2016-01-15T01:19:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka源码分析 ISR">
 <meta name="twitter:description" content="接Kafla_LogAppend,消息存储到Leader的Partition之后…">
@@ -225,7 +225,7 @@
 <p>Each log is periodically synced to disks. Data before the flushed offset is guaranteed to be persisted on disks.<br>As we will see, the flush offset can be before or after HW.<br>每个日志都会定时地同步到磁盘.在flushed offset之前的数据一定能保存成功持久化到磁盘上.<br>flush offset可以在HW之前或者之后(因为follower只是先写到内存中然后返回ack给leader,hw增加时,<br>follower在内存中的消息不一定什么时候写到磁盘上,即可能在hw增加前就写到磁盘,或者等hw增加后才写到磁盘).</p>
 <p><strong>Writes</strong><br>To publish a message to a partition, the client first finds the <code>leader of the partition</code> from<br>Zookeeper and <code>sends the message to the leader</code>.The leader writes the message to its <code>local log</code>.<br>Each follower constantly <code>pulls</code> new messages from the leader using a single socket channel.<br>That way, the follower receives all messages in the <code>same order</code> as written in the leader.<br>为了将消息发布给一个Partition,客户端会从ZK中先找到这个Partition的Leader,然后把消息发送给Leader.<br>Leader会将消息写到自己的本地日志文件中,(Partition的)每个follower会从Leader一直拉取数据.<br>通过这种方式,follower接收的所有消息的顺序一定和写到leader的消息是同样的顺序.  </p>
 <p>The follower writes each received message to its <code>own log</code> and sends an <code>acknowledgment</code> back to the leader.<br>Once the leader receives the acknowledgment from <code>all replicas in ISR</code>, the message is <code>committed</code>.<br>The <code>leader advances the HW</code> and sends an acknowledgment to the client.<br>follower收到的每条消息都会写到自己的日志中,并且发送ack给leader.<br>一旦leader接收到在ISR中所有副本的ack,这条消息就会被提交.然后Leader会增加HW,并发送ack给客户端.</p>
-<p>For better performance, each follower sends an acknowledgment after the message is <code>written to memory</code>.<br>So, for each committed message, we guarantee that the message is stored in multiple replicas in memory.<br>However, there is <code>no guarantee</code> that any replica has <code>persisted</code> the commit message to disks though.<br>Given that correlated failures are relatively rare, this approach gives us a good balance between response time and durability.<br>In the future, we may consider adding options that provide even stronger guarantees.<br>为了性能考虑,每个follower当消息被写到内存时就发送ack(而不是要完全地刷写到磁盘上才ack).<br>所以对于每条提交的消息,我们能够保证的是这条消息一定是存储在多个副本(所有ISR)的内存中.<br>但是并不保证任何副本已经把这条提交的消息持久化到磁盘中.这是基于响应时间和持久性两者平衡的.    </p>
+<p>For better performance, each follower sends an acknowledgment after the message is <code>written to memory</code>.<br>So, for each committed message, we guarantee that the message is stored in multiple replicas in memory.<br>However, there is <code>no guarantee</code> that any replica has <code>persisted</code> the commit message to disks though.<br>Given that correlated failures are relatively rare, this approach gives us a good balance between response time and durability.<br>In the future, we may consider adding options that provide even stronger guarantees.<br>为了性能考虑,每个follower当消息被写到内存时就发送ack(而不是要完全地刷写到磁盘上才ack).<br>所以对于每条提交的消息,我们能够保证的是这条消息一定是存储在多个副本(所有ISR)的内存中.<br>但是并不保证任何副本已经把这条提交的消息持久化到磁盘中.这是基于响应时间和持久性两者平衡的.  </p>
 <p>The leader also periodically <code>broadcasts the HW</code> to all followers.<br>The broadcasting can be piggybacked(背负) on the return value of the <code>fetch requests</code> from the followers.<br>From time to time, <code>each replica checkpoints its HW to its disk</code>.<br>Leader也会定时地将HW广播给所有的followers. 广播消息可以附加在从follower过来的fetch请求的结果中.<br>同时,每个副本(不管是leader还是follower)也会定时地将HW持久化到自己的磁盘上.  </p>
 <p>当follower向leader提交fetch请求时,leader也会告诉所有的follower说,我现在的hw是多少了.这是一种保护机制.<br>假设只有leader一个人保护了hw这个重要的信息,一旦leader不幸挂掉了,就没有人知道hw现在到底是多少了.<br>所以只要一有follower过来获取消息时,leader就不厌其烦地像个老太婆不断地唠叨说我这一次的hw更新到了哪里.<br>每个follower也就都会知道leader的最新hw.这样即使leader挂掉了,hw仍然在其他follower上都备份有这个重要信息.<br>几个follower在一阵商量后,选举出了新的leader,这些人都知道上一个leader最新的hw,因此hw这个香火会继续传承下去.  </p>
 <p><strong>Reads</strong><br>For simplicity, reads are always served from the leader. Only messages up to the HW are exposed to the reader.<br>为了简单起见,只有leader可以提供读消息的服务.并且最多只到hw位置的消息才会暴露给客户端.  </p>
@@ -339,6 +339,8 @@
 <h4 id="DelayedOperation">DelayedOperation</h4><blockquote>
 <p>An operation whose processing needs to be delayed for at most the given delayMs. For example<br>a delayed produce operation could be waiting for specified number of acks; or<br>delayed fetch operation could be waiting for a given number of bytes to accumulate.<br>一个操作的处理需要被延迟执行,但是最多只能延迟给定的delayMs时间. 比如<br>一个延迟的消息生产操作可能需要等待指定数量的acks(写到leader后,等待所有的ISR返回ack,leader再ack给客户端)<br>一个延迟的消息读取操作可能需要等待累积到指定数量的字节(并不是leader增加了一点hw,consumer就立即获取一丁点的数据)</p>
 <p>The logic upon completing a delayed operation is defined in onComplete() and will be called exactly once.<br>Once an operation is completed, isCompleted() will return true. onComplete() can be triggered by either<br>forceComplete(), which forces calling onComplete() after delayMs if the operation is not yet completed,or<br>tryComplete(), which first checks if the operation can be completed by now, and if yes calls forceComplete().<br>完成一个延迟的操作定义在onComplete中,并且只会被调用一次.一旦一个操作完成了,isCompleted返回true.onComplete()被触发的条件:<br>forceComplete: 如果这个操作在过了delayMs后还没有完成,会强制调用onComplete.<br>tryComplete: 首先检查这个操作是否可以完成,如果可以完成,就调用forceComplete.  </p>
+<hr>
+<p>Kafka implements several request types that cannot immediately be answered with a response. Examples:<br>A produce request with acks=all cannot be considered complete until all in-sync replicas have acknowledged the write and we can guarantee it will not be lost if the leader fails.<br>A fetch request with min.bytes=1 won’t be answered until there is at least one new byte of data for the consumer to consume. This allows a “long poll” so that the consumer need not busy wait checking for new data to arrive.</p>
 </blockquote>
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">DelayedOperation</span>(</span>delayMs: <span class="type">Long</span>) <span class="keyword">extends</span> <span class="type">TimerTask</span> <span class="keyword">with</span> <span class="type">Logging</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">override</span> <span class="keyword">val</span> expirationMs = delayMs + <span class="type">System</span>.currentTimeMillis()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="IncrementLeaderHW">IncrementLeaderHW</h4><p>(可能)增加Partition的Hight Watermark(HW)的触发条件:  </p>
@@ -358,6 +360,9 @@
 <h2 id="Ref">Ref</h2><ul>
 <li><a href="http://www.jasongj.com/2015/04/24/KafkaColumn2/" target="_blank" rel="external">http://www.jasongj.com/2015/04/24/KafkaColumn2/</a></li>
 <li><a href="https://cwiki.apache.org/confluence/display/KAFKA/Kafka+Replication" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Kafka+Replication</a></li>
+<li></li>
+<li><a href="https://cwiki.apache.org/confluence/display/KAFKA/Kafka+API+Refactoring" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Kafka+API+Refactoring</a></li>
+<li><a href="http://www.confluent.io/blog/apache-kafka-purgatory-hierarchical-timing-wheels" target="_blank" rel="external">http://www.confluent.io/blog/apache-kafka-purgatory-hierarchical-timing-wheels</a></li>
 </ul>
 
       
@@ -370,7 +375,7 @@
   <p><span>本文标题:</span><a href="/2016/01/14/2016-01-14-Kafka-ISR/">Kafka源码分析 ISR</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年01月14日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年01月14日 - 23时43分</p>
+  <p><span>最后更新:</span>2016年01月15日 - 09时19分</p>
   <p>
     <span>原始链接:</span><a href="/2016/01/14/2016-01-14-Kafka-ISR/" title="Kafka源码分析 ISR">http://github.com/zqhxuyuan/2016/01/14/2016-01-14-Kafka-ISR/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/14/2016-01-14-Kafka-ISR/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
