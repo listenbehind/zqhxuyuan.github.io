@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Storm的CEP框架 flowmix | zqhxuyuan</title>
+  <title>Introduce Kafka | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Flowmix - A Flexible Event Processing Engine for Apache Storm: http://github.com/zqhxuyuan/bigdata/tree/master/storm/storm-flowmix">
+  <meta name="description" content="Introduce Kafka">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Storm的CEP框架 flowmix">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2015/07/26/2015-09-11-Flowmix-CEP/index.html">
+<meta property="og:title" content="Introduce Kafka">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/01/04/Kafka-Intro/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="Flowmix - A Flexible Event Processing Engine for Apache Storm: http://github.com/zqhxuyuan/bigdata/tree/master/storm/storm-flowmix">
-<meta property="og:updated_time" content="2015-12-03T03:57:46.000Z">
+<meta property="og:description" content="Introduce Kafka">
+<meta property="og:updated_time" content="2016-01-15T03:43:26.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Storm的CEP框架 flowmix">
-<meta name="twitter:description" content="Flowmix - A Flexible Event Processing Engine for Apache Storm: http://github.com/zqhxuyuan/bigdata/tree/master/storm/storm-flowmix">
+<meta name="twitter:title" content="Introduce Kafka">
+<meta name="twitter:description" content="Introduce Kafka">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -170,11 +170,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-2015-09-11-Flowmix-CEP" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Kafka-Intro" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/07/26/2015-09-11-Flowmix-CEP/" class="article-date">
-  	<time datetime="2015-07-25T16:00:00.000Z" itemprop="datePublished">2015-07-26</time>
+      <a href="/2016/01/04/Kafka-Intro/" class="article-date">
+  	<time datetime="2016-01-03T16:00:00.000Z" itemprop="datePublished">2016-01-04</time>
 </a>
     </div>
   
@@ -187,7 +187,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Storm的CEP框架 flowmix
+      Introduce Kafka
     </h1>
   
 
@@ -196,13 +196,13 @@
       <div class="article-info article-info-post">
         
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	<a class="article-category-link" href="/categories/mq/">mq</a>
 	</div>
 
 
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/storm/">storm</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
 	</div>
 
         <div class="clearfix"></div>
@@ -212,10 +212,137 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>Flowmix - A Flexible Event Processing Engine for Apache Storm: <a href="http://github.com/zqhxuyuan/bigdata/tree/master/storm/storm-flowmix">http://github.com/zqhxuyuan/bigdata/tree/master/storm/storm-flowmix</a></p>
-<a id="more"></a>
-<h2 id="Introduce">Introduce</h2><p>One of the solutions Flowmix offers to the resource and sliding window orchestration problem is having a single topology<br>deployed with a generic “stream” of domain-agnostic objects that can be routed around in different ways,<br>applying different operations to the events on their way through the bolts of the topology.<br>The streams can be split and joined together, bridged to other streams, and passed through a standard pluggable output bolt.<br>Events can be passed through relational operations like partitioning, aggregating, collecting, sorting, filtering, selection, and joining.</p>
-<p>Other non-relational operations like switches and governors can also be applied to orchestrate the flow of a stream of data.<br>Generic functions can be applied to each event as it passes through a stream.</p>
+        <p>Introduce Kafka<br><a id="more"></a></p>
+<h2 id="Background">Background</h2><p><strong>MQ的通讯模式</strong>  </p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Feature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>点对点通讯</td>
+<td>点对点方式是最为传统和常见的通讯方式，它支持一对一、一对多、多对多、多对一等多种配置方式，支持树状、网状等多种拓扑结构。</td>
+</tr>
+<tr>
+<td>多点广播</td>
+<td>MQ 适用于不同类型的应用。其中重要的，也是正在发展中的是”多点广播”应用，即能够将消息发送到多个目标站点 (Destination List)。可以使用一条 MQ 指令将单一消息发送到多个目标站点，并确保为每一站点可靠地提供信息。MQ 不仅提供了多点广播的功能，而且还拥有智能消息分发功能，在将一条消息发送到同一系统上的多个用户时，MQ 将消息的一个复制版本和该系统上接收者的名单发送到目标 MQ 系统。目标 MQ 系统在本地复制这些消息，并将它们发送到名单上的队列，从而尽可能减少网络的传输量。</td>
+</tr>
+<tr>
+<td>发布/订阅(Publish/Subscribe)模式</td>
+<td>发布/订阅功能使消息的分发可以突破目的队列地理指向的限制，使消息按照特定的主题甚至内容进行分发，用户或应用程序可以根据主题或内容接收到所需要的消息。发布/订阅功能使得发送者和接收者之间的耦合关系变得更为松散，发送者不必关心接收者的目的地址，而接收者也不必关心消息的发送地址，而只是根据消息的主题进行消息的收发。</td>
+</tr>
+<tr>
+<td>群集 (Cluster)</td>
+<td>为了简化点对点通讯模式中的系统配置，MQ 提供 Cluster(群集) 的解决方案。群集类似于一个域 (Domain)，群集内部的队列管理器之间通讯时，不需要两两之间建立消息通道，而是采用群集 (Cluster) 通道与其它成员通讯，从而大大简化了系统配置。此外，群集中的队列管理器之间能够自动进行负载均衡，当某一队列管理器出现故障时，其它队列管理器可以接管它的工作，从而大大提高系统的高可靠性。</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键概念</strong></p>
+<table>
+<thead>
+<tr>
+<th>Concepts</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Topic</td>
+<td>用于划分Message的逻辑概念，一个Topic可以分布在多个Broker上。</td>
+</tr>
+<tr>
+<td>Partition</td>
+<td>是Kafka中横向扩展和一切并行化的基础，每个Topic都至少被切分为1个Partition。</td>
+</tr>
+<tr>
+<td>Offset</td>
+<td>消息在Partition中的编号，编号顺序不跨Partition(在Partition内有序)。</td>
+</tr>
+<tr>
+<td>Consumer</td>
+<td>用于从Broker中取出/消费Message。</td>
+</tr>
+<tr>
+<td>Producer</td>
+<td>用于往Broker中发送/生产Message。</td>
+</tr>
+<tr>
+<td>Replication</td>
+<td>Kafka支持以Partition为单位对Message进行冗余备份，每个Partition都可以配置至少1个Replication(当仅1个Replication时即仅该Partition本身)。</td>
+</tr>
+<tr>
+<td>Leader</td>
+<td>每个Replication集合中的Partition都会选出一个唯一的Leader，所有的读写请求都由Leader处理。其他Replicas从Leader处把数据更新同步到本地。</td>
+</tr>
+<tr>
+<td>Broker</td>
+<td>Kafka中使用Broker来接受Producer和Consumer的请求，并把Message持久化到本地磁盘。每个Cluster当中会选举出一个Broker来担任Controller，负责处理Partition的Leader选举，协调Partition迁移等工作。</td>
+</tr>
+<tr>
+<td>ISR</td>
+<td>In-Sync Replica,是Replicas的一个子集，表示目前Alive且与Leader能够“Catch-up”的Replicas集合。由于读写都是首先落到Leader上，所以一般来说通过同步机制从Leader上拉取数据的Replica都会和Leader有一些延迟(包括了延迟时间和延迟条数两个维度)，任意一个超过阈值都会把该Replica踢出ISR。每个Leader Partition都有它自己独立的ISR。</td>
+</tr>
+</tbody>
+</table>
+<p><strong>设计思想</strong></p>
+<table>
+<thead>
+<tr>
+<th>Concepts</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Consumergroup</td>
+<td>各个consumer可以组成一个组，每个消息只能被组中的一个consumer消费，如果一个消息可以被多个consumer消费的话，那么这些consumer必须在不同的组。</td>
+</tr>
+<tr>
+<td>消息状态</td>
+<td>在Kafka中，消息的状态被保存在consumer中，broker不会关心哪个消息被消费了被谁消费了，只记录一个offset值（指向partition中下一个要被消费的消息位置），这就意味着如果consumer处理不好的话，broker上的一个消息可能会被消费多次。</td>
+</tr>
+<tr>
+<td>消息持久化</td>
+<td>Kafka中会把消息持久化到本地文件系统中，并且保持极高的效率。</td>
+</tr>
+<tr>
+<td>消息有效期</td>
+<td>Kafka会长久保留其中的消息，以便consumer可以多次消费，当然其中很多细节是可配置的。</td>
+</tr>
+<tr>
+<td>批量发送</td>
+<td>Kafka支持以消息集合为单位进行批量发送，以提高push效率。</td>
+</tr>
+<tr>
+<td>push-and-pull</td>
+<td>Kafka中的Producer和consumer采用的是push-and-pull模式，即Producer只管向broker push消息，consumer只管从broker pull消息，两者对消息的生产和消费是异步的。</td>
+</tr>
+<tr>
+<td>Broker之间的关系</td>
+<td>不是主从关系，各个broker在集群中地位一样，我们可以随意的增加或删除任何一个broker节点。</td>
+</tr>
+<tr>
+<td>负载均衡</td>
+<td>Kafka提供了一个 metadata API来管理broker之间的负载（对Kafka0.8.x而言，对于0.7.x主要靠zookeeper来实现负载均衡）。</td>
+</tr>
+<tr>
+<td>同步异步</td>
+<td>Producer采用异步push方式，极大提高Kafka系统的吞吐率（可以通过参数控制是采用同步还是异步方式）。</td>
+</tr>
+<tr>
+<td>分区机制partition</td>
+<td>Kafka的broker端支持消息分区，Producer可以决定把消息发到哪个分区，在一个分区中消息的顺序就是Producer发送消息的顺序，一个主题中可以有多个分区，具体分区的数量是可配置的。分区的意义很重大，后面的内容会逐渐体现。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Ref">Ref</h2><ul>
+<li><a href="http://www.ibm.com/developerworks/cn/opensource/os-cn-kafka/index.html" target="_blank" rel="external">http://www.ibm.com/developerworks/cn/opensource/os-cn-kafka/index.html</a></li>
+<li><a href="http://bbs.umeng.com/thread-12086-1-1.html" target="_blank" rel="external">http://bbs.umeng.com/thread-12086-1-1.html</a></li>
+<li><a href="http://www.aboutyun.com/forum.php?mod=viewthread&amp;tid=15812" target="_blank" rel="external">http://www.aboutyun.com/forum.php?mod=viewthread&amp;tid=15812</a></li>
+</ul>
 
       
     </div>
@@ -224,13 +351,13 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2015/07/26/2015-09-11-Flowmix-CEP/">Storm的CEP框架 flowmix</a></p>
+  <p><span>本文标题:</span><a href="/2016/01/04/Kafka-Intro/">Introduce Kafka</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
-  <p><span>发布时间:</span>2015年07月26日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月03日 - 11时57分</p>
+  <p><span>发布时间:</span>2016年01月04日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年01月15日 - 11时43分</p>
   <p>
-    <span>原始链接:</span><a href="/2015/07/26/2015-09-11-Flowmix-CEP/" title="Storm的CEP框架 flowmix">http://github.com/zqhxuyuan/2015/07/26/2015-09-11-Flowmix-CEP/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/07/26/2015-09-11-Flowmix-CEP/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2016/01/04/Kafka-Intro/" title="Introduce Kafka">http://github.com/zqhxuyuan/2016/01/04/Kafka-Intro/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/04/Kafka-Intro/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -256,15 +383,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2015/08/01/2015-08-01-ElasticSearch/">
-        ElasticSearch入门
+      <a href="/2016/01/04/BookNote_Scala_doc/">
+        Scala Documentation
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/07/26/2015-07-26-drill-fragment-execute/">
-        Apache Drill源码阅读(6) execute
+      <a href="/2015/12/31/BookNote_Learning_Scala/">
+        Learning Scala学习笔记
       </a>
     </div>
   
@@ -277,7 +404,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduce"><span class="toc-number">1.</span> <span class="toc-text">Introduce</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Background"><span class="toc-number">1.</span> <span class="toc-text">Background</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">2.</span> <span class="toc-text">Ref</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -373,10 +500,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2015/08/01/2015-08-01-ElasticSearch/" title="上一篇: ElasticSearch入门">
+    <a href="/2016/01/04/BookNote_Scala_doc/" title="上一篇: Scala Documentation">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/07/26/2015-07-26-drill-fragment-execute/" title="下一篇: Apache Drill源码阅读(6) execute">
+    <a href="/2015/12/31/BookNote_Learning_Scala/" title="下一篇: Learning Scala学习笔记">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

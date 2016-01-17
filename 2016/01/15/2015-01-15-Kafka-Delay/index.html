@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Kafka源码分析 Delay | zqhxuyuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="接Kafla ISR,生产消息和拉取消息被缓存…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka源码分析 Delay">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/01/15/2015-01-15-Kafka-Delay/index.html">
+<meta property="og:site_name" content="zqhxuyuan">
+<meta property="og:description" content="接Kafla ISR,生产消息和拉取消息被缓存…">
+<meta property="og:image" content="http://img.blog.csdn.net/20160115150609044">
+<meta property="og:image" content="http://img.blog.csdn.net/20160115164203951">
+<meta property="og:image" content="http://img.blog.csdn.net/20160115165434436">
+<meta property="og:updated_time" content="2016-01-15T14:09:09.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kafka源码分析 Delay">
+<meta name="twitter:description" content="接Kafla ISR,生产消息和拉取消息被缓存…">
+  
+    <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">任何忧伤,都抵不过世界的美丽</a></h1>
+		</hgroup>
+
+		
+				
+
+
+		
+			<div id="switch-btn" class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div id="switch-area" class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives/">归档</a></li>
+				        
+							<li><a href="/tags/">标签</a></li>
+				        
+							<li><a href="/about/">关于</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.33px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/timeseries/" style="font-size: 13.33px;">timeseries</a> <a href="/tags/translate/" style="font-size: 10px;">translate</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">BIG(DATA)</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="/" class="profilepic">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			</a>
+			<hgroup>
+			  <h1 class="header-author"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives/">归档</a></li>
+		        
+					<li><a href="/tags/">标签</a></li>
+		        
+					<li><a href="/about/">关于</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-2015-01-15-Kafka-Delay" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/15/2015-01-15-Kafka-Delay/" class="article-date">
+  	<time datetime="2016-01-14T16:00:00.000Z" itemprop="datePublished">2016-01-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Kafka源码分析 Delay
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Source/">Source</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>接Kafla ISR,生产消息和拉取消息被缓存…<br><a id="more"></a></p>
+<h2 id="DelayedOperation">DelayedOperation</h2><p>Producer设置acks=-1,则要求所有的ISR都ack给Leader,再由Leader发送ack给Producer.<br>由于ISR是分布在集群中各个节点的,再加上网络等问题,所以这个过程并不是很快就能完成的.<br>但是Producer生产消息的速度是很快的,而且是大批量的.Producer由于不能立即得到响应,<br>而且一个ProducerRequest包含的是多个Partition的消息(TopicAndPartition-&gt;MessageSet)  </p>
+<p>一个Request要等所有Partition都ack给Producer,才算这个Request完成了.所以需要在服务端保存Producer请求相关的数据.相当于要维护一个<code>缓存</code>.<br>因为ISR fetch是异步的,不能保证什么时候完成,消息追加到Leader的Partition后需要<code>等待</code>所有ISR同步完成,等待的过程就使得这个请求是被<code>延迟</code>的<br>ReplicaManager负责创建延迟的DelayedProduce,但是<code>监视</code>这个操作什么时候加入到purgatory,以及什么时候<code>完成</code>,则交给Purgatory统一<code>管理</code>.  </p>
+<p><img src="http://img.blog.csdn.net/20160115150609044" alt="k_delay_produce"></p>
+<p><strong>延迟操作是如何完成的?</strong></p>
+<p>An operation whose processing needs to be delayed for at most the given delayMs. For example<br>a delayed produce operation could be waiting for specified number of acks; or<br>delayed fetch operation could be waiting for a given number of bytes to accumulate.  </p>
+<p>Kafka implements several request types that cannot immediately be answered with a response. Examples:<br>A produce request with acks=all cannot be considered complete until all in-sync replicas<br>have acknowledged the write and we can guarantee it will not be lost if the leader fails.<br>A fetch request with min.bytes=1 won’t be answered until there is at least one new byte of data for the consumer to consume.<br>This allows a “long poll” so that the consumer need not busy wait checking for new data to arrive. </p>
+<blockquote>
+<p>一个操作的处理需要被延迟执行,但是最多只能延迟给定的delayMs时间. 比如<br>一个延迟的消息生产操作可能需要等待指定数量的acks(写到leader后,等待所有的ISR返回ack,leader再ack给客户端)<br>一个延迟的消息读取操作可能需要等待累积到指定数量的字节(并不是leader增加了一点hw,consumer就立即获取一丁点的数据)</p>
+</blockquote>
+<p>The logic upon completing a delayed operation is defined in onComplete() and will be called exactly once.<br>Once an operation is completed, isCompleted() will return true. onComplete() can be triggered by either<br>forceComplete(), which forces calling onComplete() after delayMs if the operation is not yet completed,or<br>tryComplete(), which first checks if the operation can be completed by now, and if yes calls forceComplete().  </p>
+<blockquote>
+<p>完成一个延迟的操作定义在onComplete中,并且只会被调用一次.一旦一个操作完成了,isCompleted返回true.onComplete()被触发的条件:<br>forceComplete: 如果这个操作在过了delayMs后还没有完成,会强制调用onComplete.<br>tryComplete: 首先检查这个操作是否可以完成,如果可以完成,就调用forceComplete.  </p>
+</blockquote>
+<p>DelayedProduce以及父类DelayedOperation的参数<code>delayMs</code>表示如果超过这个时间,就算是超时了!<br>假设Producer期望在500ms内得到响应,即使这时所有Partition没有全部将ack返回给客户端,那么就要<code>触发完成</code>.  </p>
+<p><strong>为什么需要缓存?</strong></p>
+<p>当生产者设置了同步选项(requiredAcks为-1)时才会启动生产缓存,因为每一批生产的消息,需要等待ISR中所有的follower replicas同步成功.<br>在ISR中所有follower replicas上报自己的messageOffset追上leader partition之前，生产请求会一直保留在生产缓存中，等待直到超时。</p>
+<p>拉取请求为什么也需要缓存？因为kafka在消费消息时有一个默认选项，一次拉取最低消费1条消息。<br>那么如果消费者拉取的时候没有任何新消息生产，则拉取请求会保留到拉取缓存中，等待直到超时。<br>这在一定程度上避免了反复拉取一批空消息占用带宽资源的问题。 </p>
+<p><strong>缓存什么时候更新?</strong></p>
+<p>生产者可以选择批量发送消息,所以在server端接到这批消息时(当前server含有leader partition),首先要做的就是把消息写入本地文件.<br>之后会第一时间更新<code>拉取缓存</code>.kafka对缓存的处理策略是,任何操作只要有可能会对缓存施加影响,都第一时间进行更新缓存,<br>以尽可能的释放处于等待状态的拉取请求.也就是说有可能等待新消息(生产)的拉取请求，在这个时候就会带着新消息返回给消费者了.<br>之后会根据生产者配置的requiredAcks选项分为三种策略，只有当requiredAcks为-1会把这批消息的生产请求进行缓存.<br>缓存之后会迅速对生产缓存和拉取缓存进行检查，kafka不放过任何可以释放缓存中请求的机会.  </p>
+<h2 id="DelayedOperationPurgatory-tryCompleteElseWatch">DelayedOperationPurgatory.tryCompleteElseWatch</h2><p>Check if the operation can be completed, if not, watch it based on the given watch keys.<br>Note that a delayed operation can be watched on multiple keys.<br>It is possible that an operation is completed after it has been added to the watch list for some,but not all of the keys.<br>In this case, the operation is considered completed and won’t be added to the watch list of the remaining keys.<br>The expiration reaper thread will remove this operation from any watcher list in which the operation exists.  </p>
+<blockquote>
+<p>检查操作是否可以完成,如果不能,则根据给定的watchKeys加入到watch中(即监视这个watch).<br>一个延迟的操作会被多个keys监视(因为一个ProduceRequest有多个TopicAndPartition,key为TAP,value都是这个Request).  </p>
+</blockquote>
+<ul>
+<li>一个ProduceRequest有多个TopicAndPartition,其中TopicAndPartition会作为Key.  </li>
+<li>多次不同的ProduceRequest请求,可能会落在同一个TopicAndPartition里.  </li>
+<li>所以DelayedOperationPurgatory存储Key是TopicAndPartition,Value是ProduceRequest监视列表  </li>
+</ul>
+<p><img src="http://img.blog.csdn.net/20160115164203951" alt="k_purgatory-keys"></p>
+<blockquote>
+<p>有可能在将这个操作加入到某些key中(并不是所有的keys),这个操作就已经完成了(分成了两部分keys,前面的key加入的时候还没完成,后面的算完成了).<br>这种情况下,剩下的keys不需要将操作加入到监视列表中,因为这个时候操作已经完成了. 失效清理线程会从所有的keys中移除已经完成的这个操作.  </p>
+</blockquote>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> <span class="built_in">add</span>   <span class="built_in">add</span>   <span class="built_in">add</span>   <span class="built_in">add</span>     no need <span class="built_in">to</span> <span class="built_in">add</span> watch <span class="built_in">from</span> here </span><br><span class="line"> key1  key2  key3  key4    key5 key6 ...</span><br><span class="line">|<span class="comment">-------------------------|------------------------&gt;</span></span><br><span class="line">                          ⬆️</span><br><span class="line">                          这个时候Operation完成了! </span><br><span class="line">                          |&lt;<span class="comment">---remaining keys</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://img.blog.csdn.net/20160115165434436" alt="k_purgatory_key2"></p>
+<p>The cost of tryComplete() is typically proportional(均衡,成比例的) to the number of keys.<br>Calling tryComplete() for each key is going to be expensive if there are many keys. Instead,we do the check in the following way.<br>Call tryComplete(). If the operation is not completed, we just add the operation to all keys. Then we call tryComplete() again.<br>At this time, if the operation is still not completed, we are guaranteed that it won’t miss any future triggering event<br>since the operation is already on the watcher list for all keys.<br>This does mean that if the operation is completed (by another thread) between the two tryComplete() calls,<br>the operation is unnecessarily added for watch.However,this is a less severe issue since the expire reaper will clean it up periodically.</p>
+<blockquote>
+<p>调用tryComplete的代价和keys的数量是成比例的.如果有很多keys,为每个key都调用一次tryComplete是很昂贵的操作.所以采用下面的检查方式:<br>调用一次tryComplete(Operation级别),如果操作还没完成,把这个操作添加到所有的keys中.再调用一次tryComplete.这个时候如果操作仍然没有完成,<br>我们能确保这个操作不会丢失即将触发的事件(什么事件?),因为这个操作已经在所有的keys的监听列表中.<br>同时意味着,如果这个操作在两次tryComplete调用中被另外一个线程完成了,它就不会被加入到监听列表中.<br>但是这并不是一个很严重的问题,因为(即使加入了)它会被reaper线程定时地清理掉.</p>
+</blockquote>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DelayedOperationPurgatory</span>[</span><span class="type">T</span> &lt;: <span class="type">DelayedOperation</span>]()&#123;</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> executor = <span class="type">Executors</span>.newFixedThreadPool(<span class="number">1</span>, <span class="keyword">new</span> <span class="type">ThreadFactory</span>() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">newThread</span>(</span>runnable: <span class="type">Runnable</span>): <span class="type">Thread</span> = <span class="type">Utils</span>.newThread(<span class="string">"executor-"</span>+purgatoryName, runnable, <span class="literal">false</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">private</span>[<span class="keyword">this</span>] <span class="keyword">val</span> timeoutTimer = <span class="keyword">new</span> <span class="type">Timer</span>(executor)                                          <span class="comment">// timeout timer</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">val</span> watchersForKey = <span class="keyword">new</span> <span class="type">Pool</span>[<span class="type">Any</span>, <span class="type">Watchers</span>](<span class="type">Some</span>((key: <span class="type">Any</span>) =&gt; <span class="keyword">new</span> <span class="type">Watchers</span>(key)))   <span class="comment">// a list of operation watching keys</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">val</span> removeWatchersLock = <span class="keyword">new</span> <span class="type">ReentrantReadWriteLock</span>()</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">tryCompleteElseWatch</span>(</span>operation: <span class="type">T</span>, watchKeys: <span class="type">Seq</span>[<span class="type">Any</span>]): <span class="type">Boolean</span> = &#123;</span><br><span class="line">    <span class="comment">// 第一次调用Operatiron的tryComplete,即第一次尝试完成这个操作</span></span><br><span class="line">    <span class="keyword">var</span> isCompletedByMe = operation synchronized operation.tryComplete()</span><br><span class="line">    <span class="keyword">if</span> (isCompletedByMe) <span class="keyword">return</span> <span class="literal">true</span>                    <span class="comment">// 操作完成了,不需要加入到缓存中</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> watchCreated = <span class="literal">false</span>                            <span class="comment">// 这个操作是否被监视过</span></span><br><span class="line">    <span class="keyword">for</span>(key &lt;- watchKeys) &#123;                             <span class="comment">// 所有的key都监视这个相同的操作</span></span><br><span class="line">      <span class="keyword">if</span> (operation.isCompleted()) <span class="keyword">return</span> <span class="literal">false</span>         <span class="comment">// If the operation is already completed, stop adding it to the rest of the watcher list.</span></span><br><span class="line">      watchForOperation(key, operation)                 <span class="comment">// 将Operation加入到key的监视列表中</span></span><br><span class="line">      <span class="keyword">if</span> (!watchCreated) &#123;                              <span class="comment">// 有可能其他线程先执行,导致watchCreated=true</span></span><br><span class="line">        watchCreated = <span class="literal">true</span>                             <span class="comment">// 因为这是在所有的key中设置,一旦为true,其他key就没有机会再执行了</span></span><br><span class="line">        estimatedTotalOperations.incrementAndGet()      <span class="comment">// 所以一个操作,即使有多个keys,这里也只会增加一次</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 第二次尝试完成这个操作</span></span><br><span class="line">    isCompletedByMe = operation synchronized operation.tryComplete()</span><br><span class="line">    <span class="keyword">if</span> (isCompletedByMe) <span class="keyword">return</span> <span class="literal">true</span>                    <span class="comment">// 只要能完成,就立即结束</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// if it cannot be completed by now and hence is watched, add to the expire queue also</span></span><br><span class="line">    <span class="keyword">if</span> (! operation.isCompleted()) &#123;</span><br><span class="line">      timeoutTimer.add(operation)                       <span class="comment">// 现在还没有完成,加入到失效队列中</span></span><br><span class="line">      <span class="keyword">if</span> (operation.isCompleted()) operation.cancel()   <span class="comment">// cancel the timer task</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="literal">false</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Return the watch list of the given key, note that we need to grab the removeWatchersLock to avoid the operation being added to a removed watcher list</span></span><br><span class="line">  <span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">watchForOperation</span>(</span>key: <span class="type">Any</span>, operation: <span class="type">T</span>) &#123;</span><br><span class="line">    inReadLock(removeWatchersLock) &#123;</span><br><span class="line">      <span class="keyword">val</span> watcher = watchersForKey.getAndMaybePut(key)</span><br><span class="line">      watcher.watch(operation)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="DelayedProduce">DelayedProduce</h2><p>以生产请求DelayedProduce.tryComplete为例,它的完成必须等待所有ISR完成复制(或者到达客户端的超时时间).<br>DelayedProduce每调用一次tryComplete,就要查下是否有足够副本超过本批消息的最后一条offset+1(requiredOffset)<br>因为这批消息追加到Leader之后,ISR中的副本的offset也要达到requiredOffset才表示它们完全复制了这批消息.  </p>
+<p>如果说HW没有更新的话(ISR都没有ack导致的),leaderReplica的HW肯定会比requiredOffset小.<br>因为requiredOffset表示的是这批消息最后一条消息的offset,它一定是比Leader现有的HW要大.<br>如果ISR都ack之后,才会更新Leader的HW,这时候才有可能将HW设置为requiredOffset一样的大小.<br>注意是有可能,因为有时候可能只是增加了一点点,在HW &lt; requiredOffset的情况下,都是没有完全复制的.</p>
+<p><img src="" alt="k_offset_check"> </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Note that this method will only be called if requiredAcks = -1 只有ack=-1时才需要判断,因为其他值并不需要ISR发送ack给Leader</span></span><br><span class="line"><span class="comment">// and we are waiting for all replicas in ISR to be fully caught up to the (local) leader's offset 完全赶上Leader的offset </span></span><br><span class="line"><span class="comment">// corresponding to this produce request before we acknowledge the produce request. 这个offset是Leader在这次ProduceRequest中最后一条消息的offset</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">checkEnoughReplicasReachOffset</span>(</span>requiredOffset: <span class="type">Long</span>): (<span class="type">Boolean</span>, <span class="type">Short</span>) = &#123;</span><br><span class="line">  leaderReplicaIfLocal() <span class="keyword">match</span> &#123;                      <span class="comment">// 还是由Leader Partition所在的节点做这部分工作</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">Some</span>(leaderReplica) =&gt;</span><br><span class="line">      <span class="keyword">val</span> curInSyncReplicas = inSyncReplicas          <span class="comment">// keep the current immutable replica list reference</span></span><br><span class="line">      <span class="keyword">val</span> numAcks = curInSyncReplicas.count(r =&gt; &#123;    <span class="comment">// count计算返回值为true的个数,即副本的offset超过要求的offset.</span></span><br><span class="line">        <span class="keyword">if</span> (!r.isLocal)                               <span class="comment">// ISR节点中不是本地的, 即follower replicas</span></span><br><span class="line">          <span class="keyword">if</span> (r.logEndOffset.messageOffset &gt;= requiredOffset) <span class="literal">true</span> <span class="keyword">else</span> <span class="literal">false</span>  <span class="comment">//副本的offset等于required可以理解,大于是什么意思?</span></span><br><span class="line">        <span class="keyword">else</span> <span class="literal">true</span>                                     <span class="comment">// also count the local (leader) replica. Leader自己也在ISR中的</span></span><br><span class="line">      &#125;)</span><br><span class="line">      <span class="comment">//----------------------------------------------上面计算出来的numAcks对返回结果没有影响. </span></span><br><span class="line">      <span class="keyword">val</span> minIsr = leaderReplica.log.get.config.minInSyncReplicas  </span><br><span class="line">      <span class="comment">// 只有Leader的HW &gt;= requiredOffset的时候,说明这个ProduceRequest请求的这批消息都已经被ISR中的所有replica完全复制了.  </span></span><br><span class="line">      <span class="comment">// 因为Leader的HW是针对整个Partition的, 如果发生了两次生产请求,而requiredOffset还是第一次的,在第二次请求都被完全同步后,HW就比第一次的requiredOffset要大了.</span></span><br><span class="line">      <span class="keyword">if</span> (leaderReplica.highWatermark.messageOffset &gt;= requiredOffset ) &#123;</span><br><span class="line">        <span class="comment">// The topic may be configured not to accept messages if there are not enough replicas in ISR. 有些topic可能设置ISR的副本数量最少有minIsr个.</span></span><br><span class="line">        <span class="comment">// in this scenario the request was already appended locally and then added to the purgatory before the ISR was shrunk</span></span><br><span class="line">        <span class="keyword">if</span> (minIsr &lt;= curInSyncReplicas.size) &#123;</span><br><span class="line">          (<span class="literal">true</span>, <span class="type">ErrorMapping</span>.<span class="type">NoError</span>)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          (<span class="literal">true</span>, <span class="type">ErrorMapping</span>.<span class="type">NotEnoughReplicasAfterAppendCode</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> (<span class="literal">false</span>, <span class="type">ErrorMapping</span>.<span class="type">NoError</span>)            <span class="comment">// 如果ISR都没有ack,不会更新Leader的HW,就会导致HW&lt;requiredOffset</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Ref">Ref</h2><ul>
+<li><a href="http://www.cnblogs.com/devos/p/5060271.html" target="_blank" rel="external">http://www.cnblogs.com/devos/p/5060271.html</a></li>
+<li><a href="http://bigbully.github.io/kafka高可用性架构分析/" target="_blank" rel="external">http://bigbully.github.io/kafka高可用性架构分析/</a></li>
+<li><a href="https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=34839465" target="_blank" rel="external">https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=34839465</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/KAFKA/Kafka+API+Refactoring" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Kafka+API+Refactoring</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/KAFKA/Purgatory+Redesign+Proposal" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Purgatory+Redesign+Proposal</a></li>
+<li><a href="http://www.confluent.io/blog/apache-kafka-purgatory-hierarchical-timing-wheels" target="_blank" rel="external">http://www.confluent.io/blog/apache-kafka-purgatory-hierarchical-timing-wheels</a></li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2016/01/15/2015-01-15-Kafka-Delay/">Kafka源码分析 Delay</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2016年01月15日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年01月15日 - 22时09分</p>
+  <p>
+    <span>原始链接:</span><a href="/2016/01/15/2015-01-15-Kafka-Delay/" title="Kafka源码分析 Delay">http://github.com/zqhxuyuan/2016/01/15/2015-01-15-Kafka-Delay/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/15/2015-01-15-Kafka-Delay/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
+
+
+
+<nav id="article-nav">
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2016/01/14/Kafka-Replica/">
+        Kafka Replication
+      </a>
+    </div>
+  
+</nav>
+
+  
+</article>
+
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#DelayedOperation"><span class="toc-number">1.</span> <span class="toc-text">DelayedOperation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DelayedOperationPurgatory-tryCompleteElseWatch"><span class="toc-number">2.</span> <span class="toc-text">DelayedOperationPurgatory.tryCompleteElseWatch</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DelayedProduce"><span class="toc-number">3.</span> <span class="toc-text">DelayedProduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">4.</span> <span class="toc-text">Ref</span></a></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+    if ($(".toc").length < 1) {
+        $("#toc").css("display","none");
+        $("#tocButton").css("display","none");
+        $(".switch-btn").css("display","block");
+        $(".switch-area").css("display","block");
+    }
+</script>
+
+
+    <style>
+        .toc {
+            white-space: nowrap;
+            overflow-x: hidden;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $(".toc li a").mouseover(function() {
+                var title = $(this).attr('href');
+                $(this).attr("title", title);
+            });
+        })
+    </script>
+
+
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+	</div>
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+</div>
+
+
+
+
+
+
+
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
+
+
+  
+  
+    <div  class="post-nav-button">
+    <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+    <a href="/2016/01/14/Kafka-Replica/" title="下一篇: Kafka Replication">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+    
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2016 任何忧伤,都抵不过世界的美丽
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+        </div>
+    </div>
+    <div class="visit">
+      <span id="busuanzi_container_site_pv" style='display:none'>
+        <span id="site-visit" >本站到访数: 
+        <span id="busuanzi_value_site_uv"></span>
+        </span>
+      </span>
+      <span id="busuanzi_container_page_pv" style='display:none'>
+        <span id="page-visit">, 本页阅读量: 
+        <span id="busuanzi_value_page_pv"></span>
+        </span>
+      </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+<script>
+  var backgroundnum = 5;
+  var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+
+  $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+</script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+<a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+<a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
