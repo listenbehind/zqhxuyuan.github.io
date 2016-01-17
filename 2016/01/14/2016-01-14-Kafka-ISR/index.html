@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160114094002808">
 <meta property="og:image" content="http://img.blog.csdn.net/20160117162956999">
 <meta property="og:image" content="http://img.blog.csdn.net/20160117163023129">
-<meta property="og:updated_time" content="2016-01-17T08:30:40.000Z">
+<meta property="og:updated_time" content="2016-01-17T08:49:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka源码分析 ISR和Replica">
 <meta name="twitter:description" content="接Kafla_LogAppend,消息存储到Leader的Partition之后,ISR保证Partition的复制…">
@@ -335,7 +335,17 @@
 <li>C.1 <code>(Leader)Partition的ISR发生变化</code> (假设某个很慢的节点落后很多从ISR中移除,而其他节点大部分都catch-up,就可以更新HW)</li>
 <li>C.2 <code>任何Replication的LEO</code>发生变化 (ISR中的followers有任何一个节点LEO改变,看看所有ISR是否都复制了,然后更新HW)</li>
 </ul>
-<p>上面几个触发条件(延迟请求以及增加HW)中关于ISR的部分都是环环相扣的:  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">maybeIncrementLeaderHW</span>(</span>leaderReplica: <span class="type">Replica</span>): <span class="type">Boolean</span> = &#123;</span><br><span class="line">  <span class="comment">// 所有inSync副本中最小的LEO(因为每个follower的LEO都可能不一样), 表示的是最新的hw</span></span><br><span class="line">  <span class="keyword">val</span> allLogEndOffsets = inSyncReplicas.map(_.logEndOffset)</span><br><span class="line">  <span class="keyword">val</span> newHighWatermark = allLogEndOffsets.min(<span class="keyword">new</span> <span class="type">LogOffsetMetadata</span>.<span class="type">OffsetOrdering</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Leader本身的hw, 是旧的</span></span><br><span class="line">  <span class="keyword">val</span> oldHighWatermark = leaderReplica.highWatermark  <span class="comment">// 是一个LogOffsetMetadata</span></span><br><span class="line">  <span class="keyword">if</span>(oldHighWatermark.precedes(newHighWatermark)) &#123;   <span class="comment">// 比较Leader的messageOffset是否小于ISR的</span></span><br><span class="line">    leaderReplica.highWatermark = newHighWatermark    <span class="comment">// Leader小于ISR, 更新Leader为ISR中最小的</span></span><br><span class="line">    <span class="literal">true</span>      </span><br><span class="line">  &#125;<span class="keyword">else</span> <span class="literal">false</span>     <span class="comment">// Returns true if the HW was incremented, and false otherwise.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在Log中append的updateLogEndOffset(LogAppendInfo.lastOffset+1)更新的是LogOffsetMetadata的messageOffset<br>而这里的oldHighWatermark和newHighWatermark也都是LogOffsetMetadata(最重要的就是messageOffset字段了)!<br>所以实际比较的是两个LogOffsetMetadata的messageOffset, 只有<code>Leader的HW</code>小于<code>ISR最小的LEO</code>,才更新Leader的HW.  </p>
+<ul>
+<li><code>leaderReplica</code>是Partition的Leader副本,一个Partition只有一个Leader,读写都发生在Leader上</li>
+<li><code>inSyncReplicas</code>是Partition的follower中追赶上Leader的副本(并不是所有Follower都是InSync)  </li>
+</ul>
+<blockquote>
+<p>这两个属性都是Partiton级别的,即Partiton要知道它的leader是哪个,以及这个leader管理的isr列表是什么.  </p>
+</blockquote>
+<h2 id="其他">其他</h2><p><strong>delay operation complete</strong></p>
+<p>触发条件(延迟请求以及增加HW)中关于ISR的部分都是环环相扣的:  </p>
 <ul>
 <li>leader有新消息写到本地日志(生产者写新数据) –&gt; A.2 –&gt; DelayedFetch</li>
 <li>leader replication的LEO发生变化(追加了新消息) –&gt; C.2 –&gt; HW</li>
@@ -346,16 +356,7 @@
 <li>producer等待ISR都同步成功,导致HW变化,就可以返回响应 –&gt; B.1 –&gt; DelayedProduce</li>
 </ul>
 <p><img src="http://img.blog.csdn.net/20160117162956999" alt="k_trigger"></p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">maybeIncrementLeaderHW</span>(</span>leaderReplica: <span class="type">Replica</span>): <span class="type">Boolean</span> = &#123;</span><br><span class="line">  <span class="comment">// 所有inSync副本中最小的LEO(因为每个follower的LEO都可能不一样), 表示的是最新的hw</span></span><br><span class="line">  <span class="keyword">val</span> allLogEndOffsets = inSyncReplicas.map(_.logEndOffset)</span><br><span class="line">  <span class="keyword">val</span> newHighWatermark = allLogEndOffsets.min(<span class="keyword">new</span> <span class="type">LogOffsetMetadata</span>.<span class="type">OffsetOrdering</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Leader本身的hw, 是旧的</span></span><br><span class="line">  <span class="keyword">val</span> oldHighWatermark = leaderReplica.highWatermark  <span class="comment">// 是一个LogOffsetMetadata</span></span><br><span class="line">  <span class="keyword">if</span>(oldHighWatermark.precedes(newHighWatermark)) &#123;   <span class="comment">// 比较Leader的messageOffset是否小于ISR的</span></span><br><span class="line">    leaderReplica.highWatermark = newHighWatermark    <span class="comment">// Leader小于ISR, 更新Leader为ISR中最小的</span></span><br><span class="line">    <span class="literal">true</span>      </span><br><span class="line">  &#125;<span class="keyword">else</span> <span class="literal">false</span>     <span class="comment">// Returns true if the HW was incremented, and false otherwise.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在Log中append的updateLogEndOffset(LogAppendInfo.lastOffset+1)更新的是LogOffsetMetadata的messageOffset<br>而这里的oldHighWatermark和newHighWatermark也都是LogOffsetMetadata(最重要的就是messageOffset字段了)!<br>所以实际比较的是两个LogOffsetMetadata的messageOffset, 只有<code>Leader的HW</code>小于<code>ISR最小的LEO</code>,才更新Leader的HW.  </p>
-<ul>
-<li><code>leaderReplica</code>是Partition的Leader副本,一个Partition只有一个Leader,读写都发生在Leader上</li>
-<li><code>inSyncReplicas</code>是Partition的follower中追赶上Leader的副本(并不是所有Follower都是InSync)  </li>
-</ul>
-<blockquote>
-<p>这两个属性都是Partiton级别的,即Partiton要知道它的leader是哪个,以及这个leader管理的isr列表是什么.  </p>
-</blockquote>
-<h2 id="其他">其他</h2><p><strong>Partition and Replica Creation</strong></p>
+<p><strong>Partition and Replica Creation</strong></p>
 <p>ReplicaManager负责管理Partiton, 所以是在ReplicaManager创建Partition的: getOrCreatePartition<br>Partition负责管理Replica, 所以是在Partition中创建Replica的: getOrCreateReplica  </p>
 <p>ReplicaManager要管理Broker上的所有Partition, allPartitions: Pool[(String, Int), Partition]<br>Partition也要管理分配的所有Replica,还有Leader Replica和ISR.  </p>
 <p><img src="http://img.blog.csdn.net/20160117163023129" alt="k_replica_comps"></p>
@@ -383,7 +384,7 @@
   <p><span>本文标题:</span><a href="/2016/01/14/2016-01-14-Kafka-ISR/">Kafka源码分析 ISR和Replica</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年01月14日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年01月17日 - 16时30分</p>
+  <p><span>最后更新:</span>2016年01月17日 - 16时49分</p>
   <p>
     <span>原始链接:</span><a href="/2016/01/14/2016-01-14-Kafka-ISR/" title="Kafka源码分析 ISR和Replica">http://github.com/zqhxuyuan/2016/01/14/2016-01-14-Kafka-ISR/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/14/2016-01-14-Kafka-ISR/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
