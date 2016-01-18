@@ -11,11 +11,15 @@
 <meta property="og:url" content="http://github.com/zqhxuyuan/2016/01/15/2015-01-15-Kafka-Delay/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="接Kafla ISR,生产消息和拉取消息被缓存…">
+<meta property="og:image" content="http://img.blog.csdn.net/20160118111407767">
+<meta property="og:image" content="http://img.blog.csdn.net/20160118102237373">
+<meta property="og:image" content="http://img.blog.csdn.net/20160118105026702">
 <meta property="og:image" content="http://img.blog.csdn.net/20160115150609044">
+<meta property="og:image" content="http://img.blog.csdn.net/20160118131152310">
 <meta property="og:image" content="http://img.blog.csdn.net/20160115164203951">
 <meta property="og:image" content="http://img.blog.csdn.net/20160115165434436">
 <meta property="og:image" content="http://img.blog.csdn.net/20160117164143899">
-<meta property="og:updated_time" content="2016-01-17T09:26:29.000Z">
+<meta property="og:updated_time" content="2016-01-18T05:14:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka源码分析 Delay">
 <meta name="twitter:description" content="接Kafla ISR,生产消息和拉取消息被缓存…">
@@ -217,14 +221,85 @@
       
         
         <p>接Kafla ISR,生产消息和拉取消息被缓存…<br><a id="more"></a></p>
-<h2 id="DelayedOperation">DelayedOperation</h2><p>Producer设置acks=-1,则要求所有的ISR都ack给Leader,再由Leader发送ack给Producer.<br>由于ISR是分布在集群中各个节点的,再加上网络等问题,所以这个过程并不是很快就能完成的.<br>但是Producer生产消息的速度是很快的,并且通常是大批量的.因此Producer不能立即得到响应.<br>而且一个ProducerRequest包含的是多个Partition的消息(TopicAndPartition-&gt;MessageSet)  </p>
+<h2 id="DelayedOperation">DelayedOperation</h2><p>DelayedOperation包括两种: DelayedFetch和DelayedProduce. 存在DelayedFetch是为了更高效地fetch(batch fetch);<br>存在DelayedProduce是为了等待更多副本的写入, 以达到用户指定的持久性保证(这样消息更不容易丢失).<br>对于DelayedOperation而言,什么时候不再需要delay是必须指明的, 根据操作的不同,delay被满足的条件有所不同.但也有共同的比如max wait time.  </p>
+<p><img src="http://img.blog.csdn.net/20160118111407767" alt="k_delay"></p>
+<h3 id="ProducerRequest_&amp;_DelayedProduce">ProducerRequest &amp; DelayedProduce</h3><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">ProducerRequest</span>(</span>versionId: <span class="type">Short</span> = <span class="type">ProducerRequest</span>.<span class="type">CurrentVersion</span>, correlationId: <span class="type">Int</span>, clientId: <span class="type">String</span>,</span><br><span class="line">                           requiredAcks: <span class="type">Short</span>,</span><br><span class="line">                           ackTimeoutMs: <span class="type">Int</span>,</span><br><span class="line">                           data: collection.mutable.<span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">ByteBufferMessageSet</span>])</span><br><span class="line">    <span class="keyword">extends</span> <span class="type">RequestOrResponse</span>(<span class="type">Some</span>(<span class="type">ApiKeys</span>.<span class="type">PRODUCE</span>.id))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>requiredAcks: 当ack=-1时，要求所有在ISR的replica都已经确认写入了这个produce request的内容，leader才会返回响应给producer</li>
+<li>ackTimeoutMs: 服务器可以等待的在RequiredAcks的条件下收到指定数量的ack(ISR所有副本的数量)的最长时间.  </li>
+</ul>
+<blockquote>
+<p>当一个ProducerRequest由于这两个参数而需要等待时，Kafka就生成一个DelayedProduce对象，来表示’delay’的语义(<strong>生产请求被延迟发送响应给Producer</strong>)</p>
+</blockquote>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">ProducePartitionStatus</span>(</span>requiredOffset: <span class="type">Long</span>, responseStatus: <span class="type">ProducerResponseStatus</span>)</span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">ProduceMetadata</span>(</span>produceRequiredAcks: <span class="type">Short</span>, produceStatus: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">ProducePartitionStatus</span>])</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DelayedProduce</span>(</span>delayMs: <span class="type">Long</span>,</span><br><span class="line">                     produceMetadata: <span class="type">ProduceMetadata</span>,</span><br><span class="line">                     replicaManager: <span class="type">ReplicaManager</span>,</span><br><span class="line">                     responseCallback: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">ProducerResponseStatus</span>] =&gt; <span class="type">Unit</span>)</span><br><span class="line">  <span class="keyword">extends</span> <span class="type">DelayedOperation</span>(delayMs)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>ProducePartitionStatus: 针对一个Partition, 当所有replica拉取到至少requiredOffset,才会返回响应给Producer</li>
+<li>ProduceMetadata: 针对所有Partition, 记录了一些对Producer请求加工后的信息，便于以后判断delay条件时使用</li>
+<li>produceRequiredAcks: 和ProducerRequest的requiredAcks是一样的, 都表示什么时候返回ack给Producer</li>
+<li>delayMs: 和ProducerRequest的ackTimeoutMs一样, 表示超时时间</li>
+</ul>
+<blockquote>
+<p>DelayedProduce 在把消息集append到本地后，就可以获取append之后这个消息集的最后一条消息的offset，由此推出来当<br>follower来请求到至少那一条消息(最后一条消息)时，就说明这个replica已经拉取完了这个message set，这个offset就是requiredOffset  </p>
+</blockquote>
+<h3 id="FetchRequest_&amp;_DelayedFetch">FetchRequest &amp; DelayedFetch</h3><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">FetchRequest</span>(</span>versionId: <span class="type">Short</span> = <span class="type">FetchRequest</span>.<span class="type">CurrentVersion</span>, correlationId: <span class="type">Int</span> = <span class="type">FetchRequest</span>.<span class="type">DefaultCorrelationId</span>, clientId: <span class="type">String</span> = <span class="type">ConsumerConfig</span>.<span class="type">DefaultClientId</span>,</span><br><span class="line">                        replicaId: <span class="type">Int</span> = <span class="type">Request</span>.<span class="type">OrdinaryConsumerId</span>,</span><br><span class="line">                        maxWait: <span class="type">Int</span> = <span class="type">FetchRequest</span>.<span class="type">DefaultMaxWait</span>,</span><br><span class="line">                        minBytes: <span class="type">Int</span> = <span class="type">FetchRequest</span>.<span class="type">DefaultMinBytes</span>,</span><br><span class="line">                        requestInfo: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">PartitionFetchInfo</span>])</span><br><span class="line">        <span class="keyword">extends</span> <span class="type">RequestOrResponse</span>(<span class="type">Some</span>(<span class="type">ApiKeys</span>.<span class="type">FETCH</span>.id))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>maxWait: 如果没有足够的数据, 这个FetchRequest可以最多等待这么长时间, 以期待更多的数据到来</li>
+<li>minBytes: 在返回Response前最少获取这么多字节的数据。如果client把这个值设成0，那么server将会总是立即返回响应，尽管可能在上一次请求后没有新数据，client也会收到一个空的message set。如果把这个值设成1，那么只要一个partition有至少1byte的数据，或者指定的timeout到了，那么server也会返回响应。通过把这个值设大一些，并且配合timeout的设置，consumer可以只读取一批数据，从而在吞吐量和延迟之间进行调节(比如把MaxWaitTime设成100ms, 并且把MiniBytes设成64k，将使得server在返回响应给client之前，最多等待100ms来收集够64k的数据)</li>
+</ul>
+<blockquote>
+<p>当一个FetchRequest由于这两个参数而需要等待时，Kafka就生成一个DelayedFetch对象，来表示’delay’的语义(<strong>拉取请求被延迟返回数据给消费者</strong>)</p>
+</blockquote>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">PartitionFetchInfo</span>(</span>offset: <span class="type">Long</span>, fetchSize: <span class="type">Int</span>)</span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">FetchPartitionStatus</span>(</span>startOffsetMetadata: <span class="type">LogOffsetMetadata</span>, fetchInfo: <span class="type">PartitionFetchInfo</span>)</span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">FetchMetadata</span>(</span>fetchMinBytes: <span class="type">Int</span>, fetchOnlyLeader: <span class="type">Boolean</span>, fetchOnlyCommitted: <span class="type">Boolean</span>, isFromFollower: <span class="type">Boolean</span>,</span><br><span class="line">                         fetchPartitionStatus: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">FetchPartitionStatus</span>])     </span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DelayedFetch</span>(</span>delayMs: <span class="type">Long</span>,</span><br><span class="line">                   fetchMetadata: <span class="type">FetchMetadata</span>,</span><br><span class="line">                   replicaManager: <span class="type">ReplicaManager</span>,</span><br><span class="line">                   responseCallback: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">FetchResponsePartitionData</span>] =&gt; <span class="type">Unit</span>)</span><br><span class="line">  <span class="keyword">extends</span> <span class="type">DelayedOperation</span>(delayMs)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>PartitionFetchInfo  针对一个partition的，说明了从Partition的哪个offset开始读，以及最多读取多少byte的数据</li>
+<li>FetchPartitionStatus 针对一个partition的，startOffsetMetadata包含了与LogSegment有关的信息，它可以定位到具体的物理Segment</li>
+<li>FetchMetadata 包括了每个partition的FetchPartitionStatus(是个Map)，以及前边提到的minBytes(fetchMinBytes)等信息。</li>
+</ul>
+<blockquote>
+<p>DelayedFetch包括了FetchMetadata等信息(所有要拉取Partition的状态)，其中的delayMs就是前边提到的maxWait.<br>FetchRequest提供了关于原始的FetchRequest的信息，以及在FetchRequest处理的步骤中补充的一些信息</p>
+</blockquote>
+<h3 id="多个Partition">多个Partition</h3><p>在上面的定义里，在针对单个Partition的FetchRequest和ProduceRequest里，都可以produce以及fetch到这个partition。<br>而delay参数，比如ack以及minBytes都是针对整个Request(一个Request是包含多个Partition)的。<br>所以对于ProduceRequest而言，只有它包括的所有partition的ISR都已经确认，这个Request才会整体不再被delay。<br>而对于FetchRequest，只要总的bytes超过了minBytes，不管是不是所有Partition的数据都有，它都会不再被delay。  </p>
+<p>ProduceRequest的这种行为是由于对于它的响应只会有一个，所以需要等所有partition都处理完了，再能给出这个响应。<br>这个对于异步的Producer也是一样。如果需要允许确认一部分Partition就返回响应，那么server和client端的处理就会麻烦很多。  </p>
+<p>而FetchRequest的这种行为使得无法保证fetch到的数据中不同partition的比例，可能并不是特别好。<br>但是大部分情况下，还都是只针对一个Partition发一个FetchRequest，所以不会受到影响。  </p>
+<h3 id="responseCallback">responseCallback</h3><p>DelayedOperation的两个实现类的参数都是类似的,都有delayMs,Metatada,ReplicaManager,responseCallback.<br>不过因为生产和拉取请求类型不同,metadata和response的类型也不同. Metadata中都对应了另外一个触发条件.<br>比如FetchMetadata的触发条件是fetchMinBytes, ProduceMetadata的触发条件是produceRequiredAcks.<br>这也是DelayedOperation只有一个类参数delayMs的原因,因为生产和拉取请求都有共同的timeout最长等待时间.  </p>
+<p><img src="http://img.blog.csdn.net/20160118102237373" alt="k_req_meta"></p>
+<p>因为延迟操作最后一定会满足某个条件而触发完成的动作,完成后会调用responseCallback回调函数.  </p>
+<p><img src="http://img.blog.csdn.net/20160118105026702" alt="k_delay_resp"></p>
+<h3 id="Purgatory_&amp;_Cache">Purgatory &amp; Cache</h3><p><strong>为什么需要缓存?</strong></p>
+<p>当生产者设置了同步选项(requiredAcks为-1)时才会启动生产缓存,因为每一批生产的消息,需要等待ISR中所有的follower replicas同步成功.<br><code>在</code>ISR中所有follower replicas上报自己的messageOffset追上leader partition<code>之前</code>,生产<code>请求</code>会一直<code>保留在</code>生产<code>缓存中</code>,<code>等待直到超时</code>.  </p>
+<p>拉取请求为什么也需要缓存? 因为kafka在消费消息时默认一次拉取最低消费1条消息.如果消费者拉取的时候没有任何新消息生产,<br>则拉取请求会保留到拉取缓存中,等待直到超时. 这在一定程度上避免了反复拉取一批空消息占用带宽资源的问题。 </p>
+<p><strong>Produce缓存</strong></p>
+<p>生产者可以选择批量发送消息,所以在server端接到这批消息时(当前server含有leader partition),首先要把消息写入本地文件.<br>之后会第一时间更新<code>拉取缓存</code>.kafka对缓存的处理策略是,任何操作只要有可能会对缓存施加影响,都第一时间进行更新缓存,<br>以尽可能的<code>释放</code>处于<code>等待状态的拉取请求</code>.也就是说有可能等待新消息(生产)的拉取请求，在这个时候就会带着新消息返回给消费者了.  </p>
+<p>之后会根据生产者配置的requiredAcks选项分为三种策略，只有当requiredAcks为-1会把这批消息的生产请求进行缓存.<br>缓存之后会迅速对生产缓存和拉取缓存进行检查，kafka不放过任何可以释放缓存中请求的机会.  </p>
+<p>Producer设置acks=-1,则要求所有的ISR都ack给Leader,再由Leader发送ack给Producer.<br>由于ISR是分布在集群中各个节点的,再加上网络等问题,所以这个过程并不是很快就能完成的.<br>但是Producer生产消息的速度是很快的,并且通常是大批量的.因此Producer不能立即得到响应.<br>而且一个ProducerRequest包含的是多个Partition的消息(TopicAndPartition-&gt;MessageSet)  </p>
 <p>一个Request要等所有Partition都ack给Producer,才算这个Request完成了.所以需要在服务端保存Producer请求相关的数据.相当于要维护一个<code>缓存</code>.<br>因为ISR fetch是异步的,不能保证什么时候完成,消息追加到Leader的Partition后需要<code>等待</code>所有ISR同步完成,等待的过程就使得这个请求是被<code>延迟</code>的<br>ReplicaManager负责创建延迟的DelayedProduce,但是<code>监视</code>这个操作什么时候加入到purgatory,以及什么时候<code>完成</code>,则交给Purgatory统一<code>管理</code>.  </p>
 <p><img src="http://img.blog.csdn.net/20160115150609044" alt="k_delay_produce"></p>
-<p><strong>为什么需要缓存?</strong></p>
-<p>当生产者设置了同步选项(requiredAcks为-1)时才会启动生产缓存,因为每一批生产的消息,需要等待ISR中所有的follower replicas同步成功.<br>在ISR中所有follower replicas上报自己的messageOffset追上leader partition之前，生产请求会一直保留在生产缓存中，等待直到超时。</p>
-<p>拉取请求为什么也需要缓存？因为kafka在消费消息时有一个默认选项，一次拉取最低消费1条消息。<br>那么如果消费者拉取的时候没有任何新消息生产，则拉取请求会保留到拉取缓存中，等待直到超时。<br>这在一定程度上避免了反复拉取一批空消息占用带宽资源的问题。 </p>
-<p><strong>缓存什么时候更新?</strong></p>
-<p>生产者可以选择批量发送消息,所以在server端接到这批消息时(当前server含有leader partition),首先要做的就是把消息写入本地文件.<br>之后会第一时间更新<code>拉取缓存</code>.kafka对缓存的处理策略是,任何操作只要有可能会对缓存施加影响,都第一时间进行更新缓存,<br>以尽可能的释放处于等待状态的拉取请求.也就是说有可能等待新消息(生产)的拉取请求，在这个时候就会带着新消息返回给消费者了.<br>之后会根据生产者配置的requiredAcks选项分为三种策略，只有当requiredAcks为-1会把这批消息的生产请求进行缓存.<br>缓存之后会迅速对生产缓存和拉取缓存进行检查，kafka不放过任何可以释放缓存中请求的机会.  </p>
+<p><strong>Fetch缓存</strong></p>
+<p>kafka中从分区和普通的消费者几乎一致,所有这些fetch请求都会在handleFetchRequest方法中进行处理.<br>fetch请求首先会更新<code>上一次</code>拉取结果的从分区的水位线(即follower的最新messageOffset),<br>因为我们知道什么时候<code>释放生产缓存</code>是根据从分区的水位线是否<code>追上</code>主分区来决定的(都赶上后才释放),<br>所以fetch请求更新完从分区水位线之后会立刻<code>检查</code>是否可以释放生产请求(每个fetch请求都要检查),<br>由于<code>生产请求</code>释放之后会相应地<code>影响</code>被缓存的<code>拉取请求</code>,所以也要检查是否能<code>更新拉取请求</code>.  </p>
+<p>读取本地磁盘,按偏移量读出本次能够拉去的消息.并根据<code>每次拉取的最小消息量</code>配置项决定是否要把拉取请求推入拉取缓存中。<br>如果拉取请求被推入拉取缓存，他就会等待新的消息生产，直到从缓存中释放，返回消息给消费者或者从分区。 </p>
+<p>缓存的相互影响主要是生产缓存对拉取缓存的影响, 但是两者是有相互影响的.  </p>
+<ul>
+<li>生产者写入新消息到Leader, follower会去同步Leader的消息, 客户端的acks=-1时,生产请求<code>加入</code>到生产缓存</li>
+<li>当生产缓存被<code>释放</code>(DelayedProduce完成), 说明所有的follower都同步了这批消息, Leader会更新HW</li>
+</ul>
+<p>因为follower和消费者都会向Leader拉取消息, 不同的是follower跟踪的是Leader的LEO,消费者跟踪的是HW.  </p>
+<ul>
+<li>拉取请求一直在等待生产者的新消息, 在等待的过程中由于条件不满足(minBytes不够或未超时),拉取请求<code>加入</code>到拉取缓存</li>
+<li>当有新的消息到来, 拉取缓存就有机会释放处于等待中的拉取请求</li>
+<li>拉取缓存被释放(DelayedFetch完成), 说明拉取到了足够的消息, 如果是消费者,则直接返回拉取的新消息给消费者</li>
+<li>如果是follower fetch了消息,返回ack给Leader, 生产缓存有机会释放等待中的生产请求(满足ISR的条件)</li>
+</ul>
+<p><img src="http://img.blog.csdn.net/20160118131152310" alt="k_delay_cache"></p>
+<h3 id="DelayedOperation接口">DelayedOperation接口</h3><p>两种Request都有max wait时间，为此需要定期检查被delayed的这些request是否超时(expire)了，为了做到这一点，需要一个定时任务。</p>
+<p>除了时间触发之外，对DelayedOperation的delay条件是否满足的检查还有一些是事件触发的，比如，对于DelayedProduce，当一个replica发来fetch请求时，leader就获取了replica拉取进度的新信息，因此就需要检查下DelayedProduce是否可以被满足(可以被满足就是说这个DelayedOperation应该摆脱delay状态)。同样的，对于DelayedFetch，当有新的producer request里的消息append到leader，就需要检查下处于delayed状态的DelayedFetch请求是否可以被满足。因此，DelayedOperation必须有接口可以被调用以检查是否delay条件被满足了。</p>
+<p>此外，DelayedOperation应该指明在delay条件满足之后应该怎么做，比如此时应该发送response;以及应该在expire之后应该怎么做。</p>
+<p>因此，它大概需要以下方法：</p>
+<ul>
+<li>isCompleted  检查是否已经被完成</li>
+<li>tryComplete 检查delay条件是否已经满足，满足的话就执行一些操作</li>
+<li>onExpiration 在expire以后怎么做</li>
+<li>onComplete 在complete之后怎么做</li>
+</ul>
 <p><strong>延迟操作是如何完成的?</strong></p>
 <p>An operation whose processing needs to be delayed for at most the given delayMs. For example<br>a delayed produce operation could be waiting for specified number of acks; or<br>delayed fetch operation could be waiting for a given number of bytes to accumulate.  </p>
 <p>Kafka implements several request types that cannot immediately be answered with a response. Examples:<br>A produce request with acks=all cannot be considered complete until all in-sync replicas<br>have acknowledged the write and we can guarantee it will not be lost if the leader fails.<br>A fetch request with min.bytes=1 won’t be answered until there is at least one new byte of data for the consumer to consume.<br>This allows a “long poll” so that the consumer need not busy wait checking for new data to arrive. </p>
@@ -279,7 +354,7 @@
   <p><span>本文标题:</span><a href="/2016/01/15/2015-01-15-Kafka-Delay/">Kafka源码分析 Delay</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年01月15日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年01月17日 - 17时26分</p>
+  <p><span>最后更新:</span>2016年01月18日 - 13时14分</p>
   <p>
     <span>原始链接:</span><a href="/2016/01/15/2015-01-15-Kafka-Delay/" title="Kafka源码分析 Delay">http://github.com/zqhxuyuan/2016/01/15/2015-01-15-Kafka-Delay/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/15/2015-01-15-Kafka-Delay/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -323,7 +398,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#DelayedOperation"><span class="toc-number">1.</span> <span class="toc-text">DelayedOperation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DelayedOperationPurgatory-tryCompleteElseWatch"><span class="toc-number">2.</span> <span class="toc-text">DelayedOperationPurgatory.tryCompleteElseWatch</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DelayedProduce"><span class="toc-number">3.</span> <span class="toc-text">DelayedProduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">4.</span> <span class="toc-text">Ref</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#DelayedOperation"><span class="toc-number">1.</span> <span class="toc-text">DelayedOperation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ProducerRequest_&_DelayedProduce"><span class="toc-number">1.1.</span> <span class="toc-text">ProducerRequest & DelayedProduce</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FetchRequest_&_DelayedFetch"><span class="toc-number">1.2.</span> <span class="toc-text">FetchRequest & DelayedFetch</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多个Partition"><span class="toc-number">1.3.</span> <span class="toc-text">多个Partition</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#responseCallback"><span class="toc-number">1.4.</span> <span class="toc-text">responseCallback</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Purgatory_&_Cache"><span class="toc-number">1.5.</span> <span class="toc-text">Purgatory & Cache</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DelayedOperation接口"><span class="toc-number">1.6.</span> <span class="toc-text">DelayedOperation接口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DelayedOperationPurgatory-tryCompleteElseWatch"><span class="toc-number">2.</span> <span class="toc-text">DelayedOperationPurgatory.tryCompleteElseWatch</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DelayedProduce"><span class="toc-number">3.</span> <span class="toc-text">DelayedProduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">4.</span> <span class="toc-text">Ref</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
