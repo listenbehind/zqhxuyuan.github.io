@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Apache Drill源码阅读(6) execute | zqhxuyuan</title>
+  <title>Kafka源码分析 Consumer | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="大数据源码阅读系列之ApacheDrill: 执行Fragment">
+  <meta name="description" content="Kafka Consumer">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Apache Drill源码阅读(6) execute">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2015/07/26/2015-07-26-drill-fragment-execute/index.html">
+<meta property="og:title" content="Kafka源码分析 Consumer">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/01/19/2016-01-19-Kafka-Consumer/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="大数据源码阅读系列之ApacheDrill: 执行Fragment">
-<meta property="og:updated_time" content="2015-12-02T12:40:28.000Z">
+<meta property="og:description" content="Kafka Consumer">
+<meta property="og:updated_time" content="2016-01-18T14:42:33.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Apache Drill源码阅读(6) execute">
-<meta name="twitter:description" content="大数据源码阅读系列之ApacheDrill: 执行Fragment">
+<meta name="twitter:title" content="Kafka源码分析 Consumer">
+<meta name="twitter:description" content="Kafka Consumer">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -170,11 +170,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-2015-07-26-drill-fragment-execute" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-2016-01-19-Kafka-Consumer" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/07/26/2015-07-26-drill-fragment-execute/" class="article-date">
-  	<time datetime="2015-07-25T16:00:00.000Z" itemprop="datePublished">2015-07-26</time>
+      <a href="/2016/01/19/2016-01-19-Kafka-Consumer/" class="article-date">
+  	<time datetime="2016-01-18T16:00:00.000Z" itemprop="datePublished">2016-01-19</time>
 </a>
     </div>
   
@@ -187,7 +187,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Apache Drill源码阅读(6) execute
+      Kafka源码分析 Consumer
     </h1>
   
 
@@ -202,7 +202,7 @@
 
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/drill/">drill</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
 	</div>
 
         <div class="clearfix"></div>
@@ -212,16 +212,10 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>大数据源码阅读系列之ApacheDrill: 执行Fragment</p>
-<a id="more"></a>
-<h2 id="设置根节点Fragment">设置根节点Fragment</h2><p>在前面根据物理计划生成的QueryWorkUnit, 会用于设置根节点和非根节点.<br>对于根节点, 因为现在是在Foreman里, 所以是运行在Foreman节点, 相对来说就是运行在本地了.<br>因为Root Fragment都是在Foreman节点执行的. </p>
-<blockquote>
-<p>RootFragment不是Major Fragment, 按照官方的文档Major Fragment并不会执行真正的任务.<br>那么Minor Fragment和Leaf Fragment又有什么区别呢?  </p>
-</blockquote>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Set up the root fragment (which will run locally), and submit it for execution.</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">void</span> <span class="title">setupRootFragment</span><span class="params">(<span class="keyword">final</span> PlanFragment rootFragment, <span class="keyword">final</span> FragmentRoot rootOperator)</span> <span class="keyword">throws</span> ExecutionSetupException </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> FragmentContext rootContext = <span class="keyword">new</span> FragmentContext(drillbitContext, rootFragment, queryContext, initiatingClient, drillbitContext.getFunctionImplementationRegistry());</span><br><span class="line">  <span class="comment">//首先准备好IncomingBuffer</span></span><br><span class="line">  <span class="keyword">final</span> IncomingBuffers buffers = <span class="keyword">new</span> IncomingBuffers(rootFragment, rootContext);</span><br><span class="line">  rootContext.setBuffers(buffers);</span><br><span class="line"></span><br><span class="line">  <span class="comment">//每个Fragment都要加入到QueryManager的监控中,当Fragment的状态发生更新,QM可以知道</span></span><br><span class="line">  queryManager.addFragmentStatusTracker(rootFragment, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">//Fragment的Executor,是真正运行Fragment的线程</span></span><br><span class="line">  rootRunner = <span class="keyword">new</span> FragmentExecutor(rootContext, rootFragment, queryManager.newRootStatusHandler(rootContext, drillbitContext), rootOperator);</span><br><span class="line">  <span class="comment">//Fragment的Manager,除了线程,还有Buffer</span></span><br><span class="line">  <span class="keyword">final</span> RootFragmentManager fragmentManager = <span class="keyword">new</span> RootFragmentManager(rootFragment.getHandle(), buffers, rootRunner);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (buffers.isDone()) &#123;</span><br><span class="line">    <span class="comment">// if we don't have to wait for any incoming data, start the fragment runner. 不需要等待接收数据,启动线程</span></span><br><span class="line">    bee.addFragmentRunner(fragmentManager.getRunnable());</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// if we do, record the fragment manager in the workBus. 如果需要等待,则把管理Executor的Manager放到WorkBus中</span></span><br><span class="line">    <span class="comment">// TODO aren't we managing our own work? What does this do? It looks like this will never get run</span></span><br><span class="line">    drillbitContext.getWorkBus().addFragmentManager(fragmentManager);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在FragmentExecutor线程的run方法里会创建RootExec</p>
-<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root = ImplCreator.getExec(fragmentContext, rootOperator)<span class="comment">;</span></span><br><span class="line">//<span class="built_in">Run</span> the query <span class="keyword">until</span> root.<span class="keyword">next</span> returns <span class="literal">false</span> <span class="literal">OR</span> we no longer need <span class="keyword">to</span> continue.</span><br><span class="line"><span class="keyword">while</span> (shouldContinue() &amp;&amp; root.<span class="keyword">next</span>()) &#123;</span><br><span class="line">  // loop</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">null</span><span class="comment">;</span></span><br></pre></td></tr></table></figure>
-<p>这里就要涉及到Drill底层读取数据的数据结构了.  对了,前面的IncomingBuffers到底是用来干嘛的?  </p>
+        <p>Kafka Consumer<br><a id="more"></a></p>
+<h2 id="Consumer">Consumer</h2><p>生产者向topic推送消息,消费者订阅了topic后,一旦topic有消息,消费者要么会被通知,要么自己去拉数据.<br>生产者将一条消息封装成ProducerRecord, 消费者获取到的批量消息是ConsumerRecords</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">KafkaConsumer&lt;Integer, String&gt; consumer = <span class="keyword">new</span> KafkaConsumer&lt;&gt;(props);</span><br><span class="line">consumer.subscribe(Collections.singletonList(<span class="keyword">this</span>.topic));</span><br><span class="line">ConsumerRecords&lt;Integer, String&gt; records = consumer.poll(<span class="number">1000</span>);</span><br><span class="line"><span class="keyword">for</span> (ConsumerRecord&lt;Integer, String&gt; record : records) &#123;</span><br><span class="line">    System.out.println(<span class="string">"Received message: ("</span> + record.key() + <span class="string">", "</span> + record.value() + <span class="string">") at offset "</span> + record.offset());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>客户端的设计在0.9中被重新设计了:<a href="https://cwiki.apache.org/confluence/display/KAFKA/Consumer+Client+Re-Design" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Consumer+Client+Re-Design</a> </p>
 
       
     </div>
@@ -230,13 +224,13 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2015/07/26/2015-07-26-drill-fragment-execute/">Apache Drill源码阅读(6) execute</a></p>
+  <p><span>本文标题:</span><a href="/2016/01/19/2016-01-19-Kafka-Consumer/">Kafka源码分析 Consumer</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
-  <p><span>发布时间:</span>2015年07月26日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月02日 - 20时40分</p>
+  <p><span>发布时间:</span>2016年01月19日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年01月18日 - 22时42分</p>
   <p>
-    <span>原始链接:</span><a href="/2015/07/26/2015-07-26-drill-fragment-execute/" title="Apache Drill源码阅读(6) execute">http://github.com/zqhxuyuan/2015/07/26/2015-07-26-drill-fragment-execute/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/07/26/2015-07-26-drill-fragment-execute/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2016/01/19/2016-01-19-Kafka-Consumer/" title="Kafka源码分析 Consumer">http://github.com/zqhxuyuan/2016/01/19/2016-01-19-Kafka-Consumer/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/19/2016-01-19-Kafka-Consumer/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -262,15 +256,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2015/08/01/2015-08-01-ElasticSearch/">
-        ElasticSearch入门
+      <a href="/2016/02/01/2016-02-01-Kafka-Storm/">
+        Kafka源码分析 Storm-Kafka
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/07/26/2015-09-11-Flowmix-CEP/">
-        Storm的CEP框架 flowmix
+      <a href="/2016/01/15/2015-01-15-Kafka-Delay/">
+        Kafka源码分析 DelayOperation
       </a>
     </div>
   
@@ -283,7 +277,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#设置根节点Fragment"><span class="toc-number">1.</span> <span class="toc-text">设置根节点Fragment</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Consumer"><span class="toc-number">1.</span> <span class="toc-text">Consumer</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -379,10 +373,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2015/08/01/2015-08-01-ElasticSearch/" title="上一篇: ElasticSearch入门">
+    <a href="/2016/02/01/2016-02-01-Kafka-Storm/" title="上一篇: Kafka源码分析 Storm-Kafka">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/07/26/2015-09-11-Flowmix-CEP/" title="下一篇: Storm的CEP框架 flowmix">
+    <a href="/2016/01/15/2015-01-15-Kafka-Delay/" title="下一篇: Kafka源码分析 DelayOperation">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
