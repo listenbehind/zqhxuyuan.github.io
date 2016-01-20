@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160114094002808">
 <meta property="og:image" content="http://img.blog.csdn.net/20160117162956999">
 <meta property="og:image" content="http://img.blog.csdn.net/20160117163023129">
-<meta property="og:updated_time" content="2016-01-18T13:04:10.000Z">
+<meta property="og:updated_time" content="2016-01-19T06:22:33.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka源码分析 ISR和Replica">
 <meta name="twitter:description" content="接Kafla_LogAppend,消息存储到Leader的Partition之后,ISR保证Partition的复制…">
@@ -292,30 +292,6 @@
 <li>at least one partition append was successful 至少一个Partition追加成功(一次请求有多个Partition)</li>
 </ul>
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">delayedRequestRequired</span>(</span>requiredAcks: <span class="type">Short</span>, messagesPerPartition: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">MessageSet</span>], localProduceResults: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">LogAppendResult</span>]): <span class="type">Boolean</span> = &#123;</span><br><span class="line">  requiredAcks == -<span class="number">1</span> &amp;&amp; messagesPerPartition.size &gt; <span class="number">0</span> &amp;&amp; localProduceResults.values.count(_.error.isDefined) &lt; messagesPerPartition.size</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>producer request acks</strong></p>
-<p>Producer端的<code>request.required.acks</code>配置项,用来控制什么时候返回响应给客户端:  </p>
-<table>
-<thead>
-<tr>
-<th>acks</th>
-<th>what happen</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0</td>
-<td>The producer never waits for an ack 生产者不会等待一个ack,收到消息后直接返回给客户端</td>
-</tr>
-<tr>
-<td>1</td>
-<td>The producer gets an ack after the leader replica has received the data 当写Leader成功后就返回,其他的replica都是通过fetcher去同步的,所以kafka是异步写</td>
-</tr>
-<tr>
-<td>-1</td>
-<td>The producer gets an ack after all ISRs receive the data 要等待所有的replicas都成功后才能返回. </td>
-</tr>
-</tbody>
-</table>
 <p><strong>DelayedProduce</strong>  </p>
 <figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">localProduceResults<span class="function"> -&gt;</span> <span class="function"><span class="params">(TopicAndPartition,LogAppendResult)</span> -&gt;</span> ProducePartitionStatus<span class="function"> -&gt;</span> ProduceMetadata<span class="function"> -&gt;</span> DelayedProduce</span><br><span class="line">本地(Leader)的生产结果<span class="function"> -&gt;</span>           日志追加结果<span class="function">               -&gt;</span> Produce的Partition状态<span class="function">  -&gt;</span> Produce的元数据<span class="function">  -&gt;</span> 延迟的Produce操作</span><br></pre></td></tr></table></figure>
 <p>延迟的Produce操作会被ReplicaManager创建(<code>new DelayedProduce</code>),并被ProduceOperationPurgatory监视.  </p>
@@ -391,7 +367,7 @@
   <p><span>本文标题:</span><a href="/2016/01/14/2016-01-14-Kafka-ISR/">Kafka源码分析 ISR和Replica</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年01月14日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年01月18日 - 21时04分</p>
+  <p><span>最后更新:</span>2016年01月19日 - 14时22分</p>
   <p>
     <span>原始链接:</span><a href="/2016/01/14/2016-01-14-Kafka-ISR/" title="Kafka源码分析 ISR和Replica">http://github.com/zqhxuyuan/2016/01/14/2016-01-14-Kafka-ISR/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/14/2016-01-14-Kafka-ISR/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
