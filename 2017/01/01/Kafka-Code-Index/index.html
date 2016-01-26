@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Kafka源码分析 Consumer | zqhxuyuan</title>
+  <title>Kafka源码分析汇总 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Kafka Consumer">
+  <meta name="description" content="Kafka源码分析汇总">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kafka源码分析 Consumer">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2016/01/19/2016-01-19-Kafka-Consumer/index.html">
+<meta property="og:title" content="Kafka源码分析汇总">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2017/01/01/Kafka-Code-Index/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="Kafka Consumer">
-<meta property="og:updated_time" content="2016-01-19T05:20:49.000Z">
+<meta property="og:description" content="Kafka源码分析汇总">
+<meta property="og:updated_time" content="2016-01-26T09:23:58.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kafka源码分析 Consumer">
-<meta name="twitter:description" content="Kafka Consumer">
+<meta name="twitter:title" content="Kafka源码分析汇总">
+<meta name="twitter:description" content="Kafka源码分析汇总">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -110,7 +110,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.33px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/timeseries/" style="font-size: 13.33px;">timeseries</a> <a href="/tags/translate/" style="font-size: 10px;">translate</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.33px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/timeseries/" style="font-size: 13.33px;">timeseries</a> <a href="/tags/translate/" style="font-size: 10px;">translate</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
 					</div>
 				</section>
 				
@@ -170,11 +170,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-2016-01-19-Kafka-Consumer" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Kafka-Code-Index" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/19/2016-01-19-Kafka-Consumer/" class="article-date">
-  	<time datetime="2016-01-18T16:00:00.000Z" itemprop="datePublished">2016-01-19</time>
+      <a href="/2017/01/01/Kafka-Code-Index/" class="article-date">
+  	<time datetime="2016-12-31T16:00:00.000Z" itemprop="datePublished">2017-01-01</time>
 </a>
     </div>
   
@@ -187,7 +187,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Kafka源码分析 Consumer
+      Kafka源码分析汇总
     </h1>
   
 
@@ -196,7 +196,7 @@
       <div class="article-info article-info-post">
         
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
+	<a class="article-category-link" href="/categories/kafka/">kafka</a>
 	</div>
 
 
@@ -212,14 +212,18 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>Kafka Consumer<br><a id="more"></a></p>
-<h2 id="Consumer">Consumer</h2><p>生产者向topic推送消息,消费者订阅了topic后,一旦topic有消息,消费者要么会被通知,要么自己去拉数据.<br>生产者将一条消息封装成ProducerRecord, 消费者获取到的批量消息是ConsumerRecords</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">KafkaConsumer&lt;Integer, String&gt; consumer = <span class="keyword">new</span> KafkaConsumer&lt;&gt;(props);</span><br><span class="line">consumer.subscribe(Collections.singletonList(<span class="keyword">this</span>.topic));</span><br><span class="line">ConsumerRecords&lt;Integer, String&gt; records = consumer.poll(<span class="number">1000</span>);</span><br><span class="line"><span class="keyword">for</span> (ConsumerRecord&lt;Integer, String&gt; record : records) &#123;</span><br><span class="line">    System.out.println(<span class="string">"Received message: ("</span> + record.key() + <span class="string">", "</span> + record.value() + <span class="string">") at offset "</span> + record.offset());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>客户端的设计在0.9中被重新设计了:<a href="https://cwiki.apache.org/confluence/display/KAFKA/Consumer+Client+Re-Design" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Consumer+Client+Re-Design</a> </p>
-<h2 id="Ref">Ref</h2><ul>
-<li><a href="https://cwiki.apache.org/confluence/display/KAFKA/Consumer+Group+Example" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Consumer+Group+Example</a></li>
-<li><a href="https://cwiki.apache.org/confluence/display/KAFKA/0.8.0+SimpleConsumer+Example" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/0.8.0+SimpleConsumer+Example</a></li>
-<li><a href="http://flychao88.iteye.com/blog/2268481" target="_blank" rel="external">http://flychao88.iteye.com/blog/2268481</a></li>
+        <p>Kafka源码分析汇总<br><a id="more"></a></p>
+<h2 id="Introduce">Introduce</h2><ul>
+<li><a href="http://zqhxuyuan.github.io/2016/01/04/2016-01-04-Kafka-Intro/" target="_blank" rel="external">Kafka介绍</a></li>
+<li><a href="http://zqhxuyuan.github.io/2016/01/05/2016-01-05-Kafka-Unix/" target="_blank" rel="external">使用Unix管道解释Kafka</a></li>
+</ul>
+<h2 id="源码分析汇总">源码分析汇总</h2><ul>
+<li><a href="http://zqhxuyuan.github.io/2016/01/06/2016-01-06-Kafka_Producer/" target="_blank" rel="external">生产者(java)</a></li>
+<li><a href="http://zqhxuyuan.github.io/2016/01/07/2016-01-07-Kafka_Producer-scala/" target="_blank" rel="external">生产者(scala)</a></li>
+<li><a href="http://zqhxuyuan.github.io/2016/01/08/2016-01-06-Kafka_SocketServer/" target="_blank" rel="external">网络层SocketServer</a></li>
+<li><a href="http://zqhxuyuan.github.io/2016/01/10/2016-01-10-Kafka_LogAppend/" target="_blank" rel="external">消息存储到日志文件中</a></li>
+<li><a href="http://zqhxuyuan.github.io/2016/01/14/2016-01-14-Kafka-ISR/" target="_blank" rel="external">Partition的ISR工作机制</a></li>
+<li><a href="http://zqhxuyuan.github.io/2016/01/19/2016-01-19-Kafka-Consumer-scala/" target="_blank" rel="external">消费者(scala)</a></li>
 </ul>
 
       
@@ -229,13 +233,13 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2016/01/19/2016-01-19-Kafka-Consumer/">Kafka源码分析 Consumer</a></p>
+  <p><span>本文标题:</span><a href="/2017/01/01/Kafka-Code-Index/">Kafka源码分析汇总</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
-  <p><span>发布时间:</span>2016年01月19日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年01月19日 - 13时20分</p>
+  <p><span>发布时间:</span>2017年01月01日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年01月26日 - 17时23分</p>
   <p>
-    <span>原始链接:</span><a href="/2016/01/19/2016-01-19-Kafka-Consumer/" title="Kafka源码分析 Consumer">http://github.com/zqhxuyuan/2016/01/19/2016-01-19-Kafka-Consumer/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/19/2016-01-19-Kafka-Consumer/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2017/01/01/Kafka-Code-Index/" title="Kafka源码分析汇总">http://github.com/zqhxuyuan/2017/01/01/Kafka-Code-Index/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2017/01/01/Kafka-Code-Index/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -260,16 +264,10 @@
 
 <nav id="article-nav">
   
-    <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2016/02/01/2016-02-01-Kafka-Storm/">
-        Kafka源码分析 Storm-Kafka
-      </a>
-    </div>
-  
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2016/01/15/2015-01-15-Kafka-Delay/">
-        Kafka源码分析 DelayOperation
+      <a href="/2016/03/01/2016-03-01-Kafka-Spark/">
+        Kafka源码分析 SparkStreaming-Kafka
       </a>
     </div>
   
@@ -282,7 +280,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Consumer"><span class="toc-number">1.</span> <span class="toc-text">Consumer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">2.</span> <span class="toc-text">Ref</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduce"><span class="toc-number">1.</span> <span class="toc-text">Introduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码分析汇总"><span class="toc-number">2.</span> <span class="toc-text">源码分析汇总</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -376,16 +374,14 @@
 
   
   
-    
     <div  class="post-nav-button">
-    <a href="/2016/02/01/2016-02-01-Kafka-Storm/" title="上一篇: Kafka源码分析 Storm-Kafka">
-    <i class="fa fa-angle-left"></i>
-    </a>
-    <a href="/2016/01/15/2015-01-15-Kafka-Delay/" title="下一篇: Kafka源码分析 DelayOperation">
+    <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+    <a href="/2016/03/01/2016-03-01-Kafka-Spark/" title="下一篇: Kafka源码分析 SparkStreaming-Kafka">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
   
+    
 
 
 

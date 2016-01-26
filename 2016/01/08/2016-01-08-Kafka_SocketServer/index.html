@@ -15,11 +15,12 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160115112951692">
 <meta property="og:image" content="http://img.blog.csdn.net/20160110142243150">
 <meta property="og:image" content="http://img.blog.csdn.net/20160110144830297">
+<meta property="og:image" content="http://img.blog.csdn.net/20160122085949818">
 <meta property="og:image" content="http://img.blog.csdn.net/20160110152629900">
 <meta property="og:image" content="http://img.blog.csdn.net/20160110155608130">
 <meta property="og:image" content="http://img.blog.csdn.net/20160110120027673">
 <meta property="og:image" content="http://img.blog.csdn.net/20160110120044584">
-<meta property="og:updated_time" content="2016-01-19T07:17:20.000Z">
+<meta property="og:updated_time" content="2016-01-22T00:59:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka源码分析 SocketServer">
 <meta name="twitter:description" content="Kafka的SocketServer">
@@ -118,7 +119,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.33px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/timeseries/" style="font-size: 13.33px;">timeseries</a> <a href="/tags/translate/" style="font-size: 10px;">translate</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.33px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/timeseries/" style="font-size: 13.33px;">timeseries</a> <a href="/tags/translate/" style="font-size: 10px;">translate</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
 					</div>
 				</section>
 				
@@ -241,23 +242,53 @@
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span>(</span>) &#123;</span><br><span class="line">    serverChannel.register(nioSelector, <span class="type">SelectionKey</span>.<span class="type">OP_ACCEPT</span>)</span><br><span class="line">    startupComplete()</span><br><span class="line">    <span class="keyword">var</span> currentProcessor = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> (isRunning) &#123;</span><br><span class="line">        <span class="keyword">val</span> ready = nioSelector.select(<span class="number">500</span>)</span><br><span class="line">        <span class="keyword">if</span> (ready &gt; <span class="number">0</span>) &#123;</span><br><span class="line">          <span class="keyword">val</span> keys = nioSelector.selectedKeys()</span><br><span class="line">          <span class="keyword">val</span> iter = keys.iterator()</span><br><span class="line">          <span class="keyword">while</span> (iter.hasNext &amp;&amp; isRunning) &#123;</span><br><span class="line">              <span class="keyword">val</span> key = iter.next</span><br><span class="line">              iter.remove()</span><br><span class="line">              <span class="keyword">if</span> (key.isAcceptable) accept(key, processors(currentProcessor))</span><br><span class="line">              <span class="comment">// round robin to the next processor thread</span></span><br><span class="line">              currentProcessor = (currentProcessor + <span class="number">1</span>) % processors.length</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>注册OP_ACCEPT时,注册到Selector上的serverChannel是一个ServerSocketChannel.<br>所以每个Processor都能获得Acceptor成功的连接上的SocketChannel.  </p>
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">accept</span>(</span>key: <span class="type">SelectionKey</span>, processor: <span class="type">Processor</span>) &#123;</span><br><span class="line">    <span class="keyword">val</span> serverSocketChannel = key.channel().asInstanceOf[<span class="type">ServerSocketChannel</span>]</span><br><span class="line">    <span class="keyword">val</span> socketChannel = serverSocketChannel.accept()</span><br><span class="line">    processor.accept(socketChannel)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>客户端发起连接SocketChannel.connect,服务端接受这个连接ServerSocketChannel.accept,于是双方可以互相通信了.  </p>
+</blockquote>
 <p><img src="http://img.blog.csdn.net/20160110144830297" alt="k_acceptor"></p>
 <h3 id="Processor">Processor</h3><blockquote>
 <p>Processor的主要职责是负责从客户端读取数据和将响应返回给客户端，<br>它本身不处理具体的业务逻辑，也就是说它并不认识它从客户端读取回来的数据。<br>每个Processor都有一个Selector，用来监听多个客户端，因此可以非阻塞地处理多个客户端的读写请求。</p>
 </blockquote>
 <p>由于采用Round-Robin的方式分配连接给Processor,所以一个Processor会有多个SocketChannel,对应多个客户端连接.<br>每个SocketChannel都代表服务端和客户端建立的连接,Processor通过一个Selector不断轮询(并不需要每个连接对应一个Selector).  </p>
+<p><img src="http://img.blog.csdn.net/20160122085949818" alt="k_socket_channel"></p>
 <p>Processor接受一个新的SocketChannel通道连接时,先放入LinkedQueue队列中,然后唤醒Selector线程开始工作<br>Processor在运行时会首先从通道队列中去取SocketChannel,将客户端连接ID注册到Selector中,<br>便于后面Selector能够根据ConnectionID获取注册的不同的SocketChannel(比如selector.completedReceives).  </p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Acceptor会把多个客户端的数据连接SocketChannel分配一个Processor，因此每个Processor内部都有一个队列来保存这些新来的数据连接</span></span><br><span class="line"><span class="comment">//把一个SocketChannel放到队列中，然后唤醒Processor的selector</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">accept</span>(</span>socketChannel: <span class="type">SocketChannel</span>) &#123;</span><br><span class="line">  newConnections.add(socketChannel)</span><br><span class="line">  wakeup()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//如果有队列中有新的SocketChannel，则它首先将其OP_READ事情注册到该Processor的selector上面</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">configureNewConnections</span>(</span>) &#123;</span><br><span class="line">  <span class="keyword">while</span>(!newConnections.isEmpty) &#123;</span><br><span class="line">      <span class="keyword">val</span> channel = newConnections.poll()</span><br><span class="line">      <span class="keyword">val</span> localHost = channel.socket().getLocalAddress.getHostAddress</span><br><span class="line">      <span class="keyword">val</span> localPort = channel.socket().getLocalPort</span><br><span class="line">      <span class="keyword">val</span> remoteHost = channel.socket().getInetAddress.getHostAddress</span><br><span class="line">      <span class="keyword">val</span> remotePort = channel.socket().getPort</span><br><span class="line">      <span class="keyword">val</span> connectionId = <span class="type">ConnectionId</span>(localHost, localPort, remoteHost, remotePort).toString</span><br><span class="line">      selector.register(connectionId, channel)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Acceptor会把多个客户端的数据连接SocketChannel分配一个Processor，因此每个Processor内部都有一个队列来保存这些新来的数据连接</span></span><br><span class="line"><span class="comment">//把一个SocketChannel放到队列中，然后唤醒Processor的selector</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">accept</span>(</span>socketChannel: <span class="type">SocketChannel</span>) &#123;</span><br><span class="line">  newConnections.add(socketChannel)</span><br><span class="line">  wakeup()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//如果有队列中有新的SocketChannel，则它首先将其OP_READ事件注册到该Processor的selector上面</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">configureNewConnections</span>(</span>) &#123;</span><br><span class="line">  <span class="keyword">while</span>(!newConnections.isEmpty) &#123;</span><br><span class="line">      <span class="keyword">val</span> channel = newConnections.poll()</span><br><span class="line">      <span class="keyword">val</span> localHost = channel.socket().getLocalAddress.getHostAddress</span><br><span class="line">      <span class="keyword">val</span> localPort = channel.socket().getLocalPort</span><br><span class="line">      <span class="keyword">val</span> remoteHost = channel.socket().getInetAddress.getHostAddress</span><br><span class="line">      <span class="keyword">val</span> remotePort = channel.socket().getPort</span><br><span class="line">      <span class="keyword">val</span> connectionId = <span class="type">ConnectionId</span>(localHost, localPort, remoteHost, remotePort).toString</span><br><span class="line">      selector.register(connectionId, channel)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>回顾下客户端NetworkClient也是在finishConnect的时候注册了OP_READ事件,用于读取服务端的响应.<br>而对于服务端而言,在和客户端建立连接的时候,注册OP_READ事件, 是为了读取客户端发送的请求.  </p>
+</blockquote>
 <p><img src="http://img.blog.csdn.net/20160110152629900" alt="k_accept"></p>
-<p>下面的Selector也是前面分析KafkaProducer的Selector.每次轮询一次调用都需要处理返回的completedReceives,completedSends等<br>所以KafkaProducer/KafkaConsumer和SocketServer都采用NIO Selector方式.当然客户端也可以是阻塞模式(比如OldProducer)<br>Selector模型是一种多路复用的通信模式,并不一定只在服务端才可以使用的.所以看到SocketServer使用了公用的Selector.  </p>
+<p>下面的Selector也是前面分析KafkaProducer的Selector.每次轮询一次调用都需要处理返回的completedReceives,completedSends等<br>所以KafkaProducer/KafkaConsumer和SocketServer都采用NIO Selector方式.当然客户端也可以是阻塞模式(比如OldProducer)<br>Selector模型是一种多路复用的通信模式,并不一定只在服务端才可以使用的.所以看到SocketServer使用了公用的Selector.   </p>
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">run</span>(</span>) &#123;</span><br><span class="line">  startupComplete()</span><br><span class="line">  <span class="keyword">while</span>(isRunning) &#123;</span><br><span class="line">      configureNewConnections()   <span class="comment">// setup any new connections that have been queued up</span></span><br><span class="line">      processNewResponses()       <span class="comment">// register any new responses for writing</span></span><br><span class="line">      selector.poll(<span class="number">300</span>)          <span class="comment">// poll轮询逻辑已经在KafkaProducer中分析过了</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// NetworkClient.poll之后对已经完成发送和已经完成接收的都进行了handler处理. 这里也一样</span></span><br><span class="line">      selector.completedReceives.asScala.foreach &#123; receive =&gt;</span><br><span class="line">          <span class="comment">//receive是NetworkReceive, 其中包含了源节点地址, 对应configureNewConnections注册的第一个参数connectionId</span></span><br><span class="line">          <span class="keyword">val</span> channel = selector.channel(receive.source)</span><br><span class="line">          <span class="keyword">val</span> session = <span class="type">RequestChannel</span>.<span class="type">Session</span>(<span class="keyword">new</span> <span class="type">KafkaPrincipal</span>(<span class="type">KafkaPrincipal</span>.<span class="type">USER_TYPE</span>, channel.principal.getName), channel.socketAddress)</span><br><span class="line">          <span class="keyword">val</span> req = <span class="type">RequestChannel</span>.<span class="type">Request</span>(processor = id, connectionId = receive.source, session = session, buffer = receive.payload, startTimeMs = time.milliseconds, securityProtocol = protocol)</span><br><span class="line">          requestChannel.sendRequest(req)     <span class="comment">//Request请求,发送给RequestChannel处理</span></span><br><span class="line">          selector.mute(receive.source)       <span class="comment">//移除OP_READ事件. 接收本身就是Read,接收到响应后,就不需要再读了</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 上面的completedReceives是服务端接收到客户端的请求,下面的completedSends是服务端要将响应返回给客户端</span></span><br><span class="line">      selector.completedSends.asScala.foreach &#123; send =&gt;</span><br><span class="line">          <span class="keyword">val</span> resp = inflightResponses.remove(send.destination).getOrElse <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">IllegalStateException</span>()  <span class="comment">//[B]</span></span><br><span class="line">          selector.unmute(send.destination)   <span class="comment">//添加OP_READ事件. 这样才可以继续读取客户端的请求</span></span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  shutdownComplete()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再和客户端的代码进行比较, 其实两者是有很多共同点的.  </p>
+<ul>
+<li>因为对于客户端和服务端而言,都有读写操作,所以也就都有Selector轮询产生的completedSends,completedSends.  </li>
+<li>客户端的发送请求(Send)对于服务端而言是读取请求(NetworkReceive),反过来服务端的Send对应客户端的NetworkReceive.  </li>
+<li>客户端Send的destination对应服务端NetworkReceive的source. 反过来服务端Send的dest对应客户端NetworkReceice的source.  </li>
+<li>客户端请求ClientRequest在还没有收到响应时会将请求放到inFlightRequests中,对应服务端的requestChannel.  </li>
+<li>inFlightRequests表示正在进行中的客户端请求,在客户端开始发送请求时就加入到缓冲队列中,只有收到请求对应的响应结果,才从队列中删除.  </li>
+<li>inflightResponses表示正在进行中的服务端响应,也是在服务端开始发送响应请求时加入到队列中,只有响应发送成功,才从队列中删除.  </li>
+<li>完整的客户端到服务端的流程:加到inFlightRequests,服务端处理请求,加到inflightResponses,删除inflightResponses,删除inFlightRequests</li>
+<li>客户端的send表示要发送一个Send请求,但还没开始,服务端的processNewResponses也表示要发送一个Response,但也没开始,所以都需要缓冲队列. </li>
+<li></li>
+<li>客户端从Sender-NetworkClient-Selector. 服务端从Acceptor-Processor-Selector. Selector是真正干活的(在底层的通道上读写数据).  </li>
+<li>而NetworkClient和Processor会对读写请求的结果completeXXX做进一步处理(可以和客户端的handleCompletedXXX做比较).  </li>
+<li>客户端建立连接时注册READ:它不知道什么时候服务端会返回消息,服务端配置新连接时也注册READ:它也不知道客户端什么时候发送请求过来</li>
+<li>客户端在刚开始要发送Send请求时,会注册OP_WRITE,当发送完一个完整的Send请求后,会取消OP_WRITE </li>
+<li>而服务端在连接时注册了READ,接收到一个完整的NetworkReceive请求后,才会取消OP_READ.服务端在发送响应之后,还要重新注册READ.</li>
+</ul>
 <p><img src="http://img.blog.csdn.net/20160110155608130" alt="k_poll"></p>
 <p><strong>Request-&gt;completedReceives</strong></p>
 <p>将客户端发送的请求和服务端的接收请求串联起来:客户端(P或C)发送请求会经过NetworkClient发送Send请求(ClientRequest),<br>服务端对每个客户端连接使用Processor处理(Processor和客户端建立SocketChannel进行通信).<br>客户端的发送和服务端的接收都采用了NIO的Selector轮询.客户端发送请求后可能并不需要响应(handleCompletedSends).<br>服务端接收客户端的请求处理是在selector.completedReceives中, 这个时候会将收到的请求发给RequestChannel处理.  </p>
-<p>服务端注册OP_READ有两个地方,一个是在configureNewConnections,一个是completedSends完成响应发送之后.<br>注册OP_READ目的是让服务端能够读取客户端发送的请求,如果没有注册,即使客户端发送请求,也不会被Selector轮询出来.  </p>
+<p>服务端注册OP_READ有两个地方,一个是在<code>configureNewConnections</code>,一个是<code>completedSends</code>完成响应发送之后.<br>注册OP_READ目的是让服务端能够读取客户端发送的请求,如果没有注册,即使客户端发送请求,也不会被Selector轮询出来.  </p>
+<blockquote>
+<p>在完成发送响应之后,为什么要继续注册READ?类似于配置新的连接时,就注册了READ.确保连接一旦建立如果有数据进来,就能立即读取到数据.<br>那么既然读取操作这么频繁,或者说不固定, 何不如一直注册READ算了,不要在读取完毕后又取消了READ. 显然不行,事件被触发比一直轮询要好.    </p>
+</blockquote>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Use this on server-side, when a connection is accepted by a different thread but processed by the Selector</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(String id, SocketChannel socketChannel)</span> <span class="keyword">throws</span> ClosedChannelException </span>&#123;</span><br><span class="line">    SelectionKey key = socketChannel.register(nioSelector, SelectionKey.OP_READ);</span><br><span class="line">    KafkaChannel channel = channelBuilder.buildChannel(id, key, maxReceiveSize);</span><br><span class="line">    key.attach(channel);</span><br><span class="line">    <span class="keyword">this</span>.channels.put(id, channel);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>旧的代码使用了BoundedByteBufferReceive,而不是NetworkReceive:  </p>
+<p>客户的也有上面类似的代码,不过它是在Selector的connect方法里,虽然上面的register也是在Selector中,但是只有服务端调用.<br>实际上只会由客户端发起connect请求(SocketChannel.connect),所以对于客户端而言在建立连接时就创建KafkaChannel就很合适了.  </p>
+</blockquote>
+<p>旧版本的代码使用了BoundedByteBufferReceive,而不是NetworkReceive:  </p>
+<blockquote>
 <ul>
 <li>a. 首先从SelectionKey中拿到对应的SocketChannel，并且取出attach在SelectionKey上的Receive对象，<br>   如果是第一次读取，Receive对象为null，则创建一个BoundedByteBufferReceive，由它来处理具体的读数据的逻辑。<br>   可以看到每个客户端都有一个Receive对象来读取数据(同时也有一个Send对象用来发送数据)。 </li>
 <li>b. 如果数据从客户端读取完毕(receive.complete)，则将读取的数据封装成Request对象，并添加到requestChannel中去。<br>   如果没有读取完毕（可能是客户端还没有发送完或者网络延迟），那么就让selector继续监听这个通道的OP_READ事件。  </li>
@@ -266,7 +297,7 @@
 </blockquote>
 <p><strong>Response-&gt;completedSends</strong></p>
 <blockquote>
-<p>Processor不仅负责从客户端读取数据，还要将Handler的处理结果返回给客户端</p>
+<p>Processor不仅负责从客户端读取数据，还要将Handler的处理结果返回给客户端.类似客户端的NetworkClient也负责发送和读取.  </p>
 </blockquote>
 <p>服务端发送响应给客户端:在processNewResponses[A]中,判断到是SendAction(肯定有人告诉Processor说这是一个发送命令),<br>于是注册了OP_WRITE事件,同时加入到inflightResponses中. 当轮询发生时,SelectionKey会监听到写事件,将写请求发送出去.<br>在poll轮询结束后,selector.completedSends表示已经完成发送的请求.需要做些清理工作:从inflightResponses删除相关信息[B].  </p>
 <p>Processor处理客户端的读请求,则要返回response给客户端,在poll之前就要注册任何新的response.  </p>
@@ -318,7 +349,7 @@
   <p><span>本文标题:</span><a href="/2016/01/08/2016-01-08-Kafka_SocketServer/">Kafka源码分析 SocketServer</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年01月08日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年01月19日 - 15时17分</p>
+  <p><span>最后更新:</span>2016年01月22日 - 08时59分</p>
   <p>
     <span>原始链接:</span><a href="/2016/01/08/2016-01-08-Kafka_SocketServer/" title="Kafka源码分析 SocketServer">http://github.com/zqhxuyuan/2016/01/08/2016-01-08-Kafka_SocketServer/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/08/2016-01-08-Kafka_SocketServer/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -354,8 +385,8 @@
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2016/01/06/2016-01-06-Kafka_Producer/">
-        Kafka源码分析 Producer客户端
+      <a href="/2016/01/07/2016-01-07-Kafka-Producer-scala/">
+        Kafka源码分析 Producer Scala客户端
       </a>
     </div>
   
@@ -467,7 +498,7 @@
     <a href="/2016/01/10/2016-01-10-Kafka_LogAppend/" title="上一篇: Kafka源码分析 KafkaApis(LogAppend)">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2016/01/06/2016-01-06-Kafka_Producer/" title="下一篇: Kafka源码分析 Producer客户端">
+    <a href="/2016/01/07/2016-01-07-Kafka-Producer-scala/" title="下一篇: Kafka源码分析 Producer Scala客户端">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
