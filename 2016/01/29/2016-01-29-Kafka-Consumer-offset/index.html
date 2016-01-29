@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Kafka源码分析 Storm-Kafka | zqhxuyuan</title>
+  <title>Kafka源码分析 Consumer(3) offset | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Storm-Kafka">
+  <meta name="description" content="Kafka Consumer offset">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kafka源码分析 Storm-Kafka">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2016/02/01/2016-02-01-Kafka-Storm/index.html">
+<meta property="og:title" content="Kafka源码分析 Consumer(3) offset">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/01/29/2016-01-29-Kafka-Consumer-offset/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="Storm-Kafka">
-<meta property="og:updated_time" content="2016-01-18T14:50:01.000Z">
+<meta property="og:description" content="Kafka Consumer offset">
+<meta property="og:updated_time" content="2016-01-29T02:30:37.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kafka源码分析 Storm-Kafka">
-<meta name="twitter:description" content="Storm-Kafka">
+<meta name="twitter:title" content="Kafka源码分析 Consumer(3) offset">
+<meta name="twitter:description" content="Kafka Consumer offset">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -170,11 +170,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-2016-02-01-Kafka-Storm" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-2016-01-29-Kafka-Consumer-offset" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/02/01/2016-02-01-Kafka-Storm/" class="article-date">
-  	<time datetime="2016-01-31T16:00:00.000Z" itemprop="datePublished">2016-02-01</time>
+      <a href="/2016/01/29/2016-01-29-Kafka-Consumer-offset/" class="article-date">
+  	<time datetime="2016-01-28T16:00:00.000Z" itemprop="datePublished">2016-01-29</time>
 </a>
     </div>
   
@@ -187,7 +187,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Kafka源码分析 Storm-Kafka
+      Kafka源码分析 Consumer(3) offset
     </h1>
   
 
@@ -212,8 +212,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>Storm-Kafka<br><a id="more"></a></p>
-<p>挖坑待填</p>
+        <p>Kafka Consumer offset<br><a id="more"></a></p>
+<h2 id="OffsetManager">OffsetManager</h2><p>在创建ZooKeeperConsumerConnector时确保OffsetManager管理的通道被创建出来.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Blocks until the offset manager is located and a channel is established to it.</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">ensureOffsetManagerConnected</span>(</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (config.offsetsStorage == <span class="string">"kafka"</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (offsetsChannel == <span class="literal">null</span> || !offsetsChannel.isConnected)</span><br><span class="line">      offsetsChannel = <span class="type">ClientUtils</span>.channelToOffsetManager(config.groupId, zkUtils, config.offsetsChannelSocketTimeoutMs, config.offsetsChannelBackoffMs)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -222,13 +223,13 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2016/02/01/2016-02-01-Kafka-Storm/">Kafka源码分析 Storm-Kafka</a></p>
+  <p><span>本文标题:</span><a href="/2016/01/29/2016-01-29-Kafka-Consumer-offset/">Kafka源码分析 Consumer(3) offset</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
-  <p><span>发布时间:</span>2016年02月01日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年01月18日 - 22时50分</p>
+  <p><span>发布时间:</span>2016年01月29日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年01月29日 - 10时30分</p>
   <p>
-    <span>原始链接:</span><a href="/2016/02/01/2016-02-01-Kafka-Storm/" title="Kafka源码分析 Storm-Kafka">http://github.com/zqhxuyuan/2016/02/01/2016-02-01-Kafka-Storm/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/02/01/2016-02-01-Kafka-Storm/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2016/01/29/2016-01-29-Kafka-Consumer-offset/" title="Kafka源码分析 Consumer(3) offset">http://github.com/zqhxuyuan/2016/01/29/2016-01-29-Kafka-Consumer-offset/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/29/2016-01-29-Kafka-Consumer-offset/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -254,14 +255,14 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2016/03/01/2016-03-01-Kafka-Spark/">
-        Kafka源码分析 SparkStreaming-Kafka
+      <a href="/2016/02/01/2016-02-01-Kafka-Consumer-java/">
+        Kafka源码分析 Consumer java版本
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2016/01/25/2016-01-25-Redis-SortedSet/">
+      <a href="/2016/01/25/Redis-SortedSet/">
         Redis SortedSet
       </a>
     </div>
@@ -275,7 +276,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#OffsetManager"><span class="toc-number">1.</span> <span class="toc-text">OffsetManager</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -371,10 +372,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2016/03/01/2016-03-01-Kafka-Spark/" title="上一篇: Kafka源码分析 SparkStreaming-Kafka">
+    <a href="/2016/02/01/2016-02-01-Kafka-Consumer-java/" title="上一篇: Kafka源码分析 Consumer java版本">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2016/01/25/2016-01-25-Redis-SortedSet/" title="下一篇: Redis SortedSet">
+    <a href="/2016/01/25/Redis-SortedSet/" title="下一篇: Redis SortedSet">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
