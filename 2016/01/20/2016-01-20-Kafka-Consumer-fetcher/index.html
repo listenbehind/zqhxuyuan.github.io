@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Kafka源码分析 Consumer | zqhxuyuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Kafka Consumer Fetcher">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka源码分析 Consumer">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/01/20/2016-01-20-Kafka-Consumer-fetcher/index.html">
+<meta property="og:site_name" content="zqhxuyuan">
+<meta property="og:description" content="Kafka Consumer Fetcher">
+<meta property="og:image" content="http://img.blog.csdn.net/20160125104937050">
+<meta property="og:image" content="http://img.blog.csdn.net/20160129084942296">
+<meta property="og:image" content="http://img.blog.csdn.net/20160129084955562">
+<meta property="og:image" content="http://img.blog.csdn.net/20160126084038512">
+<meta property="og:image" content="http://img.blog.csdn.net/20160129084926436">
+<meta property="og:image" content="http://img.blog.csdn.net/20160126084015605">
+<meta property="og:image" content="http://img.blog.csdn.net/20160126084118702">
+<meta property="og:image" content="http://img.blog.csdn.net/20160129084905858">
+<meta property="og:image" content="http://img.blog.csdn.net/20160129095422211">
+<meta property="og:updated_time" content="2016-01-29T01:55:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kafka源码分析 Consumer">
+<meta name="twitter:description" content="Kafka Consumer Fetcher">
+  
+    <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">任何忧伤,都抵不过世界的美丽</a></h1>
+		</hgroup>
+
+		
+				
+
+
+		
+			<div id="switch-btn" class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div id="switch-area" class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives/">归档</a></li>
+				        
+							<li><a href="/tags/">标签</a></li>
+				        
+							<li><a href="/about/">关于</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.33px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/timeseries/" style="font-size: 13.33px;">timeseries</a> <a href="/tags/translate/" style="font-size: 10px;">translate</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">BIG(DATA)</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="/" class="profilepic">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			</a>
+			<hgroup>
+			  <h1 class="header-author"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives/">归档</a></li>
+		        
+					<li><a href="/tags/">标签</a></li>
+		        
+					<li><a href="/about/">关于</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-2016-01-20-Kafka-Consumer-fetcher" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/20/2016-01-20-Kafka-Consumer-fetcher/" class="article-date">
+  	<time datetime="2016-01-19T16:00:00.000Z" itemprop="datePublished">2016-01-20</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Kafka源码分析 Consumer
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Source/">Source</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>Kafka Consumer Fetcher<br><a id="more"></a></p>
+<h2 id="LeaderFinderThread">LeaderFinderThread</h2><p>获取TopicMetadata,使用生产者模式发送一个需要响应结果的TopicMetadataRequest.<br>因为一个topic分成多个partition,所以一个TopicMetadata包括多个PartitionMetadata.<br>PartitionMetadata表示Partition的元数据,有Partition的Leader信息.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fetchTopicMetadata</span>(</span>topics: <span class="type">Set</span>[<span class="type">String</span>], brokers: <span class="type">Seq</span>[<span class="type">BrokerEndPoint</span>], clientId: <span class="type">String</span>, timeoutMs: <span class="type">Int</span>, correlationId: <span class="type">Int</span> = <span class="number">0</span>): <span class="type">TopicMetadataResponse</span> = &#123;</span><br><span class="line">  <span class="keyword">val</span> props = <span class="keyword">new</span> <span class="type">Properties</span>()</span><br><span class="line">  props.put(<span class="string">"metadata.broker.list"</span>, brokers.map(_.connectionString).mkString(<span class="string">","</span>))</span><br><span class="line">  props.put(<span class="string">"client.id"</span>, clientId)</span><br><span class="line">  props.put(<span class="string">"request.timeout.ms"</span>, timeoutMs.toString)</span><br><span class="line">  <span class="keyword">val</span> producerConfig = <span class="keyword">new</span> <span class="type">ProducerConfig</span>(props)</span><br><span class="line">  fetchTopicMetadata(topics, brokers, producerConfig, correlationId)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fetchTopicMetadata</span>(</span>topics: <span class="type">Set</span>[<span class="type">String</span>], brokers: <span class="type">Seq</span>[<span class="type">BrokerEndPoint</span>], producerConfig: <span class="type">ProducerConfig</span>, correlationId: <span class="type">Int</span>): <span class="type">TopicMetadataResponse</span> = &#123;</span><br><span class="line">  <span class="keyword">var</span> fetchMetaDataSucceeded: <span class="type">Boolean</span> = <span class="literal">false</span></span><br><span class="line">  <span class="keyword">var</span> i: <span class="type">Int</span> = <span class="number">0</span></span><br><span class="line">  <span class="keyword">val</span> topicMetadataRequest = <span class="keyword">new</span> <span class="type">TopicMetadataRequest</span>(<span class="type">TopicMetadataRequest</span>.<span class="type">CurrentVersion</span>, correlationId, producerConfig.clientId, topics.toSeq)</span><br><span class="line">  <span class="keyword">var</span> topicMetadataResponse: <span class="type">TopicMetadataResponse</span> = <span class="literal">null</span></span><br><span class="line">  <span class="comment">// shuffle the list of brokers before sending metadata requests so that most requests don't get routed to the same broker</span></span><br><span class="line">  <span class="keyword">val</span> shuffledBrokers = <span class="type">Random</span>.shuffle(brokers)</span><br><span class="line">  <span class="comment">// 随机向一个Broker发送Producer请求,只要成功一次后,就算成功了</span></span><br><span class="line">  <span class="keyword">while</span>(i &lt; shuffledBrokers.size &amp;&amp; !fetchMetaDataSucceeded) &#123;</span><br><span class="line">    <span class="keyword">val</span> producer: <span class="type">SyncProducer</span> = <span class="type">ProducerPool</span>.createSyncProducer(producerConfig, shuffledBrokers(i))</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      topicMetadataResponse = producer.send(topicMetadataRequest)</span><br><span class="line">      fetchMetaDataSucceeded = <span class="literal">true</span></span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      i = i + <span class="number">1</span></span><br><span class="line">      producer.close()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  topicMetadataResponse</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>LeaderFinderThread负责在Leader Partition可用的时候,将Fetcher添加到正确的Broker.<br>这里addFetcherForPartitions明明是为Partition添加Fetcher,为什么说是添加到Broker?<br>因为addFetcherForPartitions会创建FetcherThread是以(fetcherId,brokerId)为粒度的.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">LeaderFinderThread</span>(</span>name: <span class="type">String</span>) <span class="keyword">extends</span> <span class="type">ShutdownableThread</span>(name) &#123;</span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">doWork</span>(</span>) &#123;</span><br><span class="line">      <span class="keyword">val</span> leaderForPartitionsMap = <span class="keyword">new</span> <span class="type">HashMap</span>[<span class="type">TopicAndPartition</span>, <span class="type">BrokerEndPoint</span>]</span><br><span class="line">      <span class="keyword">while</span> (noLeaderPartitionSet.isEmpty) cond.await()  <span class="comment">// No partition for leader election</span></span><br><span class="line"></span><br><span class="line">      <span class="keyword">val</span> brokers = zkUtils.getAllBrokerEndPointsForChannel(<span class="type">SecurityProtocol</span>.<span class="type">PLAINTEXT</span>)</span><br><span class="line">      <span class="keyword">val</span> topicsMetadata = <span class="type">ClientUtils</span>.fetchTopicMetadata(noLeaderPartitionSet.map(m =&gt; m.topic).toSet, brokers,config.clientId,</span><br><span class="line">                                                          config.socketTimeoutMs, correlationId.getAndIncrement).topicsMetadata</span><br><span class="line">      topicsMetadata.foreach &#123; tmd =&gt;             <span class="comment">// TopicMetadata</span></span><br><span class="line">        <span class="keyword">val</span> topic = tmd.topic                     <span class="comment">// Topic</span></span><br><span class="line">        tmd.partitionsMetadata.foreach &#123; pmd =&gt;   <span class="comment">// PartitionMetadata</span></span><br><span class="line">          <span class="keyword">val</span> topicAndPartition = <span class="type">TopicAndPartition</span>(topic, pmd.partitionId)</span><br><span class="line">          <span class="comment">// Partition存在Leader,而且存在于noLeaderPartitionSet中,则从noLeaderPartitionSet中移除,并且加到新的map中</span></span><br><span class="line">          <span class="keyword">if</span>(pmd.leader.isDefined &amp;&amp; noLeaderPartitionSet.contains(topicAndPartition)) &#123;</span><br><span class="line">            <span class="keyword">val</span> leaderBroker = pmd.leader.get</span><br><span class="line">            leaderForPartitionsMap.put(topicAndPartition, leaderBroker)</span><br><span class="line">            noLeaderPartitionSet -= topicAndPartition</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 要为Fetcher添加的Partitions是有Leader的: TopicAndPartition-&gt;BrokerInitialOffset</span></span><br><span class="line">      addFetcherForPartitions(leaderForPartitionsMap.map&#123;</span><br><span class="line">        <span class="comment">// partitionMap是topicRegistry的PartitionTopicInfo, 包含了fetchOffset和consumerOffset</span></span><br><span class="line">        <span class="keyword">case</span> (topicAndPartition, broker) =&gt; topicAndPartition -&gt; <span class="type">BrokerAndInitialOffset</span>(broker, partitionMap(topicAndPartition).getFetchOffset())&#125;</span><br><span class="line">      )</span><br><span class="line">      shutdownIdleFetcherThreads()    <span class="comment">// 上面为Fetcher添加partition,如果fetcher没有partition,则删除该fetcher.</span></span><br><span class="line">      <span class="type">Thread</span>.sleep(config.refreshLeaderBackoffMs)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>leaderForPartitionsMap的映射关系是TopicAndPartition到leaderBroker.<br>抓取数据要关心Partition的offset,从Partition的哪个offset开始抓取数据.<br>在前面rebalance时为消费者分配的的partitionMap已经获取到offset(fetchOffsets)  </p>
+<h2 id="AbstractFetcherManager">AbstractFetcherManager</h2><p>每个消费者都有自己的ConsumerFetcherManager.fetch动作不仅只有消费者有,Partition的副本也会拉取Leader的数据.<br>createFetcherThread抽象方法对于Consumer和Replica会分别创建ConsumerFetcherThread和ReplicaFetcherThread.  </p>
+<p><img src="http://img.blog.csdn.net/20160125104937050" alt="k_abstract_fetcher"></p>
+<p>由于消费者可以消费多个topic的多个partition.每个TopicPartition组合都会有一个fetcherId.<br>所以fetcherThreadMap的key实际上是由(broker_id, topic_id, partition_id)共同组成的.<br>针对每个source broker的每个partition都会有拉取线程,即拉取是针对partition级别拉取数据的.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractFetcherManager</span>(</span><span class="keyword">protected</span> <span class="keyword">val</span> name: <span class="type">String</span>, clientId: <span class="type">String</span>, numFetchers: <span class="type">Int</span> = <span class="number">1</span>) &#123;</span><br><span class="line">  <span class="comment">// map of (source broker_id, fetcher_id per source broker) =&gt; fetcher</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">val</span> fetcherThreadMap = <span class="keyword">new</span> mutable.<span class="type">HashMap</span>[<span class="type">BrokerAndFetcherId</span>, <span class="type">AbstractFetcherThread</span>]</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">BrokerAndFetcherId</span>(</span>broker: <span class="type">BrokerEndPoint</span>, fetcherId: <span class="type">Int</span>)</span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">BrokerAndInitialOffset</span>(</span>broker: <span class="type">BrokerEndPoint</span>, initOffset: <span class="type">Long</span>)</span><br></pre></td></tr></table></figure>
+<p>所以BrokerAndFetcherId可以表示Borker上某个topic的PartitionId,而BrokerAndInitialOffset是Broker级别的offset.<br>addFetcherForPartitions的参数中BrokerAndInitialOffset是和TopicAndPartition有关的,即Partition的offset.   </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// to be defined in subclass to create a specific fetcher</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">createFetcherThread</span>(</span>fetcherId: <span class="type">Int</span>, sourceBroker: <span class="type">BrokerEndPoint</span>): <span class="type">AbstractFetcherThread</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 为Partition添加Fetcher是为Partition创建Fetcher线程. 因为Fetcher线程是用来抓取Partition的消息. </span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">addFetcherForPartitions</span>(</span>partitionAndOffsets: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">BrokerAndInitialOffset</span>]) &#123;</span><br><span class="line">    <span class="comment">// 根据broker-topic-partition分组. 相同fetcherId对应一个fetcher线程  </span></span><br><span class="line">    <span class="keyword">val</span> partitionsPerFetcher = partitionAndOffsets.groupBy&#123; <span class="keyword">case</span>(topicAndPartition, brokerAndInitialOffset) =&gt;</span><br><span class="line">      <span class="type">BrokerAndFetcherId</span>(brokerAndInitialOffset.broker, getFetcherId(topicAndPartition.topic, topicAndPartition.partition))&#125;</span><br><span class="line">    <span class="comment">// 分组之后的value仍然不变,还是partitionAndOffsets. 不过因为是根据fetcherId,可能存在不同的partition有相同的fetcherId </span></span><br><span class="line">    <span class="keyword">for</span> ((brokerAndFetcherId, partitionAndOffsets) &lt;- partitionsPerFetcher) &#123;</span><br><span class="line">      <span class="keyword">var</span> fetcherThread: <span class="type">AbstractFetcherThread</span> = <span class="literal">null</span></span><br><span class="line">      fetcherThreadMap.get(brokerAndFetcherId) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">Some</span>(f) =&gt; fetcherThread = f</span><br><span class="line">        <span class="keyword">case</span> <span class="type">None</span> =&gt;</span><br><span class="line">          fetcherThread = createFetcherThread(brokerAndFetcherId.fetcherId, brokerAndFetcherId.broker)</span><br><span class="line">          fetcherThreadMap.put(brokerAndFetcherId, fetcherThread)</span><br><span class="line">          fetcherThread.start         <span class="comment">// 启动刚刚创建的拉取线程</span></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 由于partitionAndOffsets现在已经是在同一个partition里. 取得所有partition对应的offset</span></span><br><span class="line">      fetcherThreadMap(brokerAndFetcherId).addPartitions(partitionAndOffsets.map &#123; </span><br><span class="line">        <span class="keyword">case</span> (topicAndPartition, brokerAndInitOffset) =&gt; topicAndPartition -&gt; brokerAndInitOffset.initOffset</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>partitionAndOffsets.groupBy</code>的partitionAndOffsets是包括所有Broker-Topic-Partition的.<br>分组后,<code>for循环中partitionsPerFetcher的partitionAndOffsets</code>对相同fetcherId的partitions会被分到同一组.<br>在同一个for循环里的partitionAndOffsets有相同的fetcherId,可能会有多个partitionAndOffsets.  </p>
+<blockquote>
+<p>注意: 这里的fetcherId的计算方式是对topic进行hash,加上partition的结果后和numFetchers求余数.<br>所以可能存在相同topic,不同partition的fetcherId是相同的.<br>比如numFetchers=3,相同topic,partition=[2,5].fetcherId就是相同的(因为2%3=2,5%3=2).  </p>
+</blockquote>
+<p>入口参数partitionAndOffsets(Map)决定了每个TopicAndPartition只会有一个BrokerAndOffset(唯一性).<br>对于<code>同一个TopicAndPartition只有一个BrokerAndOffset</code>  </p>
+<table>
+<thead>
+<tr>
+<th>topic</th>
+<th>partition</th>
+<th>broker</th>
+<th>offset</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>t1</td>
+<td>1</td>
+<td>A</td>
+<td>10 </td>
+</tr>
+<tr>
+<td>t1</td>
+<td>2</td>
+<td>B</td>
+<td>15</td>
+</tr>
+<tr>
+<td>t2</td>
+<td>1</td>
+<td>A</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<p>根据<code>(broker,topic,partition)</code>对partitionAndOffsets<strong>分组</strong>:  </p>
+<table>
+<thead>
+<tr>
+<th>topic</th>
+<th>partition</th>
+<th>broker</th>
+<th>offset</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>t1</td>
+<td>1</td>
+<td>A</td>
+<td>10 </td>
+</tr>
+<tr>
+<td>t1</td>
+<td>1</td>
+<td>C</td>
+<td>12</td>
+</tr>
+<tr>
+<td>t1</td>
+<td>2</td>
+<td>B</td>
+<td>15</td>
+</tr>
+<tr>
+<td>t2</td>
+<td>1</td>
+<td>A</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<p>上面示例中相同的TopicAndPartition有多个Broker.但是这种结构首先就不满足topic-partition的唯一性!<br>实际上也不允许相同的partition分布在不同的broker上,而不同的partition分布在相同的broker上则是允许的.<br>因此对于<code>相同broker,相同topic, 不同的partition</code>则是可以满足的!而这正是fetcherId算法的计算方式.  </p>
+<table>
+<thead>
+<tr>
+<th>topic</th>
+<th>partition</th>
+<th>broker</th>
+<th>offset</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>t1</td>
+<td>1</td>
+<td>A</td>
+<td>10 </td>
+</tr>
+<tr>
+<td>t1</td>
+<td>2</td>
+<td>A</td>
+<td>12</td>
+</tr>
+</tbody>
+</table>
+<p>FetcherManager管理所有的FetcherThread,而每个FetcherThread则管理自己的PartitionOffset.<br>每个角色都各司其职,管理者不需要关心底层的Partition,而是交给线程来管理,因为线程负责处理Partition.<br>这就好比常见的Master-Worker架构,Master是管理者,负责管理所有的Worker进程,而Worker负责具体的Task.  </p>
+<p><img src="http://img.blog.csdn.net/20160129084942296" alt="k_manager_thread"></p>
+<h2 id="AbstractFetcherThread_addPartitions">AbstractFetcherThread addPartitions</h2><p>Consumer和Replica的FetcherManager都会负责将自己要抓取的partitionAndOffsets传给对应的Fetcher线程.<br>Consumer交给LeaderFinderThread发现线程, Replica则是在makeFollowers时确定partitionOffsets.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">AbstractFetcherManager</span>.addFetcherForPartitions(<span class="type">Map</span>&lt;<span class="type">TopicAndPartition</span>, <span class="type">BrokerAndInitialOffset</span>&gt;)  (kafka.server)</span><br><span class="line">    |-- <span class="type">LeaderFinderThread</span> in <span class="type">ConsumerFetcherManager</span>.doWork()  (kafka.consumer)</span><br><span class="line">    |-- <span class="type">ReplicaManager</span>.makeFollowers(int, int, <span class="type">Map</span>&lt;<span class="type">Partition</span>, <span class="type">PartitionState</span>&gt;, int, <span class="type">Map</span>&lt;<span class="type">TopicPartition</span>, <span class="type">Object</span>&gt;, <span class="type">MetadataCache</span>)  (kafka.server)</span><br></pre></td></tr></table></figure>
+<p>抓取线程也是用<code>partitionMap</code>缓存来保存每个TopicAndPartition的抓取状态.即<code>管理者负责线程</code>相关,而<code>线程负责状态</code>相关.  </p>
+<table>
+<thead>
+<tr>
+<th>map</th>
+<th>class</th>
+<th>source invoker</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fetcherThreadMap: BrokerAndFetcherId-&gt;AbstractFetcherThread</td>
+<td>AbstractFetcherManager</td>
+<td>LeaderFinderThread.addFetcherForPartitions</td>
+</tr>
+<tr>
+<td>partitionMap: TopicAndPartition-&gt;PartitionTopicInfo</td>
+<td>ConsumerFetcherManager</td>
+<td>updateFetcher-&gt;startConnections</td>
+</tr>
+<tr>
+<td>leaderForPartitionsMap: TopicAndPartition-&gt;leaderBroker</td>
+<td>LeaderFinderThread</td>
+<td>fetchTopicMetadata-&gt;partitionsMetadata</td>
+</tr>
+<tr>
+<td>partitionMap: TopicAndPartition-&gt;PartitionFetchState</td>
+<td>AbstractFetcherThread</td>
+<td>addFetcherForPartitions-&gt;addPartitions</td>
+</tr>
+<tr>
+<td>partitionMap: TopicAndPartition-&gt;PartitionTopicInfo</td>
+<td>ConsumerFetcherThread</td>
+<td>ConsumerFetcherManager.createFetcherThread</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Abstract class for fetching data from multiple partitions from the same broker.</span></span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractFetcherThread</span>(</span>name: <span class="type">String</span>, clientId: <span class="type">String</span>, sourceBroker: <span class="type">BrokerEndPoint</span>, fetchBackOffMs: <span class="type">Int</span> = <span class="number">0</span>, isInterruptible: <span class="type">Boolean</span> = <span class="literal">true</span>) <span class="keyword">extends</span> <span class="type">ShutdownableThread</span>(name, isInterruptible) &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">val</span> partitionMap = <span class="keyword">new</span> mutable.<span class="type">HashMap</span>[<span class="type">TopicAndPartition</span>, <span class="type">PartitionFetchState</span>] <span class="comment">// a (topic, partition) -&gt; partitionFetchState map</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">addPartitions</span>(</span>partitionAndOffsets: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">Long</span>]) &#123;</span><br><span class="line">    partitionMapLock.lockInterruptibly()</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">for</span> ((topicAndPartition, offset) &lt;- partitionAndOffsets) &#123;</span><br><span class="line">        <span class="comment">// If the partitionMap already has the topic/partition, then do not update the map with the old offset</span></span><br><span class="line">        <span class="keyword">if</span> (!partitionMap.contains(topicAndPartition))</span><br><span class="line">          partitionMap.put(topicAndPartition,</span><br><span class="line">            <span class="keyword">if</span> (<span class="type">PartitionTopicInfo</span>.isOffsetInvalid(offset)) <span class="keyword">new</span> <span class="type">PartitionFetchState</span>(handleOffsetOutOfRange(topicAndPartition))</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">new</span> <span class="type">PartitionFetchState</span>(offset)</span><br><span class="line">          )&#125;</span><br><span class="line">      partitionMapCond.signalAll()</span><br><span class="line">    &#125; <span class="keyword">finally</span> partitionMapLock.unlock()</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>总结下从消费者通过ZKRebalancerListener获取到分配给它的PartitionAssignment,转换为topicRegistry.<br>交给AbstractFetcherManager管理所有的FetcherThread. 同时有Leader发现线程获取Partition的Leader.<br>Partition的offset的源头是topicRegistry的fetchOffsets(即从offsetChannel获取),贯穿于整个流程.  </p>
+<p><img src="http://img.blog.csdn.net/20160129084955562" alt="k_fetcher_flow"></p>
+<h2 id="FetchRequest_&amp;_PartitionData">FetchRequest &amp; PartitionData</h2><p>拉取请求指定要拉取哪个TopicAndPartition(offset来自于PartitionFetchState), PartitionData返回要拉取的消息集.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">REQ</span> <span class="title">&lt;</span>:</span> <span class="type">FetchRequest</span>  <span class="comment">//拉取请求的子类</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">PD</span> <span class="title">&lt;</span>:</span> <span class="type">PartitionData</span>  <span class="comment">//Partition数据,即拉取结果</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">trait</span> <span class="title">FetchRequest</span> &#123;</span>      <span class="comment">//定义了拉取接口</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">isEmpty</span>:</span> <span class="type">Boolean</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">offset</span>(</span>topicAndPartition: <span class="type">TopicAndPartition</span>): <span class="type">Long</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">trait</span> <span class="title">PartitionData</span> &#123;</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">errorCode</span>:</span> <span class="type">Short</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">exception</span>:</span> <span class="type">Option</span>[<span class="type">Throwable</span>]</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">toByteBufferMessageSet</span>:</span> <span class="type">ByteBufferMessageSet</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">highWatermark</span>:</span> <span class="type">Long</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>FetchRequest和PartitionData也有Consumer和Replica之分. ConsumerFetcherThread中的方法交给了underlying(类似于装饰模式).<br>来自于kafka.api的FetchRequest才是真正面向KafkaApis的请求.PartitionFetchInfo除了offset还有fetchSize.<br>RequestOrResponse是作为KafkaApis中数据传递的介质接口. 参数requestId表示了请求的类型(PRODUCE,FETCH等)  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">PartitionFetchInfo</span>(</span>offset: <span class="type">Long</span>, fetchSize: <span class="type">Int</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">FetchRequest</span>(</span>versionId: <span class="type">Short</span> = <span class="type">FetchRequest</span>.<span class="type">CurrentVersion</span>,correlationId: <span class="type">Int</span> = <span class="type">FetchRequest</span>.<span class="type">DefaultCorrelationId</span>,</span><br><span class="line">                        clientId: <span class="type">String</span> = <span class="type">ConsumerConfig</span>.<span class="type">DefaultClientId</span>,replicaId: <span class="type">Int</span> = <span class="type">Request</span>.<span class="type">OrdinaryConsumerId</span>,</span><br><span class="line">                        maxWait: <span class="type">Int</span> = <span class="type">FetchRequest</span>.<span class="type">DefaultMaxWait</span>,minBytes: <span class="type">Int</span> = <span class="type">FetchRequest</span>.<span class="type">DefaultMinBytes</span>,</span><br><span class="line">                        requestInfo: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">PartitionFetchInfo</span>])</span><br><span class="line">        <span class="keyword">extends</span> <span class="type">RequestOrResponse</span>(<span class="type">Some</span>(<span class="type">ApiKeys</span>.<span class="type">FETCH</span>.id))</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.blog.csdn.net/20160126084038512" alt="k_fetchRequest_partitionData"></p>
+<p><strong>ConsumerFetcherThread.buildFetchRequest</strong>  </p>
+<p>AbstractFetcherThread的doWork会抽象出buildFetchRequest,ConsumerFetcherThread会使用FetchRequestBuilder<br>build出来的是和kafka.api.FetchRequestBuilder相同文件下的kafka.api.FetchRequest,作为underlying.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConsumerFetcherThread</span>(</span>...)&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">val</span> fetchRequestBuilder = <span class="keyword">new</span> <span class="type">FetchRequestBuilder</span>().</span><br><span class="line">    clientId(clientId).replicaId(<span class="type">Request</span>.<span class="type">OrdinaryConsumerId</span>).maxWait(config.fetchWaitMaxMs).</span><br><span class="line">    minBytes(config.fetchMinBytes).requestVersion(kafka.api.<span class="type">FetchRequest</span>.<span class="type">CurrentVersion</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// partitionMap来自于AbstractFetcherThread.addPartitions或者delayPartitions</span></span><br><span class="line">  <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">buildFetchRequest</span>(</span>partitionMap: collection.<span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">PartitionFetchState</span>]): <span class="type">FetchRequest</span> = &#123;</span><br><span class="line">    partitionMap.foreach &#123; <span class="keyword">case</span> ((topicAndPartition, partitionFetchState)) =&gt;</span><br><span class="line">      <span class="keyword">if</span> (partitionFetchState.isActive)</span><br><span class="line">        fetchRequestBuilder.addFetch(topicAndPartition.topic, topicAndPartition.partition, partitionFetchState.offset, fetchSize)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">new</span> <span class="type">FetchRequest</span>(fetchRequestBuilder.build())  <span class="comment">//构造器模式,在最后才进行build</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FetchRequestBuilder</span>(</span>) &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">val</span> requestMap = <span class="keyword">new</span> collection.mutable.<span class="type">HashMap</span>[<span class="type">TopicAndPartition</span>, <span class="type">PartitionFetchInfo</span>]</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">addFetch</span>(</span>topic: <span class="type">String</span>, partition: <span class="type">Int</span>, offset: <span class="type">Long</span>, fetchSize: <span class="type">Int</span>) = &#123;</span><br><span class="line">    requestMap.put(<span class="type">TopicAndPartition</span>(topic, partition), <span class="type">PartitionFetchInfo</span>(offset, fetchSize))</span><br><span class="line">    <span class="keyword">this</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">build</span>(</span>) = &#123;</span><br><span class="line">    <span class="keyword">val</span> fetchRequest = <span class="type">FetchRequest</span>(versionId, correlationId.getAndIncrement, clientId, replicaId, maxWait, minBytes, requestMap.toMap)</span><br><span class="line">    requestMap.clear()</span><br><span class="line">    fetchRequest</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>buildFetchRequest的参数<code>partitionMap</code>的每个条目包含了FetchRequest需要从指定的offset开始抓取数据.<br>ConsumerFetcherThread的调用者是其抽象父类AbstractFetcherThread,而它的参数来自于自己的partitionMap.<br>它的partitionMap被放入是在<code>addPartitions</code>时,然后到了AbstractFetcherManager.addFetcherForPartitions,<br>接着其调用者是ConsumerFetcherThread内部类LeaderFetcherThread.这样就知道了数据的来龙去脉,形成一个闭环.  </p>
+<p>这里的设计思路是: 线程的抽象父类负责通过addPartitions添加到partitionMap中,它也负责获取partitionMap.<br>而子类(Consumer)不需要知道partitionMap是如何得来,只要能根据提供的partitionMap构建FetchRequest就可以.  </p>
+<p><img src="http://img.blog.csdn.net/20160129084926436" alt="k_partitionMap"></p>
+<h2 id="AbstractFetcherThread_doWork">AbstractFetcherThread doWork</h2><p>AbstractFetcherThread定义了多个回调方法,它的doWork方法会构建FetchRequest,然后处理拉取请求.<br>因为拉取分为Consumer和Replica,所以将具体的拉取动作要留给子类自己实现.  </p>
+<p>前面buildFetchRequest的参数partitionMap的一种来源是LeaderFetcherThread.下面的processFetchRequest在拉取数据之后<br>会<code>更新这批数据最后一条消息的下一个offset</code>作为<strong>partitionMap</strong>中Partition最新PartitionFetchState,<br>所以下一次调用buildFetchRequest构建新的FetchRequest时,PartitionFetchInfo的offset也是最新的.<br>总结下来:partitionMap在addPartitions中被添加.在doWork拉取到数据后被更新offset,表示最新拉取的位置  </p>
+<p><img src="http://img.blog.csdn.net/20160126084015605" alt="k_fetch_update_offset"></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractFetcherThread</span>(</span>..)&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">val</span> partitionMap = <span class="keyword">new</span> mutable.<span class="type">HashMap</span>[<span class="type">TopicAndPartition</span>, <span class="type">PartitionFetchState</span>] <span class="comment">// a (topic, partition) -&gt; partitionFetchState map</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// ① 根据partitionMap构建FetchRequest请求</span></span><br><span class="line">  <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">buildFetchRequest</span>(</span>partitionMap: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">PartitionFetchState</span>]): <span class="type">REQ</span></span><br><span class="line">  <span class="comment">// ② 根据抓取请求向Broker拉取消息</span></span><br><span class="line">  <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">fetch</span>(</span>fetchRequest: <span class="type">REQ</span>): <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">PD</span>]</span><br><span class="line">  <span class="comment">// ③ process fetched data 处理抓取到的数据</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">processPartitionData</span>(</span>topicAndPartition: <span class="type">TopicAndPartition</span>, fetchOffset: <span class="type">Long</span>, partitionData: <span class="type">PD</span>)</span><br><span class="line">  <span class="comment">// ④ handle a partition whose offset is out of range and return a new fetch offset 处理超出范围的offset</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">handleOffsetOutOfRange</span>(</span>topicAndPartition: <span class="type">TopicAndPartition</span>): <span class="type">Long</span></span><br><span class="line">  <span class="comment">// ⑤ deal with partitions with errors, potentially due to leadership changes 处理出错的partitions</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">handlePartitionsWithErrors</span>(</span>partitions: <span class="type">Iterable</span>[<span class="type">TopicAndPartition</span>])</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 拉取线程工作, doWork是被循环调用的,所以一旦partiionMap发生了变化(比如拉取一次之后),新的FetchRequest中的offset也发生了变化 </span></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">doWork</span>(</span>) &#123;</span><br><span class="line">    <span class="keyword">val</span> fetchRequest = inLock(partitionMapLock) &#123;</span><br><span class="line">      <span class="keyword">val</span> fetchRequest = buildFetchRequest(partitionMap)</span><br><span class="line">      <span class="comment">// 如果没有拉取请求, 则延迟back-off毫秒后继续发送请求</span></span><br><span class="line">      <span class="keyword">if</span> (fetchRequest.isEmpty) partitionMapCond.await(fetchBackOffMs, <span class="type">TimeUnit</span>.<span class="type">MILLISECONDS</span>)</span><br><span class="line">      fetchRequest</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!fetchRequest.isEmpty) processFetchRequest(fetchRequest)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">processFetchRequest</span>(</span>fetchRequest: <span class="type">REQ</span>) &#123;</span><br><span class="line">    <span class="keyword">val</span> partitionsWithError = <span class="keyword">new</span> mutable.<span class="type">HashSet</span>[<span class="type">TopicAndPartition</span>]</span><br><span class="line">    <span class="keyword">var</span> responseData: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">PD</span>] = <span class="type">Map</span>.empty</span><br><span class="line">    responseData = fetch(fetchRequest)</span><br><span class="line">    responseData.foreach &#123; <span class="keyword">case</span> (topicAndPartition, partitionData) =&gt;</span><br><span class="line">      <span class="comment">// 响应结果:TopicAndPartition-&gt;PartitionData,根据TopicAndPartition,就能从partitionMap中的PartitionFetchState</span></span><br><span class="line">      partitionMap.get(topicAndPartition).foreach(currentPartitionFetchState =&gt;</span><br><span class="line">        <span class="comment">// we append to the log if the current offset is defined and it is the same as the offset requested during fetch</span></span><br><span class="line">        <span class="comment">// fetchRequest是由partitionMap通过buildFetchRequest构建出来的,而currentPartitionFetchState也来自于partitionMap</span></span><br><span class="line">        <span class="keyword">if</span> (fetchRequest.offset(topicAndPartition) == currentPartitionFetchState.offset) &#123;</span><br><span class="line">          <span class="type">Errors</span>.forCode(partitionData.errorCode) <span class="keyword">match</span> &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="type">Errors</span>.<span class="type">NONE</span> =&gt;</span><br><span class="line">                <span class="comment">// responseData的PartitionData,包含了拉取的消息内容</span></span><br><span class="line">                <span class="keyword">val</span> messages = partitionData.toByteBufferMessageSet</span><br><span class="line">                <span class="comment">// 最后一条消息的offset+1,为新的offset,即下一次要拉取的offset的开始位置从newOffset开始</span></span><br><span class="line">                <span class="keyword">val</span> newOffset = messages.shallowIterator.toSeq.lastOption <span class="keyword">match</span> &#123;  <span class="comment">//正常的迭代器迭代之后消息就没有了,使用shallow拷贝,消息仍然存在</span></span><br><span class="line">                  <span class="keyword">case</span> <span class="type">Some</span>(m: <span class="type">MessageAndOffset</span>) =&gt; m.nextOffset</span><br><span class="line">                  <span class="keyword">case</span> <span class="type">None</span> =&gt; currentPartitionFetchState.offset</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 更新partitionMap中的Partition拉取状态, 这样下次请求时,因为partitionMap内容更新了,重新构造的buildFetchRequest的offset也变化了</span></span><br><span class="line">                partitionMap.put(topicAndPartition, <span class="keyword">new</span> <span class="type">PartitionFetchState</span>(newOffset))</span><br><span class="line">                processPartitionData(topicAndPartition, currentPartitionFetchState.offset, partitionData)</span><br><span class="line">            <span class="keyword">case</span> <span class="type">Errors</span>.<span class="type">OFFSET_OUT_OF_RANGE</span> =&gt; partitionMap.put(topicAndPartition, <span class="keyword">new</span> <span class="type">PartitionFetchState</span>(handleOffsetOutOfRange(topicAndPartition)))</span><br><span class="line">            <span class="keyword">case</span> _ =&gt; <span class="keyword">if</span> (isRunning.get) partitionsWithError += topicAndPartition</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (partitionsWithError.nonEmpty) &#123;</span><br><span class="line">      handlePartitionsWithErrors(partitionsWithError)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到processFetchRequest作为抽象类的主方法,将其他回调都组织起来.  </p>
+<p><img src="http://img.blog.csdn.net/20160126084118702" alt="k_abstractFetcherThread_doWork"></p>
+<h2 id="ConsumerFetcherThread">ConsumerFetcherThread</h2><p>fetch请求会产生PartitionData分区数据(抓取的结果).获取到数据后调用processPartitionData,将结果放到队列中.<br>这里还看到了ConsumerFetcherManager的partitionMap不仅用于LeaderFinderThread查找partition的offset,<br>因为它也传给了每个ConsumerFetcherThread,也用于这里查找partition的PartitionTopicInfo.<br>而PartitionTopicInfo除了offsert,还保持了实际结果数据的BlockingQueue.所以这里在获取到数据后会先加到队列中.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConsumerFetcherThread</span>(</span>name: <span class="type">String</span>, <span class="keyword">val</span> config: <span class="type">ConsumerConfig</span>, sourceBroker: <span class="type">BrokerEndPoint</span>,</span><br><span class="line">                            partitionMap: <span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">PartitionTopicInfo</span>], <span class="keyword">val</span> consumerFetcherManager: <span class="type">ConsumerFetcherManager</span>)</span><br><span class="line">        <span class="keyword">extends</span> <span class="type">AbstractFetcherThread</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">val</span> simpleConsumer = <span class="keyword">new</span> <span class="type">SimpleConsumer</span>(sourceBroker.host, sourceBroker.port, config.socketTimeoutMs, config.socketReceiveBufferBytes, config.clientId)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">protected</span> <span class="function"><span class="keyword">def</span> <span class="title">fetch</span>(</span>fetchRequest: <span class="type">FetchRequest</span>): collection.<span class="type">Map</span>[<span class="type">TopicAndPartition</span>, <span class="type">PartitionData</span>] =</span><br><span class="line">    simpleConsumer.fetch(fetchRequest.underlying).data.map &#123; <span class="keyword">case</span> (key, value) =&gt; key -&gt; <span class="keyword">new</span> <span class="type">PartitionData</span>(value) &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">processPartitionData</span>(</span>topicAndPartition: <span class="type">TopicAndPartition</span>, fetchOffset: <span class="type">Long</span>, partitionData: <span class="type">PartitionData</span>) &#123;</span><br><span class="line">    <span class="keyword">val</span> pti = partitionMap(topicAndPartition)   <span class="comment">// PartitionTopicInfo</span></span><br><span class="line">    pti.enqueue(partitionData.underlying.messages.asInstanceOf[<span class="type">ByteBufferMessageSet</span>])  <span class="comment">// FetchResponsePartitionData的消息集入队</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>PartitionTopicInfo的offset用于抓取Partition,而BlockingQueue用于存储抓取后的结果数据.  </p>
+<p><img src="http://img.blog.csdn.net/20160129084905858" alt="k_partition_topicinfo"></p>
+<p>PartitionTopicInfo是在ZKRebalancerListener.rebalance时调用addPartitionTopicInfo创建的.<br>队列是topicThreadIdAndQueues某个threadId对应的Queue,在consume里创建空的队列,在这里放入了数据.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PartitionTopicInfo</span>(</span><span class="keyword">val</span> topic: <span class="type">String</span>, <span class="keyword">val</span> partitionId: <span class="type">Int</span>,</span><br><span class="line">                         <span class="keyword">private</span> <span class="keyword">val</span> chunkQueue: <span class="type">BlockingQueue</span>[<span class="type">FetchedDataChunk</span>],</span><br><span class="line">                         <span class="keyword">private</span> <span class="keyword">val</span> consumedOffset: <span class="type">AtomicLong</span>, <span class="keyword">private</span> <span class="keyword">val</span> fetchedOffset: <span class="type">AtomicLong</span>,</span><br><span class="line">                         <span class="keyword">private</span> <span class="keyword">val</span> fetchSize: <span class="type">AtomicInteger</span>, <span class="keyword">private</span> <span class="keyword">val</span> clientId: <span class="type">String</span>) <span class="keyword">extends</span> <span class="type">Logging</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">enqueue</span>(</span>messages: <span class="type">ByteBufferMessageSet</span>) &#123;</span><br><span class="line">    <span class="keyword">val</span> size = messages.validBytes</span><br><span class="line">    <span class="keyword">if</span>(size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">val</span> next = messages.shallowIterator.toSeq.last.nextOffset</span><br><span class="line">      chunkQueue.put(<span class="keyword">new</span> <span class="type">FetchedDataChunk</span>(messages, <span class="keyword">this</span>, fetchedOffset.get))</span><br><span class="line">      fetchedOffset.set(next)</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(messages.sizeInBytes &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      chunkQueue.put(<span class="keyword">new</span> <span class="type">FetchedDataChunk</span>(messages, <span class="keyword">this</span>, fetchedOffset.get))</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="SimpleConsumer">SimpleConsumer</h2><p>SimpleConsumer抓取数据流程使用和scala版本的Producer类似,用同步类型的阻塞通道实现.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SimpleConsumer</span>(</span><span class="keyword">val</span> host: <span class="type">String</span>, <span class="keyword">val</span> port: <span class="type">Int</span>, <span class="keyword">val</span> soTimeout: <span class="type">Int</span>, <span class="keyword">val</span> bufferSize: <span class="type">Int</span>, <span class="keyword">val</span> clientId: <span class="type">String</span>) <span class="keyword">extends</span> <span class="type">Logging</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">val</span> blockingChannel = <span class="keyword">new</span> <span class="type">BlockingChannel</span>(host, port, bufferSize, <span class="type">BlockingChannel</span>.<span class="type">UseDefaultBufferSize</span>, soTimeout)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">fetch</span>(</span>request: <span class="type">FetchRequest</span>): <span class="type">FetchResponse</span> = &#123;</span><br><span class="line">    <span class="keyword">var</span> response: <span class="type">NetworkReceive</span> = sendRequest(request)</span><br><span class="line">    <span class="keyword">val</span> fetchResponse = <span class="type">FetchResponse</span>.readFrom(response.payload(), request.versionId)</span><br><span class="line">    <span class="keyword">val</span> fetchedSize = fetchResponse.sizeInBytes</span><br><span class="line">    fetchResponse</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">sendRequest</span>(</span>request: <span class="type">RequestOrResponse</span>): <span class="type">NetworkReceive</span> = &#123;</span><br><span class="line">    getOrMakeConnection()</span><br><span class="line">    blockingChannel.send(request)</span><br><span class="line">    <span class="keyword">var</span> response: <span class="type">NetworkReceive</span> = blockingChannel.receive()</span><br><span class="line">    response</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个消费者线程(ConsumerFetcherThread)会和一个source Broker建立唯一的连接通道,<br>而这些broker最开始源于LeaderFinderThread的leaderForPartitionsMap.  </p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">LeaderFinderThread                                      AbstractFetcherManager </span><br><span class="line">  |-- addFetcherForPartitions<span class="function"><span class="params">(leaderForPartitionsMap)</span>  --&gt;</span> |-- createFetcherThread(fetcherId,broker)      </span><br><span class="line"></span><br><span class="line">ConsumerFetcherManager          ConsumerFetcherThread  </span><br><span class="line">  |-- <span class="keyword">new</span> ConsumerFetcherThread<span class="function"> --&gt;</span>  |-- simepleConsumer.fetch<span class="function"> --&gt;</span> SimpleConsumer<span class="function"><span class="params">(sourceBroker)</span> --&gt;</span> BlockingChannel</span><br></pre></td></tr></table></figure>
+<p>现在我们再梳理下消费者,线程,队列,通道等的关系.  </p>
+<table>
+<thead>
+<tr>
+<th>No</th>
+<th>Event</th>
+<th>ObjectLifeCycle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>消费者订阅多个主题(Topic),每个主题可以配置多个线程(Count)</td>
+<td>TopicCount</td>
+</tr>
+<tr>
+<td>2</td>
+<td>消费者对一个Topic就可以有多个线程</td>
+<td>topicThreadIds: topic-&gt;theadIds</td>
+</tr>
+<tr>
+<td>3</td>
+<td>每个线程对应一个队列和KafkaStream</td>
+<td>queuesAndStreams</td>
+</tr>
+<tr>
+<td>4</td>
+<td>一个Topic和Partition组合对应一个fetcherId</td>
+<td>fetcherId</td>
+</tr>
+<tr>
+<td>5</td>
+<td>根据fetcherId和broker可以创建一个FetcherThread</td>
+<td>createFetcherThread(fetcherId,broker)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>一个FetcherThread使用一个SimpleConsumer和一个BlockingChannel通道</td>
+<td>SimpleConsumer</td>
+</tr>
+<tr>
+<td>7</td>
+<td>一个fetcherId可能对应相同broker,相同topic,不同的partition</td>
+<td>partitionMap</td>
+</tr>
+<tr>
+<td>8</td>
+<td>一次fetch操作从partitionMap中构建一个FetchRequest</td>
+<td>buildFetchRequest</td>
+</tr>
+<tr>
+<td>9</td>
+<td>所以一个FetchRequest会包括多个Partition</td>
+<td>TopicAndPartition-&gt;PartitionFetchInfo</td>
+</tr>
+</tbody>
+</table>
+<p><img src="http://img.blog.csdn.net/20160129095422211" alt="k_consumer_hubble"></p>
+<p>因为FetchRequest对应唯一的SimpleConsumer(6),所以构建FetchRequest的partitionMap也是属于唯一的FetcherThread(上图左下角).  </p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Action</th>
+<th>Explain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AbstractFetcherManager.addFetcherForPartitions</td>
+<td>fetcherThreadMap(brokerAndFetcherId).addPartitions(..)</td>
+<td>把属于某个Fetcher的Partitions加入到对应的线程中</td>
+</tr>
+<tr>
+<td>AbstractFetcherThread.addPartitions</td>
+<td>partitionMap.put(…)</td>
+<td>添加只属于这个线程的Partition到对应的partitionMap中</td>
+</tr>
+<tr>
+<td>AbstractFetcherThread.buildFetchRequest</td>
+<td>FetchRequest</td>
+<td>根据partitionMap构建FetchRequest</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2016/01/20/2016-01-20-Kafka-Consumer-fetcher/">Kafka源码分析 Consumer</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2016年01月20日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年01月29日 - 09时55分</p>
+  <p>
+    <span>原始链接:</span><a href="/2016/01/20/2016-01-20-Kafka-Consumer-fetcher/" title="Kafka源码分析 Consumer">http://github.com/zqhxuyuan/2016/01/20/2016-01-20-Kafka-Consumer-fetcher/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/20/2016-01-20-Kafka-Consumer-fetcher/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
+
+
+
+<nav id="article-nav">
+  
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2016/01/22/2016-01-22-Kafka-Consumer-java/">
+        Kafka源码分析 Consumer
+      </a>
+    </div>
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2016/01/19/2016-01-19-Kafka-Consumer-scala/">
+        Kafka源码分析 Consumer
+      </a>
+    </div>
+  
+</nav>
+
+  
+</article>
+
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#LeaderFinderThread"><span class="toc-number">1.</span> <span class="toc-text">LeaderFinderThread</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractFetcherManager"><span class="toc-number">2.</span> <span class="toc-text">AbstractFetcherManager</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractFetcherThread_addPartitions"><span class="toc-number">3.</span> <span class="toc-text">AbstractFetcherThread addPartitions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FetchRequest_&_PartitionData"><span class="toc-number">4.</span> <span class="toc-text">FetchRequest & PartitionData</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AbstractFetcherThread_doWork"><span class="toc-number">5.</span> <span class="toc-text">AbstractFetcherThread doWork</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ConsumerFetcherThread"><span class="toc-number">6.</span> <span class="toc-text">ConsumerFetcherThread</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SimpleConsumer"><span class="toc-number">7.</span> <span class="toc-text">SimpleConsumer</span></a></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+    if ($(".toc").length < 1) {
+        $("#toc").css("display","none");
+        $("#tocButton").css("display","none");
+        $(".switch-btn").css("display","block");
+        $(".switch-area").css("display","block");
+    }
+</script>
+
+
+    <style>
+        .toc {
+            white-space: nowrap;
+            overflow-x: hidden;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $(".toc li a").mouseover(function() {
+                var title = $(this).attr('href');
+                $(this).attr("title", title);
+            });
+        })
+    </script>
+
+
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+	</div>
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+</div>
+
+
+
+
+
+
+
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
+
+
+  
+  
+    
+    <div  class="post-nav-button">
+    <a href="/2016/01/22/2016-01-22-Kafka-Consumer-java/" title="上一篇: Kafka源码分析 Consumer">
+    <i class="fa fa-angle-left"></i>
+    </a>
+    <a href="/2016/01/19/2016-01-19-Kafka-Consumer-scala/" title="下一篇: Kafka源码分析 Consumer">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2016 任何忧伤,都抵不过世界的美丽
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+        </div>
+    </div>
+    <div class="visit">
+      <span id="busuanzi_container_site_pv" style='display:none'>
+        <span id="site-visit" >本站到访数: 
+        <span id="busuanzi_value_site_uv"></span>
+        </span>
+      </span>
+      <span id="busuanzi_container_page_pv" style='display:none'>
+        <span id="page-visit">, 本页阅读量: 
+        <span id="busuanzi_value_page_pv"></span>
+        </span>
+      </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+<script>
+  var backgroundnum = 5;
+  var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+
+  $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+</script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+<a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+<a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
