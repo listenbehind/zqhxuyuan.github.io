@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160216105419542">
 <meta property="og:image" content="http://img.blog.csdn.net/20160216154259375">
 <meta property="og:image" content="http://img.blog.csdn.net/20160216155221722">
-<meta property="og:updated_time" content="2016-02-16T07:52:49.000Z">
+<meta property="og:updated_time" content="2016-02-18T15:50:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka源码分析 Consumer(2) Fetcher">
 <meta name="twitter:description" content="Kafka Consumer Fetcher">
@@ -408,6 +408,8 @@
 </blockquote>
 <p>fetch请求会产生PartitionData分区数据(抓取的结果).获取到数据后调用processPartitionData,将结果放到队列中.<br>FetchResponse的data存储TopicAndPartition-&gt;FetchResponsePartitionData,其value被用于构建PartitionData.<br>而实际上FetchResponsePartitionData作为<code>underlying</code>,包含了从服务端抓取的消息集内容<code>messages</code>.  </p>
 <p><img src="http://img.blog.csdn.net/20160203090218358" alt="k_consumerFetchThread"></p>
+<p>AbstractFetcherThread的responseData中PartitionData的错误码是OFFSET_OUT_OF_RANGE的处理方式:<br>根据autoOffsetReset重置策略,Smallest对应Earliest, Largest对应Latest. 发送OffsetRequest请求.  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// handle a partition whose offset is out of range and return a new fetch offset</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handleOffsetOutOfRange</span>(</span>topicAndPartition: <span class="type">TopicAndPartition</span>): <span class="type">Long</span> = &#123;</span><br><span class="line">  <span class="keyword">val</span> startTimestamp = config.autoOffsetReset <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">OffsetRequest</span>.<span class="type">SmallestTimeString</span> =&gt; <span class="type">OffsetRequest</span>.<span class="type">EarliestTime</span></span><br><span class="line">    <span class="keyword">case</span> <span class="type">OffsetRequest</span>.<span class="type">LargestTimeString</span> =&gt; <span class="type">OffsetRequest</span>.<span class="type">LatestTime</span></span><br><span class="line">    <span class="keyword">case</span> _ =&gt; <span class="type">OffsetRequest</span>.<span class="type">LatestTime</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">val</span> newOffset = simpleConsumer.earliestOrLatestOffset(topicAndPartition, startTimestamp, <span class="type">Request</span>.<span class="type">OrdinaryConsumerId</span>)</span><br><span class="line">  <span class="keyword">val</span> pti = partitionMap(topicAndPartition)</span><br><span class="line">  pti.resetFetchOffset(newOffset)</span><br><span class="line">  pti.resetConsumeOffset(newOffset)</span><br><span class="line">  newOffset</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="PartitionTopicInfo">PartitionTopicInfo</h3><blockquote>
 <p>这里还看到了ConsumerFetcherManager的partitionMap不仅用于LeaderFinderThread查找partition的offset,<br>因为它也传给了每个ConsumerFetcherThread,也用于这里查找partition的PartitionTopicInfo.<br>而PartitionTopicInfo除了offsert,还保持了实际结果数据的BlockingQueue.所以这里在获取到数据后会先加到队列中.  </p>
 </blockquote>
@@ -689,7 +691,7 @@
   <p><span>本文标题:</span><a href="/2016/01/20/2016-01-20-Kafka-Consumer-fetcher/">Kafka源码分析 Consumer(2) Fetcher</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年01月20日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年02月16日 - 15时52分</p>
+  <p><span>最后更新:</span>2016年02月18日 - 23时50分</p>
   <p>
     <span>原始链接:</span><a href="/2016/01/20/2016-01-20-Kafka-Consumer-fetcher/" title="Kafka源码分析 Consumer(2) Fetcher">http://github.com/zqhxuyuan/2016/01/20/2016-01-20-Kafka-Consumer-fetcher/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/20/2016-01-20-Kafka-Consumer-fetcher/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
