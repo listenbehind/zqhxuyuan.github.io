@@ -3,24 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Apache Ignite 内存网格数据库 | zqhxuyuan</title>
+  <title>使用Kafka Connect构建大规模低延迟的数据管道 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Apache Ignite In-Memory Data Fabric is a high-performance, integrated and distributed in-memory platform for computing and transacting on large-scale data sets in real-time, orders of magnitude faster">
+  <meta name="description" content="Announcing Kafka Connect: Building large-scale low-latency data pipelineshttp://www.confluent.io/blog/announcing-kafka-connect-building-large-scale-low-latency-data-pipelines">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Apache Ignite 内存网格数据库">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2015/12/11/2015-12-11-Apache-Ignite/index.html">
+<meta property="og:title" content="使用Kafka Connect构建大规模低延迟的数据管道">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/02/21/Kafka-connect-pipeline/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="Apache Ignite In-Memory Data Fabric is a high-performance, integrated and distributed in-memory platform for computing and transacting on large-scale data sets in real-time, orders of magnitude faster">
-<meta property="og:image" content="http://img.blog.csdn.net/20151211152736924">
-<meta property="og:image" content="http://ignite.apache.org/images/in_memory_compute.png">
-<meta property="og:image" content="http://img.blog.csdn.net/20151211152900022">
-<meta property="og:image" content="http://ignite.apache.org/images/in_memory_data.png">
-<meta property="og:image" content="http://img.blog.csdn.net/20151214103403518">
-<meta property="og:image" content="http://img.blog.csdn.net/20151214103416523">
-<meta property="og:updated_time" content="2015-12-14T02:38:21.000Z">
+<meta property="og:description" content="Announcing Kafka Connect: Building large-scale low-latency data pipelineshttp://www.confluent.io/blog/announcing-kafka-connect-building-large-scale-low-latency-data-pipelines">
+<meta property="og:updated_time" content="2016-02-21T14:30:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Apache Ignite 内存网格数据库">
-<meta name="twitter:description" content="Apache Ignite In-Memory Data Fabric is a high-performance, integrated and distributed in-memory platform for computing and transacting on large-scale data sets in real-time, orders of magnitude faster">
+<meta name="twitter:title" content="使用Kafka Connect构建大规模低延迟的数据管道">
+<meta name="twitter:description" content="Announcing Kafka Connect: Building large-scale low-latency data pipelineshttp://www.confluent.io/blog/announcing-kafka-connect-building-large-scale-low-latency-data-pipelines">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -176,11 +170,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-2015-12-11-Apache-Ignite" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Kafka-connect-pipeline" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/12/11/2015-12-11-Apache-Ignite/" class="article-date">
-  	<time datetime="2015-12-10T16:00:00.000Z" itemprop="datePublished">2015-12-11</time>
+      <a href="/2016/02/21/Kafka-connect-pipeline/" class="article-date">
+  	<time datetime="2016-02-20T16:00:00.000Z" itemprop="datePublished">2016-02-21</time>
 </a>
     </div>
   
@@ -193,7 +187,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Apache Ignite 内存网格数据库
+      使用Kafka Connect构建大规模低延迟的数据管道
     </h1>
   
 
@@ -202,13 +196,13 @@
       <div class="article-info article-info-post">
         
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	<a class="article-category-link" href="/categories/translate/">translate</a>
 	</div>
 
 
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ignite/">ignite</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/translate/">translate</a></li></ul>
 	</div>
 
         <div class="clearfix"></div>
@@ -218,37 +212,12 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>Apache Ignite In-Memory Data Fabric is a high-performance, integrated and distributed in-memory platform for computing and transacting on large-scale data sets in real-time, orders of magnitude faster than possible with traditional disk-based or flash technologies. <a href="http://ignite.apache.org/" target="_blank" rel="external">http://ignite.apache.org/</a></p>
-<a id="more"></a>
-<h2 id="Introduce">Introduce</h2><p>Apache Ignite前身是GridGain,它包括了如下组件:DataGrid(数据网格),ComputeGrid(计算网格),ServiceGrid(服务网格),Streaming&amp;CEP(流处理和复杂事件处理),并提供了分布式缓存,分布式消息,分布式的数据结构.  </p>
-<p><img src="http://img.blog.csdn.net/20151211152736924" alt="ignite_components"></p>
-<blockquote>
-<p>Grid网格听起来高大上,实际上就是集群中的所有节点组成了一个网格. 比如数据网格提供分布式存储,计算网格提供分布式计算.  </p>
-</blockquote>
-<p><strong>ComputeGrid</strong>: 计算网格将计算单元分发到集群的每个Ignite节点,并聚合每个节点的返回结果</p>
-<p><img src="http://ignite.apache.org/images/in_memory_compute.png" alt="ignite_computegrid"></p>
-<p><strong>DataGrid</strong>: 数据网格是一个分布式的缓存,数据从DB中加载后会分布到集群的每个Ignite节点, 与之交互的组件有SQL,计算网格等.    </p>
-<p><img src="http://img.blog.csdn.net/20151211152900022" alt="ignite_datagrid"> </p>
-<p>数据存储在DB中, 发生在内存中的更新操作会<code>write through</code>到DB, 当请求的数据不再内存中,也会从DB中<code>read-through</code>加载到内存中.  </p>
-<p><img src="http://ignite.apache.org/images/in_memory_data.png" alt="ignite_dbcache"></p>
-<p>DataGrid是一个分布式的KeyValue数据库. 数据分布式的模式有partition(分区)和replicate(副本).<br><code>REPLICATED</code>模式: 每个节点保存所有的副本数. <code>PARTITIONED</code>模式: 将数据切分平均分布在集群中.  </p>
-<blockquote>
-<p>复制模式: 因为一个节点保存了所有数据的副本, 所以JVM1的LocalClient都可以从自己的JVM进程中直接读取数据.<br>分区模式: 只有一个Primary和一个Backup. LocalClient读取A,C,D需要从其他进程获取.  </p>
-</blockquote>
-<p><img src="http://img.blog.csdn.net/20151214103403518" alt="replicate_cache"><br><img src="http://img.blog.csdn.net/20151214103416523" alt="partition_cache"></p>
-<p>实际上还有一种本地模式: <a href="https://apacheignite.readme.io/docs/cache-modes" target="_blank" rel="external">https://apacheignite.readme.io/docs/cache-modes</a>. 本地模式是最轻量的模式,因为没有数据被分布化到其他节点  </p>
-<ul>
-<li>分区化缓存适合于数据量很大而更新频繁的场合</li>
-<li>复制缓存适用于数据集不大而且更新不频繁的场合</li>
-<li>本地缓存适用于或者数据是只读的，或者需要定期刷新的场景中</li>
-</ul>
-<p><strong>Streaming&amp;CEP</strong>:  </p>
-<ul>
-<li>客户端节点通过Ignite数据流处理器向Ignite缓存中注入有限的或者持续的数据流；</li>
-<li>数据在Ignite数据节点间自动分区，每个节点持有均等的数据量；</li>
-<li>数据流可以在Ignite数据节点上以<code>并置</code>的方式直接<code>并行</code>处理；</li>
-<li>客户端也可以在数据流上执行<code>并发</code>的SQL查询。</li>
-</ul>
+        <p>Announcing Kafka Connect: Building large-scale low-latency data pipelines<br><a href="http://www.confluent.io/blog/announcing-kafka-connect-building-large-scale-low-latency-data-pipelines" target="_blank" rel="external">http://www.confluent.io/blog/announcing-kafka-connect-building-large-scale-low-latency-data-pipelines</a><br><a id="more"></a></p>
+<p>很长一段时间以来,数据处理的一个重要部分是运行一个大的批处理作业–从数据库中导出CSV文件,<br>在每天结束时收集所有的日志文件等等. 但是实时的商业交易因为底层软件的缺陷而无法做出实时的响应.<br>为什么非要在每天结束的时候才处理数据,而不是在数据到来时持续地做出响应? 这是流处理最紧迫处理的任务.<br>但是流处理只有在基础数据的抓取用流式的方式抓取才能变得可能.毕竟你不能把一整天的CSV dumps作为一个流.<br>这种流处理的变化使得Apache Kafka变得流行起来. 但是即使是Kafka,构建实时数据管道风格也需要一些工作.  </p>
+<p>现在0.9+版本的kafka已经有了Kafka Connect,一个全新的功能使得构建和管理流式数据管道变得更加容易.  </p>
+<h2 id="流数据平台:_所有数据的集中营">流数据平台: 所有数据的集中营</h2><p>在LinkedIn我们有机会构建基于Kafka的流式数据平台,并且和开源社区以及Confluent客户端一起协作.<br>我们认为未来的流式数据平台的样子: 一个流式数据平台可以作为所有数据的大本营,它在公司范围内运行,<br>并且支持多样化的分布式应用程序和系统,可以实时地以自由的流程来消费和处理数据.  </p>
+<p>一个流式数据平台有两个特点:  </p>
+<p>1.数据集成:平台抓取流式事件,或者数据的变更,将它们注入其他的数据系统中比如数据库,KV存储,Hadoop,数据仓库等.<br>2.流式处理:持续地实时处理,并且对这些相同的流做转换,在系统级别上支持结果是可用的.  </p>
 
       
     </div>
@@ -257,13 +226,13 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2015/12/11/2015-12-11-Apache-Ignite/">Apache Ignite 内存网格数据库</a></p>
+  <p><span>本文标题:</span><a href="/2016/02/21/Kafka-connect-pipeline/">使用Kafka Connect构建大规模低延迟的数据管道</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
-  <p><span>发布时间:</span>2015年12月11日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月14日 - 10时38分</p>
+  <p><span>发布时间:</span>2016年02月21日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年02月21日 - 22时30分</p>
   <p>
-    <span>原始链接:</span><a href="/2015/12/11/2015-12-11-Apache-Ignite/" title="Apache Ignite 内存网格数据库">http://github.com/zqhxuyuan/2015/12/11/2015-12-11-Apache-Ignite/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/11/2015-12-11-Apache-Ignite/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2016/02/21/Kafka-connect-pipeline/" title="使用Kafka Connect构建大规模低延迟的数据管道">http://github.com/zqhxuyuan/2016/02/21/Kafka-connect-pipeline/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/02/21/Kafka-connect-pipeline/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -289,15 +258,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2015/12/12/2015-12-12-Apache-Geode/">
-        Apache GEODE 一致性数据库
+      <a href="/2017/01/01/Kafka-Code-Index/">
+        Kafka源码分析汇总
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/12/09/2015-12-09-Apache-Apex/">
-        Apache Apex 流处理和批处理统一框架
+      <a href="/2016/02/21/Kafka-Connect/">
+        使用Kafka Connect构建一个可扩展的ETL管道
       </a>
     </div>
   
@@ -310,7 +279,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduce"><span class="toc-number">1.</span> <span class="toc-text">Introduce</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#流数据平台:_所有数据的集中营"><span class="toc-number">1.</span> <span class="toc-text">流数据平台: 所有数据的集中营</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -406,10 +375,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2015/12/12/2015-12-12-Apache-Geode/" title="上一篇: Apache GEODE 一致性数据库">
+    <a href="/2017/01/01/Kafka-Code-Index/" title="上一篇: Kafka源码分析汇总">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/12/09/2015-12-09-Apache-Apex/" title="下一篇: Apache Apex 流处理和批处理统一框架">
+    <a href="/2016/02/21/Kafka-Connect/" title="下一篇: 使用Kafka Connect构建一个可扩展的ETL管道">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

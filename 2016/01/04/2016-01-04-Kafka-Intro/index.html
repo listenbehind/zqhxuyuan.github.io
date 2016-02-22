@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Introduce Kafka">
 <meta property="og:image" content="http://kafka.apache.org/images/consumer-groups.png">
-<meta property="og:updated_time" content="2016-02-18T09:13:59.000Z">
+<meta property="og:updated_time" content="2016-02-20T13:05:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Introduce Kafka">
 <meta name="twitter:description" content="Introduce Kafka">
@@ -111,7 +111,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.33px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/timeseries/" style="font-size: 13.33px;">timeseries</a> <a href="/tags/translate/" style="font-size: 10px;">translate</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.33px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/timeseries/" style="font-size: 13.33px;">timeseries</a> <a href="/tags/translate/" style="font-size: 15px;">translate</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
 					</div>
 				</section>
 				
@@ -424,7 +424,7 @@
 <li>Fetch数据</li>
 <li>识别Leader的变化，并对之作出必要的响应</li>
 </ul>
-<h3 id="New_Consumer">New Consumer</h3><p><a href="http://kafka.apache.org/090/javadoc/" target="_blank" rel="external">http://kafka.apache.org/090/javadoc/</a><br><a href="https://cwiki.apache.org/confluence/display/KAFKA/Kafka+0.9+Consumer+Rewrite+Design" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Kafka+0.9+Consumer+Rewrite+Design</a></p>
+<h3 id="New_Consumer">New Consumer</h3><p><a href="https://cwiki.apache.org/confluence/display/KAFKA/Kafka+0.9+Consumer+Rewrite+Design" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Kafka+0.9+Consumer+Rewrite+Design</a></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">KafkaConsumer&lt;Integer, String&gt; consumer = <span class="keyword">new</span> KafkaConsumer&lt;&gt;(props);</span><br><span class="line">consumer.subscribe(Collections.singletonList(<span class="keyword">this</span>.topic));</span><br><span class="line">ConsumerRecords&lt;Integer, String&gt; records = consumer.poll(<span class="number">1000</span>);</span><br><span class="line"><span class="keyword">for</span> (ConsumerRecord&lt;Integer, String&gt; record : records) &#123;</span><br><span class="line">    System.out.println(<span class="string">"Received message: ("</span> + record.key() + <span class="string">", "</span> + record.value() + <span class="string">") at offset "</span> + record.offset());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="Ref">Ref</h2><ul>
 <li><a href="http://www.ibm.com/developerworks/cn/opensource/os-cn-kafka/index.html" target="_blank" rel="external">http://www.ibm.com/developerworks/cn/opensource/os-cn-kafka/index.html</a></li>
@@ -442,7 +442,7 @@
   <p><span>本文标题:</span><a href="/2016/01/04/2016-01-04-Kafka-Intro/">Introduce Kafka</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年01月04日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年02月18日 - 17时13分</p>
+  <p><span>最后更新:</span>2016年02月20日 - 21时05分</p>
   <p>
     <span>原始链接:</span><a href="/2016/01/04/2016-01-04-Kafka-Intro/" title="Introduce Kafka">http://github.com/zqhxuyuan/2016/01/04/2016-01-04-Kafka-Intro/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/04/2016-01-04-Kafka-Intro/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -471,15 +471,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2016/01/04/BookNote_FP_scala/">
-        Function Programming in Scala
+      <a href="/2016/01/04/BookNote_Scala_doc/">
+        Scala Documentation
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/12/31/BookNote_Learning_Scala/">
-        Learning Scala学习笔记
+      <a href="/2016/01/04/BookNote_FP_scala/">
+        Function Programming in Scala
       </a>
     </div>
   
@@ -588,10 +588,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2016/01/04/BookNote_FP_scala/" title="上一篇: Function Programming in Scala">
+    <a href="/2016/01/04/BookNote_Scala_doc/" title="上一篇: Scala Documentation">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/12/31/BookNote_Learning_Scala/" title="下一篇: Learning Scala学习笔记">
+    <a href="/2016/01/04/BookNote_FP_scala/" title="下一篇: Function Programming in Scala">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
