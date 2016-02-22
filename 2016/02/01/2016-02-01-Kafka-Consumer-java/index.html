@@ -11,7 +11,9 @@
 <meta property="og:url" content="http://github.com/zqhxuyuan/2016/02/01/2016-02-01-Kafka-Consumer-java/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Kafka Consumer java">
-<meta property="og:updated_time" content="2016-02-20T13:05:39.000Z">
+<meta property="og:image" content="https://cwiki.apache.org/confluence/download/attachments/38570548/Consumer%20state%20diagram.jpg?version=10&modificationDate=1400109502000&api=v2">
+<meta property="og:image" content="https://cwiki.apache.org/confluence/download/attachments/38570548/Coordinator%20state%20diagram.jpg?version=5&modificationDate=1399498790000&api=v2">
+<meta property="og:updated_time" content="2016-02-22T04:08:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka源码分析 Consumer java版本">
 <meta name="twitter:description" content="Kafka Consumer java">
@@ -214,12 +216,30 @@
         
         <p>Kafka Consumer java<br><a id="more"></a></p>
 <h2 id="Consumer_Re-design">Consumer Re-design</h2><p>前面分析的High-level Consumer由Kafka内置实现了失败检测和Rebalance(ZKRebalancerListener),<br>但是它存在羊群效应和脑裂的问题. 客户端代码实现Low-level Consumer也不能解决这个问题.<br>如果将失败探测和Rebalance的逻辑放到一个高可用的中心Coordinator, 这两个问题即可解决.<br>同时还可大大减少Zookeeper的负载,有利于Kafka Broker的扩展(Broker也会作为协调节点的角色存在).  </p>
-<p>协调节点在前面分析Consumer的Offset(fetchOffsets和commitOffsets)分析过GroupCoordinator的处理逻辑.<br>新设计的消费者有一个AbstractCoordinator,实现类包括clients的ConsumerCoordinator和runtime的WorkerCoordinator.  </p>
+<p>协调节点在前面分析Consumer的Offset(fetchOffsets和commitOffsets)分析过GroupCoordinator的处理逻辑.<br>新消费者有一个AbstractCoordinator,实现类包括clients的ConsumerCoordinator和runtime的WorkerCoordinator.  </p>
 <h3 id="Group_management_protocol">Group management protocol</h3><p>在同一个消费组里多个consumer实例需要进行平衡操作. 消费组会注册感兴趣的topics. 这个消费组中的所有消费者会互相协调,<br>每个消费者会互相拥有独一的partition集合. 即同一个partition只会分配给消费组中的一个消费者.一个消费者可以有多个partition.<br>当消费组成功平衡后,所有注册的topics的每个partition都会被唯一的消费者拥有(每个partition都会被分配给消费者去消费)<br>每个Broker节点会被选举为一部分消费组的协调节点,消费组的协调节点负责在组成员变化,或者注册的topics的partition变化时进行协调<br>协调节点同时负责在平衡操作时, 将partition的所有权配置信息(partition分配给哪个消费者)在所有consumers之间进行交流  </p>
-<p>Consumer消费者的工作过程:<br>1.在启动时或者协调节点故障转移时,消费者发送ConsumerMetadataRequest(GroupCoordinatorRequest)给bootstrap.brokers列表中的<br>任意一个brokers.在ConsumerMetadataResponse(GroupCoordinatorResponse)中,它接收消费者对应的消费组所属的协调节点的位置信息<br>2.消费者连接协调节点,并发送HeartbeatRequest.如果返回的HeartbeatResponse中返回IllegalGeneration错误码,说明协调节点已经在初始化平衡.<br>消费者就会停止抓取数据,提交offsets,发送JoinGroupRequest给协调节点. 在JoinGroupResponse,它接收消费者应该拥有的topic-partitions列表<br>以及当前消费组的新的generation编号. 这个时候消费组管理已经完成,消费者就可以开始抓取数据,并为它拥有的partitions提交offsets<br>3.如果HeartbeatResponse没有错误返回,消费者会从它上次拥有的partitions列表继续抓取数据,这个过程是不会被中断的.  </p>
-<p>Co-ordinator协调节点的工作过程:<br>1.在稳定状态下,协调节点通过故障检测协议跟踪每个消费组中每个消费者的健康状况.<br>2.在选举和启动时,协调节点读取它管理的消费组列表,以及从ZK中读取每个消费组的成员信息.如果之前没有成员信息,它不会做任何动作.<br>只有在同一个消费组的第一个消费者注册进来时,协调节点才开始工作(即开始加载消费组的消费者成员信息).<br>3.当协调节点完全加载完它所负责的消费组列表的所有组成员之前,它会在以下几种请求的响应中返回CoordinatorStartupNotComplete错误码:<br>HeartbeatRequest,OffsetCommitRequest,JoinGroupRequest.这样消费者就会果断时间重试(直到完全加载,没有错误码返回为止).<br>4.在选举或启动时,协调节点会对消费组中的所有消费者进行故障检测. 根据故障检测协议被协调节点标记为Dead的消费者会从消费组中移除<br>这个时候协调节点会为Dead的消费者所属的消费组触发一个平衡操作(消费者Dead之后,这个消费者拥有的partition需要平衡给其他消费者).<br>5.当HeartbeatResponse返回IllegalGeneration错误码,就会触发平衡操作. 一旦所有存活的消费者通过JoinGroupRequests重新注册到协调节点<br>协调节点会将最新的partition所有权信息在JoinGroupResponse的每个消费者之间通信(同步),然后就完成了平衡操作.<br>6.协调节点会跟踪任何一个消费者已经注册的topics的topic-partition的变更. 如果它检测到某个topic新增的partition,就会触发平衡操作.<br>当创建一个新的topics也会触发平衡操作,因为消费者可以在topic被创建之前就注册它感兴趣的topics.  </p>
+<p><strong>Consumer消费者的工作过程:</strong>  </p>
+<p>1.在启动时或者协调节点故障转移时,消费者发送ConsumerMetadataRequest(GroupCoordinatorRequest)给bootstrap.brokers列表中的<br>任意一个brokers.在ConsumerMetadataResponse(GroupCoordinatorResponse)中,它接收消费者对应的消费组所属的协调节点的位置信息<br>2.消费者连接协调节点,并发送HeartbeatRequest.如果返回的HeartbeatResponse中返回IllegalGeneration错误码,说明协调节点已经在初始化平衡.<br>消费者就会停止抓取数据,提交offsets,发送JoinGroupRequest给协调节点. 在JoinGroupResponse,它接收消费者应该拥有的topic-partitions列表<br>以及当前消费组的新的generation编号. 这个时候消费组管理已经完成,消费者就可以开始抓取数据,并为它拥有的partitions提交offsets<br>3.如果HeartbeatResponse没有错误返回,消费者会从它上次拥有的partitions列表继续抓取数据,这个过程是不会被中断的.  </p>
+<p><strong>Co-ordinator协调节点的工作过程:</strong>  </p>
+<p>1.在稳定状态下,协调节点通过<code>故障检测协议</code>跟踪每个消费组中每个消费者的健康状况.<br>2.在选举和启动时,协调节点读取它管理的消费组列表,以及从ZK中读取每个消费组的成员信息.如果之前没有成员信息,它不会做任何动作.<br>只有在同一个消费组的第一个消费者注册进来时,协调节点才开始工作(即开始加载消费组的消费者成员信息).<br>3.当协调节点完全加载完它所负责的消费组列表的所有组成员之前,它会在以下几种请求的响应中返回CoordinatorStartupNotComplete错误码:<br>HeartbeatRequest,OffsetCommitRequest,JoinGroupRequest.这样消费者就会过段时间重试(直到完全加载,没有错误码返回为止).<br>4.在选举或启动时,协调节点会对消费组中的所有消费者进行故障检测. 根据故障检测协议被协调节点标记为Dead的消费者会从消费组中移除<br>这个时候协调节点会为Dead的消费者所属的消费组触发一个平衡操作(消费者Dead之后,这个消费者拥有的partition需要平衡给其他消费者).<br>5.当HeartbeatResponse返回IllegalGeneration错误码,就会触发平衡操作. 一旦所有存活的消费者通过JoinGroupRequests重新注册到协调节点<br>协调节点会将最新的partition所有权信息在JoinGroupResponse的每个消费者之间通信(同步),然后就完成了平衡操作.<br>6.协调节点会跟踪任何一个消费者已经注册的topics的topic-partition的变更. 如果它检测到某个topic新增的partition,就会触发平衡操作.<br>当创建一个新的topics也会触发平衡操作,因为消费者可以在topic被创建之前就注册它感兴趣的topics.  </p>
 <p>从上面两者的工作过程,我们大致知道了协调节点负责管理消费组中的消费者.而消费者会和协调节点通信.<br>如果协调节点发生故障转移,则消费者需要寻找新的协调节点.<br>如果协调节点检测到消费者发生了故障,则协调节点负责平衡操作. </p>
-<h3 id="Offsets和消费者位置">Offsets和消费者位置</h3><p>Kafka在一个Partition中为每一条记录都维护了一个数值类型的offset.这个offset是这个Partition中记录的唯一标识.<br>还标识了消费者在当前Partition中的位置. 比如一个消费者的position位置是5,<br>表示它已经消费了0到4的记录,下一次会接收offset=5这个位置的记录.  </p>
+<h3 id="故障检测协议">故障检测协议</h3><p>消费者在加入到消费组时,发送给协调者的JoinGroupRequest设置了session timeout.当消费者成功加入到消费组后,在消费者和协调者都会开始<br>故障检测流程.消费者启动周期性的心跳(发送HeartbeatRequest),每隔session.timeout.ms/heartbeat.frequency发送给协调者并等待响应.  </p>
+<ul>
+<li>session.timeout 会话超时的最大时间,超过这个时间,消费者和协调者都会认为对方挂掉了</li>
+<li>heartbeart.frequency 心跳频率, 时间处于次数,表示每一次心跳的时间间隔</li>
+</ul>
+<p>如果协调者在session.timeout没有收到消费者的心跳请求,它会标记消费者为死亡状态.同样如果消费者在session.timeout内没有收到心跳响应,<br>它会假设协调者挂掉了,消费者会启动重新发现协调者的流程(每个协调者只管理一部分消费者,一个消费者只被一个协调者管理,协调者是brokers中的一个).  </p>
+<p>heartbeat.frequency(心跳频率)是消费者端的配置,它决定了消费者发送一次心跳给协调者的时间间隔.<br>这个值是rebalance延迟的最低临界值,因为协调者是根据心跳响应通知消费者,进行rebalance操作的.<br>(为什么心跳频率和rebalance有关,因为心跳和session.timeout有关,超时后,会触发rebalance)<br>所以如果session.timeout.ms设置的非常大时,也要将心跳频率设置为相对有意义的比较大的值.<br>当然也不能将心跳频率设置的太高(结果是心跳时间间隔很短),导致brokers的负载太重了.  </p>
+<p>1.在接收到ConsumerMetadataResponse或JoinGroupResponse后,消费者周期性地发送HeartbeatRequest给协调者<br>2.协调者在收到HeartbeatRequesst时,首先检查generation id,消费者编号和消费组. 如果消费者指定了一个无效或<br>过期的generation id,协调者会发送带有IllegalGeneration错误码的HeartbeatResponse给消费者<br>3.如果协调者在session timeout没有收到消费者的心跳请求,标记消费者挂掉,并触发消费组的rebalance流程<br>4.如果消费者在session timeout没有收到协调者的心跳响应,认为协调者失败,并触发重新发现协调者的流程  </p>
+<p>当协调者发生故障时,消费者发现新的协调者的顺序可能发生在新的协调者完成故障处理(包括从zk中加载消费组元数据等)之前或之后.<br>如果在完成故障处理之后才发现新的协调者,新的协调者就会像之前一样接收消费者的心跳请求.<br>而如果是在之前,新的协调者则会拒绝消费者的心跳请求,会导致消费者重新发现协调者,并重新连接协调者.<br>如果消费者太晚连接新的协调者,协调者可能会标记消费者挂掉了,消费者再次加入时,会认为这是一个新的消费者,并触发rebalance.  </p>
+<blockquote>
+<p>消费者发现新的协调者(co-ordinator re-discovery),包括两个步骤,首先确定新的协调者,然后消费者连接协调者.<br>如果新的协调者确定了,并且消费者成功连接上新协调者,这样消费者发送的心跳请求就会被新的协调者正常接收.<br>但是如果新协调者已经确定,而消费者并没有连接上新的协调者,消费者发送的心跳请求并不会被接收:因为连接都还没有建立!  </p>
+</blockquote>
+<h3 id="状态图">状态图</h3><p><strong>消费者状态机</strong>  </p>
+<p><img src="https://cwiki.apache.org/confluence/download/attachments/38570548/Consumer%20state%20diagram.jpg?version=10&amp;modificationDate=1400109502000&amp;api=v2" alt="consumer-state"></p>
+<p><strong>协调者状态机</strong>  </p>
+<p><img src="https://cwiki.apache.org/confluence/download/attachments/38570548/Coordinator%20state%20diagram.jpg?version=5&amp;modificationDate=1399498790000&amp;api=v2" alt="coordinator-state"></p>
+<h2 id="KafkaConsumer">KafkaConsumer</h2><h3 id="Offsets和消费者位置">Offsets和消费者位置</h3><p>Kafka在一个Partition中为每一条记录都维护了一个数值类型的offset.这个offset是这个Partition中记录的唯一标识.<br>还标识了消费者在当前Partition中的位置. 比如一个消费者的position位置是5,<br>表示它已经消费了0到4的记录,下一次会接收offset=5这个位置的记录.  </p>
 <p>消费者的<code>position</code>值表示下一条要获取的记录的offset.它比当前Partition消费者已经看到的最高的offset还要多一个偏移量.<br>每次消费者通过poll接收数据,并读取消息时,都会自动地往前增加一个位置(每当读取一条消息,这个position就会+1).  </p>
 <p><code>committed position</code>的含义是已经成功保存的最近的offset.因为消费者进程可能失败或者重启,<br>这个offset会用于(从指定的位置)恢复.消费者可以定时自动地提交offset,或者手动控制什么时候提交offset.  </p>
 <p>使用commitSync手动提交commitOffset,会阻塞调用线程,直到offsets成功被提交,或者在提交过程中发生错误.<br>使用commitAsync则是非阻塞方式,会在成功提交或者失败时,触发OffsetCommitCallback回调函数的执行.  </p>
@@ -352,9 +372,9 @@
 <p>解决上面的缺点有多种方式.比如每个处理线程都可以有自己的队列,消费者可以对TopicPartition<br>的hash结果放入不同处理线程的队列中,这样也可以确保消息被顺序地消费,并且简化提交offset的逻辑.   </p>
 <h2 id="Ref">Ref</h2><ul>
 <li><a href="https://cwiki.apache.org/confluence/display/KAFKA/Consumer+Client+Re-Design" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Consumer+Client+Re-Design</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/KAFKA/Kafka+0.9+Consumer+Rewrite+Design" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Kafka+0.9+Consumer+Rewrite+Design</a></li>
 <li><a href="http://kafka.apache.org/090/javadoc/" target="_blank" rel="external">http://kafka.apache.org/090/javadoc/</a></li>
 <li><a href="http://people.apache.org/~nehanarkhede/kafka-0.9-consumer-javadoc/doc/" target="_blank" rel="external">http://people.apache.org/~nehanarkhede/kafka-0.9-consumer-javadoc/doc/</a></li>
-<li><a href="http://flychao88.iteye.com/blog/2268481" target="_blank" rel="external">http://flychao88.iteye.com/blog/2268481</a></li>
 </ul>
 
       
@@ -367,7 +387,7 @@
   <p><span>本文标题:</span><a href="/2016/02/01/2016-02-01-Kafka-Consumer-java/">Kafka源码分析 Consumer java版本</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年02月01日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年02月20日 - 21时05分</p>
+  <p><span>最后更新:</span>2016年02月22日 - 12时08分</p>
   <p>
     <span>原始链接:</span><a href="/2016/02/01/2016-02-01-Kafka-Consumer-java/" title="Kafka源码分析 Consumer java版本">http://github.com/zqhxuyuan/2016/02/01/2016-02-01-Kafka-Consumer-java/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/02/01/2016-02-01-Kafka-Consumer-java/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -417,7 +437,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Consumer_Re-design"><span class="toc-number">1.</span> <span class="toc-text">Consumer Re-design</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Group_management_protocol"><span class="toc-number">1.1.</span> <span class="toc-text">Group management protocol</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Offsets和消费者位置"><span class="toc-number">1.2.</span> <span class="toc-text">Offsets和消费者位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消费者组和主题订阅"><span class="toc-number">1.3.</span> <span class="toc-text">消费者组和主题订阅</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#New_Consumer_Example"><span class="toc-number">1.4.</span> <span class="toc-text">New Consumer Example</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">2.</span> <span class="toc-text">Ref</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Consumer_Re-design"><span class="toc-number">1.</span> <span class="toc-text">Consumer Re-design</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Group_management_protocol"><span class="toc-number">1.1.</span> <span class="toc-text">Group management protocol</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#故障检测协议"><span class="toc-number">1.2.</span> <span class="toc-text">故障检测协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#状态图"><span class="toc-number">1.3.</span> <span class="toc-text">状态图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KafkaConsumer"><span class="toc-number">2.</span> <span class="toc-text">KafkaConsumer</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Offsets和消费者位置"><span class="toc-number">2.1.</span> <span class="toc-text">Offsets和消费者位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#消费者组和主题订阅"><span class="toc-number">2.2.</span> <span class="toc-text">消费者组和主题订阅</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#New_Consumer_Example"><span class="toc-number">2.3.</span> <span class="toc-text">New Consumer Example</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ref"><span class="toc-number">3.</span> <span class="toc-text">Ref</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
