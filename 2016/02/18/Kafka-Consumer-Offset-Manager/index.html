@@ -11,7 +11,10 @@
 <meta property="og:url" content="http://github.com/zqhxuyuan/2016/02/18/Kafka-Consumer-Offset-Manager/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="https://cwiki.apache.org/confluence/display/KAFKA/Inbuilt+Consumer+Offset+Management">
-<meta property="og:updated_time" content="2016-02-23T03:29:59.000Z">
+<meta property="og:image" content="http://img.blog.csdn.net/20160223142716750">
+<meta property="og:image" content="http://img.blog.csdn.net/20160223142729875">
+<meta property="og:image" content="http://img.blog.csdn.net/20160223142742613">
+<meta property="og:updated_time" content="2016-02-23T06:33:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用新的Kafka消费者客户端">
 <meta name="twitter:description" content="https://cwiki.apache.org/confluence/display/KAFKA/Inbuilt+Consumer+Offset+Management">
@@ -213,7 +216,96 @@
       
         
         <p><a href="https://cwiki.apache.org/confluence/display/KAFKA/Inbuilt+Consumer+Offset+Management" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Inbuilt+Consumer+Offset+Management</a><br><a id="more"></a></p>
-
+<h2 id="介绍">介绍</h2><p>实现内置的消费者这offset管理功能有两种方式:<br>1.让消费者创建一个内置的producer示例,并且像生产消息一样发送offsets<br>2.让消费者使用offset commit请求API来提交offsets. 我们让brokers记录offset消息到磁盘上,<br>并且使用消息的复制特征,达到持久性和可用性. 所以实际上在broker端的offset提交处理和生产者请求<br>的处理是一样的逻辑.在broker端重构代码可以使我们重用已有的代码.  </p>
+<h2 id="Offset_Management">Offset Management</h2><h3 id="Offsets_topic">Offsets topic</h3><p>消费者的offset提交请求会作为生产请求发送到”__offsets”的topic. 一个offset提交消息包括下面字段:  </p>
+<table>
+<thead>
+<tr>
+<th>fields</th>
+<th>content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Key</td>
+<td>Consumer Group, topic, partition</td>
+</tr>
+<tr>
+<td>Payload</td>
+<td>Offset, metadata, timestamp</td>
+</tr>
+</tbody>
+</table>
+<p>offset提交消息会根据消费组的key(消费组名称)进行分区. 对于一个给定的消费组,它的所有消息都会发送到唯一的broker,<br>这对offset的抓取请求会更加容易,因为不需要以分散-收集的方式对多个brokers发送请求并收集结果(只针对一个broker).  </p>
+<p><img src="http://img.blog.csdn.net/20160223142716750" alt="k_offsets_topics"></p>
+<p>这种方式的缺点是如果任何一个消费组负责消费很多数量的partitions,会多某些brokers造成性能瓶颈,会增加需要<br>处理的offset提交请求. 不过offsets topic的消息量并不会很大,所以这应该不会成为一个问题.  </p>
+<h3 id="Offset_managers">Offset managers</h3><p>Offset manager负责存储,抓取,和维护消费者的offsets. 每个broker都有一个offset manager实例. 有两种具体的实现:  </p>
+<ul>
+<li>ZookeeperOffsetManager: 调用zookeeper来存储和接收offset</li>
+<li>DefaultOffsetManager: 提供消费者offsets内置的offset管理</li>
+</ul>
+<p>在config/server.properties中新增了”offset.storage”属性,用来在两种实现中选择一种. 对于DefaultOffsetManager<br>还有两个其他属性: “offsets.topic.replication.factor”和”offsets.topic.num.partitions”,默认值都是1.<br>这两个属性会用来自动地创建”offsets topic”即”__offsets” topic(这种方式将offset作为和普通消息一样的topic).<br>理想情况下,”offsets topic”的副本因子(比如3或4个副本)应该比其他正常的kafka topic要高,目的是获得更高的可用性.  </p>
+<p><strong>offsets是怎么保存到DefaultOffsetManager?</strong>  </p>
+<p>除了将offset作为logs保存到磁盘上,DefaultOffsetManager维护了一张能快速服务于offset抓取请求的consumer offsets表.<br>broker在offsets表(缓存)中包含仅仅是”offsets topic”的partitions中属于leader partition对应的条目(存储的是offset).<br>(即这些partitions的replicas只会在他们自己的logs中有offset信息,并不会对应offset表中的条目).  </p>
+<p>offsets topic的logs的segment大小相比正常的topics设置的很低,默认”offsets.topic.segment.bytes”=10MB.<br>这样LogCleaner会更快地选出未清理的segments,结果就是能够更频繁地清理. 同样log的大小设置的越小也有助于<br>减少读取logs的时间,在把读取出来的logs信息放到offsets缓存中也更快(比如重启kafka时会重新加载日志文件).  </p>
+<h3 id="Offsets_manager_interface">Offsets manager interface</h3><p>下面是offset manager接口的概要.  </p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>DefaultOffsetManager</th>
+<th>ZookeeperOffsetManager</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>startup</td>
+<td>初始化内部变量(zkClient和log manager)</td>
+<td>初始化zkClient对象</td>
+</tr>
+<tr>
+<td>getOffset</td>
+<td>从offset table中读取</td>
+<td>从zookeeper中读取</td>
+</tr>
+<tr>
+<td>putOffset</td>
+<td>添加offset到offset table</td>
+<td>写入zookeeper</td>
+</tr>
+<tr>
+<td>triggerLoadOffsets</td>
+<td>当leader变化或者已经存在的broker成为某些partition的leader,需要从磁盘上为指定的partition加载logs,并形成offsets table</td>
+<td>nothing</td>
+</tr>
+<tr>
+<td>cleanup</td>
+<td>leader变化或者某些partition的leader变成了follower,需要清理offsets table</td>
+</tr>
+<tr>
+<td>shutdown</td>
+<td>关闭scheduler,上面的triggerLoadOffsets是个异步线程</td>
+<td>nothing</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Offset_Commit实现">Offset Commit实现</h2><h3 id="消费端">消费端</h3><p>一条offset提交消息会作为生产请求.当消费者启动时,会为”offsets topic”创建一个消费者. 下面是内置的生产者的一些属性:  </p>
+<p>|property|value|explain|<br>|producer.type|sync|可以使用异步.但是使用同步可以避免延迟的生产请求(因为是批量消息),并且我们需要立即知道offset消息是否被broker成功接收<br>|request.required.acks|-1|确保所有的replicas和leader是同步的,并且能看到所有的offset消息<br>|key.serializer.class|StringEncoder|key和payload都是strings</p>
+<p>注意我们没有对提交的offset消息进行压缩,因为每条消息本身大小是很小的,如果压缩了反而适得其反.<br>目前key和offset的值通过纯文本方式传递. 我们可以转换为更加紧凑的二进制协议,而不是把<br>Long类型的offset和Int类型的partition作为字符串. 当然在不断演进时还要考虑版本和格式协议.  </p>
+<h3 id="broker端">broker端</h3><p>broker把接收到的offset提交信息当做一个正常的生产请求,对offset请求的处理和正常的生产者请求处理方式是一样的.<br>一旦将数据追加到leader的本地日志中,并且所有的replicas都赶上leader.leader检查生产请求是”offsets topic”,<br>(因为broker端的处理逻辑针对offset请求和普通生产请求是一样的,如果是offset请求,还需要有不同的处理分支)<br>它就会要求offset manager添加这个offset(对于延迟的生产请求,更新操作会在延迟的生产请求被完成的时候).<br>因为设置了acks=-1,只有当这些offsets成功地复制到ISR中的所有brokers,才会被提交给offset manager.  </p>
+<p><img src="http://img.blog.csdn.net/20160223142729875" alt="k_offset_commit_broker"></p>
+<p>offsets topic会在第一次的offset提交请求时被自动创建.即一个集群中的第一个消费者会触发创建过程.  </p>
+<h2 id="Offset_Fetch实现">Offset Fetch实现</h2><h3 id="消费端-1">消费端</h3><p>消费者启动时,会首先创建到任意一个存活的brokers的通道.因此消费者会发送它所有”OffsetFetchRequest”<br>到这个随机选中的broker. 如果出现错误,这个通道就会被关闭,并重新创建一个随机的通道.  </p>
+<h3 id="broker端-1">broker端</h3><p>一个Offset抓取请求包含了多个topic-partitions. 接收请求的broker可能有也可能没有请求的partitions的offset信息.<br>因此接收请求的brokers也会和其他broker通信. 一个通道连接池会用来转发请求给partition的leader broker.<br>下面是一个broker在接收到一个offset抓取请求后的步骤:  </p>
+<ul>
+<li>接收请求的broker首先决定”offset topic”的哪个partition负责这个请求</li>
+<li>从broker的leader cache中找出对应partition的leader(会在controller的每次metadata更新请求中更新缓存)</li>
+<li>如果接收请求的broker就是leader,它会从自己的offset manager中读取出offset,并添加到响应中<br>如果offset不存在,返回UnknownTopicOrPartitionCode<br>如果broker正在加载offsets table,返回OffsetLoadingCode.消费者受到这个状态码会在之后重试  </li>
+<li>如果接收请求的broker不是指定topic-partition的leader,它会将OffsetFetchRequest转发给这个partition的当前leader  </li>
+<li>如果”offsets topic”这个时候不存在,它会尝试自动创建,在创建成果后,会返回offset=-1</li>
+</ul>
+<p><img src="http://img.blog.csdn.net/20160223142742613" alt="k_offset_fetch_broker"></p>
+<h2 id="Broker_failover">Broker failover</h2><h2 id="Offset清理">Offset清理</h2>
       
     </div>
     
@@ -224,7 +316,7 @@
   <p><span>本文标题:</span><a href="/2016/02/18/Kafka-Consumer-Offset-Manager/">使用新的Kafka消费者客户端</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年02月18日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年02月23日 - 11时29分</p>
+  <p><span>最后更新:</span>2016年02月23日 - 14时33分</p>
   <p>
     <span>原始链接:</span><a href="/2016/02/18/Kafka-Consumer-Offset-Manager/" title="使用新的Kafka消费者客户端">http://github.com/zqhxuyuan/2016/02/18/Kafka-Consumer-Offset-Manager/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/02/18/Kafka-Consumer-Offset-Manager/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -274,7 +366,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#介绍"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Offset_Management"><span class="toc-number">2.</span> <span class="toc-text">Offset Management</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Offsets_topic"><span class="toc-number">2.1.</span> <span class="toc-text">Offsets topic</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Offset_managers"><span class="toc-number">2.2.</span> <span class="toc-text">Offset managers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Offsets_manager_interface"><span class="toc-number">2.3.</span> <span class="toc-text">Offsets manager interface</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Offset_Commit实现"><span class="toc-number">3.</span> <span class="toc-text">Offset Commit实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#消费端"><span class="toc-number">3.1.</span> <span class="toc-text">消费端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#broker端"><span class="toc-number">3.2.</span> <span class="toc-text">broker端</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Offset_Fetch实现"><span class="toc-number">4.</span> <span class="toc-text">Offset Fetch实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#消费端-1"><span class="toc-number">4.1.</span> <span class="toc-text">消费端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#broker端-1"><span class="toc-number">4.2.</span> <span class="toc-text">broker端</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Broker_failover"><span class="toc-number">5.</span> <span class="toc-text">Broker failover</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Offset清理"><span class="toc-number">6.</span> <span class="toc-text">Offset清理</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
