@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://github.com/zqhxuyuan/2016/02/23/2016-02-23-Kafka-Controller/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Kafka Controller">
-<meta property="og:updated_time" content="2016-02-22T02:07:05.000Z">
+<meta property="og:updated_time" content="2016-02-23T11:52:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka源码分析 KafkaController">
 <meta name="twitter:description" content="Kafka Controller">
@@ -110,7 +110,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.33px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.67px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/timeseries/" style="font-size: 13.33px;">timeseries</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 11.43px;">work</a>
 					</div>
 				</section>
 				
@@ -215,7 +215,37 @@
         <p>Kafka Controller<br><a id="more"></a></p>
 <p>在kafka集群中,brokers中的一个会作为KafkaController,它负责partitions和replicas的状态管理,<br>以及管理任务比如重新分配partitions(前面分析group coordinator时分析过partition的重新分配操作).  </p>
 <p><strong>PartitionStateChange</strong>  </p>
+<p>有效的状态如下:  </p>
+<ul>
+<li>NonExistentPartition: partition从来没有被创建,或者创建了被立即删除</li>
+<li>NewPartition: partition创建后状态为New,这个状态下,partition应该有分配的replicas,但是还没有leader/isr</li>
+<li>OnlinePartition: 当为partition选举出leader后,partition的状态为Online</li>
+<li>OfflinePartition: 在成功选举之后,partition的leader挂掉了,partition转为Offline</li>
+</ul>
+<p>有效的状态转换为:  </p>
+<ul>
+<li>NonExistentPartition -&gt; NewPartition: 从zk中加载分配的replicas到controller的缓存中</li>
+<li>NewPartition -&gt; OnlinePartition: 第一个活动的replica为leader,所有活动的replicas作为isr,并写入到zk<br>发送这个partition的LeaderAndIsr请求给每个replica,并发送UpdateMetadata给每个存活的broker  </li>
+<li>OnlinePartition,OfflinePartition -&gt; OnlinePartition:<br>1.为这个partition以选择新的leader和isr,replicas集合接收LeaderAndIsr请求,写入leader和isr到zk<br>2.对这个partition,发送LeaderAndIsr请求给每个接收的replica,发送UpdateMetadata请求给每个存活的broker  </li>
+<li>NewPartition,OnlinePartition -&gt; OfflinePartition: </li>
+<li>OfflinePartition -&gt; NonExistentPartition: </li>
+</ul>
 <p><strong>ReplicaStateChange</strong>  </p>
+<p>有效的状态如下:  </p>
+<ul>
+<li>NewReplica: 在创建topic或partition重新分配时会创建replicas.这个状态下,一个replica只能收到BecomeFollower的状态变更请求</li>
+<li>OnlineReplica: 当一个replica启动后,并且作为它的partition中被分配的replicas的一部分.该状态可以收到BecomeLeader或BecomeFollower</li>
+<li>OfflineReplica: 一个replica挂掉了,比如持有replica的broker主机当掉时</li>
+<li>NonExistentReplica: 一个replica被删除掉时</li>
+</ul>
+<p>有效的状态转换为:  </p>
+<ul>
+<li>NonExistentReplica –&gt; NewReplica: 将带有当前的leader和isr的LeaderAndIsr请求发送给新的replica,并且向每个存活的broker发送UpdateMetadata</li>
+<li>NewReplica-&gt; OnlineReplica: 如果需要,将新的replica加入到分配的replica中(通常情况下,新的replica已经在已分配的replicas中)</li>
+<li>OnlineReplica,OfflineReplica -&gt; OnlineReplica: 同NonExistentReplica –&gt; NewReplica</li>
+<li>NewReplica,OnlineReplica -&gt; OfflineReplica: 发送StopReplicaRequest给replica(不包括删除);<br>从isr中移除这个replica,发送LeaderAndIsr(新的isr)给leader,并且向每个存活的broker发送UpdateMetadata  </li>
+<li>OfflineReplica -&gt; NonExistentReplica: 发送StopReplicaRequest给replica(包括删除)</li>
+</ul>
 <p><strong>KafkaController Operations</strong>  </p>
 <h2 id="Ref">Ref</h2><ul>
 <li><a href="https://cwiki.apache.org/confluence/display/KAFKA/Kafka+Controller+Internals" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Kafka+Controller+Internals</a></li>
@@ -231,7 +261,7 @@
   <p><span>本文标题:</span><a href="/2016/02/23/2016-02-23-Kafka-Controller/">Kafka源码分析 KafkaController</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年02月23日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年02月22日 - 10时07分</p>
+  <p><span>最后更新:</span>2016年02月23日 - 19时52分</p>
   <p>
     <span>原始链接:</span><a href="/2016/02/23/2016-02-23-Kafka-Controller/" title="Kafka源码分析 KafkaController">http://github.com/zqhxuyuan/2016/02/23/2016-02-23-Kafka-Controller/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/02/23/2016-02-23-Kafka-Controller/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">

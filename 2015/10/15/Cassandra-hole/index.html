@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Cassandra陷阱 | zqhxuyuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Cassandra的一些陷阱">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cassandra陷阱">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2015/10/15/Cassandra-hole/index.html">
+<meta property="og:site_name" content="zqhxuyuan">
+<meta property="og:description" content="Cassandra的一些陷阱">
+<meta property="og:updated_time" content="2016-03-07T03:58:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cassandra陷阱">
+<meta name="twitter:description" content="Cassandra的一些陷阱">
+  
+    <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">任何忧伤,都抵不过世界的美丽</a></h1>
+		</hgroup>
+
+		
+				
+
+
+		
+			<div id="switch-btn" class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div id="switch-area" class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives/">归档</a></li>
+				        
+							<li><a href="/tags/">标签</a></li>
+				        
+							<li><a href="/about/">关于</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 11.43px;">work</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">BIG(DATA)</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="/" class="profilepic">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			</a>
+			<hgroup>
+			  <h1 class="header-author"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives/">归档</a></li>
+		        
+					<li><a href="/tags/">标签</a></li>
+		        
+					<li><a href="/about/">关于</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Cassandra-hole" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/10/15/Cassandra-hole/" class="article-date">
+  	<time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished">2015-10-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Cassandra陷阱
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>Cassandra的一些陷阱</p>
+<a id="more"></a>
+<h2 id="Count">Count</h2><p>CQL默认显示10万条数据. 如果真正的数量不多, 可以增大limit值.   </p>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cqlsh:forseti&gt; <span class="keyword">select</span> <span class="built_in">count</span>(*) <span class="keyword">from</span> velocity_app limit <span class="number">100000000</span>;</span><br><span class="line"> <span class="built_in">count</span></span><br><span class="line">--------</span><br><span class="line"> <span class="number">983872</span></span><br></pre></td></tr></table></figure>
+<p>但是如果数据很多, 增大limit也会导致超时, 因为默认的range query时间是15秒.    </p>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cqlsh:forseti&gt; <span class="built_in">select</span> <span class="built_in">count</span>(*) <span class="keyword">from</span> <span class="built_in">velocity</span> limit <span class="number">10000000</span>;</span><br><span class="line">Request did <span class="built_in">not</span> complete within rpc_timeout.</span><br></pre></td></tr></table></figure>
+<p>用CQL查询的count有98万, 但是预估的keys只有600多条. 这是因为keys是统计partiton key的数量.<br>而CQL中的count是统计columns的: 即一个partiton key有多个column, 每个column都算一条!   </p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">➜  ~  nodetool cfstats forseti.velocity_app -h <span class="number">192.168</span><span class="number">.6</span><span class="number">.52</span></span><br><span class="line"><span class="string">Keyspace:</span> forseti</span><br><span class="line">  Pending <span class="string">Tasks:</span> <span class="number">0</span></span><br><span class="line"><span class="label">    Table:</span> velocity_app</span><br><span class="line">    SSTable <span class="string">count:</span> <span class="number">1</span></span><br><span class="line">    SSTables <span class="keyword">in</span> each <span class="string">level:</span> [<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]</span><br><span class="line">    Space used (live), <span class="string">bytes:</span> <span class="number">13401166</span></span><br><span class="line">    Space used (total), <span class="string">bytes:</span> <span class="number">13401166</span></span><br><span class="line">    Off heap memory used (total), <span class="string">bytes:</span> <span class="number">6548</span></span><br><span class="line">    SSTable Compression <span class="string">Ratio:</span> <span class="number">0.27455019357879173</span></span><br><span class="line">    👉Number of keys (estimate): <span class="number">640</span></span><br><span class="line">    👉Memtable cell <span class="string">count:</span> <span class="number">393345</span></span><br><span class="line">    Memtable data size, <span class="string">bytes:</span> <span class="number">60653197</span></span><br><span class="line">    Memtable <span class="keyword">switch</span> <span class="string">count:</span> <span class="number">4</span></span><br><span class="line">    Compression metadata off heap memory used, <span class="string">bytes:</span> <span class="number">5912</span></span><br><span class="line">    Compacted partition minimum <span class="string">bytes:</span> <span class="number">17085</span></span><br><span class="line">    Compacted partition maximum <span class="string">bytes:</span> <span class="number">785939</span></span><br><span class="line">    Compacted partition mean <span class="string">bytes:</span> <span class="number">91169</span></span><br><span class="line">    👉Average live cells per slice (last five minutes): <span class="number">918.0</span></span><br></pre></td></tr></table></figure>
+<p>每个slice切片的存活cells都近1000个, cell认为是column, slice认为是row. 所以columns = 600*1000=600000=60万.<br>注意还要加上Memtable的cell count近40万, 这样60万+40万看来跟CQL查询的90万就差不多了.   </p>
+<h2 id="Truncate">Truncate</h2><p>在CQL中truncate表数据后, df -h对应的空间并没有减少. 虽然表目录下没有数据文件了, 但是实际上它会<code>生成快照</code>.<br>所以要彻底删除表和数据, 最后对所有节点执行: <code>nodetool clearsnapshot -h  192.168.47...</code></p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@cass047221 forseti]$ <span class="keyword">cd</span> /home/admin/cassandra/data/forseti &amp;&amp; <span class="keyword">for</span> i <span class="keyword">in</span> $(<span class="keyword">ls</span> -<span class="keyword">l</span> |grep '^<span class="keyword">d</span>' |du -s * |<span class="keyword">sort</span> -nr|awk '&#123;<span class="keyword">print</span> <span class="label">$2&#125;</span>');<span class="keyword">do</span> du -<span class="keyword">sh</span> <span class="label">$i</span>;done | head -10</span><br><span class="line">590G  activity_detail</span><br><span class="line">391G  velocity</span><br><span class="line">62G account_association_info</span><br><span class="line">8.1G  account_attached_ip</span><br><span class="line">7.7G  account_binded_property</span><br><span class="line">[qihuang.zheng@cass047221 forseti]$ ll activity_detail/</span><br><span class="line">drwxr-xr-x. 3 admin admin 4096 10月 20 15:07 snapshots     ⬅️ 生成快照文件夹, 执行clearsnapshot会删除这个文件夹</span><br></pre></td></tr></table></figure>
+<h2 id="Query">Query</h2><blockquote>
+<p>通常的TimeSeries的DataModel的设计是: 相同的partition key会有很多记录. 比如weather_station_id.<br>一个气象站点每分钟一条数据, 则主键设计为: PRIMARY KEY(station_id, occur_min).<br>或者设计成compound partition key: PRIMARY KEY((station_id, day), occur_min)  </p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">desc table activity_detail;</span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> activity_detail (</span><br><span class="line">  sequence_id <span class="built_in">text</span>,</span><br><span class="line">  occur_time <span class="built_in">bigint</span>,</span><br><span class="line">  activity_map <span class="keyword">map</span>&lt;<span class="built_in">text</span>, <span class="built_in">text</span>&gt;,</span><br><span class="line">  ...</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> ((sequence_id), occur_time)</span><br><span class="line">)</span></span><br></pre></td></tr></table></figure>
+<p>查询时可以只能是partiton key,不能单单根据cluster column(allow filtering除外):   </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--非partition key查询(虽然occur_time也是primary key的一部分),需要跟上allow filtering,但是会慢点</span></span><br><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> activity_detail <span class="keyword">where</span> occur_time=<span class="number">1432292854170</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> activity_detail <span class="keyword">where</span> occur_time &lt;<span class="number">1398873600000</span> <span class="keyword">limit</span> <span class="number">1</span>;</span></span><br><span class="line">Bad Request: Cannot <span class="operator"><span class="keyword">execute</span> this <span class="keyword">query</span> <span class="keyword">as</span> it might involve <span class="keyword">data</span> filtering <span class="keyword">and</span> thus may have unpredictable <span class="keyword">performance</span>. </span><br><span class="line"><span class="keyword">If</span> you want <span class="keyword">to</span> <span class="keyword">execute</span> this <span class="keyword">query</span> despite the <span class="keyword">performance</span> unpredictability, <span class="keyword">use</span> <span class="keyword">ALLOW</span> FILTERING</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> activity_detail <span class="keyword">where</span> occur_time &lt;<span class="number">1398873600000</span> <span class="keyword">limit</span> <span class="number">1</span> <span class="keyword">ALLOW</span> FILTERING;</span></span><br><span class="line"><span class="operator"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> activity_detail <span class="keyword">where</span> occur_time &lt;<span class="number">1398873600000</span> <span class="keyword">ALLOW</span> FILTERING;</span></span><br></pre></td></tr></table></figure>
+<p>更新时必须跟上所有primary key:  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--不支持子查询!</span></span><br><span class="line"><span class="operator"><span class="keyword">UPDATE</span> activity_detail <span class="keyword">USING</span> TTL <span class="number">10</span> </span><br><span class="line"><span class="keyword">SET</span> occur_time=(<span class="keyword">select</span> occur_time <span class="keyword">from</span> activity_detail <span class="keyword">where</span> sequence_id=<span class="string">'1415881081492-08553997'</span>)</span><br><span class="line"><span class="keyword">where</span> sequence_id=<span class="string">'1415881081492-08553997'</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--Bad Request: PRIMARY KEY part occur_time found in SET part 不允许更新primary key!</span></span><br><span class="line"><span class="operator"><span class="keyword">UPDATE</span> activity_detail <span class="keyword">USING</span> TTL <span class="number">10</span> <span class="keyword">SET</span> occur_time=<span class="number">1415881081493</span> </span><br><span class="line"><span class="keyword">where</span> sequence_id=<span class="string">'1415881081492-08553997'</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--Bad Request: Missing mandatory PRIMARY KEY part occur_time 需要跟上所有primary key字段</span></span><br><span class="line"><span class="operator"><span class="keyword">UPDATE</span> activity_detail <span class="keyword">USING</span> TTL <span class="number">30</span> <span class="keyword">SET</span> geo_map=&#123;<span class="string">'test'</span>:<span class="string">'test'</span>&#125;</span><br><span class="line"><span class="keyword">where</span> sequence_id=<span class="string">'1415881081492-08553997'</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--OK,but TTL don't really work as expected! 注意要同时跟上primary key的所有字段!</span></span><br><span class="line"><span class="operator"><span class="keyword">UPDATE</span> activity_detail <span class="keyword">USING</span> TTL <span class="number">30</span> <span class="keyword">SET</span> geo_map=&#123;<span class="string">'test'</span>:<span class="string">'test'</span>&#125;</span><br><span class="line"><span class="keyword">where</span> sequence_id=<span class="string">'1415881081492-08553997'</span> <span class="keyword">and</span> occur_time=<span class="number">1415881081493</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--Bad Request: Cannot use selection function ttl on collections</span></span><br><span class="line"><span class="operator"><span class="keyword">select</span> ttl(geo_map) <span class="keyword">from</span> activity_detail <span class="keyword">where</span> sequence_id=<span class="string">'1415881081492-08553997'</span> ;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--Bad Request: Cannot use selection function ttl on PRIMARY KEY part occur_time</span></span><br><span class="line"><span class="operator"><span class="keyword">select</span> ttl(occur_time) <span class="keyword">from</span> activity_detail <span class="keyword">where</span> sequence_id=<span class="string">'1415881081492-08553997'</span> ;</span></span><br></pre></td></tr></table></figure>
+<p><strong>null与删除:</strong><br>更新一个字段时指定TTL,TTL后字段值为null;<br>插入一条记录时指定TTL,TTL后这条记录消失;<br>DELETE删除一条记录,这条记录消失.  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--数据仍然存在,只不过值为null. </span></span><br><span class="line"><span class="operator"><span class="keyword">select</span> geo_map <span class="keyword">from</span> activity_detail <span class="keyword">where</span> sequence_id=<span class="string">'1415881081492-08553997'</span> ;</span></span><br><span class="line"> geo_map</span><br><span class="line"><span class="comment">---------</span></span><br><span class="line">    null</span><br><span class="line"></span><br><span class="line"><span class="comment">--使用DELETE FROM可以成功删除! </span></span><br><span class="line"><span class="operator"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> activity_detail <span class="keyword">where</span> sequence_id=<span class="string">'1415881081492-08553997'</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> activity_detail <span class="keyword">where</span> sequence_id=<span class="string">'1415881081492-08553997'</span> ;</span></span><br><span class="line">(0 rows)</span><br></pre></td></tr></table></figure>
+<h3 id="where">where</h3><p><a href="http://www.datastax.com/dev/blog/a-deep-look-to-the-cql-where-clause" target="_blank" rel="external">http://www.datastax.com/dev/blog/a-deep-look-to-the-cql-where-clause</a></p>
+<h3 id="fetchSize和limit">fetchSize和limit</h3><p><a href="http://docs.datastax.com/en/developer/java-driver/2.1/java-driver/jd-faq.html" target="_blank" rel="external">http://docs.datastax.com/en/developer/java-driver/2.1/java-driver/jd-faq.html</a><br><a href="http://stackoverflow.com/questions/22854558/datastax-driver-limit-option" target="_blank" rel="external">http://stackoverflow.com/questions/22854558/datastax-driver-limit-option</a>  </p>
+<blockquote>
+<p>What’s the difference between using setFetchSize() and LIMIT?<br>Basically, LIMIT controls the maximum number of results done on the Cassandra side, 在服务端限制<br>while the setFetchSize() method controls the amount of data transferred between Cassandra and the client.</p>
+</blockquote>
+<p>假设一条row有5000个column, 如果只是设置fetchSize=1000, 则第一次返回1000行, 还有剩余的4000行, 会在什么时候返回?  </p>
+<h2 id="二级索引的删除">二级索引的删除</h2><p>1.不支持根据二级索引删除  </p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span> <span class="keyword">ON</span> velocity_app (sequence_id);</span><br><span class="line"></span><br><span class="line">根据二级索引查询都是OK的:  </span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> velocity_app <span class="keyword">where</span> sequence_id=<span class="string">'1439981942982-51788461'</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> velocity_app <span class="keyword">where</span> attribute=<span class="string">'229.195.196.98'</span> <span class="keyword">and</span> partner_code=<span class="string">'demo'</span> <span class="keyword">and</span> app_name=<span class="string">'autoTest'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'ipAddress'</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> velocity_app <span class="keyword">where</span> attribute=<span class="string">'229.195.196.98'</span> <span class="keyword">and</span> partner_code=<span class="string">'demo'</span> <span class="keyword">and</span> app_name=<span class="string">'autoTest'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'ipAddress'</span> </span><br><span class="line">  <span class="keyword">and</span> sequence_id=<span class="string">'1439981942982-51788461'</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> velocity_app <span class="keyword">where</span> attribute=<span class="string">'229.195.196.98'</span> <span class="keyword">and</span> partner_code=<span class="string">'demo'</span> <span class="keyword">and</span> app_name=<span class="string">'autoTest'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'ipAddress'</span> </span><br><span class="line">  <span class="keyword">and</span> timestamp=<span class="number">1439981942982</span> <span class="keyword">and</span> sequence_id=<span class="string">'1439981942982-51788461'</span>;</span><br><span class="line"></span><br><span class="line">但是不支持二级索引的删除:  </span><br><span class="line">🈲 delete <span class="keyword">from</span> velocity_app <span class="keyword">where</span> sequence_id=<span class="string">'1439981942982-51788461'</span>;</span><br><span class="line">🈲 delete <span class="keyword">from</span> velocity_app <span class="keyword">where</span> attribute=<span class="string">'229.195.196.98'</span> <span class="keyword">and</span> sequence_id=<span class="string">'1439981942982-51788461'</span>;</span><br><span class="line">🈲 delete <span class="keyword">from</span> velocity_app <span class="keyword">where</span> attribute=<span class="string">'229.195.196.98'</span> <span class="keyword">and</span> partner_code=<span class="string">'demo'</span> <span class="keyword">and</span> app_name=<span class="string">'autoTest'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'ipAddress'</span> <span class="keyword">and</span> sequence_id=<span class="string">'1439981942982-51788461'</span>;</span><br><span class="line">&gt;Bad Request: Non PRIMARY KEY sequence_id found <span class="keyword">in</span> <span class="keyword">where</span> clause</span><br><span class="line"></span><br><span class="line">必须这样子删除:  </span><br><span class="line">✅ delete <span class="keyword">from</span> velocity_app <span class="keyword">where</span> attribute=<span class="string">'229.195.196.98'</span> <span class="keyword">and</span> partner_code=<span class="string">'demo'</span> <span class="keyword">and</span> app_name=<span class="string">'autoTest'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'ipAddress'</span>;</span><br></pre></td></tr></table></figure>
+<p>上面的删除并没有sequence_id的限制条件. 为了能根据sequence_id删除记录,需要把sequence_id作为cluster key.  </p>
+<p>2.把sequence_id作为唯一的cluster key: 👈 We Choose This!!  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> velocity_seq (</span><br><span class="line">  <span class="keyword">attribute</span> <span class="built_in">text</span>,</span><br><span class="line">  partner_code <span class="built_in">text</span>,</span><br><span class="line">  app_name <span class="built_in">text</span>,</span><br><span class="line">  <span class="keyword">type</span> <span class="built_in">text</span>,</span><br><span class="line">  <span class="string">"timestamp"</span> <span class="built_in">bigint</span>,</span><br><span class="line">  <span class="keyword">event</span> <span class="built_in">text</span>,</span><br><span class="line">  sequence_id <span class="built_in">text</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> ((<span class="keyword">attribute</span>, partner_code, app_name, <span class="keyword">type</span>), sequence_id)</span><br><span class="line">)<span class="keyword">WITH</span> <span class="keyword">CLUSTERING</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> (sequence_id <span class="keyword">DESC</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> velocity_seq(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,<span class="keyword">event</span>,sequence_id)<span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">12345</span>,<span class="string">'event1'</span>,<span class="string">'12345'</span>);</span></span><br><span class="line"><span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> velocity_seq(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,<span class="keyword">event</span>,sequence_id)<span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">12346</span>,<span class="string">'event2'</span>,<span class="string">'12346'</span>);</span></span><br><span class="line"><span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> velocity_seq(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,<span class="keyword">event</span>,sequence_id)<span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">12347</span>,<span class="string">'event1'</span>,<span class="string">'12347'</span>);</span></span><br><span class="line"><span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> velocity_seq(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,<span class="keyword">event</span>,sequence_id)<span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">12348</span>,<span class="string">'event1'</span>,<span class="string">'12348'</span>);</span></span><br><span class="line"></span><br><span class="line">✅ <span class="operator"><span class="keyword">delete</span> <span class="keyword">from</span> velocity_seq <span class="keyword">where</span> <span class="keyword">attribute</span>=<span class="string">'test001'</span> <span class="keyword">and</span> partner_code=<span class="string">'test001'</span> <span class="keyword">and</span> app_name=<span class="string">'test001'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'test001'</span> <span class="keyword">and</span> sequence_id=<span class="string">'12345'</span>;</span></span><br><span class="line"></span><br><span class="line">允许最后一个cluster key进行范围查询:  </span><br><span class="line">✅ <span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> velocity_seq <span class="keyword">where</span> <span class="keyword">attribute</span>=<span class="string">'test001'</span> <span class="keyword">and</span> partner_code=<span class="string">'test001'</span> <span class="keyword">and</span> app_name=<span class="string">'test001'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'test001'</span> <span class="keyword">and</span> sequence_id&gt;=<span class="string">'1234'</span> <span class="keyword">and</span> sequence_id&lt;=<span class="string">'1235'</span>;</span></span><br></pre></td></tr></table></figure>
+<p>原先使用timestamp作为cluster key作为cluster key, 不仅仅是为了按照时间倒序排列, 也可以作为TTL查询的限制条件避免查询tombstone: where timestamp&gt;=currentTime-3M<br>因为sequence_id本身就有timestamp的业务意义, 所以也可以使用sequence_id来代替timestamp的限制来避免查询tombstone:  where sequence_id&gt;=’currentTime-3M’</p>
+<p>假设timestamp=1439981914929, sequence_id=’1439981914929-81748374’, 假设currentTime-3M=1439981914930.<br>where timestamp&gt;=1439981914930可以过滤这条数据.  where sequence_id&gt;=’1439981914930’也能过滤: 因为’1439981914930’ &gt; ‘1439981914929-81748374’</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> velocity_seq(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,<span class="keyword">event</span>,sequence_id)<span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">1439981914929</span>,<span class="string">'event1'</span>,<span class="string">'1439981914929-81748374'</span>);</span></span><br><span class="line"><span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> velocity_seq(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,<span class="keyword">event</span>,sequence_id)<span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">1439981914920</span>,<span class="string">'event1'</span>,<span class="string">'1439981914920-81748374'</span>);</span></span><br><span class="line"><span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> velocity_seq(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,<span class="keyword">event</span>,sequence_id)<span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">1439981914940</span>,<span class="string">'event1'</span>,<span class="string">'1439981914940-81748374'</span>);</span></span><br><span class="line"><span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> velocity_seq(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,<span class="keyword">event</span>,sequence_id)<span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">1439981914920</span>,<span class="string">'event1'</span>,<span class="string">'1439981914920-81748375'</span>);</span></span><br><span class="line"></span><br><span class="line"> attribute | partner_code | app_name | type    | sequence_id            | event  | timestamp</span><br><span class="line"><span class="comment">-----------+--------------+----------+---------+------------------------+--------+---------------</span></span><br><span class="line">   test001 |      test001 |  test001 | test001 | 1439981914940-81748374 | event1 | 1439981914940</span><br><span class="line">   test001 |      test001 |  test001 | test001 | 1439981914929-81748374 | event1 | 1439981914929</span><br><span class="line">   test001 |      test001 |  test001 | test001 | 1439981914920-81748375 | event1 | 1439981914920</span><br><span class="line">   test001 |      test001 |  test001 | test001 | 1439981914920-81748374 | event1 | 1439981914920</span><br><span class="line"></span><br><span class="line">✅ <span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> velocity_seq <span class="keyword">where</span> <span class="keyword">attribute</span>=<span class="string">'test001'</span> <span class="keyword">and</span> partner_code=<span class="string">'test001'</span> <span class="keyword">and</span> app_name=<span class="string">'test001'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'test001'</span> <span class="keyword">and</span> sequence_id&gt;=<span class="string">'1439981914930'</span>;</span></span><br></pre></td></tr></table></figure>
+<p>3.原先就存在cluster key:timestamp, 删除时必须指定全部的primary key:  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> velocity_tseq (</span><br><span class="line">  <span class="keyword">attribute</span> <span class="built_in">text</span>,</span><br><span class="line">  partner_code <span class="built_in">text</span>,</span><br><span class="line">  app_name <span class="built_in">text</span>,</span><br><span class="line">  <span class="keyword">type</span> <span class="built_in">text</span>,</span><br><span class="line">  <span class="string">"timestamp"</span> <span class="built_in">bigint</span>,</span><br><span class="line">  <span class="keyword">event</span> <span class="built_in">text</span>,</span><br><span class="line">  sequence_id <span class="built_in">text</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> ((<span class="keyword">attribute</span>, partner_code, app_name, <span class="keyword">type</span>), <span class="string">"timestamp"</span>,sequence_id)</span><br><span class="line">)<span class="keyword">WITH</span> <span class="keyword">CLUSTERING</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> (<span class="string">"timestamp"</span> <span class="keyword">desc</span>,sequence_id <span class="keyword">DESC</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> velocity_tseq(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,<span class="keyword">event</span>,sequence_id)<span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">12345</span>,<span class="string">'event1'</span>,<span class="string">'12345'</span>);</span></span><br><span class="line"><span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> velocity_tseq(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,<span class="keyword">event</span>,sequence_id)<span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">12346</span>,<span class="string">'event2'</span>,<span class="string">'12346'</span>);</span></span><br><span class="line"></span><br><span class="line">🈲 <span class="operator"><span class="keyword">delete</span> <span class="keyword">from</span> velocity_tseq <span class="keyword">where</span> <span class="keyword">attribute</span>=<span class="string">'test001'</span> <span class="keyword">and</span> partner_code=<span class="string">'test001'</span> <span class="keyword">and</span> app_name=<span class="string">'test001'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'test001'</span> <span class="keyword">and</span> sequence_id=<span class="string">'12345'</span>;</span></span><br><span class="line">Bad Request: Missing PRIMARY KEY part timestamp since sequence_id is <span class="operator"><span class="keyword">set</span></span><br><span class="line"></span><br><span class="line">✅ <span class="keyword">delete</span> <span class="keyword">from</span> velocity_tseq <span class="keyword">where</span> <span class="keyword">attribute</span>=<span class="string">'test001'</span> <span class="keyword">and</span> partner_code=<span class="string">'test001'</span> <span class="keyword">and</span> app_name=<span class="string">'test001'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'test001'</span> <span class="keyword">and</span> <span class="keyword">timestamp</span>=<span class="number">12345</span> <span class="keyword">and</span> sequence_id=<span class="string">'12345'</span>;</span></span><br></pre></td></tr></table></figure>
+<p>指定sequence_id, 对timestamp采用范围查询, 失败!    </p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">insert into velocity_tse<span class="string">q(attribute,partner_code,app_name,type,"timestamp",event,sequence_id)</span><span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">12345</span>,<span class="string">'event1'</span>,<span class="string">'12345'</span>);</span><br><span class="line">insert into velocity_tse<span class="string">q(attribute,partner_code,app_name,type,"timestamp",event,sequence_id)</span><span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">12346</span>,<span class="string">'event1'</span>,<span class="string">'12346'</span>);</span><br><span class="line">insert into velocity_tse<span class="string">q(attribute,partner_code,app_name,type,"timestamp",event,sequence_id)</span><span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">12347</span>,<span class="string">'event1'</span>,<span class="string">'12347'</span>);</span><br><span class="line">insert into velocity_tse<span class="string">q(attribute,partner_code,app_name,type,"timestamp",event,sequence_id)</span><span class="keyword">values</span>(<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="string">'test001'</span>,<span class="number">12348</span>,<span class="string">'event1'</span>,<span class="string">'12348'</span>);</span><br><span class="line"></span><br><span class="line">不能跳过timestamp直接查询sequence_id:  </span><br><span class="line">🈲 <span class="keyword">select</span> * from velocity_tseq where attribute=<span class="string">'test001'</span> <span class="keyword">and</span> partner_code=<span class="string">'test001'</span> <span class="keyword">and</span> app_name=<span class="string">'test001'</span> <span class="keyword">and</span> type=<span class="string">'test001'</span> <span class="keyword">and</span> sequence_id=<span class="string">'12345'</span>;</span><br><span class="line"></span><br><span class="line">指定sequence_id,不能对timestamp进行范围查询:  </span><br><span class="line">🈲 <span class="keyword">select</span> * from velocity_tseq where attribute=<span class="string">'test001'</span> <span class="keyword">and</span> partner_code=<span class="string">'test001'</span> <span class="keyword">and</span> app_name=<span class="string">'test001'</span> <span class="keyword">and</span> type=<span class="string">'test001'</span> <span class="keyword">and</span> timestamp&gt;=<span class="number">12346</span> <span class="keyword">and</span> timestamp&lt;=<span class="number">12347</span> <span class="keyword">and</span> sequence_id=<span class="string">'12345'</span>;</span><br><span class="line">Bad Request: PRIMARY KEY column <span class="string">"sequence_id"</span> cannot be restricted (preceding column <span class="string">"timestamp"</span> is restricted by a non-EQ relation)</span><br><span class="line"></span><br><span class="line">查询不行, 删除当然也不行了:  </span><br><span class="line">🈲 <span class="keyword">delete</span> from velocity_tseq where attribute=<span class="string">'test001'</span> <span class="keyword">and</span> partner_code=<span class="string">'test001'</span> <span class="keyword">and</span> app_name=<span class="string">'test001'</span> <span class="keyword">and</span> type=<span class="string">'test001'</span> <span class="keyword">and</span> timestamp&gt;=<span class="number">12346</span> <span class="keyword">and</span> timestamp&lt;=<span class="number">12347</span> <span class="keyword">and</span> sequence_id=<span class="string">'12345'</span>;</span><br><span class="line">Bad Request: Invalid operator &gt;= <span class="keyword">for</span> PRIMARY KEY part timestamp</span><br></pre></td></tr></table></figure>
+<p><a href="http://www.datastax.com/dev/blog/a-deep-look-to-the-cql-where-clause" target="_blank" rel="external">http://www.datastax.com/dev/blog/a-deep-look-to-the-cql-where-clause</a><br>这里说对2.2以前的版本, 只能对cluster keys的最后一个column进行范围查询. 下面的表结构sequence_id用等号查询, timestamp用范围限定, 貌似能够符合.  </p>
+<p>4.调换sequence_id和timestamp, 指定sequence_id, 并对timstamp进行范围查询:  </p>
+<figure class="highlight vhdl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE velocity_seqt (</span><br><span class="line">  <span class="keyword">attribute</span> text,</span><br><span class="line">  partner_code text,</span><br><span class="line">  app_name text,</span><br><span class="line">  <span class="keyword">type</span> text,</span><br><span class="line">  <span class="string">"timestamp"</span> bigint,</span><br><span class="line">  event text,</span><br><span class="line">  sequence_id text,</span><br><span class="line">  PRIMARY KEY ((<span class="keyword">attribute</span>, partner_code, app_name, <span class="keyword">type</span>), sequence_id, <span class="string">"timestamp"</span>)</span><br><span class="line">)<span class="keyword">WITH</span> CLUSTERING ORDER BY (sequence_id DESC, <span class="string">"timestamp"</span> desc);</span><br><span class="line"></span><br><span class="line">insert into velocity_seqt(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,event,sequence_id)values(<span class="attribute">'test001</span>',<span class="attribute">'test001</span>',<span class="attribute">'test001</span>',<span class="attribute">'test001</span>',<span class="number">12345</span>,<span class="attribute">'event1</span>','<span class="number">12345</span>');</span><br><span class="line">insert into velocity_seqt(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,event,sequence_id)values(<span class="attribute">'test001</span>',<span class="attribute">'test001</span>',<span class="attribute">'test001</span>',<span class="attribute">'test001</span>',<span class="number">12346</span>,<span class="attribute">'event1</span>','<span class="number">12346</span>');</span><br><span class="line">insert into velocity_seqt(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,event,sequence_id)values(<span class="attribute">'test001</span>',<span class="attribute">'test001</span>',<span class="attribute">'test001</span>',<span class="attribute">'test001</span>',<span class="number">12347</span>,<span class="attribute">'event1</span>','<span class="number">12347</span>');</span><br><span class="line">insert into velocity_seqt(<span class="keyword">attribute</span>,partner_code,app_name,<span class="keyword">type</span>,<span class="string">"timestamp"</span>,event,sequence_id)values(<span class="attribute">'test001</span>',<span class="attribute">'test001</span>',<span class="attribute">'test001</span>',<span class="attribute">'test001</span>',<span class="number">12348</span>,<span class="attribute">'event1</span>','<span class="number">12348</span>');</span><br><span class="line"></span><br><span class="line">查询时不指定cluster key, 但必须指定所有的partition key: </span><br><span class="line">✅ <span class="keyword">select</span> * from velocity_seqt where <span class="keyword">attribute</span>=<span class="attribute">'test001</span>' <span class="keyword">and</span> partner_code=<span class="attribute">'test001</span>' <span class="keyword">and</span> app_name=<span class="attribute">'test001</span>' <span class="keyword">and</span> <span class="keyword">type</span>=<span class="attribute">'test001</span>';</span><br><span class="line">指定第一个cluster key:  </span><br><span class="line">✅ <span class="keyword">select</span> * from velocity_seqt where <span class="keyword">attribute</span>=<span class="attribute">'test001</span>' <span class="keyword">and</span> partner_code=<span class="attribute">'test001</span>' <span class="keyword">and</span> app_name=<span class="attribute">'test001</span>' <span class="keyword">and</span> <span class="keyword">type</span>=<span class="attribute">'test001</span>' <span class="keyword">and</span> sequence_id='<span class="number">12345</span>';</span><br><span class="line">指定所有的cluser key:  </span><br><span class="line">✅ <span class="keyword">select</span> * from velocity_seqt where <span class="keyword">attribute</span>=<span class="attribute">'test001</span>' <span class="keyword">and</span> partner_code=<span class="attribute">'test001</span>' <span class="keyword">and</span> app_name=<span class="attribute">'test001</span>' <span class="keyword">and</span> <span class="keyword">type</span>=<span class="attribute">'test001</span>' <span class="keyword">and</span> sequence_id='<span class="number">12345</span>' <span class="keyword">and</span> timestamp=<span class="number">12345</span>;</span><br><span class="line">但是不能跳过前面的cluser key, 直接使用后面的cluser key:  </span><br><span class="line">🈲 <span class="keyword">select</span> * from velocity_seqt where <span class="keyword">attribute</span>=<span class="attribute">'test001</span>' <span class="keyword">and</span> partner_code=<span class="attribute">'test001</span>' <span class="keyword">and</span> app_name=<span class="attribute">'test001</span>' <span class="keyword">and</span> <span class="keyword">type</span>=<span class="attribute">'test001</span>' <span class="keyword">and</span> timestamp=<span class="number">12345</span>;</span><br><span class="line"></span><br><span class="line">对最后一个cluser key查询范围也是没有问题的: </span><br><span class="line">✅ <span class="keyword">select</span> * from velocity_seqt where <span class="keyword">attribute</span>=<span class="attribute">'test001</span>' <span class="keyword">and</span> partner_code=<span class="attribute">'test001</span>' <span class="keyword">and</span> app_name=<span class="attribute">'test001</span>' <span class="keyword">and</span> <span class="keyword">type</span>=<span class="attribute">'test001</span>' <span class="keyword">and</span> sequence_id='<span class="number">12345</span>' <span class="keyword">and</span> timestamp&gt;=<span class="number">12345</span>;</span><br><span class="line">✅ <span class="keyword">select</span> * from velocity_seqt where <span class="keyword">attribute</span>=<span class="attribute">'test001</span>' <span class="keyword">and</span> partner_code=<span class="attribute">'test001</span>' <span class="keyword">and</span> app_name=<span class="attribute">'test001</span>' <span class="keyword">and</span> <span class="keyword">type</span>=<span class="attribute">'test001</span>' <span class="keyword">and</span> sequence_id='<span class="number">12345</span>' <span class="keyword">and</span> timestamp&gt;=<span class="number">12345</span> <span class="keyword">and</span> timestamp&lt;=<span class="number">12347</span>;</span><br><span class="line"></span><br><span class="line">查询没问题, 并不等于删除没问题: 只能用等号删除, 不能用&gt;=范围删除.  </span><br><span class="line">🈲 delete from velocity_seqt where <span class="keyword">attribute</span>=<span class="attribute">'test001</span>' <span class="keyword">and</span> partner_code=<span class="attribute">'test001</span>' <span class="keyword">and</span> app_name=<span class="attribute">'test001</span>' <span class="keyword">and</span> <span class="keyword">type</span>=<span class="attribute">'test001</span>' <span class="keyword">and</span> sequence_id='<span class="number">12345</span>' <span class="keyword">and</span> timestamp&gt;=<span class="number">12345</span> <span class="keyword">and</span> timestamp&lt;=<span class="number">12347</span>;</span><br><span class="line">Bad Request: Invalid operator &gt;= <span class="keyword">for</span> PRIMARY KEY part timestamp</span><br><span class="line"></span><br><span class="line">delete from velocity_seqt where <span class="keyword">attribute</span>=<span class="attribute">'test001</span>' <span class="keyword">and</span> partner_code=<span class="attribute">'test001</span>' <span class="keyword">and</span> app_name=<span class="attribute">'test001</span>' <span class="keyword">and</span> <span class="keyword">type</span>=<span class="attribute">'test001</span>' <span class="keyword">and</span> sequence_id='<span class="number">12345</span>';</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2015/10/15/Cassandra-hole/">Cassandra陷阱</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2015年10月15日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年03月07日 - 11时58分</p>
+  <p>
+    <span>原始链接:</span><a href="/2015/10/15/Cassandra-hole/" title="Cassandra陷阱">http://github.com/zqhxuyuan/2015/10/15/Cassandra-hole/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/10/15/Cassandra-hole/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
+
+
+
+<nav id="article-nav">
+  
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2015/11/10/2015-11-10-Cassandra-Client/">
+        Cassandra Client查询优化
+      </a>
+    </div>
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2015/10/15/Cassandra-Daily/">
+        Cassandra日常运维
+      </a>
+    </div>
+  
+</nav>
+
+  
+</article>
+
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Count"><span class="toc-number">1.</span> <span class="toc-text">Count</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Truncate"><span class="toc-number">2.</span> <span class="toc-text">Truncate</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Query"><span class="toc-number">3.</span> <span class="toc-text">Query</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#where"><span class="toc-number">3.1.</span> <span class="toc-text">where</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fetchSize和limit"><span class="toc-number">3.2.</span> <span class="toc-text">fetchSize和limit</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二级索引的删除"><span class="toc-number">4.</span> <span class="toc-text">二级索引的删除</span></a></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+    if ($(".toc").length < 1) {
+        $("#toc").css("display","none");
+        $("#tocButton").css("display","none");
+        $(".switch-btn").css("display","block");
+        $(".switch-area").css("display","block");
+    }
+</script>
+
+
+    <style>
+        .toc {
+            white-space: nowrap;
+            overflow-x: hidden;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $(".toc li a").mouseover(function() {
+                var title = $(this).attr('href');
+                $(this).attr("title", title);
+            });
+        })
+    </script>
+
+
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+	</div>
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+</div>
+
+
+
+
+
+
+
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
+
+
+  
+  
+    
+    <div  class="post-nav-button">
+    <a href="/2015/11/10/2015-11-10-Cassandra-Client/" title="上一篇: Cassandra Client查询优化">
+    <i class="fa fa-angle-left"></i>
+    </a>
+    <a href="/2015/10/15/Cassandra-Daily/" title="下一篇: Cassandra日常运维">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2016 任何忧伤,都抵不过世界的美丽
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+        </div>
+    </div>
+    <div class="visit">
+      <span id="busuanzi_container_site_pv" style='display:none'>
+        <span id="site-visit" >本站到访数: 
+        <span id="busuanzi_value_site_uv"></span>
+        </span>
+      </span>
+      <span id="busuanzi_container_page_pv" style='display:none'>
+        <span id="page-visit">, 本页阅读量: 
+        <span id="busuanzi_value_page_pv"></span>
+        </span>
+      </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+<script>
+  var backgroundnum = 5;
+  var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+
+  $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+</script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+<a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+<a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

@@ -14,7 +14,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160223142716750">
 <meta property="og:image" content="http://img.blog.csdn.net/20160223142729875">
 <meta property="og:image" content="http://img.blog.csdn.net/20160223142742613">
-<meta property="og:updated_time" content="2016-02-23T06:33:49.000Z">
+<meta property="og:updated_time" content="2016-02-23T09:05:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用新的Kafka消费者客户端">
 <meta name="twitter:description" content="https://cwiki.apache.org/confluence/display/KAFKA/Inbuilt+Consumer+Offset+Management">
@@ -113,7 +113,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.33px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.67px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/timeseries/" style="font-size: 13.33px;">timeseries</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 11.43px;">work</a>
 					</div>
 				</section>
 				
@@ -305,7 +305,23 @@
 <li>如果”offsets topic”这个时候不存在,它会尝试自动创建,在创建成果后,会返回offset=-1</li>
 </ul>
 <p><img src="http://img.blog.csdn.net/20160223142742613" alt="k_offset_fetch_broker"></p>
-<h2 id="Broker_failover">Broker failover</h2><h2 id="Offset清理">Offset清理</h2>
+<h2 id="Broker_failover">Broker failover</h2><p>当broker启动时,它会按照正常流程执行. 但是当对”offsets topic”的某些partition而言,broker状态发生改变,<br>即被当做partition的leader或者follower时,LeaderAndIsrRequest请求会被触发:  </p>
+<ul>
+<li>如果broker是”offsets topic”中一些partitions的leader, broker会读取指定partition的logs文件,<br>并将offsets加载到offset table缓存中.<br>1) 任何对这些partition的提交请求仍然会更新offsets表.我们会防止日志文件中过期的offsets覆盖最近的提交请求的offsets.<br>2) 被”offsets topic”中partition管理的offset抓取请求的keys直到加载成功之前是不会被使用的.<br>broker会返回OffsetLoadingCode的OffsetFetchResponse给消费者客户端. </li>
+<li>如果broker是follower: 和其他正常的kafka topic一样,follower会从leader中抓取数据.<br>由于follower的offset manager不再负责partitions,它们会在cleanup方法被调用时清理数据.    </li>
+</ul>
+<h2 id="Offset清理">Offset清理</h2><h3 id="Offset移除协议">Offset移除协议</h3><p>带有null的payload的OffsetCommitRequest表示指定的key(group-topic-partition)的offset应该被删除.<br>假设一个broker拥有offsets topic的partition X,收到了null payloads的这样一个请求.<br>正常的append-to-logs流程会继续运行,并且followers也会同步leader的数据. 当offset manager提交offset时,<br>它检查到payload是”null”,就会删除zk和offsets表中有这个key的条目.<br>如果一个消费组的所有条目都被删除了,就会删除zk中当前消费组对应的znode(/consumers/[group_id]).<br>这只是覆盖了zk和offset表的清理. 不过数据仍然存在于offsets topic的logs中.<br>log cleaner线程运行在”dedupe”模式时也会对offsets topic的logs使用null payload清理数据.  </p>
+<h3 id="手动清理">手动清理</h3><p>用户可以通过自定义一个要删除的offset的消费组. 该工具首先和zk进行联系得到如下信息:  </p>
+<ul>
+<li>请求的消费组是否存在,如果不存在,则停止(消费组必须存在)</li>
+<li>消费组有没有存活的消费者, 如果有,也停止(消费组必须没有存活的消费者)</li>
+<li>从zk中得到这个消费组下所有的消费topics(/consumers/[group]/owners)</li>
+<li>得到每个topics的partition编号</li>
+</ul>
+<p>在得到上面这些信息后发送一个OffsetCommitRequest,其中key是所有的group-topic-partition,<br>value是null payloads. 移除offset的过程和上面的移除协议是一样的.<br>根据时间的移除策略也是可行的,只要在OffsetFetchResponse中返回每个offset的时间撮.<br>(offset抓取之后,就开始重置计时器,如果在指定时间内这个partition没有再被fetch,就可以被移除了)  </p>
+<h3 id="自动清理">自动清理</h3><p>在OffsetManager中有一个单独的线程周期性地运行着自动清理offset. 该线程会读取当前broker中对应了<br>offsets topic所有partitions的logs,对每个key(group-topic-partition),会保存logs中<br>最近发现的条目的时间撮. 然后(清理线程)会向自己(broker)发送一个OffsetCommitRequest.<br>这个请求的条件应该满足:(当前时间撮-最近offset条目的时间撮)&gt;OFFSET_RETENTION_PERIOD(保留间隔)  </p>
+<p>当所有的brokers记录了指定的group-topic-partition的payload=null,毫无疑问可以放心地删除.<br>即使broker在log cleaner在完成清理之前当掉了不过又马上恢复过来. 在加载阶段就会防止删除的offsets<br>被加入到offset表. 有一点要注意,如果broker记录了要提交的消息为null payload到磁盘上,但是在<br>清理zk之前失败了, 会导致zk中存在过期的条目. 在ZookeeperOffsetManager的zk加载阶段需要处理这种情况.  </p>
+
       
     </div>
     
@@ -316,7 +332,7 @@
   <p><span>本文标题:</span><a href="/2016/02/18/Kafka-Consumer-Offset-Manager/">使用新的Kafka消费者客户端</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年02月18日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年02月23日 - 14时33分</p>
+  <p><span>最后更新:</span>2016年02月23日 - 17时05分</p>
   <p>
     <span>原始链接:</span><a href="/2016/02/18/Kafka-Consumer-Offset-Manager/" title="使用新的Kafka消费者客户端">http://github.com/zqhxuyuan/2016/02/18/Kafka-Consumer-Offset-Manager/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/02/18/Kafka-Consumer-Offset-Manager/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -366,7 +382,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#介绍"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Offset_Management"><span class="toc-number">2.</span> <span class="toc-text">Offset Management</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Offsets_topic"><span class="toc-number">2.1.</span> <span class="toc-text">Offsets topic</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Offset_managers"><span class="toc-number">2.2.</span> <span class="toc-text">Offset managers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Offsets_manager_interface"><span class="toc-number">2.3.</span> <span class="toc-text">Offsets manager interface</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Offset_Commit实现"><span class="toc-number">3.</span> <span class="toc-text">Offset Commit实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#消费端"><span class="toc-number">3.1.</span> <span class="toc-text">消费端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#broker端"><span class="toc-number">3.2.</span> <span class="toc-text">broker端</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Offset_Fetch实现"><span class="toc-number">4.</span> <span class="toc-text">Offset Fetch实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#消费端-1"><span class="toc-number">4.1.</span> <span class="toc-text">消费端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#broker端-1"><span class="toc-number">4.2.</span> <span class="toc-text">broker端</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Broker_failover"><span class="toc-number">5.</span> <span class="toc-text">Broker failover</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Offset清理"><span class="toc-number">6.</span> <span class="toc-text">Offset清理</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#介绍"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Offset_Management"><span class="toc-number">2.</span> <span class="toc-text">Offset Management</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Offsets_topic"><span class="toc-number">2.1.</span> <span class="toc-text">Offsets topic</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Offset_managers"><span class="toc-number">2.2.</span> <span class="toc-text">Offset managers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Offsets_manager_interface"><span class="toc-number">2.3.</span> <span class="toc-text">Offsets manager interface</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Offset_Commit实现"><span class="toc-number">3.</span> <span class="toc-text">Offset Commit实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#消费端"><span class="toc-number">3.1.</span> <span class="toc-text">消费端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#broker端"><span class="toc-number">3.2.</span> <span class="toc-text">broker端</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Offset_Fetch实现"><span class="toc-number">4.</span> <span class="toc-text">Offset Fetch实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#消费端-1"><span class="toc-number">4.1.</span> <span class="toc-text">消费端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#broker端-1"><span class="toc-number">4.2.</span> <span class="toc-text">broker端</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Broker_failover"><span class="toc-number">5.</span> <span class="toc-text">Broker failover</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Offset清理"><span class="toc-number">6.</span> <span class="toc-text">Offset清理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Offset移除协议"><span class="toc-number">6.1.</span> <span class="toc-text">Offset移除协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#手动清理"><span class="toc-number">6.2.</span> <span class="toc-text">手动清理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动清理"><span class="toc-number">6.3.</span> <span class="toc-text">自动清理</span></a></li></ol></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {

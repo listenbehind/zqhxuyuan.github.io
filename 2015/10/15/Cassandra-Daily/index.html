@@ -8,10 +8,10 @@
   <meta name="description" content="Cassandra日常运维, OpsCenter">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Cassandra日常运维">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2015/10/15/2015-10-15-Cassandra-Daily/index.html">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2015/10/15/Cassandra-Daily/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Cassandra日常运维, OpsCenter">
-<meta property="og:updated_time" content="2016-02-23T04:06:29.000Z">
+<meta property="og:updated_time" content="2016-03-07T03:43:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cassandra日常运维">
 <meta name="twitter:description" content="Cassandra日常运维, OpsCenter">
@@ -110,7 +110,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.33px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.67px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/timeseries/" style="font-size: 13.33px;">timeseries</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 11.43px;">work</a>
 					</div>
 				</section>
 				
@@ -170,10 +170,10 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-2015-10-15-Cassandra-Daily" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Cassandra-Daily" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/10/15/2015-10-15-Cassandra-Daily/" class="article-date">
+      <a href="/2015/10/15/Cassandra-Daily/" class="article-date">
   	<time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished">2015-10-15</time>
 </a>
     </div>
@@ -215,7 +215,7 @@
         <p>Cassandra日常运维, OpsCenter</p>
 <a id="more"></a>
 <h2 id="Cassandra日常运维">Cassandra日常运维</h2><h3 id="线上应急">线上应急</h3><p><strong>[日志]超过10s的GC:</strong>  </p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cat /var/log/cassandra/system.log | grep '2016-01-31' | grep 'GC for .*: [<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>]'</span><br><span class="line"></span><br><span class="line">./pssh.sh ip_all.txt "cat /var/log/cassandra/system.log | grep '2015-11-25' | grep 'GC for .*: [<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>]'"</span><br><span class="line"></span><br><span class="line">./pssh.sh ip_forseti.txt "cat /var/log/cassandra/system.log | grep '2016-02-17' | grep 'GC for .*: [<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>][<span class="link_reference">0-9</span>][<span class="link_label">0-9</span>]'"</span><br><span class="line"></span><br><span class="line">cat /var/log/cassandra/system.log | grep 'GC for ConcurrentMarkSweep' | grep '2015-11-03'</span><br><span class="line"></span><br><span class="line">tail -f /var/log/cassandra/system.log | grep '2015-11-05' | grep 'GC'</span><br></pre></td></tr></table></figure>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cat</span> /var/<span class="built_in">log</span>/cassandra/<span class="built_in">system</span>.<span class="built_in">log</span> | <span class="keyword">grep</span> <span class="string">'2016-03'</span> | <span class="keyword">grep</span> <span class="string">'GC for .*: [0-9][0-9][0-9][0-9][0-9]'</span></span><br><span class="line"></span><br><span class="line">./pssh.<span class="keyword">sh</span> ip_forseti.txt <span class="string">"cat /var/log/cassandra/system.log | grep '2016-03-03' | grep 'GC for .*: [0-9][0-9][0-9][0-9][0-9]'"</span></span><br><span class="line"></span><br><span class="line">./pssh.<span class="keyword">sh</span> ip_forseti.txt <span class="string">"nodetool compactionstats"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">cat</span> /var/<span class="built_in">log</span>/cassandra/<span class="built_in">system</span>.<span class="built_in">log</span> | <span class="keyword">grep</span> <span class="string">'GC for ConcurrentMarkSweep'</span> | <span class="keyword">grep</span> <span class="string">'2015-11-03'</span></span><br><span class="line"></span><br><span class="line">tail -<span class="keyword">f</span> /var/<span class="built_in">log</span>/cassandra/<span class="built_in">system</span>.<span class="built_in">log</span> | <span class="keyword">grep</span> <span class="string">'2016-03-02'</span> | <span class="keyword">grep</span> <span class="string">'GC'</span></span><br><span class="line"></span><br><span class="line">fgrep <span class="string">'GC for'</span> /var/<span class="built_in">log</span>/cassandra/<span class="built_in">system</span>.<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
 <p><strong>[JVM]查看GC:</strong>  </p>
 <figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sudo -<span class="keyword">u</span> admin jstat -gc -<span class="keyword">h</span> 10 `sudo -<span class="keyword">u</span> admin jps | grep CassandraDaemon |awk '&#123;<span class="keyword">print</span> <span class="label">$1&#125;</span>'` 1000 | \</span><br><span class="line">awk '&#123;printf(<span class="string">"%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t\n"</span>,<span class="label">$1</span>,<span class="label">$5</span>,<span class="label">$3</span>,<span class="label">$4</span>,<span class="label">$6</span>,<span class="label">$8</span>,<span class="label">$11</span>,<span class="label">$12</span>,<span class="label">$13</span>,<span class="label">$14</span>)&#125;'</span><br><span class="line"></span><br><span class="line">sudo -<span class="keyword">u</span> admin jstat -gcutil `sudo -<span class="keyword">u</span> admin jps | grep CassandraDaemon |awk '&#123;<span class="keyword">print</span> <span class="label">$1&#125;</span>'` 1000 </span><br><span class="line"></span><br><span class="line">sudo -<span class="keyword">u</span> admin jstat -gc -<span class="keyword">h</span> 10 `sudo -<span class="keyword">u</span> admin jps | grep CassandraDaemon |awk '&#123;<span class="keyword">print</span> <span class="label">$1&#125;</span>'` 500 | \</span><br><span class="line">awk '&#123;printf(<span class="string">"%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t\n"</span>,<span class="label">$1</span>,<span class="label">$3</span>,<span class="label">$4</span>,<span class="label">$5</span>,<span class="label">$6</span>,<span class="label">$7</span>,<span class="label">$8</span>,<span class="label">$11</span>,<span class="label">$12</span>,<span class="label">$13</span>,<span class="label">$14</span>)&#125;'</span><br><span class="line"></span><br><span class="line">sudo -<span class="keyword">u</span> admin jmap -dump:<span class="keyword">format</span>=b,<span class="keyword">file</span>=/home/qihuang.zheng/1031.dat `sudo -<span class="keyword">u</span> admin jps | grep CassandraDaemon |awk '&#123;<span class="keyword">print</span> <span class="label">$1&#125;</span>'`</span><br><span class="line"></span><br><span class="line">       S0C         S0U         S1U          EC          EU          OC          <span class="keyword">OU</span>         YGC        YGCT         FGC        FGCT</span><br><span class="line">  419392.0    419392.0    419392.0   3355520.0   3355520.0  12582912.0  11641724.1      995186   39005.793        1951     810.868</span><br></pre></td></tr></table></figure>
 <p><strong>[进程]重启Cassandra进程:</strong>  </p>
@@ -244,6 +244,8 @@
 <figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo -u admin ln -s <span class="regexp">/usr/i</span>nstall<span class="regexp">/apache-cassandra-2.0.15 /u</span>sr<span class="regexp">/install/</span>cassandra</span><br></pre></td></tr></table></figure>
 <p>3.关闭swap</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo swapoff -<span class="tag">a</span></span><br><span class="line">sudo vi /etc/fstab</span><br><span class="line"></span><br><span class="line">sed -<span class="tag">i</span> <span class="string">'s/^\(.*swap\)/#\1/'</span> /etc/fstab</span><br><span class="line">echo <span class="string">"vm.swappiness = 1"</span> &gt; /etc/sysctl.d/swappiness<span class="class">.conf</span></span><br><span class="line">sysctl -<span class="tag">p</span> /etc/sysctl.d/swappiness.conf</span><br></pre></td></tr></table></figure>
+<h3 id="升级">升级</h3><p><a href="http://zhaoyanblog.com/archives/815.html" target="_blank" rel="external">http://zhaoyanblog.com/archives/815.html</a>  </p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">第一步：更改配置文件</span><br><span class="line">把Cassandra <span class="number">2</span>.<span class="number">0</span>的配置通过比对, 把你原来cassandra.yaml配置文件里的参数移植到新版本的cassandra.yaml配置文件中。</span><br><span class="line">因为cassandra2.<span class="number">1</span>增加了一些配置，也减少了一些配置。所以你不能直接复制过来。你只要把新版的配置文件中有的配置项，从老的配置文件中挪过来就可以了。</span><br><span class="line"></span><br><span class="line">第二步：创建快照，防止升级失败</span><br><span class="line"><span class="label">nodetool</span> snapshot keyspace -t snapshot_20150828 创建快照。</span><br><span class="line">如果你使用了JNA，快照是通过硬链接实现的，并不会增加磁盘空间，创建快照时间很短。</span><br><span class="line"></span><br><span class="line">第三步：停节点</span><br><span class="line">先执行<span class="keyword">bin/nodetool </span>drain 关闭写入，同时把数据写入文件。</span><br><span class="line">执行<span class="keyword">bin/nodetool </span>stodaemon停掉本节点。</span><br><span class="line"></span><br><span class="line">第四步: 启动新节点</span><br><span class="line"><span class="keyword">bin/cassandra。</span><br><span class="line"></span></span><br><span class="line">第五步：重复一到四步把集群所有机器都升级为新版本。</span><br><span class="line"></span><br><span class="line">第六步：在所有节点执行升级sstable文件操作</span><br><span class="line">后台执行</span><br><span class="line"><span class="label">nohup</span> <span class="keyword">bin/nodetool </span>upgradesstables &amp;</span><br><span class="line">目前看，这个操作不会产生太大的负载</span><br><span class="line">等所有节点操作完毕，至此升级完毕。</span><br></pre></td></tr></table></figure>
 <h3 id="文件">文件</h3><p>1.递归查看磁盘的容量或者Cassandra每个keyspace/table占用的大小(第三个按照大小排序取前10个):  </p>
 <figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ll</span> /home/admin/cassandra/data/forseti_fp/android_device_session -rSh|<span class="keyword">grep</span> Data|tail</span><br><span class="line"></span><br><span class="line">du --<span class="built_in">max</span>-depth=<span class="number">1</span> /home/admin/cassandra/data/forseti -<span class="keyword">h</span></span><br><span class="line">du /home/admin/cassandra/data/forseti/* -<span class="keyword">sh</span> *</span><br><span class="line"><span class="keyword">cd</span> /home/admin/cassandra/data/forseti &amp;&amp; <span class="keyword">for</span> <span class="keyword">i</span> in $(<span class="keyword">ls</span> -<span class="keyword">l</span> |<span class="keyword">grep</span> <span class="string">'^d'</span> |du -<span class="keyword">s</span> * |<span class="built_in">sort</span> -nr|awk <span class="string">'&#123;print $2&#125;'</span>);<span class="keyword">do</span> du -<span class="keyword">sh</span> $<span class="keyword">i</span>;done | head -<span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">cd</span> /home/admin/cassandra/data/forseti_fp &amp;&amp; <span class="keyword">for</span> <span class="keyword">i</span> in $(<span class="keyword">ls</span> -<span class="keyword">l</span> |<span class="keyword">grep</span> <span class="string">'^d'</span> |du -<span class="keyword">s</span> * |<span class="built_in">sort</span> -nr|awk <span class="string">'&#123;print $2&#125;'</span>);<span class="keyword">do</span> du -<span class="keyword">sh</span> $<span class="keyword">i</span>;done</span><br></pre></td></tr></table></figure>
 <p>2.找出修改时间在三个月前的文件(第二个命令会删除这些文件):  </p>
@@ -310,8 +312,6 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">ALTER</span> KEYSPACE <span class="string">"Excalibur"</span> <span class="keyword">WITH</span> <span class="keyword">REPLICATION</span> = &#123; <span class="string">'class'</span> : <span class="string">'SimpleStrategy'</span>, <span class="string">'replication_factor'</span> : <span class="number">3</span> &#125;;</span></span><br><span class="line"><span class="operator"><span class="keyword">ALTER</span> KEYSPACE system_auth <span class="keyword">WITH</span> <span class="keyword">REPLICATION</span> = &#123;<span class="string">'class'</span> : <span class="string">'NetworkTopologyStrategy'</span>, <span class="string">'dc1'</span> : <span class="number">3</span>, <span class="string">'dc2'</span> : <span class="number">2</span>&#125;;</span></span><br></pre></td></tr></table></figure>
 <p>在每个节点依次执行<code>nodetool repair</code>, 这样会将副本数据拷贝到其他节点. 不至于一个节点当掉, 导致无法访问C.  </p>
 <p>….TODO</p>
-<p><strong>4.移动数据文件</strong></p>
-<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">WARN <span class="number">14:14:55,72</span>0 At level 1, SSTableReader(path='/home/admin/cassandra/data/forseti/velocity_app/forseti-velocity_app-jb-1675-Data.db') </span><br><span class="line">[DecoratedKey(-<span class="number">2251189883765</span>179735, <span class="number">00203462333</span><span class="number">46437643666</span><span class="number">656562393133</span><span class="number">30373930376</span><span class="number">36536393739</span><span class="number">31303431643</span><span class="number">70000096a69</span><span class="number">65646169626</span><span class="number">16f00000f6</span>a<span class="number">69656461696</span><span class="number">2616f5f61</span><span class="number">6e64726f00</span><span class="number">000c61636</span><span class="number">36f756e74</span><span class="number">4c6f67696</span>e00), </span><br><span class="line">DecoratedKey(<span class="number">74433709433</span><span class="number">8704937</span>, <span class="number">0006e4b8</span>ade59bbd<span class="number">0000066a69</span><span class="number">75796f75000</span><span class="number">00a6a69757</span><span class="number">96f755f77</span><span class="number">656200001069</span><span class="number">704164647265</span><span class="number">7373436f75</span><span class="number">6e74727900</span>)] </span><br><span class="line">overlaps SSTableReader(path='/home/admin/cassandra/data/forseti/velocity_app/forseti-velocity_app-jb-191783-Data.db') </span><br><span class="line">[DecoratedKey(-<span class="number">32129705157</span><span class="number">7330931</span>, <span class="number">000d31363</span><span class="number">72e31342e32</span><span class="number">32352e34340</span><span class="number">00009727978</span><span class="number">61617736734</span>e<span class="number">00000d72797</span><span class="number">86161773673</span><span class="number">4e5f77656</span><span class="number">200000969704</span><span class="number">164647265737</span>300), </span><br><span class="line">DecoratedKey(-<span class="number">2831248293238</span>04542, <span class="number">0009e4b88</span>ae<span class="number">6b5b7e5</span>b<span class="number">88200000563</span><span class="number">74726970000</span><span class="number">00963747269</span><span class="number">705f77656</span><span class="number">200000d69704</span><span class="number">164647265737</span><span class="number">34369747900</span>)].  </span><br><span class="line">This could be caused by a bug in Cassandra 1.1.0 .. 1.1.3 or due to the fact that you have dropped sstables from another node into the data directory. </span><br><span class="line">Sending back to L0.  If you didn't drop in sstables, and have not yet run scrub, you should do so since you may also have rows out-of-order within an sstable</span><br></pre></td></tr></table></figure>
 <h3 id="OpsCenter:">OpsCenter:</h3><h4 id="安装opscenter">安装opscenter</h4><p>opscenter只需要安装server端即可, 启动方式: <code>sudo -u admin /usr/install/opscenter-5.2.2/bin/opscenter</code><br>启动后会在opscenter下生成一个twistd.pid代表server的进程id.  </p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@cass047222 opscenter-<span class="number">5.2</span><span class="number">.0</span>]$ ps -ef | grep opscenter</span><br><span class="line">admin     <span class="number">6344</span>     <span class="number">1</span> <span class="number">39</span> <span class="number">11</span>:<span class="number">22</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">01</span> /usr/bin/python2<span class="number">.6</span> ./bin/twistd -r epoll -oy bin/start_opscenter.py</span><br></pre></td></tr></table></figure>
 <p>杀掉opscenter进程的方式:  </p>
@@ -326,7 +326,157 @@
 <figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo kill -<span class="number">9</span> <span class="string">`ps -ef|grep datastax_agent_monitor | head -1 |awk '&#123;print $2&#125;'`</span> &amp;&amp;</span><br><span class="line">sudo kill -<span class="number">9</span> <span class="string">`cat /var/run/datastax-agent/datastax-agent.pid`</span> &amp;&amp;</span><br><span class="line">sudo rm -rf /var/<span class="class"><span class="keyword">lib</span>/<span class="title">datastax</span>-<span class="title">agent</span> &amp;&amp;</span></span><br><span class="line">sudo rm -rf /usr/share/datastax-agent</span><br></pre></td></tr></table></figure>
 <h4 id="堡垒机无法查看opscenter">堡垒机无法查看opscenter</h4><p><a href="https://docs.datastax.com/en/opscenter/5.1/opsc/troubleshooting/opscTroubleshootingZeroNodes.html" target="_blank" rel="external">https://docs.datastax.com/en/opscenter/5.1/opsc/troubleshooting/opscTroubleshootingZeroNodes.html</a></p>
 <h4 id="手动安装agent">手动安装agent</h4><p><a href="http://docs.datastax.com/en//opscenter/5.0/opsc/install/opsc-agentInstallManual_t.html" target="_blank" rel="external">http://docs.datastax.com/en//opscenter/5.0/opsc/install/opsc-agentInstallManual_t.html</a></p>
-
+<h2 id="GC_Turning">GC Turning</h2><h3 id="Config">Config</h3><ul>
+<li>提高compaction流量，对于大的partition让compaction尽快完成。已完成</li>
+<li>修改内存配置（堆内存，New大小，memtable大小）为官方建议的配置。未完成</li>
+<li>修改compaction策略。待评估</li>
+</ul>
+<h4 id="compaction_throughput_mb_per_sec_√">compaction_throughput_mb_per_sec √</h4><p>插入速度越快，就应该更快地compact便于减少sstable的数量。<br>如果没有及时compact，sstable数量变多，查询分布在多个sstable会变慢。<br>默认值为16M. 建议的值是每秒写入量(MB/s)的16-32倍，这个值是针对整个集群而言。<br>目前的值是128M,对应的写入量大概是8M/s.<br>因为要求尽快地compact,所以应该提升compact的流量。<br>提高到200M:  <code>nodetool setcompactionthroughput 200</code>  </p>
+<p>为什么是提高而不是减少？降低后本来应该快速被compaction完成的对象现在由于流量限制，compaction完成的慢了，对象存活时间越长。  </p>
+<blockquote>
+<p>Throttling compaction can even make it worse by forcing Cassandra to keep objects in memory longer than necessary, causing promotion which leads to memory compaction which is bound by memory bandwidth of the system.</p>
+<p>该配置主要针对大的partitions(partition指的是partition key对应的记录)</p>
+</blockquote>
+<h4 id="memtable_total_space_in_mb">memtable_total_space_in_mb</h4><p>默认堆1/4大小。我们集群机器内存32G，cassandra-env.sh关于堆内存的配置：-Xms16G，-Xmx16G，-Xmn4G<br>堆1/4=4G(和Xmn新生代大小一样)。那么堆内存是由什么决定的呢？看下面的两个配置：  </p>
+<h4 id="MAX_HEAP_SIZE&amp;HEAP_NEWSIZE">MAX_HEAP_SIZE&amp;HEAP_NEWSIZE</h4><p><code>Xms和Xmx</code>对应<code>MAX_HEAP_SIZE</code>，<code>-Xmn</code>对应<code>HEAP_NEWSIZE</code><br>而MAX_HEAP_SIZE建议为系统内存的1/4,但不超过8G。Java的堆内存不宜过高的原因是：  </p>
+<ul>
+<li>超过8G时，Java处理GC回收的能力会有所减弱</li>
+<li>现代操作系统对频繁访问的数据会放到PageCache里（内存中），如果JVM堆内存过大，PageCache内存就减少，这部分的工作也不是很好</li>
+</ul>
+<p>基于java的Cassandra,一般为堆分配8G内存，现代机器的内存一般超过8G，<br>Cassandra可以使用额外的内存（分配给堆剩余的内存）作为page cache，<br>当磁盘上的文件(sstable)被访问时会被放入page cache,<br>所以访问的sstable文件并不是在堆内存里，而是在page cache里，因此也有内存级的访问速度！  </p>
+<p>HEAP_NEWSIZE为100M*Core(不过有些文章说为Heap的1/4)：  </p>
+<ul>
+<li>NEW越大，GC暂停的时间越长，因为在内存中的数据越多 -&gt; GC时间长，次数少；  </li>
+<li>NEW越小，GC的代价越大，因为内存很容易满，越容易发生GC -&gt; GC时间短，次数多。  </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>config</th>
+<th>old value</th>
+<th>suggest value</th>
+<th>explain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MAX_HEAP_SIZE(Xmx)</td>
+<td>16G</td>
+<td>8G</td>
+<td>物理内存的1/4,最多8G</td>
+</tr>
+<tr>
+<td>HEAP_NEWSIZE(Xms)</td>
+<td>4G</td>
+<td>800M/2G</td>
+<td>100*8cores,堆内存的1/4</td>
+</tr>
+<tr>
+<td>memtable_total_space_in_mb</td>
+<td>1G</td>
+<td>2G</td>
+<td>堆内存的1/4</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>问题：<code>HEAP_NEWSIZE</code>和<code>memtable_total_space_in_mb</code>大小都是堆内存的1/4,两者有关联吗？  </p>
+</blockquote>
+<h4 id="LeveledCompactionStrategy">LeveledCompactionStrategy</h4><p>相同partition key的数据写入包括两种情况：列被覆盖（比如最近的访问时间，则每次更新同一列），<br>添加新列（比如以sequenceId作为cluster key，则对于相同attribtue,都是添加新列，这种叫做wide rows）。  </p>
+<p>层级压缩策略：在compaction时花费更多的IO（代价）来确保一行记录分布在尽量少的sstable上（读延迟低）。<br>使用该配置，在90%的情况下读取一行记录只需要读取一个sstable文件。  </p>
+<p>Leveled compaction essentially treats more disk IO for a guarantee of how many SSTables a row may be spread. Below are the cases where Leveled Compaction can be a good option.</p>
+<ul>
+<li>Low latency read is required</li>
+<li>High read/write ratio</li>
+<li>Rows are frequently updated. If size-tiered compaction is used, a row will spread across multiple SSTables.</li>
+</ul>
+<p>Below are the cases where size-tiered compaction can be a good option.</p>
+<ul>
+<li>Disk I/O is expensive</li>
+<li>Write heavy workloads.</li>
+<li>Rows are write once. If the rows are written once and then never updated, they will be contained in a single SSTable naturally. There’s no point to use the more I/O intensive leveled compaction.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Leveled</th>
+<th>velocity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low latency read</td>
+<td>+(20ms)</td>
+</tr>
+<tr>
+<td>High read/write ratio</td>
+<td>-(写多读少)</td>
+</tr>
+<tr>
+<td>Rows frequently updated</td>
+<td>+(attribute)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Size-tiered</th>
+<th>velocity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Disk I/O is expensive</td>
+<td>-(SSD)</td>
+</tr>
+<tr>
+<td>Write heavy workloads</td>
+<td>+(20倍于读)</td>
+</tr>
+<tr>
+<td>Rows are write once</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h4 id="读写流量和延迟">读写流量和延迟</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ nodetool cfstats forseti.velocity</span><br><span class="line">    Read Count: <span class="number">2326552</span></span><br><span class="line">    Read Latency: <span class="number">2.3876420939656624</span> ms.</span><br><span class="line">    Write Count: <span class="number">48797866</span></span><br><span class="line">    Write Latency: <span class="number">0.0562924710478118</span> ms.</span><br><span class="line">    Pending Tasks: <span class="number">0</span></span><br><span class="line">        Table: velocity</span><br><span class="line">        SSTable count: <span class="number">3716</span></span><br><span class="line">        SSTables in each level: [<span class="number">2</span>, <span class="number">10</span>, <span class="number">90</span>, <span class="number">623</span>, <span class="number">2991</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<p>每个level的sstble数量加起来，正好等于sstable count.<br>每一个level的数量表示该level的sstable数量。L0的大小为5M,后面每个Level的大小是前一个的10倍。<br>源码位置：LeveledManifest</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">$ nodetool cfhistograms forseti velocity</span><br><span class="line"></span><br><span class="line">SSTables per <span class="string">Read :</span> 读取的sstable数量： 请求数</span><br><span class="line"><span class="number">1</span> <span class="string">sstables:</span> <span class="number">300887</span></span><br><span class="line"><span class="number">2</span> <span class="string">sstables:</span> <span class="number">65075</span></span><br><span class="line"><span class="number">3</span> <span class="string">sstables:</span> <span class="number">47227</span></span><br><span class="line"><span class="number">4</span> <span class="string">sstables:</span> <span class="number">22041</span></span><br><span class="line"><span class="number">5</span> <span class="string">sstables:</span> <span class="number">8023</span></span><br><span class="line"><span class="number">6</span> <span class="string">sstables:</span> <span class="number">1512</span></span><br><span class="line"><span class="number">7</span> <span class="string">sstables:</span> <span class="number">345</span></span><br><span class="line"><span class="number">8</span> <span class="string">sstables:</span> <span class="number">109</span></span><br><span class="line"></span><br><span class="line">Write Latency (microseconds) 写入延迟毫秒：请求数</span><br><span class="line">     <span class="number">6</span> <span class="string">us:</span> <span class="number">13</span></span><br><span class="line">    <span class="number">42</span> <span class="string">us:</span> <span class="number">1174485</span> </span><br><span class="line"><span class="number">263210</span> <span class="string">us:</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line">Read Latency (microseconds)</span><br><span class="line">     <span class="number">24</span> <span class="string">us:</span> <span class="number">3</span></span><br><span class="line">   <span class="number">2759</span> <span class="string">us:</span> <span class="number">20459</span></span><br><span class="line"><span class="number">4866323</span> <span class="string">us:</span> <span class="number">3</span></span><br><span class="line"></span><br><span class="line">Partition Size (bytes) Partitiond大小：请求数</span><br><span class="line">     <span class="number">124</span> <span class="string">bytes:</span> <span class="number">2029</span></span><br><span class="line"><span class="number">25109160</span> <span class="string">bytes:</span> <span class="number">883</span></span><br><span class="line"></span><br><span class="line">Cell Count per Partition 每个Partition的列数量：Partition数</span><br><span class="line">       <span class="number">1</span> <span class="string">cells:</span> <span class="number">2030</span></span><br><span class="line"><span class="number">25109160</span> <span class="string">cells:</span> <span class="number">13</span></span><br></pre></td></tr></table></figure>
+<h3 id="Ref">Ref</h3><p><strong>gc</strong>  </p>
+<ul>
+<li><a href="https://docs.datastax.com/en/cassandra/2.0/cassandra/operations/ops_tune_jvm_c.html" target="_blank" rel="external">https://docs.datastax.com/en/cassandra/2.0/cassandra/operations/ops_tune_jvm_c.html</a></li>
+<li><a href="https://tobert.github.io/pages/als-cassandra-21-tuning-guide.html" target="_blank" rel="external">https://tobert.github.io/pages/als-cassandra-21-tuning-guide.html</a></li>
+</ul>
+<p><strong>compaction</strong>  </p>
+<ul>
+<li><a href="http://www.datastax.com/dev/blog/when-to-use-leveled-compaction" target="_blank" rel="external">http://www.datastax.com/dev/blog/when-to-use-leveled-compaction</a></li>
+<li><a href="http://www.roman10.net/2012/08/24/apache-cassandra-how-compaction-works/" target="_blank" rel="external">http://www.roman10.net/2012/08/24/apache-cassandra-how-compaction-works/</a></li>
+</ul>
+<p>几种GC的发生：</p>
+<ul>
+<li>Eden满了，发生minor gc，将eden中存活的移动到Survivor</li>
+<li>Survivor满了，会将eden中存活的和survivor中存活的移动到另一个survivor</li>
+<li>对象在survivor中超过指定年龄，被promot到old</li>
+<li>old满了，发生FullGC</li>
+</ul>
+<p>if you see long ParNew GC pauses it’s because many objects are being promoted. </p>
+<p>If you have long ParNew pauses, it means that a lot of the objects in eden are not (yet) garbage, and they’re being copied around to the survivor space, or into the old gen.</p>
+<p>通常来说大部分的对象存活周期都很短(short lived objects)。找出并移除要被回收的对象是很快的。<br>但是将没有被回收的对象从eden移动到survivor，或者从survivor移动到old，则很慢。<br>长时间的ParNew GC停顿，表示新生代的很多对象没有被回收，需要移动的对象很多，因此耗时较长。  </p>
+<p>哪些对象会被提升：在新生代存活超过MaxTenuringThreshold(默认为1，因为大部分对象都是short live)  </p>
+<p>By increasing the young generation space it decreases the frequency at which we have to run GC because more objects can accumulate before we reach 75% capacity. By increasing the young generation and the MaxTenuringThreshold you give the short lived objects more time to die, and dead objects don’t get promoted. </p>
+<p>As of Cassandra 2.0, there are two major pieces of the storage engine that still depend on the JVM heap: memtables and the key cache.</p>
+<p>The only thing that should live in tenured space is the key cache and memtables.</p>
+<p>Although no random I/O occurs, compaction can still be a fairly heavyweight operation. During compaction, there is a temporary spike in disk space usage and disk I/O because the old and new SSTables co-exist. To minimize deteriorating read speed, compaction runs in the background.</p>
+<p>To lessen the impact of compaction on application requests, Cassandra performs these operations:</p>
+<ul>
+<li>Throttles compaction I/O to compaction_throughput_mb_per_sec (default 16MB/s).</li>
+<li>Requests that the operating system pull newly compacted partitions into the page cache when the key cache indicates that the compacted partition is hot for recent reads.</li>
+</ul>
+<ul>
+<li><a href="https://docs.datastax.com/en/cassandra/2.0/cassandra/dml/dml_write_path_c.html" target="_blank" rel="external">https://docs.datastax.com/en/cassandra/2.0/cassandra/dml/dml_write_path_c.html</a></li>
+</ul>
+<h3 id="日志分析">日志分析</h3><h4 id="ParNew统计">ParNew统计</h4><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">INFO [ScheduledTasks:1] 2016-03-02 23:05:42,594 GCInspector.java (<span class="keyword">line</span> 116) GC <span class="keyword">for</span> ParNew: 406 ms <span class="keyword">for</span> 2 collections, 8366932456 used; max is 16750411776</span><br><span class="line">INFO [ScheduledTasks:1] 2016-03-02 23:06:57,084 GCInspector.java (<span class="keyword">line</span> 116) GC <span class="keyword">for</span> ParNew: 520 ms <span class="keyword">for</span> 1 collections, 4986064208 used; max is 16750411776</span><br><span class="line"></span><br><span class="line">统计所有的ParNew</span><br><span class="line"><span class="keyword">cat</span> /<span class="keyword">var</span>/<span class="keyword">log</span>/cassandra/system.<span class="keyword">log</span> | grep <span class="string">"GC for ParNew"</span> | awk '&#123;<span class="keyword">print</span> <span class="label">$3&#125;</span>' | uniq -c</span><br><span class="line"><span class="keyword">cat</span> /<span class="keyword">var</span>/<span class="keyword">log</span>/cassandra/system.<span class="keyword">log</span> | grep <span class="string">"GC for ParNew"</span> | awk '&#123;<span class="keyword">if</span>(<span class="label">$11</span>&gt;200) <span class="keyword">print</span> <span class="label">$3&#125;</span>' | uniq -c</span><br><span class="line">按照时间排序：</span><br><span class="line"><span class="keyword">cat</span> /<span class="keyword">var</span>/<span class="keyword">log</span>/cassandra/system.<span class="keyword">log</span>* | grep <span class="string">"GC for ParNew"</span> | awk '&#123;<span class="keyword">print</span> <span class="label">$3&#125;</span>' | uniq -c | awk '&#123;<span class="keyword">print</span> <span class="label">$2</span><span class="string">" "</span><span class="label">$1&#125;</span>' | <span class="keyword">sort</span> | tail -30</span><br><span class="line">    126 2016-03-01</span><br><span class="line">    153 2016-03-02</span><br><span class="line">    146 2016-03-03</span><br><span class="line"></span><br><span class="line">按天统计超过500ms的ParNew</span><br><span class="line"><span class="keyword">cat</span> /<span class="keyword">var</span>/<span class="keyword">log</span>/cassandra/system.<span class="keyword">log</span> | grep <span class="string">"GC for ParNew"</span> | awk '&#123;<span class="keyword">if</span>(<span class="label">$11</span>&gt;500) <span class="keyword">print</span> <span class="label">$3&#125;</span>' | uniq -c</span><br><span class="line">     57 2016-03-01</span><br><span class="line">     73 2016-03-02</span><br><span class="line">     89 2016-03-03</span><br><span class="line"></span><br><span class="line">按天-小时统计超过500ms的ParNew</span><br><span class="line"><span class="keyword">cat</span> /<span class="keyword">var</span>/<span class="keyword">log</span>/cassandra/system.<span class="keyword">log</span> | grep <span class="string">"GC for ParNew"</span> | awk '&#123;<span class="keyword">if</span>(<span class="label">$11</span>&gt;500) <span class="keyword">print</span> <span class="label">$3</span><span class="string">" "</span><span class="literal">substr</span>(<span class="label">$4</span>,0,2)&#125;' | uniq -c</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -334,13 +484,13 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2015/10/15/2015-10-15-Cassandra-Daily/">Cassandra日常运维</a></p>
+  <p><span>本文标题:</span><a href="/2015/10/15/Cassandra-Daily/">Cassandra日常运维</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年10月15日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年02月23日 - 12时06分</p>
+  <p><span>最后更新:</span>2016年03月07日 - 11时43分</p>
   <p>
-    <span>原始链接:</span><a href="/2015/10/15/2015-10-15-Cassandra-Daily/" title="Cassandra日常运维">http://github.com/zqhxuyuan/2015/10/15/2015-10-15-Cassandra-Daily/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/10/15/2015-10-15-Cassandra-Daily/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2015/10/15/Cassandra-Daily/" title="Cassandra日常运维">http://github.com/zqhxuyuan/2015/10/15/Cassandra-Daily/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/10/15/Cassandra-Daily/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -366,15 +516,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2015/11/10/2015-11-10-Cassandra-Client/">
-        Cassandra Client查询优化
+      <a href="/2015/10/15/Cassandra-hole/">
+        Cassandra陷阱
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/09/10/2015-09-10-Storm-Window/">
-        Storm的滑动窗口
+      <a href="/2015/10/15/Cassandra-exception/">
+        Cassandra常见异常
       </a>
     </div>
   
@@ -387,7 +537,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Cassandra日常运维"><span class="toc-number">1.</span> <span class="toc-text">Cassandra日常运维</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#线上应急"><span class="toc-number">1.1.</span> <span class="toc-text">线上应急</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#机器预估"><span class="toc-number">1.2.</span> <span class="toc-text">机器预估</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">1.3.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件"><span class="toc-number">1.4.</span> <span class="toc-text">文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进程"><span class="toc-number">1.5.</span> <span class="toc-text">进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CQL查询客户端"><span class="toc-number">1.6.</span> <span class="toc-text">CQL查询客户端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nodetool维护工具"><span class="toc-number">1.7.</span> <span class="toc-text">nodetool维护工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集群维护"><span class="toc-number">1.8.</span> <span class="toc-text">集群维护</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OpsCenter:"><span class="toc-number">1.9.</span> <span class="toc-text">OpsCenter:</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#安装opscenter"><span class="toc-number">1.9.1.</span> <span class="toc-text">安装opscenter</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建集群和安装agent"><span class="toc-number">1.9.2.</span> <span class="toc-text">创建集群和安装agent</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#修改agent配置"><span class="toc-number">1.9.3.</span> <span class="toc-text">修改agent配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#堡垒机无法查看opscenter"><span class="toc-number">1.9.4.</span> <span class="toc-text">堡垒机无法查看opscenter</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#手动安装agent"><span class="toc-number">1.9.5.</span> <span class="toc-text">手动安装agent</span></a></li></ol></li></ol></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Cassandra日常运维"><span class="toc-number">1.</span> <span class="toc-text">Cassandra日常运维</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#线上应急"><span class="toc-number">1.1.</span> <span class="toc-text">线上应急</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#机器预估"><span class="toc-number">1.2.</span> <span class="toc-text">机器预估</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">1.3.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#升级"><span class="toc-number">1.4.</span> <span class="toc-text">升级</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件"><span class="toc-number">1.5.</span> <span class="toc-text">文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进程"><span class="toc-number">1.6.</span> <span class="toc-text">进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CQL查询客户端"><span class="toc-number">1.7.</span> <span class="toc-text">CQL查询客户端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nodetool维护工具"><span class="toc-number">1.8.</span> <span class="toc-text">nodetool维护工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集群维护"><span class="toc-number">1.9.</span> <span class="toc-text">集群维护</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OpsCenter:"><span class="toc-number">1.10.</span> <span class="toc-text">OpsCenter:</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#安装opscenter"><span class="toc-number">1.10.1.</span> <span class="toc-text">安装opscenter</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建集群和安装agent"><span class="toc-number">1.10.2.</span> <span class="toc-text">创建集群和安装agent</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#修改agent配置"><span class="toc-number">1.10.3.</span> <span class="toc-text">修改agent配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#堡垒机无法查看opscenter"><span class="toc-number">1.10.4.</span> <span class="toc-text">堡垒机无法查看opscenter</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#手动安装agent"><span class="toc-number">1.10.5.</span> <span class="toc-text">手动安装agent</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GC_Turning"><span class="toc-number">2.</span> <span class="toc-text">GC Turning</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Config"><span class="toc-number">2.1.</span> <span class="toc-text">Config</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#compaction_throughput_mb_per_sec_√"><span class="toc-number">2.1.1.</span> <span class="toc-text">compaction_throughput_mb_per_sec √</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#memtable_total_space_in_mb"><span class="toc-number">2.1.2.</span> <span class="toc-text">memtable_total_space_in_mb</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MAX_HEAP_SIZE&HEAP_NEWSIZE"><span class="toc-number">2.1.3.</span> <span class="toc-text">MAX_HEAP_SIZE&HEAP_NEWSIZE</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LeveledCompactionStrategy"><span class="toc-number">2.1.4.</span> <span class="toc-text">LeveledCompactionStrategy</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#读写流量和延迟"><span class="toc-number">2.1.5.</span> <span class="toc-text">读写流量和延迟</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ref"><span class="toc-number">2.2.</span> <span class="toc-text">Ref</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#日志分析"><span class="toc-number">2.3.</span> <span class="toc-text">日志分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ParNew统计"><span class="toc-number">2.3.1.</span> <span class="toc-text">ParNew统计</span></a></li></ol></li></ol></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -483,10 +633,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2015/11/10/2015-11-10-Cassandra-Client/" title="上一篇: Cassandra Client查询优化">
+    <a href="/2015/10/15/Cassandra-hole/" title="上一篇: Cassandra陷阱">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/09/10/2015-09-10-Storm-Window/" title="下一篇: Storm的滑动窗口">
+    <a href="/2015/10/15/Cassandra-exception/" title="下一篇: Cassandra常见异常">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

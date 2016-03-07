@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://github.com/zqhxuyuan/2016/02/22/2016-02-22-Kafka-Consumer-new/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Kafka new Consumer 0.9+">
-<meta property="og:updated_time" content="2016-02-23T02:03:40.000Z">
+<meta property="og:updated_time" content="2016-02-23T12:03:36.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka源码分析 KafkaConsumer">
 <meta name="twitter:description" content="Kafka new Consumer 0.9+">
@@ -110,7 +110,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.33px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 18.33px;">drill</a> <a href="/tags/druid/" style="font-size: 15px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.67px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 15px;">spark</a> <a href="/tags/storm/" style="font-size: 16.67px;">storm</a> <a href="/tags/timeseries/" style="font-size: 13.33px;">timeseries</a> <a href="/tags/work/" style="font-size: 11.67px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 11.43px;">work</a>
 					</div>
 				</section>
 				
@@ -213,6 +213,17 @@
       
         
         <p>Kafka new Consumer 0.9+<br><a id="more"></a></p>
+<p>KafkaConsumer的构造方法中创建了以下对象：  </p>
+<ul>
+<li>Metadata（消费者客户端的元数据）</li>
+<li>NetworkClient（通用客户端，也用于KafkaProducer）</li>
+<li>ConsumerNetworkClient（高级消费者的网络层访问，提供了Future和任务调度）</li>
+<li>OffsetResetStrategy（重置Offset策略，比如设置为最早和最近）</li>
+<li>SubscriptionState（订阅状态，手动分配partitions或者动态订阅）</li>
+<li>PartitionAssignor（分配Partition算法）</li>
+<li>ConsumerCoordinator（消费者的协调者）</li>
+<li>Fetcher（管理消费者抓取Brokers的数据）</li>
+</ul>
 
       
     </div>
@@ -224,7 +235,7 @@
   <p><span>本文标题:</span><a href="/2016/02/22/2016-02-22-Kafka-Consumer-new/">Kafka源码分析 KafkaConsumer</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年02月22日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年02月23日 - 10时03分</p>
+  <p><span>最后更新:</span>2016年02月23日 - 20时03分</p>
   <p>
     <span>原始链接:</span><a href="/2016/02/22/2016-02-22-Kafka-Consumer-new/" title="Kafka源码分析 KafkaConsumer">http://github.com/zqhxuyuan/2016/02/22/2016-02-22-Kafka-Consumer-new/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/02/22/2016-02-22-Kafka-Consumer-new/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -260,8 +271,8 @@
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2016/02/21/Kafka-connect-pipeline/">
-        使用Kafka Connect构建大规模低延迟的数据管道
+      <a href="/2016/02/21/Kafka-Connect/">
+        使用Kafka Connect构建一个可扩展的ETL管道
       </a>
     </div>
   
@@ -373,7 +384,7 @@
     <a href="/2016/02/23/2016-02-23-Kafka-Controller/" title="上一篇: Kafka源码分析 KafkaController">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2016/02/21/Kafka-connect-pipeline/" title="下一篇: 使用Kafka Connect构建大规模低延迟的数据管道">
+    <a href="/2016/02/21/Kafka-Connect/" title="下一篇: 使用Kafka Connect构建一个可扩展的ETL管道">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
