@@ -5,16 +5,16 @@
   
   <title>Kafka源码分析汇总 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Kafka源码分析汇总, gitbook入口: https://www.gitbook.com/book/zqhxuyuan1/kafka/details">
+  <meta name="description" content="《Kafka技术内幕》">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kafka源码分析汇总">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2017/01/01/Kafka-Code-Index/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="Kafka源码分析汇总, gitbook入口: https://www.gitbook.com/book/zqhxuyuan1/kafka/details">
-<meta property="og:updated_time" content="2016-02-21T14:36:57.000Z">
+<meta property="og:description" content="《Kafka技术内幕》">
+<meta property="og:updated_time" content="2016-03-16T01:12:08.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka源码分析汇总">
-<meta name="twitter:description" content="Kafka源码分析汇总, gitbook入口: https://www.gitbook.com/book/zqhxuyuan1/kafka/details">
+<meta name="twitter:description" content="《Kafka技术内幕》">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -212,7 +212,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>Kafka源码分析汇总, gitbook入口: <a href="https://www.gitbook.com/book/zqhxuyuan1/kafka/details" target="_blank" rel="external">https://www.gitbook.com/book/zqhxuyuan1/kafka/details</a><br><a id="more"></a></p>
+        <p>《Kafka技术内幕》<br><a id="more"></a></p>
 <h2 id="Introduce">Introduce</h2><ul>
 <li><a href="http://zqhxuyuan.github.io/2016/01/04/2016-01-04-Kafka-Intro/" target="_blank" rel="external">Kafka介绍</a></li>
 <li><a href="http://zqhxuyuan.github.io/2016/01/05/2016-01-05-Kafka-Unix/" target="_blank" rel="external">使用Unix管道解释Kafka</a></li>
@@ -227,16 +227,18 @@
 <li><a href="http://zqhxuyuan.github.io/2016/01/19/2016-01-19-Kafka-Consumer-scala/" target="_blank" rel="external">消费者初始化(scala)</a></li>
 <li><a href="http://zqhxuyuan.github.io/2016/01/20/2016-01-20-Kafka-Consumer-fetcher/" target="_blank" rel="external">消费者抓取流程</a></li>
 </ul>
-<h2 id="Kafka_Book_Content">Kafka Book Content</h2><ul>
-<li>Kafka入门</li>
-<li>Producer</li>
-<li>Consumer(High-level and Low-level)</li>
-<li>New Consumer</li>
-<li>Coordinator</li>
-<li>Controller</li>
-<li>Connect</li>
-<li>Ecosystem</li>
-<li>Tool</li>
+<p>Gitbook入口: <a href="https://www.gitbook.com/book/zqhxuyuan1/kafka/details" target="_blank" rel="external">https://www.gitbook.com/book/zqhxuyuan1/kafka/details</a></p>
+<h2 id="《Kafka技术内幕》章节">《Kafka技术内幕》章节</h2><ul>
+<li>[ ] Kafka入门</li>
+<li>[x] 生产者</li>
+<li>[x] 存储</li>
+<li>[x] 消费者（低级和高级API）</li>
+<li>[x] 新生产者</li>
+<li>[x] 控制器</li>
+<li>[ ] Connect</li>
+<li>[ ] Streams</li>
+<li>[ ] Tool</li>
+<li>[ ] Ecosystem</li>
 </ul>
 
       
@@ -249,7 +251,7 @@
   <p><span>本文标题:</span><a href="/2017/01/01/Kafka-Code-Index/">Kafka源码分析汇总</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2017年01月01日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年02月21日 - 22时36分</p>
+  <p><span>最后更新:</span>2016年03月16日 - 09时12分</p>
   <p>
     <span>原始链接:</span><a href="/2017/01/01/Kafka-Code-Index/" title="Kafka源码分析汇总">http://github.com/zqhxuyuan/2017/01/01/Kafka-Code-Index/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2017/01/01/Kafka-Code-Index/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -293,7 +295,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduce"><span class="toc-number">1.</span> <span class="toc-text">Introduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码分析汇总"><span class="toc-number">2.</span> <span class="toc-text">源码分析汇总</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka_Book_Content"><span class="toc-number">3.</span> <span class="toc-text">Kafka Book Content</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduce"><span class="toc-number">1.</span> <span class="toc-text">Introduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码分析汇总"><span class="toc-number">2.</span> <span class="toc-text">源码分析汇总</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#《Kafka技术内幕》章节"><span class="toc-number">3.</span> <span class="toc-text">《Kafka技术内幕》章节</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
