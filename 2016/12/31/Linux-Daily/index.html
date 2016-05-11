@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Linux日常命令">
 <meta property="og:image" content="http://img.blog.csdn.net/20151114125939707">
-<meta property="og:updated_time" content="2016-04-26T01:38:49.000Z">
+<meta property="og:updated_time" content="2016-05-10T04:07:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux Daily">
 <meta name="twitter:description" content="Linux日常命令">
@@ -111,7 +111,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 12.86px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 10px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 12.86px;">work</a>
 					</div>
 				</section>
 				
@@ -380,6 +380,7 @@
 </em>必须要有, 最后的-r表示目录下载</p>
 <p>wget -r -l 1 <a href="http://www.baidu.com/dir/" target="_blank" rel="external">http://www.baidu.com/dir/</a>   </p>
 <p>文件续传:  <code>wget -c xxx.file</code></p>
+<p>下载网站的所有文件： wget -r -l 1 <a href="http://atlarge.ewi.tudelft.nl/graphalytics/" target="_blank" rel="external">http://atlarge.ewi.tudelft.nl/graphalytics/</a></p>
 <h3 id="文件按行数分割">文件按行数分割</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ wc -l dispatch2012.csv </span><br><span class="line"><span class="number">231272</span> dispatch2012.csv</span><br><span class="line"></span><br><span class="line">$ split -l <span class="number">60000</span> dispatch2012.csv dispatch2012_new.csv </span><br><span class="line">$ ll</span><br><span class="line">-rw-r--r-- <span class="number">1</span> hadoop hadoop <span class="number">27649615</span>  <span class="number">9</span>月 <span class="number">27</span>  <span class="number">2014</span> dispatch2012.csv</span><br><span class="line">-rw-rw-r-- <span class="number">1</span> hadoop hadoop  <span class="number">7115577</span>  <span class="number">4</span>月 <span class="number">14</span> <span class="number">19</span>:<span class="number">08</span> dispatch2012_new.csvaa</span><br><span class="line">-rw-rw-r-- <span class="number">1</span> hadoop hadoop  <span class="number">7188497</span>  <span class="number">4</span>月 <span class="number">14</span> <span class="number">19</span>:<span class="number">08</span> dispatch2012_new.csvab</span><br><span class="line">-rw-rw-r-- <span class="number">1</span> hadoop hadoop  <span class="number">7208496</span>  <span class="number">4</span>月 <span class="number">14</span> <span class="number">19</span>:<span class="number">08</span> dispatch2012_new.csvac</span><br><span class="line">-rw-rw-r-- <span class="number">1</span> hadoop hadoop  <span class="number">6137045</span>  <span class="number">4</span>月 <span class="number">14</span> <span class="number">19</span>:<span class="number">08</span> dispatch2012_new.csvad</span><br><span class="line">$ wc -l dispatch2012_new.csv*</span><br><span class="line">   <span class="number">60000</span> dispatch2012_new.csvaa</span><br><span class="line">   <span class="number">60000</span> dispatch2012_new.csvab</span><br><span class="line">   <span class="number">60000</span> dispatch2012_new.csvac</span><br><span class="line">   <span class="number">51272</span> dispatch2012_new.csvad</span><br><span class="line">  <span class="number">231272</span> 总用量</span><br></pre></td></tr></table></figure>
 <h2 id="5-_vi">5. vi</h2><p>显示行号: :set number<br>打开文件定位到最后一行: vi + file.txt ，或者<strong>G</strong><br>第一行：:0回车<br>从指定行删除到最后一行</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">方法<span class="number">1</span>： </span><br><span class="line">使用<span class="built_in">set</span> number计算当前行和最后一行的差比如<span class="number">100</span></span><br><span class="line">输入<span class="number">100</span>dd</span><br></pre></td></tr></table></figure>
@@ -448,7 +449,7 @@
   <p><span>本文标题:</span><a href="/2016/12/31/Linux-Daily/">Linux Daily</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年12月31日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年04月26日 - 09时38分</p>
+  <p><span>最后更新:</span>2016年05月10日 - 12时07分</p>
   <p>
     <span>原始链接:</span><a href="/2016/12/31/Linux-Daily/" title="Linux Daily">http://github.com/zqhxuyuan/2016/12/31/Linux-Daily/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/12/31/Linux-Daily/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -484,8 +485,8 @@
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2016/04/21/Cassandra-upgrade/">
-        Cassandra升级
+      <a href="/2016/05/10/Graph Hello Neo4j/">
+        
       </a>
     </div>
   
@@ -597,7 +598,7 @@
     <a href="/2017/01/01/Kafka-Code-Index/" title="上一篇: Kafka技术内幕">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2016/04/21/Cassandra-upgrade/" title="下一篇: Cassandra升级">
+    <a href="/2016/05/10/Graph Hello Neo4j/" title="下一篇: ">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
