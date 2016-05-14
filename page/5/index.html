@@ -109,7 +109,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 10px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 12.86px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 10px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.29px;">work</a>
 					</div>
 				</section>
 				
@@ -171,10 +171,278 @@
 </nav>
       <div class="body-wrap">
   
-    <article id="post-Cassandra-exception" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Cassandra-query" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/10/15/Cassandra-exception/" class="article-date">
+      <a href="/2015/10/16/Cassandra-query/" class="article-date">
+  	<time datetime="2015-10-15T16:00:00.000Z" itemprop="datePublished">2015-10-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/16/Cassandra-query/">Cassandra查询</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <h2 id="Query">Query</h2><p><a href="http://www.planetcassandra.org/blog/we-shall-have-order/" target="_blank" rel="external">http://www.planetcassandra.org/blog/we-shall-have-order/</a><br><a href="http://www.planetcassandra.org/blog/composite-keys-in-apache-cassandra/" target="_blank" rel="external">http://www.planetcassandra.org/blog/composite-keys-in-apache-cassandra/</a><br><a href="http://www.datastax.com/dev/blog/cassandra-anti-patterns-queues-and-queue-like-datasets" target="_blank" rel="external">http://www.datastax.com/dev/blog/cassandra-anti-patterns-queues-and-queue-like-datasets</a>  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> velocity (</span><br><span class="line">  <span class="keyword">attribute</span> <span class="built_in">text</span>,       //属性值: zhangshan</span><br><span class="line">  partner_code <span class="built_in">text</span>,    //合作方: koudai</span><br><span class="line">  app_name <span class="built_in">text</span>,        //应用: koudai_ios</span><br><span class="line">  <span class="keyword">type</span> <span class="built_in">text</span>,            //属性名称: <span class="keyword">account</span></span><br><span class="line">  <span class="string">"timestamp"</span> <span class="built_in">bigint</span>,   //时间撮</span><br><span class="line">  <span class="keyword">event</span> <span class="built_in">text</span>,           //事件: <span class="keyword">JSON</span>串</span><br><span class="line">  sequence_id <span class="built_in">text</span>,     //序列号</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> ((<span class="keyword">attribute</span>), partner_code, app_name, <span class="keyword">type</span>, <span class="string">"timestamp"</span>)</span><br><span class="line">)</span></span><br></pre></td></tr></table></figure>
+<p><strong>主键primary key</strong>: (attribute), partner_code, app_name, type, “timestamp”<br><strong>分区键partition key</strong>: attribute<br><strong>聚合键clustering key</strong>: partner_code, app_name, type, timestamp</p>
+<blockquote>
+<p>添加上timestampe的目的是为了排序: CassandraVelocityReadDaoImpl Line_133  </p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Collections.sort(velocities, <span class="keyword">new</span> Comparator&lt;VelocityDO&gt;() &#123;</span><br><span class="line">    @<span class="function">Override</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(VelocityDO velo1, VelocityDO velo2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (velo1.getTimestamp() - velo2.getTimestamp() == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> velo1.getTimestamp() &lt; velo2.getTimestamp() ? -<span class="number">1</span> : <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>TODO: cluster key本身的目的就是为了order by使用的. 改进的方式是直接使用Cassandra自身的order by来排序! 就不需要使用上面的客户端排序了.</p>
+<p>测试数据(下面除了timestamp和sequence_id不一样, 其他数据都是一样的, 注意插入顺序和timestamp的值没有关系): </p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">insert <span class="keyword">into</span> velocity(attribute,partner_code,app_name,<span class="keyword">type</span>,timestamp,<span class="keyword">event</span>,sequence_id)values(<span class="string">'test'</span>,<span class="string">'koudai'</span>,<span class="string">'koudai_ios'</span>,<span class="string">'account'</span>,<span class="number">1234567</span>,<span class="string">'event blob'</span>,<span class="string">'1234567'</span>);</span><br><span class="line">insert <span class="keyword">into</span> velocity(attribute,partner_code,app_name,<span class="keyword">type</span>,timestamp,<span class="keyword">event</span>,sequence_id)values(<span class="string">'test'</span>,<span class="string">'koudai'</span>,<span class="string">'koudai_ios'</span>,<span class="string">'account'</span>,<span class="number">12345</span>,<span class="string">'event blob'</span>,<span class="string">'12345'</span>);</span><br><span class="line">insert <span class="keyword">into</span> velocity(attribute,partner_code,app_name,<span class="keyword">type</span>,timestamp,<span class="keyword">event</span>,sequence_id)values(<span class="string">'test'</span>,<span class="string">'koudai'</span>,<span class="string">'koudai_ios'</span>,<span class="string">'account'</span>,<span class="number">123456</span>,<span class="string">'event blob'</span>,<span class="string">'123456'</span>);</span><br><span class="line">cqlsh:forseti&gt; <span class="keyword">select</span> * <span class="keyword">from</span> velocity <span class="keyword">where</span> attribute=<span class="string">'test'</span>;</span><br><span class="line"> attribute | partner_code | app_name   | <span class="keyword">type</span>    | timestamp | <span class="keyword">event</span>      | sequence_id</span><br><span class="line">-----------+--------------+------------+---------+-----------+------------+-------------</span><br><span class="line">      test |       koudai | koudai_ios | account |     <span class="number">12345</span> | <span class="keyword">event</span> blob |       <span class="number">12345</span></span><br><span class="line">      test |       koudai | koudai_ios | account |    <span class="number">123456</span> | <span class="keyword">event</span> blob |      <span class="number">123456</span></span><br><span class="line">      test |       koudai | koudai_ios | account |   <span class="number">1234567</span> | <span class="keyword">event</span> blob |     <span class="number">1234567</span></span><br></pre></td></tr></table></figure>
+<p><strong>数据在Cassandra中是如何存储的?</strong>  </p>
+<p><a href="http://www.slideshare.net/DataStax/understanding-how-cql3-maps-to-cassandras-internal-data-structure" target="_blank" rel="external">http://www.slideshare.net/DataStax/understanding-how-cql3-maps-to-cassandras-internal-data-structure</a><br><img src="http://img.blog.csdn.net/20151016173903670" alt="cassandra_mapping"></p>
+<p>把所有的clustering key+非primary key的每一列column, value的值是这一列的值.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">     |<span class="symbol">koudai:</span><span class="symbol">koudai_ios:</span><span class="symbol">account:</span><span class="number">12345</span><span class="symbol">:event|koudai</span><span class="symbol">:koudai_ios</span><span class="symbol">:account</span><span class="symbol">:</span><span class="number">12345</span><span class="symbol">:sequence_id|koudai</span><span class="symbol">:koudai_ios</span><span class="symbol">:account</span><span class="symbol">:</span><span class="number">123456</span><span class="symbol">:event|koudai</span><span class="symbol">:koudai_ios</span><span class="symbol">:account</span><span class="symbol">:</span><span class="number">123456</span><span class="symbol">:sequence_id</span></span><br><span class="line">test |event blob                           |<span class="number">12345</span>                                      |event blob                            |<span class="number">123456</span></span><br></pre></td></tr></table></figure>
+<p>其中test是row-key, partition key=attribute的值,<br>列名: koudai:koudai_ios:account:12345:event之前几个<code>koudai:koudai_ios:account:12345</code>对应的分别是clustering key=partner_code:app_name:type:timestamp的值<br>最后一个<code>event</code>是event的列名, 同理koudai:koudai_ios:account:12345:sequence_id的sequence_id是sequence_id的列名. value是列对应的值. </p>
+<p>由于相同的attribute(以及相同的合作方,应用,属性类型名称)可能有多个, 所以这些记录都会放在同一行里!(同一行指的是同一个partition key)</p>
+<p>那么在查询应用时: <code>select * from velocity where attribute=? and partner_code=? and app_name=? and type=?</code>对应的查询是:<br><code>select * from velocity where attribute=&#39;test&#39; and partner_code=&#39;koudai&#39; and app_name=&#39;koudai_ios&#39; and type=&#39;account&#39;</code><br>这个查询会查出上面attribute=’test’的两条记录(12345,123456). 而且速度是很快的. 因为数据在底层都是通过clustering key进行排好序的. </p>
+<blockquote>
+<p>虽然上面where条件中没有指定timestamp, 但是按照clustering key的含义,只要是以clustering key作为查询条件, 都是会排序的. </p>
+</blockquote>
+<h3 id="Range_Query">Range Query</h3><p>The <strong>partition key</strong> must be defined in the WHERE clause and<br>the ORDER BY clause defines the <strong>clustering column</strong> to use for ordering.</p>
+<p>SELECT * FROM users WHERE userID IN (102,104) ORDER BY age ASC;</p>
+<p>userID 是partition key. age是cluster column.<br>所以我们可以知道users表的primary key是 PRIMARY KEY(userId, age)<br>出现在where中的必须是primary key或者index column.  </p>
+<p>Cassandra does not support non-equal conditional operations on the partition key.<br>Use the token function for range queries on the partition key.<br>不支持在PartitionKey上执行不等于查询. 可以使用token函数执行基于partition key的范围查询</p>
+<h3 id="问题1:_查询应用内最近的记录存在BUG:_查的不是最近而是最早">问题1: 查询应用内最近的记录存在BUG: 查的不是最近而是最早</h3><p>在没有排序的情况下, limit查询, 不会查询最新的, 而是最早的. 实际上没有指定排序就是升序,即按照cluster key升序.    </p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cqlsh:forseti&gt; select <span class="keyword">*</span> from velocity where attribute='test' limit 2;</span><br><span class="line"> attribute |<span class="string"> partner_code </span>|<span class="string"> app_name   </span>|<span class="string"> type    </span>|<span class="string"> timestamp </span>|<span class="string"> event      </span>|<span class="string"> sequence_id</span><br><span class="line">-----------+--------------+------------+---------+-----------+------------+-------------</span><br><span class="line">      test </span>|<span class="string">       koudai </span>|<span class="string"> koudai_ios </span>|<span class="string"> account </span>|<span class="string">     12345 </span>|<span class="string"> event blob </span>|<span class="string">       12345</span><br><span class="line">      test </span>|<span class="string">       koudai </span>|<span class="string"> koudai_ios </span>|<span class="string"> account </span>|<span class="string">    123456 </span>|<span class="string"> event blob </span>|<span class="string">      123456</span></span><br></pre></td></tr></table></figure>
+<h3 id="解决方式:_应用内最近记录使用Order_By_DESC">解决方式: 应用内最近记录使用Order By DESC</h3><p>使用order by查询正确的方式是: 要指定所有的cluster key. 可以看到按照desc查询时, 查询的是最新的记录了(1234567).   </p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cqlsh:forseti&gt; <span class="keyword">select</span> * <span class="keyword">from</span> velocity </span><br><span class="line">  <span class="keyword">where</span> attribute=<span class="string">'test'</span> <span class="keyword">and</span> partner_code=<span class="string">'koudai'</span> <span class="keyword">and</span> app_name=<span class="string">'koudai_ios'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'account'</span> </span><br><span class="line">  <span class="keyword">order</span> <span class="keyword">by</span> partner_code <span class="keyword">desc</span>,app_name <span class="keyword">desc</span>,<span class="keyword">type</span> <span class="keyword">desc</span>,timestamp <span class="keyword">desc</span> limit <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"> attribute | partner_code | app_name   | <span class="keyword">type</span>    | timestamp | <span class="keyword">event</span>      | sequence_id</span><br><span class="line">-----------+--------------+------------+---------+-----------+------------+-------------</span><br><span class="line">      test |       koudai | koudai_ios | account |   <span class="number">1234567</span> | <span class="keyword">event</span> blob |     <span class="number">1234567</span></span><br><span class="line">(<span class="number">1</span> rows)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这里order by多个字段, 每个字段都必须指定排序方式.</p>
+</blockquote>
+<h3 id="问题2:_查询全局范围最近的记录目前的表结构无法实现">问题2: 查询全局范围最近的记录目前的表结构无法实现</h3><p>全局查询时按照时间倒序排列, 也必须要指定前面的clustering key. 不能只有一个timestamp.<br>这就影响了数据的准确性. 加入partner_code=’abc’有10条记录, 但是它的ts=1, 而partner_code=’cde’,它们的ts=10. 查询的应该是cde,而不是abc.<br>如果不加上order by直接limit,会导致数据也不是按照时间逆序排列的!</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> velocity <span class="keyword">where</span> <span class="keyword">attribute</span>=<span class="string">'test'</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">timestamp</span> <span class="keyword">desc</span> <span class="keyword">limit</span> <span class="number">10</span>;</span>  ×: 语法错误!</span><br><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> velocity <span class="keyword">where</span> <span class="keyword">attribute</span>=<span class="string">'test'</span> <span class="keyword">order</span> <span class="keyword">by</span> partner_code <span class="keyword">desc</span>,app_name <span class="keyword">desc</span>,<span class="keyword">type</span> <span class="keyword">desc</span>,<span class="keyword">timestamp</span> <span class="keyword">desc</span> <span class="keyword">limit</span> <span class="number">10</span>;</span>  ×: 不符合业务逻辑,不是严格倒排,数据不准确</span><br></pre></td></tr></table></figure>
+<p>可以设置WITH CLUSTERING ORDER BY (timestamp DESC)进行强制字段排序. 但是只能在建表的时候指定,不能使用alter修改表结构!</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> velocity_order (</span><br><span class="line">  <span class="keyword">attribute</span> <span class="built_in">text</span>,</span><br><span class="line">  partner_code <span class="built_in">text</span>,</span><br><span class="line">  app_name <span class="built_in">text</span>,</span><br><span class="line">  <span class="keyword">type</span> <span class="built_in">text</span>,</span><br><span class="line">  <span class="string">"timestamp"</span> <span class="built_in">bigint</span>,</span><br><span class="line">  <span class="keyword">event</span> <span class="built_in">text</span>,</span><br><span class="line">  sequence_id <span class="built_in">text</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> ((<span class="keyword">attribute</span>), partner_code, app_name, <span class="keyword">type</span>, <span class="string">"timestamp"</span>)</span><br><span class="line">) <span class="keyword">WITH</span> <span class="keyword">CLUSTERING</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> (<span class="string">"timestamp"</span> <span class="keyword">DESC</span>);</span></span><br><span class="line"></span><br><span class="line">Bad Request: Missing CLUSTERING ORDER for column partner_code</span><br></pre></td></tr></table></figure>
+<p>使用CLUSTERING ORDER BY,必须包含所有的clustering key! 上面只指定一个timestamp字段是不行的! 要这么做:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> velocity_order (</span><br><span class="line">  <span class="keyword">attribute</span> <span class="built_in">text</span>,</span><br><span class="line">  partner_code <span class="built_in">text</span>,</span><br><span class="line">  app_name <span class="built_in">text</span>,</span><br><span class="line">  <span class="keyword">type</span> <span class="built_in">text</span>,</span><br><span class="line">  <span class="string">"timestamp"</span> <span class="built_in">bigint</span>,</span><br><span class="line">  <span class="keyword">event</span> <span class="built_in">text</span>,</span><br><span class="line">  sequence_id <span class="built_in">text</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> ((<span class="keyword">attribute</span>), partner_code, app_name, <span class="keyword">type</span>, <span class="string">"timestamp"</span>)</span><br><span class="line">) <span class="keyword">WITH</span> <span class="keyword">CLUSTERING</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> (partner_code <span class="keyword">DESC</span>, app_name <span class="keyword">DESC</span>, <span class="keyword">type</span> <span class="keyword">DESC</span>, <span class="string">"timestamp"</span> <span class="keyword">DESC</span>);</span></span><br></pre></td></tr></table></figure>
+<p>这种方式在业务系统中, 对于全局的查询显然是不对的! 因为全局查询时要求按照timestamp倒序,其他字段比如partner_code等都不需要排序! </p>
+<h3 id="拆表">拆表</h3><p>由于上面的全局查询无法查询最近的1000条记录, 需要将velocity拆分成三张表: 应用, 合作方, 全局. </p>
+<blockquote>
+<p>虽然写的时候要写张表, 但是写对于Cassandra来说是很快的. 只要能满足快速读的性能, 对于数据的冗余,是可以接受的.  </p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">应用:</span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> velocity_app (</span><br><span class="line">  <span class="keyword">attribute</span> <span class="built_in">text</span>,       </span><br><span class="line">  partner_code <span class="built_in">text</span>,    </span><br><span class="line">  app_name <span class="built_in">text</span>,        </span><br><span class="line">  <span class="keyword">type</span> <span class="built_in">text</span>,            </span><br><span class="line">  <span class="string">"timestamp"</span> <span class="built_in">bigint</span>,   </span><br><span class="line">  <span class="keyword">event</span> <span class="built_in">text</span>,           </span><br><span class="line">  sequence_id <span class="built_in">text</span>,     </span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> ((<span class="keyword">attribute</span>, partner_code, app_name, <span class="keyword">type</span>), <span class="string">"timestamp"</span>)</span><br><span class="line">) </span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> velocity_app <span class="keyword">where</span> <span class="keyword">attribute</span>=? <span class="keyword">and</span> partner_code=? <span class="keyword">and</span> app_name=? <span class="keyword">and</span> <span class="keyword">type</span>=? <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">timestamp</span> <span class="keyword">desc</span> <span class="keyword">limit</span> <span class="number">1000</span>;</span></span><br><span class="line"></span><br><span class="line">合作方:</span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> velocity_partner (</span><br><span class="line">  <span class="keyword">attribute</span> <span class="built_in">text</span>,       </span><br><span class="line">  partner_code <span class="built_in">text</span>,    </span><br><span class="line">  app_name <span class="built_in">text</span>,        </span><br><span class="line">  <span class="keyword">type</span> <span class="built_in">text</span>,            </span><br><span class="line">  <span class="string">"timestamp"</span> <span class="built_in">bigint</span>,   </span><br><span class="line">  <span class="keyword">event</span> <span class="built_in">text</span>,           </span><br><span class="line">  sequence_id <span class="built_in">text</span>,     </span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> ((<span class="keyword">attribute</span>, partner_code), <span class="string">"timestamp"</span>)</span><br><span class="line">) </span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> velocity_partner <span class="keyword">where</span> <span class="keyword">attribute</span>=? <span class="keyword">and</span> partner_code=? <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">timestamp</span> <span class="keyword">desc</span> <span class="keyword">limit</span> <span class="number">1000</span>;</span></span><br><span class="line"></span><br><span class="line">全局: </span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> velocity_global (</span><br><span class="line">  <span class="keyword">attribute</span> <span class="built_in">text</span>,       </span><br><span class="line">  partner_code <span class="built_in">text</span>,    </span><br><span class="line">  app_name <span class="built_in">text</span>,        </span><br><span class="line">  <span class="keyword">type</span> <span class="built_in">text</span>,            </span><br><span class="line">  <span class="string">"timestamp"</span> <span class="built_in">bigint</span>,   </span><br><span class="line">  <span class="keyword">event</span> <span class="built_in">text</span>,           </span><br><span class="line">  sequence_id <span class="built_in">text</span>,     </span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> ((<span class="keyword">attribute</span>), <span class="string">"timestamp"</span>)</span><br><span class="line">) </span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> velocity_global <span class="keyword">where</span> <span class="keyword">attribute</span>=? <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">timestamp</span> <span class="keyword">desc</span> <span class="keyword">limit</span> <span class="number">1000</span>;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这样就完了吗? 上面的建表语句如果加上<code>CLUSTERING ORDER BY</code>, 会不会提升性能?</p>
+</blockquote>
+<h2 id="CLUSTERING_ORDER_BY">CLUSTERING ORDER BY</h2><p><a href="http://docs.datastax.com/en/cql/3.1/cql/cql_reference/create_table_r.html?scroll=reference_ds_v3f_vfk_xj__ordering-results" target="_blank" rel="external">http://docs.datastax.com/en/cql/3.1/cql/cql_reference/create_table_r.html?scroll=reference_ds_v3f_vfk_xj__ordering-results</a>  </p>
+<blockquote>
+<p>You can order query results to make use of the on-disk sorting of columns. 使用存储在磁盘上的列是排序的这个特点来对查询的结果进行排序<br>You can order results in ascending or descending order. 因为列是排序的,你可以对结果进行升序或降序排列.<br>The ascending order will be more efficient than descending. If you need results in descending order, 如果你需要对结果降序排列<br>you can specify a <strong>clustering order</strong> to store columns on disk in the reverse order of the default. 你可以声明存储列时默认按照降序<br>Descending queries will then be <strong>faster</strong> than ascending ones. 这样降序查询会比升序要快</p>
+<p>注意: 这里的列指的是Cassandra底层存储的结构对应的列, 而不是CQL中的列(或者通常意义的列).<br>Cassandra的列按照存储结构是指cluster key的值+非CK的名称. 相同的row-key/partition key不同的clust key放在同一行.<br>这些不同的cluster key组成partition key的一列. 列的个数是有限制的.   </p>
+</blockquote>
+<p><a href="http://www.planetcassandra.org/blog/we-shall-have-order/" target="_blank" rel="external">http://www.planetcassandra.org/blog/we-shall-have-order/</a>  </p>
+<blockquote>
+<p>In summary, when it comes to ordering your result sets in Cassandra, remember these points:<br>-The clustering column(s) determine the data’s on-disk sort order only within a partition key. 只有特定的partiton key下clust key是排序的<br>-Do not model your table with a “dummy” partition key (key that always has the same value). 如果你的partition key有相同的值, 不要这么设计<br>-It is not necessary to specify the ORDER BY clause on a query if your desired sort direction 如果CLUSTERING ORDER的顺序和你的查询顺序一样,<br> (“ASCending/DESCending”) already matches the CLUSTERING ORDER in the table definition. 查询时不需要指定order by.<br>-On a CREATE TABLE command, Cassandra will specify CLUSTERING ORDER for you in the table definition if you did not specify it yourself.<br> The default CLUSTERING ORDER on a table is comprised of your clustering keys in the “ASCending” sort direction. 默认是按照cluster key升序的<br>-Be mindful of the limit of two billion columns per wide row (partition), as well as the problems that accompany unbounded row growth. 列是有个数限制的<br>-For tables supporting queries for recent, time-based data, you may want to specify a “DESCending” sort direction in your table definition. 最近的记录在定义时使用降序<br>-Do not create a new cluster using the Byte Ordered Partitioner. 不要使用ByteOrderedPartitioner分区方式. </p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> velocity_app (</span><br><span class="line">  <span class="keyword">attribute</span> <span class="built_in">text</span>,       </span><br><span class="line">  partner_code <span class="built_in">text</span>,    </span><br><span class="line">  app_name <span class="built_in">text</span>,        </span><br><span class="line">  <span class="keyword">type</span> <span class="built_in">text</span>,            </span><br><span class="line">  <span class="string">"timestamp"</span> <span class="built_in">bigint</span>,   </span><br><span class="line">  <span class="keyword">event</span> <span class="built_in">text</span>,           </span><br><span class="line">  sequence_id <span class="built_in">text</span>,     </span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> ((<span class="keyword">attribute</span>, partner_code, app_name, <span class="keyword">type</span>), <span class="string">"timestamp"</span>)</span><br><span class="line">) <span class="keyword">WITH</span> <span class="keyword">CLUSTERING</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> (<span class="string">"timestamp"</span> <span class="keyword">DESC</span>)</span></span><br></pre></td></tr></table></figure>
+<p>观点1: 在存储的时候就把最近的记录存在前面, 这样读取的时候可以不用指定order by timestamp desc.<br>观点2: 查询的时候还是要指定order by timestamp desc的! 只不过指定了CLUSTERING ORDER BY后, 倒序查询时会快点.<br>结论: 建表时指定了CLUSTERING ORDER BY, 查询时如果倒排, 就不需要再指定了order by desc, 当然指定了也没关系.<br>下面的查询可以看到没有指定order by timestamp desc, 查询出来的timestamp也是倒序排列的. </p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cqlsh:forseti&gt; select <span class="keyword">*</span> from velocity_app where attribute='test_55' and partner_code='koudai' and app_name='koudai_ios' and type='account' limit 2;</span><br><span class="line"> attribute |<span class="string"> partner_code </span>|<span class="string"> app_name   </span>|<span class="string"> type    </span>|<span class="string"> timestamp </span>|<span class="string"> event              </span>|<span class="string"> sequence_id</span><br><span class="line">-----------+--------------+------------+---------+-----------+--------------------+-------------</span><br><span class="line">   test_55 </span>|<span class="string">       koudai </span>|<span class="string"> koudai_ios </span>|<span class="string"> account </span>|<span class="string">  12346595 </span>|<span class="string"> raw event json str </span>|<span class="string">    12346595</span><br><span class="line">   test_55 </span>|<span class="string">       koudai </span>|<span class="string"> koudai_ios </span>|<span class="string"> account </span>|<span class="string">  12346594 </span>|<span class="string"> raw event json str </span>|<span class="string">    12346594</span></span><br></pre></td></tr></table></figure>
+<h2 id="现实世界的查询:_Tombstone">现实世界的查询: Tombstone</h2><h3 id="tombstone太多查询中断">tombstone太多查询中断</h3><p>1.<strong>原先查询时没有指定order by, 经常会出现timeout的情况: 查询到10万个tombstone就会timeout, 这是因为查询被中断导致超时的.</strong>    </p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">select <span class="keyword">*</span> from velocity where attribute='58.246.57.66' and partner_code='testDemo' and app_name='testDemo' and type='ipAddress' limit 1000;</span><br><span class="line"></span><br><span class="line">Request did not complete within rpc_timeout.</span><br><span class="line">       Skipped 0/5 non-slice-intersecting sstables, included 0 due to tombstones |<span class="string"> 15:23:59,601 </span>|<span class="string"> 192.168.47.203 </span>|<span class="string">            830</span><br><span class="line">                                      Merging data from memtables and 5 sstables </span>|<span class="string"> 15:23:59,601 </span>|<span class="string"> 192.168.47.203 </span>|<span class="string">            838</span><br><span class="line"> Scanned over 100000 tombstones; query aborted (see tombstone_failure_threshold) </span>|<span class="string"> 15:23:59,929 </span>|<span class="string"> 192.168.47.203 </span>|<span class="string">         328301</span><br><span class="line"> Scanned over 100000 tombstones; query aborted (see tombstone_failure_threshold) </span>|<span class="string"> 15:24:00,068 </span>|<span class="string"> 192.168.47.222 </span>|<span class="string">         502772</span><br><span class="line">                                            Timed out; received 0 of 1 responses </span>|<span class="string"> 15:24:01,565 </span>|<span class="string"> 192.168.47.202 </span>|<span class="string">        2000874</span><br><span class="line">                                                                Request complete </span>|<span class="string"> 15:24:01,564 </span>|<span class="string"> 192.168.47.202 </span>|<span class="string">        2000993</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>为什么在查询的时候会出现tombstones?<br>因为默认指定了所有的查询条件除了timestamp外, 那么timestamp是按照升序排列的. 即按照插入记录的timestamp时间升序.<br>但是因为指定了TTL, 所以最先插入的数据在经过TTL后, 会变成tombstone.<br>查询时按照timestamp升序查询, 只要数据存在, 尽管是tombstone没有被真正删除, 也会被查询出来. </p>
+</blockquote>
+<p>对应使用JavaAPI时在system.log中报错:  </p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ERROR</span> [ReadStage:332] 2015-10-14 13:25:35,597 SliceQueryFilter.java (<span class="keyword">line</span> 206) Scanned over 100000 tombstones <span class="keyword">in</span> forseti.velocity; <span class="keyword">query</span> aborted (see tombstone_failure_threshold)</span><br><span class="line"><span class="keyword">ERROR</span> [ReadStage:332] 2015-10-14 13:25:35,597 CassandraDaemon.java (<span class="keyword">line</span> 258) Exception <span class="keyword">in</span> thread Thread[ReadStage:332,5,main]</span><br><span class="line">java.lang.RuntimeException: org.apache.cassandra.<span class="keyword">db</span>.filter.TombstoneOverwhelmingException</span><br><span class="line">        at org.apache.cassandra.service.StorageProxy<span class="label">$DroppableRunnable</span>.<span class="keyword">run</span>(StorageProxy.java:2016)</span><br><span class="line">        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)</span><br><span class="line">        at java.util.concurrent.ThreadPoolExecutor<span class="label">$Worker</span>.<span class="keyword">run</span>(ThreadPoolExecutor.java:615)</span><br><span class="line">        at java.lang.Thread.<span class="keyword">run</span>(Thread.java:744)</span><br></pre></td></tr></table></figure>
+<p>如果tombstone太多,则查询会被中断, 否则查询方式的图例如下:  </p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">这些tombstone都不计入limit,    开始查询                 达到limit值,停止  -<span class="subst">-&gt;  </span>最终结果: 读取到了<span class="number">1000</span>条记录,并且有xxx个tombstone<span class="subst">!</span> </span><br><span class="line">---------------------------------------------------<span class="subst">-&gt;</span>|</span><br><span class="line">tombstone <span class="attribute">...</span><span class="built_in">.  </span>tombstone <span class="built_in">.. </span>| rc1 rc2 rc3 <span class="attribute">...</span><span class="built_in">. </span>rc1000 rc1001 rc1002 rc1003</span><br></pre></td></tr></table></figure>
+<h3 id="orderby+limit查询">orderby+limit查询</h3><ol>
+<li><strong>使用order by查询: 不仅解决了数据准确性的问题(查询最近记录), 还解决了超时的问题(tombstone太多)! 可谓一石二鸟!</strong><br>改为按照timestamp倒序查询, 可以看到tombstone cells=0. 耗费时间为62ms(62592). </li>
+</ol>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> velocity <span class="keyword">where</span> attribute=<span class="string">'58.246.57.66'</span> <span class="keyword">and</span> partner_code=<span class="string">'testDemo'</span> <span class="keyword">and</span> app_name=<span class="string">'testDemo'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'ipAddress'</span> </span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> partner_code <span class="keyword">desc</span>,app_name <span class="keyword">desc</span>,<span class="keyword">type</span> <span class="keyword">desc</span>,timestamp <span class="keyword">desc</span> limit <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line"> Skipped <span class="number">0</span>/<span class="number">5</span> non-slice-intersecting sstables, included <span class="number">0</span> due <span class="keyword">to</span> tombstones | <span class="number">15</span>:<span class="number">26</span>:<span class="number">13</span>,<span class="number">525</span> | <span class="number">192.168</span>.<span class="number">47.203</span> |            <span class="number">315</span></span><br><span class="line">                                Merging data <span class="keyword">from</span> memtables <span class="keyword">and</span> <span class="number">5</span> sstables | <span class="number">15</span>:<span class="number">26</span>:<span class="number">13</span>,<span class="number">525</span> | <span class="number">192.168</span>.<span class="number">47.203</span> |            <span class="number">323</span></span><br><span class="line">                                      <span class="keyword">Read</span> <span class="number">1001</span> live <span class="keyword">and</span> <span class="number">0</span> tombstone cells | <span class="number">15</span>:<span class="number">26</span>:<span class="number">13</span>,<span class="number">542</span> | <span class="number">192.168</span>.<span class="number">47.203</span> |          <span class="number">17706</span></span><br><span class="line">                                     Enqueuing response <span class="keyword">to</span> /<span class="number">192.168</span>.<span class="number">47.202</span> | <span class="number">15</span>:<span class="number">26</span>:<span class="number">13</span>,<span class="number">542</span> | <span class="number">192.168</span>.<span class="number">47.203</span> |          <span class="number">17852</span></span><br><span class="line">                                        Sending message <span class="keyword">to</span> /<span class="number">192.168</span>.<span class="number">47.202</span> | <span class="number">15</span>:<span class="number">26</span>:<span class="number">13</span>,<span class="number">542</span> | <span class="number">192.168</span>.<span class="number">47.203</span> |          <span class="number">18011</span></span><br><span class="line">                                     Message received <span class="keyword">from</span> /<span class="number">192.168</span>.<span class="number">47.203</span> | <span class="number">15</span>:<span class="number">26</span>:<span class="number">13</span>,<span class="number">551</span> | <span class="number">192.168</span>.<span class="number">47.202</span> |           null</span><br><span class="line">                                  Processing response <span class="keyword">from</span> /<span class="number">192.168</span>.<span class="number">47.203</span> | <span class="number">15</span>:<span class="number">26</span>:<span class="number">13</span>,<span class="number">551</span> | <span class="number">192.168</span>.<span class="number">47.202</span> |           null</span><br><span class="line">                                                          Request complete | <span class="number">15</span>:<span class="number">26</span>:<span class="number">13</span>,<span class="number">548</span> | <span class="number">192.168</span>.<span class="number">47.202</span> |          <span class="number">62592</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这里为什么没有查询tombstone. 因为按照时间倒序查询, 最近的数据一定不会过期. 而TTL=3M, 没有过期的数据不止1000条,<br>所以在这1000条数据里都没有TTL的数据, 即没有tombstone.<br>那么如果没有过期的数据没有1000条, 我们要求limit 1000, 会不会查询存在于TTL中的数据(比如TTL的数据很多)?</p>
+</blockquote>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">                                      到达limit值,可以看到没有一个tobstone</span><br><span class="line">                                       <span class="string">|&lt;----------------------------------- 倒排是从这里往前查询的</span></span><br><span class="line">tombstone ....  tombstone .. <span class="string">| rc1 rc2 rc3 .... rc1000 rc1001 rc1002 rc1003</span></span><br><span class="line"></span><br><span class="line">                               <span class="string">|&lt;------------------------ 存活的没有1000条呢? 会不会去查询tombstone?</span></span><br><span class="line">tombstone ....  tombstone .. <span class="string">| rc1 rc2 rc3 .... rc500 r501</span></span><br></pre></td></tr></table></figure>
+<h3 id="timestamp限制不读取tombstone">timestamp限制不读取tombstone</h3><p>3.<strong>另外的一种解决方式是: 不适用order by,但是对timestamp进行了时间限制, 彻底解决不读取tombstone的问题!</strong><br>优化点2: 因为每条记录的TTL=3Month, 查询时使用条件: <code>timestamp&gt;(当前时间-3M)</code>, 就能保证<code>一定不会有tombstone的记录被查询到</code>!   </p>
+<p>在system.log中会出现这样的日志: </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cat /var/<span class="built_in">log</span>/cassandra/system.<span class="built_in">log</span> | grep <span class="string">"tombstone cells in forseti.velocity"</span> | tail </span><br><span class="line">WARN [ReadStage:<span class="number">303</span>] <span class="number">2015</span>-<span class="number">10</span>-<span class="number">14</span> <span class="number">12</span>:<span class="number">30</span>:<span class="number">25</span>,<span class="number">333</span> SliceQueryFilter.java (line <span class="number">231</span>) Read <span class="number">1001</span> live and <span class="number">1110</span> tombstone cells in forseti.velocity (see tombstone_warn_threshold). </span><br><span class="line"> <span class="number">1000</span> columns was requested, slices=[jiedaibao:jiedaibao_andro:accountPassword-jiedaibao:jiedaibao_andro:accountPassword:!]</span><br><span class="line">WARN [ReadStage:<span class="number">352</span>] <span class="number">2015</span>-<span class="number">10</span>-<span class="number">14</span> <span class="number">12</span>:<span class="number">30</span>:<span class="number">37</span>,<span class="number">635</span> SliceQueryFilter.java (line <span class="number">231</span>) Read <span class="number">1001</span> live and <span class="number">45075</span> tombstone cells in forseti.velocity (see tombstone_warn_threshold). </span><br><span class="line"> <span class="number">1000</span> columns was requested, slices=[koudai:weidian:payeeIdNumber-koudai:weidian:payeeIdNumber:!]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面的日志是对应用内的查询优化后(使用order+limit查询)打印的一些日志, 而按照我们的理解:<br>倒排后limit 1000条记录, 如果没有过期的有不止1000条, 那么是不会有tombstone出现的. 那么为什么会出现查到了1001条,仍然有tombstone呢?<br>难道这些查询记录是合作方,全局的吗, 那么为什么slices包括了partner_code:app_name:type.<br>注意: slices是个范围查询[xxx-yyy]的格式. slice里的是cluser key,没有partition key:attribute和timestamp.</p>
+</blockquote>
+<p>这种情况是怎么出现的呢? 虽然能够正常查询出来, 但同时带有tombstone.<br>从下面的查询可以看到tombstone的数量对查询的速度还是有一定的影响的: 没有tombstone时是32ms, 2600个tombstone时55ms.  </p>
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">时间需要有客户端传入, 目前cql虽然能够获取当前时间戳,但不支持时间戳的加减.  </span><br><span class="line"></span><br><span class="line">如果把时间刚好定位在三个月之前的那个时间点(或者之后), 则不会查询到tombstone. </span><br><span class="line">Read <span class="number">1001</span> live <span class="literal">and</span> <span class="number">0</span> tombstone cells,, <span class="number">32</span>ms</span><br><span class="line"></span><br><span class="line">稍微过几秒, 会有少量的tombstone.</span><br><span class="line">Read <span class="number">1001</span> live <span class="literal">and</span> <span class="number">45</span> tombstone cells,, <span class="number">33</span>ms</span><br><span class="line"></span><br><span class="line">select * from velocity where attribute='<span class="number">58.246</span>.<span class="number">57.66</span>' <span class="literal">and</span> partner_code='testDemo' <span class="literal">and</span> app_name='testDemo' <span class="literal">and</span> type='ipAddress' </span><br><span class="line"><span class="literal">and</span> timestamp&gt;<span class="number">1437645780000</span> limit <span class="number">1000</span><span class="comment">;</span></span><br><span class="line">Read <span class="number">1001</span> live <span class="literal">and</span> <span class="number">519</span> tombstone cells,, <span class="number">44</span>ms</span><br><span class="line"></span><br><span class="line"><span class="label">半个小时:</span>  </span><br><span class="line">select * from velocity where attribute='<span class="number">58.246</span>.<span class="number">57.66</span>' <span class="literal">and</span> partner_code='testDemo' <span class="literal">and</span> app_name='testDemo' <span class="literal">and</span> type='ipAddress' </span><br><span class="line"><span class="literal">and</span> timestamp&gt;<span class="number">1437643644000</span> limit <span class="number">1000</span><span class="comment">;</span></span><br><span class="line">Read <span class="number">1001</span> live <span class="literal">and</span> <span class="number">2661</span> tombstone cells,,<span class="number">55</span>ms</span><br></pre></td></tr></table></figure>
+<h3 id="orderby_+_timestamp">orderby + timestamp</h3><p>把order by和timestamp的时间限制结合起来: 虽然有时候两者差不多, 但总体来说没有orderby还是高一点.<br>并且order by+timestamp不会有tombstone被查询出来. 而只有timestamp是会有tombstone的.<br>经过测试, 只有order by也不会有tombstone.  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">1.只有timestamp</span><br><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> velocity <span class="keyword">where</span> <span class="keyword">attribute</span>=<span class="string">'58.246.57.66'</span> <span class="keyword">and</span> partner_code=<span class="string">'testDemo'</span> <span class="keyword">and</span> app_name=<span class="string">'testDemo'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'ipAddress'</span> <span class="keyword">and</span> <span class="keyword">timestamp</span>&gt;<span class="number">1437710925000</span> <span class="keyword">limit</span> <span class="number">1000</span>;</span></span><br><span class="line">Read 1001 live and 111 tombstone cells</span><br><span class="line">111: 38ms, </span><br><span class="line">162: 71ms,</span><br><span class="line">207: 51ms</span><br><span class="line">2241: 79ms</span><br><span class="line"></span><br><span class="line">2.只有order by </span><br><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> velocity <span class="keyword">where</span> <span class="keyword">attribute</span>=<span class="string">'58.246.57.66'</span> <span class="keyword">and</span> partner_code=<span class="string">'testDemo'</span> <span class="keyword">and</span> app_name=<span class="string">'testDemo'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'ipAddress'</span> <span class="keyword">order</span> <span class="keyword">by</span> partner_code <span class="keyword">desc</span>,app_name <span class="keyword">desc</span>,<span class="keyword">type</span> <span class="keyword">desc</span>,<span class="keyword">timestamp</span> <span class="keyword">desc</span> <span class="keyword">limit</span> <span class="number">1000</span>;</span></span><br><span class="line">Read 1001 live and 0 tombstone cells</span><br><span class="line">39ms, </span><br><span class="line">ø</span><br><span class="line">3.order by + timestamp</span><br><span class="line"><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> velocity <span class="keyword">where</span> <span class="keyword">attribute</span>=<span class="string">'58.246.57.66'</span> <span class="keyword">and</span> partner_code=<span class="string">'testDemo'</span> <span class="keyword">and</span> app_name=<span class="string">'testDemo'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'ipAddress'</span> <span class="keyword">and</span> <span class="keyword">timestamp</span>&gt;<span class="number">1437710925000</span> <span class="keyword">order</span> <span class="keyword">by</span> partner_code <span class="keyword">desc</span>,app_name <span class="keyword">desc</span>,<span class="keyword">type</span> <span class="keyword">desc</span>,<span class="keyword">timestamp</span> <span class="keyword">desc</span> <span class="keyword">limit</span> <span class="number">1000</span>;</span></span><br><span class="line">Read 1001 live and 0 tombstone cells</span><br><span class="line">33ms</span><br></pre></td></tr></table></figure>
+<p>查询只有几条alive, 但是tombstone超过1万条的记录: </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cat /var/<span class="built_in">log</span>/cassandra/system.<span class="built_in">log</span> | grep <span class="string">"Read [0-9] live and [0-9][0-9][0-9][0-9][0-9] tombstone cells in forseti.velocity"</span></span><br><span class="line"></span><br><span class="line"> WARN [ReadStage:<span class="number">403</span>] <span class="number">2015</span>-<span class="number">10</span>-<span class="number">17</span> <span class="number">15</span>:<span class="number">06</span>:<span class="number">22</span>,<span class="number">030</span> SliceQueryFilter.java (line <span class="number">231</span>) Read <span class="number">1</span> live and <span class="number">26295</span> tombstone cells in forseti.velocity (see tombstone_warn_threshold). <span class="number">1000</span> columns was requested, slices=[testDemo:testDemo:accountMobile-testDemo:testDemo:accountMobile:!]</span><br><span class="line"></span><br><span class="line"> WARN [ReadStage:<span class="number">7030</span>] <span class="number">2015</span>-<span class="number">10</span>-<span class="number">17</span> <span class="number">15</span>:<span class="number">05</span>:<span class="number">33</span>,<span class="number">481</span> SliceQueryFilter.java (line <span class="number">231</span>) Read <span class="number">0</span> live and <span class="number">26295</span> tombstone cells in forseti.velocity (see tombstone_warn_threshold). <span class="number">1000</span> columns was requested, slices=[testDemo:testDemo:accountMobile-testDemo:testDemo:accountMobile:!]</span><br><span class="line"> WARN [ReadStage:<span class="number">6968</span>] <span class="number">2015</span>-<span class="number">10</span>-<span class="number">18</span> <span class="number">12</span>:<span class="number">12</span>:<span class="number">39</span>,<span class="number">221</span> SliceQueryFilter.java (line <span class="number">231</span>) Read <span class="number">1</span> live and <span class="number">15990</span> tombstone cells in forseti.velocity (see tombstone_warn_threshold). <span class="number">1000</span> columns was requested, slices=[testDemo:testDemo:ipAddress-testDemo:testDemo:ipAddress:!]</span><br><span class="line"> WARN [ReadStage:<span class="number">7024</span>] <span class="number">2015</span>-<span class="number">10</span>-<span class="number">21</span> <span class="number">15</span>:<span class="number">46</span>:<span class="number">03</span>,<span class="number">710</span> SliceQueryFilter.java (line <span class="number">231</span>) Read <span class="number">2</span> live and <span class="number">60159</span> tombstone cells in forseti.velocity (see tombstone_warn_threshold). <span class="number">1</span> columns was requested, slices=[testDemo:testDemo:ipAddress:<span class="number">1437580800000</span>:!-testDemo:testDemo:ipAddress:!]</span><br><span class="line"> WARN [ReadStage:<span class="number">7038</span>] <span class="number">2015</span>-<span class="number">10</span>-<span class="number">21</span> <span class="number">15</span>:<span class="number">47</span>:<span class="number">02</span>,<span class="number">929</span> SliceQueryFilter.java (line <span class="number">231</span>) Read <span class="number">6</span> live and <span class="number">60333</span> tombstone cells in forseti.velocity (see tombstone_warn_threshold). <span class="number">5</span> columns was requested, slices=[testDemo:testDemo:ipAddress:<span class="number">1437580800000</span>:!-testDemo:testDemo:ipAddress:!]</span><br></pre></td></tr></table></figure>
+<h3 id="orderby+limit如果存活的记录数没有超过limit,是否会查询TTL的数据?">orderby+limit如果存活的记录数没有超过limit,是否会查询TTL的数据?</h3><p>TombstoneQueryTest:  插入103条, Delete 50条.  </p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> velocity <span class="keyword">where</span> attribute=<span class="string">'test2'</span> <span class="keyword">and</span> partner_code=<span class="string">'koudai'</span> <span class="keyword">and</span> app_name=<span class="string">'koudai_ios'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'account'</span> </span><br><span class="line"></span><br><span class="line">limit <span class="number">10</span>;   </span><br><span class="line">limit <span class="number">100</span>; </span><br><span class="line">上面默认升序查询, 有多少个tombstone cells都是一样的, 只不过live的数量跟limit有关系: </span><br><span class="line"><span class="keyword">Read</span> <span class="number">11</span> live <span class="keyword">and</span> <span class="number">15</span> tombstone cells</span><br><span class="line"><span class="keyword">Read</span> <span class="number">95</span> live <span class="keyword">and</span> <span class="number">15</span> tombstone cells</span><br><span class="line"></span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> partner_code <span class="keyword">desc</span>,app_name <span class="keyword">desc</span>,<span class="keyword">type</span> <span class="keyword">desc</span>,timestamp <span class="keyword">desc</span> limit <span class="number">30</span>; <span class="comment">//降序查询, 查询部分存活. 即全部存活的不止30个. </span></span><br><span class="line"><span class="keyword">Read</span> <span class="number">31</span> live <span class="keyword">and</span> <span class="number">0</span> tombstone cells</span><br><span class="line"></span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> partner_code <span class="keyword">desc</span>,app_name <span class="keyword">desc</span>,<span class="keyword">type</span> <span class="keyword">desc</span>,timestamp <span class="keyword">desc</span> limit <span class="number">100</span>; <span class="comment">//降序查询, 全部存活. 但是全部存活的都没有满足limit, 会去查询TTL的吗?</span></span><br><span class="line"><span class="keyword">Read</span> <span class="number">90</span> live <span class="keyword">and</span> <span class="number">30</span> tombstone cells</span><br><span class="line">在经过<span class="number">50</span>m, 失效了<span class="number">5</span>条记录, tombstones=<span class="number">5</span>*<span class="number">3</span>=<span class="number">15</span></span><br><span class="line"><span class="keyword">Read</span> <span class="number">85</span> live <span class="keyword">and</span> <span class="number">45</span> tombstone cells</span><br></pre></td></tr></table></figure>
+<h3 id="tombstone使用经验">tombstone使用经验</h3><p><a href="http://yangzhe1991.org/blog/2015/05/using-cassandra-for-one-year/" target="_blank" rel="external">http://yangzhe1991.org/blog/2015/05/using-cassandra-for-one-year/</a>  </p>
+<blockquote>
+<p>LSM类的数据库都是把删除替换为写入一个标记，叫tombstone。HBase也差不多的原理，删除数据的话把tombstone写到log里，<br>compaction的时候如果遇到tombstone就可以不用保留已经被删的数据，读数据的时候遇到tombstone就屏蔽掉数据并且跳过，最后返回所有没删的数据。<br>但是，C<em>因为并不是靠单个region server来读写数据，而是N个节点同时读写，所以跟HBase最大的区别，就是每个节点维护tombstone的时候不能只考虑自己。<br>于是某单个节点读数据的时候读到tombstone后，不能屏蔽掉data然后跳过，而是要`<em>*把tombstone也返回给接受client请求的那个coordinator</em></em>`，<br>因为你不知道其他节点是否写入了这个tombstone（因为写入W个就算成功）。<br>而且在compaction的时候不能判断说当前节点跟这个tombstone有关的数据都删完了就把自己也删了，<br>因为你不确定别的节点有没有这个tombstone——如果别的节点在写tombstone的时候没写成（毕竟写W个节点就算成功，最多N-W个节点没有这个tombstone），<br>自己又在compaction的时候把tombstone删了，那么再读数据的时候有节点有这行数据，又没有节点有这行数据的tombstone，于是这个数据就复活了……  </p>
+<p>处理这两个tombstone导致的问题，解决方案就是，首先避免大量tombstone的生成。如果不能避免量删column key，那么一定要<code>**避免对column key做范围查找**</code>。<br>(对column key做范围查找指的是查询一个row key的多个column, 对相同的partition key, 可以很多个column)<br>因为读的时候会把所有范围内包含的tombstone返回给coordinator，而tombstone又不是有效的返回数据不能用来分页，<br>导致<code>可能client设limit 100，期望读100行数据，但对节点来说是100行数据+中间穿插的1000个tombstone，gc压力、响应时间跟读1100行数据差不多</code>。<br>所以C*默认会在一次读取遇到几万个tombstone的时候强制终止读取数据抛异常。  </p>
+</blockquote>
+<p>partition key的使用经验:  </p>
+<blockquote>
+<p>C*不对column key做bloom filter的优化, 只对row key做BF优化。而HBase我记得是可以有的。<br>于是这就导致如果读特定某行数据，如果table的定义是所有primary key都是partition key，那么可能bloom filter过滤完只需要读一个SSTable，<br>但如果有column key，而且<code>partition key下面有非常多行数据，那么bloom filter对column key不起作用</code>，<br>这个partition key下面的数据分布在多个SSTable里，就需要读所有这些SSTable，影响性能。<br>因此，<code>如果对范围查询没需求，那么就尽量把所有主键都设成partition key</code>  </p>
+</blockquote>
+<p><a href="http://yangzhe1991.org/blog/2014/08/cassandra删除数据的坑" target="_blank" rel="external">http://yangzhe1991.org/blog/2014/08/cassandra删除数据的坑</a></p>
+<blockquote>
+<p>Cassandra通过写一条“tombstone”来标记一个数据被删除了。<br>被标记的数据默认要10天(配置文件中的gc_grace_seconds)后且被compaction或cleanup<strong>执行到对应的SSTable</strong>时才会被真正从磁盘删除<br>在select数据的时候，在每个SSTable遇到的<code>所有符合查询条件的tombstone要放内存中</code>从而在合并每个SSTable文件的数据时判断<br>哪些column数据没被删能最终返回，tombstone太多会导致heap被大量占用需要各种GC从而影响性能<br>因此如果经常删除一个row key下的column key(比如因为TTL自动过期,逻辑意义上的一行对应的存储列就会被标记为tombstone)，  </p>
+<p>同时又有一次select一个row key下多个column key的需求，很容易遇到这种情况，tombstone很多的时候即使不到10w最终成功读取了，<br>这次读取也会很慢，并很快导致触发年轻代GC(读取到内存中,首先放到Eden,如果量太大,Eden区很快满了触发YGC)从而拖慢整个节点的响应速度。  </p>
+</blockquote>
+<h3 id="Slice_Query">Slice Query</h3><p><a href="http://www.datastax.com/dev/blog/cassandra-anti-patterns-queues-and-queue-like-datasets" target="_blank" rel="external">http://www.datastax.com/dev/blog/cassandra-anti-patterns-queues-and-queue-like-datasets</a></p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">A slice query will keep reading columns <span class="keyword">until</span> <span class="constant">one</span> <span class="operator">of</span> <span class="operator">the</span> following condition is met (assuming regular, non-reverse order):  </span><br><span class="line">  - <span class="operator">the</span> specified limit <span class="operator">of</span> live columns has been <span class="built_in">read</span> 只有存活的列才会被计入limit</span><br><span class="line">  - <span class="operator">a</span> column beyond <span class="operator">the</span> finish column has been <span class="built_in">read</span> (<span class="keyword">if</span> specified)</span><br><span class="line">  - all columns <span class="operator">in</span> <span class="operator">the</span> row have been <span class="built_in">read</span> 这一行所有的列都读取完毕</span><br></pre></td></tr></table></figure>
+<p><a href="http://aryanet.com/blog/cassandra-garbage-collector-tuning" target="_blank" rel="external">http://aryanet.com/blog/cassandra-garbage-collector-tuning</a>  </p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">When you have rows <span class="keyword">with</span> dynamic columns(动态的列,即相同分区键不同CK,可以认为一个动态的列是传统意义的一行数据) <span class="keyword">and</span> your <span class="type">application</span> deletes those columns(删除列), </span><br><span class="line">Cassandra will apply a tombstones <span class="function_start"><span class="keyword">on</span></span> those columns <span class="keyword">until</span> next compaction runs <span class="keyword">and</span> cleans up expired tombstones passed gc_grace_seconds. </span><br><span class="line">When your client <span class="keyword">does</span> a slice query(切片查询) <span class="keyword">to</span> <span class="command">read</span> a few columns(范围查询时查询多列), even <span class="keyword">if</span> majority <span class="keyword">of</span> columns were perviously deleted, </span><br><span class="line">Cassandra will have <span class="keyword">to</span> <span class="command">read</span> <span class="keyword">and</span> scan all <span class="keyword">the</span> tombstones <span class="keyword">in</span> order <span class="keyword">to</span> find [<span class="keyword">as</span> may non deleted columns** <span class="keyword">as</span> you requested <span class="keyword">in</span> your slice query.</span><br></pre></td></tr></table></figure>
+<h2 id="Paging_Query">Paging Query</h2><p><a href="https://ahappyknockoutmouse.wordpress.com/2014/11/12/246/" target="_blank" rel="external">https://ahappyknockoutmouse.wordpress.com/2014/11/12/246/</a><br><a href="http://www.datastax.com/dev/blog/client-side-improvements-in-cassandra-2-0" target="_blank" rel="external">http://www.datastax.com/dev/blog/client-side-improvements-in-cassandra-2-0</a>  </p>
+<ol>
+<li>I have some difficulties with paging through a row set, is there some examples available?</li>
+</ol>
+<blockquote>
+<p>Prior to Cassandra 2.0, tricks were used to page through a large result set. However, Cassandra 2.0 has auto paging. 自动分页功能<br>Instead of using token function to create paging, it is now a built-in feature. 不适用token函数来分页,而是只用内置的自动分页功能.<br>Now developers can iterate over the entire result set, without having to care that it’s size is larger the the memory. 迭代全部数据,不需要关心数据大小能够放到内存中<br>As the client code iterates over the results, some extra rows can be fetched, while old ones are dropped. 客户端迭代结果时,额外的行会被获取,旧的行会被丢弃<br>Looking at this in Java, note that SELECT statement returns all rows, and the number of rows retrieved is set to 100.<br>I’ve shown a simple statement here, but the same code can be written with a prepared statement, couple with a bound statement.<br>It is possible to disable automatic paging if it is not desired. It is also important to test various fetch size settings,<br>since you will want to keep the memorize small enough, but not so small that too many round-trips to the database are taken. </p>
+</blockquote>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Statement</span> <span class="type">stmt</span> = new <span class="type">SimpleStatement</span>(<span class="string">"select * FROM raw_weather_data WHERE wsid= '725474:99999' AND year = 2005 AND month = 6"</span>);</span><br><span class="line"><span class="type">stmt</span>.setFetchSize(<span class="number">100</span>);</span><br><span class="line"><span class="type">ResultSet</span> rs = session.execute(<span class="type">stmt</span>);</span><br><span class="line"><span class="type">Iterator</span>&lt;<span class="type">Row</span>&gt; iter = rs.<span class="keyword">iterator</span>();</span><br><span class="line"><span class="keyword">while</span> (!rs.isFullyFetched()) &#123;</span><br><span class="line">   rs.fetchMoreResults();</span><br><span class="line">   <span class="type">Row</span> row = iter.next();</span><br><span class="line">   <span class="type">System</span>.<span class="keyword">out</span>.println(row);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Read_Time_Out">Read Time Out</h2><p>cassandra.yaml中和timeout相关的配置项:  </p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">cross_node_timeout</span>: <span class="string">false</span></span><br><span class="line"><span class="attribute">read_request_timeout_in_ms</span>: <span class="string">2000      读取一条记录的超时为2秒</span></span><br><span class="line"><span class="attribute">range_request_timeout_in_ms</span>: <span class="string">15000    读取多条记录的超时为15秒</span></span><br><span class="line"><span class="attribute">write_request_timeout_in_ms</span>: <span class="string">10000    写请求的超时为10秒</span></span><br><span class="line"><span class="attribute">request_timeout_in_ms</span>: <span class="string">5000           请求超时为5秒</span></span><br><span class="line"><span class="attribute">truncate_request_timeout_in_ms</span>: <span class="string">60000 清空表数据的超时为1分钟</span></span><br><span class="line"><span class="attribute">cas_contention_timeout_in_ms</span>: <span class="string">1000</span></span><br></pre></td></tr></table></figure>
+<p>1.read timeout选项:读取一条记录的超时时间为2s, 超过2s这条记录没有返回,就中断查询.<br>示例: tombstone数量超过10万条.  </p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> velocity <span class="keyword">where</span> attribute=<span class="string">'58.246.57.66'</span> <span class="keyword">and</span> partner_code=<span class="string">'testDemo'</span> <span class="keyword">and</span> app_name=<span class="string">'testDemo'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'ipAddress'</span> limit <span class="number">1000</span>;</span><br><span class="line">Request did <span class="keyword">not</span> complete within rpc_timeout.</span><br><span class="line"> Scanned over <span class="number">100000</span> tombstones; query aborted (see tombstone_failure_threshold) | <span class="number">15</span>:<span class="number">24</span>:<span class="number">00</span>,<span class="number">068</span> | <span class="number">192.168</span>.<span class="number">47.222</span> |         <span class="number">502772</span></span><br><span class="line">                                            Timed <span class="keyword">out</span>; received <span class="number">0</span> <span class="keyword">of</span> <span class="number">1</span> responses | <span class="number">15</span>:<span class="number">24</span>:<span class="number">01</span>,<span class="number">565</span> | <span class="number">192.168</span>.<span class="number">47.202</span> |        <span class="number">2000874</span></span><br><span class="line">                                                                Request complete | <span class="number">15</span>:<span class="number">24</span>:<span class="number">01</span>,<span class="number">564</span> | <span class="number">192.168</span>.<span class="number">47.202</span> |        <span class="number">2000993</span></span><br></pre></td></tr></table></figure>
+<p>2.range_request_timeout_in_ms=15s: 范围查询的超时时间为15s.<br>示例: truncate一张表的数据, 然后查询limit 1. 或者count(*)查询全部数据:  </p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cqlsh:forseti&gt; select * from activity_detail limit 1<span class="comment">;</span></span><br><span class="line">Request did not complete within rpc_timeout.</span><br><span class="line"> Executing seq scan across 15 sstables for (max(-<span class="number">845199564809</span><span class="number">2911156</span>), max(-<span class="number">83995602364</span><span class="number">95679024</span>)] | <span class="number">09:35:20,165</span> | <span class="number">192.168.47.203</span> |            197</span><br><span class="line">                                       Timed out<span class="comment">; received 0 of 1 responses for range 144 of 3329 | 09:35:35,149 | 192.168.47.202 |       15148870</span></span><br><span class="line">                                                                                 Request complete | <span class="number">09:35:35,149</span> | <span class="number">192.168.47.202</span> |       <span class="number">15149076</span></span><br><span class="line"></span><br><span class="line">cqlsh:forseti&gt; select count(*) from activity_detail<span class="comment">;</span></span><br><span class="line">Request did not complete within rpc_timeout.</span><br><span class="line"> Executing seq scan across 15 sstables for (max(-<span class="number">92094347386</span><span class="number">68044748</span>), max(-<span class="number">91949352864</span><span class="number">58247645</span>)] | <span class="number">09:39:28,45</span>3 | <span class="number">192.168.47.203</span> |            154</span><br><span class="line">                                        Timed out<span class="comment">; received 0 of 1 responses for range 10 of 3329 | 09:39:43,435 | 192.168.47.202 |       15010833</span></span><br><span class="line">                                                                                 Request complete | <span class="number">09:39:43,43</span>4 | <span class="number">192.168.47.202</span> |       <span class="number">15010948</span></span><br></pre></td></tr></table></figure>
+<p>3.查询就是会超时怎么办,而且不是因为tombstone太多,没办法加限制条件</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"> activity                                                                                                                |<span class="string"> timestamp    </span>|<span class="string"> source         </span>|<span class="string"> source_elapsed</span><br><span class="line">-------------------------------------------------------------------------------------------------------------------------+--------------+----------------+----------------</span><br><span class="line">                                                                                                      execute_cql3_query </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">              0</span><br><span class="line"> Parsing SELECT * from android_device_session where session_id = 'Android_....................................' limit 1; </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">             51</span><br><span class="line">                                                                                                     Preparing statement </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">            154</span><br><span class="line">                                                              Executing single-partition query on android_device_session </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">            305</span><br><span class="line">                                                                                            Acquiring sstable references </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">            315</span><br><span class="line">                                                                                             Merging memtable tombstones </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">            347</span><br><span class="line">                                                                             Bloom filter allows skipping sstable 542646 </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">            382</span><br><span class="line">                                                                             Bloom filter allows skipping sstable 542645 </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">            394</span><br><span class="line">                                                                             Bloom filter allows skipping sstable 542640 </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">            404</span><br><span class="line">                                                                             Bloom filter allows skipping sstable 542635 </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">            418</span><br><span class="line">                                                                             Bloom filter allows skipping sstable 542631 </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">            431</span><br><span class="line">                                                                             Bloom filter allows skipping sstable 542546 </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">            441</span><br><span class="line">                                                                                        Key cache hit for sstable 542489 </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">            456</span><br><span class="line">                                                                             Seeking to partition beginning in data file </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">            461</span><br><span class="line">                                                                             Bloom filter allows skipping sstable 541100 </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">            817</span><br><span class="line">                                                                                        Key cache hit for sstable 539754 </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">            838</span><br><span class="line">                                                                             Seeking to partition beginning in data file </span>|<span class="string"> 15:38:26,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">            844</span><br><span class="line">                                                                             Bloom filter allows skipping sstable 538761 </span>|<span class="string"> 15:38:26,990 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">           1050</span><br><span class="line">                                                                             Bloom filter allows skipping sstable 528588 </span>|<span class="string"> 15:38:26,990 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">           1064</span><br><span class="line">                                                                             Bloom filter allows skipping sstable 540223 </span>|<span class="string"> 15:38:26,990 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">           1079</span><br><span class="line">                                                                             Bloom filter allows skipping sstable 500552 </span>|<span class="string"> 15:38:26,990 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">           1090</span><br><span class="line">                                                                             Bloom filter allows skipping sstable 436090 </span>|<span class="string"> 15:38:26,990 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">           1100</span><br><span class="line">                                                                             Bloom filter allows skipping sstable 375563 </span>|<span class="string"> 15:38:26,990 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">           1111</span><br><span class="line">                                                                                        Key cache hit for sstable 275761 </span>|<span class="string"> 15:38:26,990 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">           1130</span><br><span class="line">                                                                             Seeking to partition beginning in data file </span>|<span class="string"> 15:38:26,990 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">           1138</span><br><span class="line">                                                                                        Key cache hit for sstable 180212 </span>|<span class="string"> 15:38:26,990 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">           1362</span><br><span class="line">                                                                             Seeking to partition beginning in data file </span>|<span class="string"> 15:38:26,990 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">           1370</span><br><span class="line">                                                                                    Timed out; received 0 of 1 responses </span>|<span class="string"> 15:38:28,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">        2000450</span><br><span class="line">                                                                                                        Request complete </span>|<span class="string"> 15:38:28,989 </span>|<span class="string"> 192.168.48.159 </span>|<span class="string">        2000522</span></span><br></pre></td></tr></table></figure>
+<h3 id="Future_Interrupt">Future Interrupt</h3><p>查询方式修改为Future, 但还是存在超过500ms的查询:  </p>
+<p><img src="http://img.blog.csdn.net/20151115162040546" alt="velocity_500ms"></p>
+<p>一般在监控上超过50ms, zabbix的查询时间就会升高, 而opscenter就会有抖动:  </p>
+<p><img src="http://img.blog.csdn.net/20151115163846920" alt="slow_zabbix">  </p>
+<p><img src="http://img.blog.csdn.net/20151115163859694" alt="slow_monitor"></p>
+<p><img src="http://img.blog.csdn.net/20151115163912127" alt="slow_ops"></p>
+<h2 id="More_Abould_Query:_Token?">More Abould Query: Token?</h2><p>Cassandra中的partition key会映射到集群节点VNodes组成的Token中.  通过对partition key计算hash,映射到token环的特定位置.  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">cqlsh:forseti&gt; <span class="function">select <span class="title">token</span><span class="params">(attribute)</span> from velocity limit 1</span>;</span><br><span class="line"> token(attribute)</span><br><span class="line">----------------------</span><br><span class="line"> -<span class="number">9223372016580570173</span></span><br><span class="line">(<span class="number">1</span> rows)</span><br><span class="line"></span><br><span class="line">Tracing session: <span class="number">3</span>d1450b0-<span class="number">7e16</span>-<span class="number">11e5</span>-<span class="number">971e-2</span>bcdca057dae</span><br><span class="line"> activity                                                                                        | timestamp    | source         | source_elapsed</span><br><span class="line">-------------------------------------------------------------------------------------------------+--------------+----------------+----------------</span><br><span class="line">                                                                              execute_cql3_query | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">380</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span> |              <span class="number">0</span></span><br><span class="line">                                          <span class="function">Parsing select <span class="title">token</span><span class="params">(attribute)</span> from velocity limit 1</span>; | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">380</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span> |             <span class="number">81</span></span><br><span class="line">                                                                             Preparing statement | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">381</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span> |            <span class="number">288</span></span><br><span class="line">                                                                   Determining replicas to query | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">381</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span> |            <span class="number">651</span></span><br><span class="line">                                                           Message received from /<span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span> | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">382</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span> |             <span class="number">61</span></span><br><span class="line"> Executing seq scan across <span class="number">6</span> sstables <span class="keyword">for</span> [min(-<span class="number">9223372036854775808</span>), max(-<span class="number">9218212468661360888</span>)] | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">383</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span> |            <span class="number">372</span></span><br><span class="line">                                                            Enqueuing request to /<span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span> | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">384</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span> |           <span class="number">3252</span></span><br><span class="line">                                                              Sending message to /<span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span> | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">384</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span> |           <span class="number">3460</span></span><br><span class="line">                                                     Seeking to partition beginning in data file | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">386</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span> |           <span class="number">3476</span></span><br><span class="line">                                                               Read <span class="number">1</span> live and <span class="number">0</span> tombstone cells | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">386</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span> |           <span class="number">4165</span></span><br><span class="line">                                                     Seeking to partition beginning in data file | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">387</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span> |           <span class="number">4204</span></span><br><span class="line">                                                               Read <span class="number">1</span> live and <span class="number">0</span> tombstone cells | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">387</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span> |           <span class="number">4239</span></span><br><span class="line">                                                                    Scanned <span class="number">1</span> rows and matched <span class="number">1</span> | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">387</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span> |           <span class="number">4341</span></span><br><span class="line">                                                           Enqueuing response to /<span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span> | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">390</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span> |           <span class="number">8042</span></span><br><span class="line">                                                              Sending message to /<span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span> | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">391</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span> |           <span class="number">8272</span></span><br><span class="line">                                                           Message received from /<span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span> | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">393</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span> |          <span class="number">12316</span></span><br><span class="line">                                                        Processing response from /<span class="number">192.168</span><span class="number">.47</span><span class="number">.222</span> | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">393</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span> |          <span class="number">12407</span></span><br><span class="line">                                                                                Request complete | <span class="number">16</span>:<span class="number">22</span>:<span class="number">48</span>,<span class="number">392</span> | <span class="number">192.168</span><span class="number">.47</span><span class="number">.202</span> |          <span class="number">12789</span></span><br></pre></td></tr></table></figure>
+<h2 id="Node_down_effect">Node down effect</h2><p>seeds只设置一个节点52, 当52当掉, 即使使用CQL连接53, 也会报错: <code>Unable to complete request: one or more nodes were unavailable.</code></p>
+<p>使用API查询时: <code>com.datastax.driver.core.exceptions.UnavailableException: Not enough replica available for query at consistency ONE (1 required but only 0 alive)</code></p>
+<p>这是因为副本数=1(keyspace里面设置的). 如果seeds设置两个节点52,53. 当掉52之后, 还是会出现上面的异常.  </p>
+<h2 id="TTL">TTL</h2><p><a href="http://docs.datastax.com/en/cql/3.1/cql/cql_using/use_expire_c.html" target="_blank" rel="external">http://docs.datastax.com/en/cql/3.1/cql/cql_using/use_expire_c.html</a><br><a href="http://engblog.polyvore.com/2015/03/cassandra-compaction-and-tombstone.html" target="_blank" rel="external">http://engblog.polyvore.com/2015/03/cassandra-compaction-and-tombstone.html</a>  </p>
+<blockquote>
+<p>Data in a column, other than a counter column, can have an optional expiration period called TTL (time to live).<br>The client request specifies a TTL value, defined in seconds, for the data.<br>TTL data is marked with a tombstone after the requested amount of time has expired.<br>A tombstone exists for gc_grace_seconds. After data is marked with a tombstone,<br>the data is automatically removed during the normal compaction and repair processes.<br>If you want to change the TTL of expiring data, you have to re-insert the data with a new TTL.</p>
+</blockquote>
+<p><strong>列</strong>中的数据可以有一个可选的TTL间隔. 当指定的时间过去后,TTL数据(指定的列)会被标记为墓碑.<br>墓碑标记的存活时间为gc_grace_seconds. 如果这个配置=0, 则在整理和修复时会被删除.<br>如果这个配置不为0, 则还会再存活gc_grace_seconds时间. 在这个时间之后, 在整理时才会被删除.<br>如果想要更新TTL的时间, 只能使用新的TTL重新插入数据(C*中的insert是插入或更新,取决于这条数据是否已经存在). </p>
+<blockquote>
+<p>Since all Cassandra SSTable entries are immutable, any updates or deletes to a row requires a new SSTable entry to be recorded.<br>Values which are deleted are replaced by a tombstone record for the length of time configured in gc_grace_seconds.<br>Cassandra reconciles(使一致) updates by determining the most recent data, and then only returns the valid data to the client.<br>被删除的记录会用tombstone替代, 并且会存活gc_grace_seconds一段时间. </p>
+</blockquote>
+<p>This means that:  </p>
+<ul>
+<li>Deletions and storage space recovery are lazy 删除和磁盘空间恢复是懒执行的</li>
+<li>A row can fragment across more than one SSTable 一条记录会分段在不止一个SSTable文件中</li>
+<li>A tombstone is a fragment of a row 墓碑标记也是一行记录的一个分片(删除后flush到磁盘,这条记录被标记为tombstone)</li>
+<li>Reading a row requires reconciling all SSTable entries, and determining the most recent set of data before returning data to the caller.</li>
+<li>Increased row fragments spread across multiple SSTables increases response latency.</li>
+</ul>
+<p><strong>the most recent set of data</strong>: 最近的数据集, 新插入的是最细的.   </p>
+<p>tombstone只有出现TTL过期(3Month), 以及DELTE操作(我们的场景没有DELETE).<br>现在的velocity的gc_grace_seconds已经设置为0. 一旦TTL过期, 就会被删除.<br>而记录在达到TTL时, 只有在下一次Compaction的时候, 才会被真正删除.  </p>
+<p>因为每条记录都设置了TTL=3Month. 所以每经过一秒钟, 都会有满足TTL的记录存在.<br>所以被标记为tombstone(满足TTL)的记录存活的时间是: TTL到期的那一刻, 到下一次Compaction时.  </p>
+<p>那么问题转到SSTable文件什么时候会被Compaction?</p>
+<p><a href="http://www.datastax.com/dev/blog/leveled-compaction-in-apache-cassandra" target="_blank" rel="external">http://www.datastax.com/dev/blog/leveled-compaction-in-apache-cassandra</a><br><a href="http://www.datastax.com/dev/blog/when-to-use-leveled-compaction" target="_blank" rel="external">http://www.datastax.com/dev/blog/when-to-use-leveled-compaction</a>  </p>
+<blockquote>
+<p>LeveledCompactionStrategy (LCS): The leveled compaction strategy creates SSTables of a fixed,<br>relatively small size (160 MB by default) that are grouped into levels.<br>Within each level, SSTables are guaranteed to be non-overlapping(不会重叠).<br>Each level (L0, L1, L2 and so on) is 10 times as large as the previous(每一级都都是前一级别10倍).<br>Disk I/O is more uniform(一致) and predictable on higher than on lower levels(高的级别比低级别更一致) as<br>SSTables are continuously(持续) being compacted into progressively(逐步) larger levels.<br>At each level, row keys are merged into non-overlapping SSTables.<br>This can improve performance for reads, because Cassandra can determine<br>which SSTables in each level to check for the existence of row key data. </p>
+</blockquote>
+<p>Compaction的子属性配置: <a href="http://docs.datastax.com/en/cql/3.1/cql/cql_reference/compactSubprop.html?scroll=compactSubprop__compactionSubpropertiesLCS" target="_blank" rel="external">http://docs.datastax.com/en/cql/3.1/cql/cql_reference/compactSubprop.html?scroll=compactSubprop__compactionSubpropertiesLCS</a></p>
+<p><a href="http://stackoverflow.com/questions/29132033/cassandra-low-read-performance-with-high-sstable-count" target="_blank" rel="external">http://stackoverflow.com/questions/29132033/cassandra-low-read-performance-with-high-sstable-count</a><br>If you are updating data within the same partition frequently and at different times, 对相同的partition在不同的时间段做频繁的更新<br>you could consider using LeveledCompactionStrategy. 可以使用分层级的整理压紧策略<br>LCS will keep data from the same partition together in the same SSTable within a level 在一个层级中将相同的分区数据放在同一个SSTable文件<br>which greatly improves read performance, at the cost of more Disk I/O doing compaction. 可以提升读性能(因为只读一个文件),但是整理时需要更多的IO操作<br>In my experience, the extra compaction disk I/O more than pays off in read performance if you have a high ratio of reads to writes.</p>
+<h3 id="TTL是针对行,_还是针对列">TTL是针对行, 还是针对列</h3><p><code>INSERT INTO users (user_name, password) VALUES (&#39;cbrown&#39;, &#39;ch@ngem4a&#39;) USING TTL 86400;</code></p>
+<p>问: 使用TTL后, 经过86400秒后, 这条数据(一行)在CQL中不会被查询到. 那么上面说的Column是什么意思,为什么不是Row?<br>答: Cassandra的Column实际上就是传统DB中认为的一行!  </p>
+<p><a href="http://cjwebb.github.io/blog/2015/03/02/cassandra-ttl-is-per-column/" target="_blank" rel="external">http://cjwebb.github.io/blog/2015/03/02/cassandra-ttl-is-per-column/</a><br>这篇文章在第一次插入时制定了一个TTL, 然后使用insert into只更新其中的一个字段,并使用新的TTL.<br>这样对于两个不同的字段, 它们的TTL时间就不同. 因此这条记录的两个字段, 会在不同的时间点失效.<br>那么问题是: 如果这两个字段都失效后, 这条记录还可不可见, 还是说可见, 但是两个字段为NULL. -&gt; 不可见! </p>
+<h3 id="插入数据时using_TTL">插入数据时using TTL</h3><p>建表时指定default_time_to_live=0,<br>在插入时不指定ttl(test), 表示数据不会过期. 查询时ttl为null<br>在插入时指定ttl(test3), 则这一行数据在经过TTL后会过期被删除. </p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cqlsh:forseti&gt; select ttl(event) from velocity where attribute=<span class="emphasis">'test'</span> limit 1;</span><br><span class="line"><span class="header"> ttl(event)</span><br><span class="line">------------</span></span><br><span class="line"><span class="code">       null</span></span><br><span class="line"></span><br><span class="line">cqlsh:forseti&gt; select ttl(event) from velocity where attribute=<span class="emphasis">'test3'</span> limit 1;</span><br><span class="line"><span class="header"> ttl(event)</span><br><span class="line">------------</span></span><br><span class="line"><span class="code">       3544</span></span><br></pre></td></tr></table></figure>
+<h3 id="测试Table的default_ttl">测试Table的default ttl</h3><p>1.创建表时指定默认的TTL, 插入数据时不用using TTL  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> velocity_test (</span><br><span class="line">  <span class="keyword">attribute</span> <span class="built_in">text</span>,       </span><br><span class="line">  partner_code <span class="built_in">text</span>,    </span><br><span class="line">  app_name <span class="built_in">text</span>,        </span><br><span class="line">  <span class="keyword">type</span> <span class="built_in">text</span>,            </span><br><span class="line">  <span class="string">"timestamp"</span> <span class="built_in">bigint</span>,   </span><br><span class="line">  <span class="keyword">event</span> <span class="built_in">text</span>,           </span><br><span class="line">  sequence_id <span class="built_in">text</span>,     </span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> ((<span class="keyword">attribute</span>, partner_code, app_name, <span class="keyword">type</span>), <span class="string">"timestamp"</span>)</span><br><span class="line">) <span class="keyword">WITH</span></span><br><span class="line">  bloom_filter_fp_chance=<span class="number">0.100000</span> <span class="keyword">AND</span></span><br><span class="line">  <span class="keyword">caching</span>=<span class="string">'ALL'</span> <span class="keyword">AND</span></span><br><span class="line">  <span class="keyword">comment</span>=<span class="string">''</span> <span class="keyword">AND</span></span><br><span class="line">  dclocal_read_repair_chance=<span class="number">0.000000</span> <span class="keyword">AND</span></span><br><span class="line">  gc_grace_seconds=<span class="number">0</span> <span class="keyword">AND</span></span><br><span class="line">  index_interval=<span class="number">128</span> <span class="keyword">AND</span></span><br><span class="line">  read_repair_chance=<span class="number">0.100000</span> <span class="keyword">AND</span></span><br><span class="line">  replicate_on_write=<span class="string">'true'</span> <span class="keyword">AND</span></span><br><span class="line">  populate_io_cache_on_flush=<span class="string">'false'</span> <span class="keyword">AND</span></span><br><span class="line">  default_time_to_live=<span class="number">3600</span> <span class="keyword">AND</span></span><br><span class="line">  speculative_retry=<span class="string">'99.0PERCENTILE'</span> <span class="keyword">AND</span></span><br><span class="line">  memtable_flush_period_in_ms=<span class="number">0</span> <span class="keyword">AND</span></span><br><span class="line">  compaction=&#123;<span class="string">'unchecked_tombstone_compaction'</span>: <span class="string">'true'</span>, <span class="string">'tombstone_threshold'</span>: <span class="string">'0.1'</span>, <span class="string">'class'</span>: <span class="string">'LeveledCompactionStrategy'</span>&#125; <span class="keyword">AND</span></span><br><span class="line">  compression=&#123;<span class="string">'sstable_compression'</span>: <span class="string">'LZ4Compressor'</span>&#125;;</span></span><br></pre></td></tr></table></figure>
+<p>使用CassandraClient或者原始API插入数据后, 查看非primary key的ttl:  </p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cqlsh:forseti&gt; <span class="keyword">select</span> ttl(<span class="keyword">event</span>) <span class="keyword">from</span> velocity_test <span class="keyword">where</span> attribute=<span class="string">'test'</span> <span class="keyword">and</span> partner_code=<span class="string">'koudai'</span> <span class="keyword">and</span> app_name=<span class="string">'koudai_ios'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'account'</span> limit <span class="number">1</span>;</span><br><span class="line"> ttl(<span class="keyword">event</span>)</span><br><span class="line">------------</span><br><span class="line">       <span class="number">3310</span></span><br><span class="line">(<span class="number">1</span> rows)</span><br></pre></td></tr></table></figure>
+<p>2.修改Table的 default_time_to_live   </p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">alter table velocity_test <span class="keyword">with</span>  default_time_to_live = <span class="number">1800</span>;</span><br><span class="line"></span><br><span class="line">cqlsh:forseti&gt; <span class="keyword">select</span> ttl(<span class="keyword">event</span>) <span class="keyword">from</span> velocity_test <span class="keyword">where</span> attribute=<span class="string">'test'</span> <span class="keyword">and</span> partner_code=<span class="string">'koudai'</span> <span class="keyword">and</span> app_name=<span class="string">'koudai_ios'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'account'</span> limit <span class="number">1</span>;</span><br><span class="line"> ttl(<span class="keyword">event</span>)</span><br><span class="line">------------</span><br><span class="line">       <span class="number">2796</span></span><br><span class="line">(<span class="number">1</span> rows)</span><br><span class="line"></span><br><span class="line">cqlsh:forseti&gt; alter table velocity_test <span class="keyword">with</span>  default_time_to_live = <span class="number">1800</span>;</span><br><span class="line">cqlsh:forseti&gt; <span class="keyword">select</span> ttl(<span class="keyword">event</span>) <span class="keyword">from</span> velocity_test <span class="keyword">where</span> attribute=<span class="string">'test'</span> <span class="keyword">and</span> partner_code=<span class="string">'koudai'</span> <span class="keyword">and</span> app_name=<span class="string">'koudai_ios'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'account'</span> limit <span class="number">1</span>;</span><br><span class="line"> ttl(<span class="keyword">event</span>)</span><br><span class="line">------------</span><br><span class="line">       <span class="number">2782</span></span><br><span class="line">(<span class="number">1</span> rows)</span><br></pre></td></tr></table></figure>
+<p>3.只有新插入的数据(test2)才会使用刚刚更新的default_time_to_live, 而原有的数据(test)则不会更新!</p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cqlsh:forseti&gt; <span class="keyword">select</span> ttl(<span class="keyword">event</span>) <span class="keyword">from</span> velocity_test <span class="keyword">where</span> attribute=<span class="string">'test2'</span> <span class="keyword">and</span> partner_code=<span class="string">'koudai'</span> <span class="keyword">and</span> app_name=<span class="string">'koudai_ios'</span> <span class="keyword">and</span> <span class="keyword">type</span>=<span class="string">'account'</span> limit <span class="number">1</span>;</span><br><span class="line"> ttl(<span class="keyword">event</span>)</span><br><span class="line">------------</span><br><span class="line">       <span class="number">1772</span></span><br><span class="line">(<span class="number">1</span> rows)</span><br></pre></td></tr></table></figure>
+<p><strong>小结</strong></p>
+<ul>
+<li>修改表结构的default_time_to_live并不会改变原有数据的TTL, 只对新插入的数据有影响.  </li>
+<li>在插入时指定TTL和设置表结构的default_time_to_live的效果都是一样的,数据在经过TTL后会过期被删除.  </li>
+<li>插入时指定TTL通常要在代码中指定, 如果通过default_time_to_live, 则在插入时可以不用指定using ttl.</li>
+</ul>
+<h3 id="gc_grace_seconds">gc_grace_seconds</h3><blockquote>
+<p>Specifies the time to wait before garbage collecting tombstones (deletion markers).<br>The default value allows a great deal of time for consistency to be achieved prior to deletion.<br>In many deployments this interval can be reduced, and in a single-node cluster it can be safely set to zero.</p>
+</blockquote>
+<p>设置gc_grace_seconds是为了在真正物理删除之前, 确保数据的一致性(默认是10天).<br>如果设置为0, 则在compact时, 因为TTL被标记为墓碑的记录, 会被立即删除.  </p>
+<h3 id="Delete操作">Delete操作</h3><p><a href="http://docs.datastax.com/en/cql/3.1/cql/cql_using/use_delete.html" target="_blank" rel="external">http://docs.datastax.com/en/cql/3.1/cql/cql_using/use_delete.html</a>  </p>
+<blockquote>
+<p>CQL provides the DELETE command to delete a column or row.<br>Deleted values are removed completely by the first compaction following deletion.</p>
+</blockquote>
+<p>Cassandra是支持删除的! 但是删除并不会立即发生, 而是在执行delete操作之后的第一次整理时. </p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-Cassandra-Daily" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/10/15/Cassandra-Daily/" class="article-date">
   	<time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished">2015-10-15</time>
 </a>
     </div>
@@ -188,7 +456,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/15/Cassandra-exception/">Cassandra常见异常</a>
+      <a class="article-title" href="/2015/10/15/Cassandra-Daily/">Cassandra日常运维</a>
     </h1>
   
 
@@ -197,7 +465,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Cassandra异常</p>
+        <p>Cassandra日常运维, OpsCenter</p>
       
     </div>
     
@@ -216,7 +484,7 @@
 
       
         <p class="article-more-link">
-          <a  href="/2015/10/15/Cassandra-exception/#more">more >></a>
+          <a  href="/2015/10/15/Cassandra-Daily/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -337,6 +605,89 @@
         
 
   
+    <article id="post-Cassandra-exception" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/10/15/Cassandra-exception/" class="article-date">
+  	<time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished">2015-10-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/15/Cassandra-exception/">Cassandra常见异常</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Cassandra异常</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/10/15/Cassandra-exception/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
     <article id="post-2015-09-10-Storm-Window" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -420,89 +771,6 @@
         
 
   
-    <article id="post-2015-08-25-Apache-Cassandra" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/08/25/2015-08-25-Apache-Cassandra/" class="article-date">
-  	<time datetime="2015-08-24T16:00:00.000Z" itemprop="datePublished">2015-08-25</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/25/2015-08-25-Apache-Cassandra/">Apache Cassandra入门</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Hello Cassandra</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/08/25/2015-08-25-Apache-Cassandra/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
     <article id="post-2015-08-25-Cassandra-Architecture" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -549,6 +817,89 @@
       
         <p class="article-more-link">
           <a  href="/2015/08/25/2015-08-25-Cassandra-Architecture/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-08-25-Apache-Cassandra" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/08/25/2015-08-25-Apache-Cassandra/" class="article-date">
+  	<time datetime="2015-08-24T16:00:00.000Z" itemprop="datePublished">2015-08-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/25/2015-08-25-Apache-Cassandra/">Apache Cassandra入门</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Hello Cassandra</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/08/25/2015-08-25-Apache-Cassandra/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -1213,172 +1564,6 @@
       
         <p class="article-more-link">
           <a  href="/2015/07/10/2015-07-10-drill-log/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-07-09-Apache-Drill" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/07/09/2015-07-09-Apache-Drill/" class="article-date">
-  	<time datetime="2015-07-08T16:00:00.000Z" itemprop="datePublished">2015-07-09</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/07/09/2015-07-09-Apache-Drill/">Apache Drill入门</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Apache Drill: Schema-free SQL Query Engine for Hadoop, NoSQL and Cloud Storage</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/drill/">drill</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/07/09/2015-07-09-Apache-Drill/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-07-07-Spark-HA-YARN" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/07/07/2015-07-07-Spark-HA-YARN/" class="article-date">
-  	<time datetime="2015-07-06T16:00:00.000Z" itemprop="datePublished">2015-07-07</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/07/07/2015-07-07-Spark-HA-YARN/">Spark HA和YARN模式</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Apache Spark的HA实验和SparkOnYarn模式</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/07/07/2015-07-07-Spark-HA-YARN/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Kafka技术内幕样章 日志压缩 | zqhxuyuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Kafka技术内幕样章：Kafka的日志压缩（LogCompaction）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka技术内幕样章 日志压缩">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/05/13/2016-5-13-Kafka-Book-Sample-LogCompaction/index.html">
+<meta property="og:site_name" content="zqhxuyuan">
+<meta property="og:description" content="Kafka技术内幕样章：Kafka的日志压缩（LogCompaction）">
+<meta property="og:image" content="http://img.blog.csdn.net/20160513080537434">
+<meta property="og:image" content="http://img.blog.csdn.net/20160514104117667">
+<meta property="og:image" content="http://img.blog.csdn.net/20160513080746211">
+<meta property="og:image" content="http://img.blog.csdn.net/20160514104222841">
+<meta property="og:image" content="http://img.blog.csdn.net/20160514104311333">
+<meta property="og:updated_time" content="2016-05-14T10:04:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kafka技术内幕样章 日志压缩">
+<meta name="twitter:description" content="Kafka技术内幕样章：Kafka的日志压缩（LogCompaction）">
+  
+    <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">任何忧伤,都抵不过世界的美丽</a></h1>
+		</hgroup>
+
+		
+				
+
+
+		
+			<div id="switch-btn" class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div id="switch-area" class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives/">归档</a></li>
+				        
+							<li><a href="/tags/">标签</a></li>
+				        
+							<li><a href="/about/">关于</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 10px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.29px;">work</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">BIG(DATA)</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="/" class="profilepic">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			</a>
+			<hgroup>
+			  <h1 class="header-author"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives/">归档</a></li>
+		        
+					<li><a href="/tags/">标签</a></li>
+		        
+					<li><a href="/about/">关于</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-2016-5-13-Kafka-Book-Sample-LogCompaction" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/05/13/2016-5-13-Kafka-Book-Sample-LogCompaction/" class="article-date">
+  	<time datetime="2016-05-12T16:00:00.000Z" itemprop="datePublished">2016-05-13</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Kafka技术内幕样章 日志压缩
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Source/">Source</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>Kafka技术内幕样章：Kafka的日志压缩（LogCompaction）<br><a id="more"></a></p>
+<h2 id="3-3_日志管理类的后台线程">3.3 日志管理类的后台线程</h2><p>分布式存储系统除了要保证客户端写请求流程的正确性，节点可能会非正常宕机或者需要重启，在启动的时候必须要能够正常地加载/恢复已有的数据，日志管理类在创建的时候要加载已有的所有日志文件，这和创建Log时要加载所有的Segment是类似的。<code>LogManager</code>的<code>logDirs</code>参数对应了<code>log.dirs</code>配置项，每个TopicPartition文件夹都对应一个Log实例，所有的Partition文件夹都在日志目录下，当成功加载完所有的Log实例后logs才可以被日志管理类真正地用在战场上。  </p>
+<p>假设logDirs=<code>/tmp/kafka_logs1,/tmp/kafka_logs2</code>，logs1下有[t0-0,t0-1,t1-2]，logs2下有[t0-2,t1-0,t1-1]，图3-26的logDir指的是Log对象的dir，和log.dirs是不同的概念，可以认为所有Log的dir都是在每个log.dirs下，如果把Log.dir叫做Partition级别的文件夹，则checkpoint文件和Partition文件夹是同一层级。  </p>
+<p><img src="http://img.blog.csdn.net/20160513080537434" alt="3-26 logDirs and logs"><br>图3-26 日志的组织方式和对应的数据结构</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LogManager</span>(</span><span class="keyword">val</span> logDirs: <span class="type">Array</span>[<span class="type">File</span>])&#123;</span><br><span class="line">  <span class="keyword">val</span> logs = <span class="keyword">new</span> <span class="type">Pool</span>[<span class="type">TopicAndPartition</span>, <span class="type">Log</span>]()</span><br><span class="line">  <span class="keyword">val</span> recoveryPointCheckpoints=logDirs.map((_,<span class="keyword">new</span> <span class="type">OffsetCheckpoint</span>(<span class="keyword">new</span> <span class="type">File</span>(_,<span class="string">"checkpoint"</span>))))</span><br><span class="line"></span><br><span class="line">  loadLogs() <span class="comment">//启动LogManager实例时,如果已经存在日志文件，要把它们加载到内存中</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">loadLogs</span>(</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> threadPools = mutable.<span class="type">ArrayBuffer</span>.empty[<span class="type">ExecutorService</span>]</span><br><span class="line">    <span class="keyword">for</span> (dir &lt;- <span class="keyword">this</span>.logDirs) &#123; <span class="comment">//按照log.dirs创建线程池，如果只配置一个目录就只有一个线程池</span></span><br><span class="line">      <span class="keyword">val</span> pool = <span class="type">Executors</span>.newFixedThreadPool(ioThreads)</span><br><span class="line">      threadPools.append(pool)</span><br><span class="line">      <span class="comment">//checkpoint文件一个日志目录只有一个，并不是每个Partition级别!</span></span><br><span class="line">      <span class="comment">//既然所有Partition公共一个checkpoint文件，那么文件内容当然要有Partition信息</span></span><br><span class="line">      <span class="keyword">var</span> recoveryPoints:<span class="type">Map</span>[<span class="type">TopicAndPartition</span>,<span class="type">Long</span>]=recoveryPointCheckpoints(dir).read</span><br><span class="line">      <span class="keyword">val</span> jobsForDir = <span class="keyword">for</span> &#123;</span><br><span class="line">        dirContent &lt;- <span class="type">Option</span>(dir.listFiles).toList <span class="comment">//日志目录下的所有文件/文件夹</span></span><br><span class="line">        logDir &lt;- dirContent <span class="keyword">if</span> logDir.isDirectory <span class="comment">//Partition文件夹,忽略日志目录下的文件</span></span><br><span class="line">      &#125; <span class="keyword">yield</span> &#123;</span><br><span class="line">        <span class="type">CoreUtils</span>.runnable &#123; <span class="comment">//每个Partition文件夹创建一个线程，由线程池执行</span></span><br><span class="line">          <span class="keyword">val</span> topicPartition = <span class="type">Log</span>.parseTopicPartitionName(logDir)</span><br><span class="line">          <span class="keyword">val</span> config = topicConfigs.getOrElse(topicPartition.topic, defaultConfig)</span><br><span class="line">          <span class="keyword">val</span> logRecoveryPoint = recoveryPoints.getOrElse(topicPartition, <span class="number">0</span>L) <span class="comment">//分区的恢复点</span></span><br><span class="line">          <span class="keyword">val</span> current = <span class="keyword">new</span> <span class="type">Log</span>(logDir, config, logRecoveryPoint, scheduler, time) <span class="comment">//恢复Log</span></span><br><span class="line">          <span class="keyword">this</span>.logs.put(topicPartition, current) <span class="comment">//这里放入logs集合中，所有分区的Log满血复活</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      jobsForDir.map(pool.submit).toSeq <span class="comment">//提交任务</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//只有调用loadLogs后，logs才有值，后面的操作都依赖于logs</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">allLogs</span>(</span>): <span class="type">Iterable</span>[<span class="type">Log</span>] = logs.values</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">logsByDir</span> =</span> logs.groupBy&#123;<span class="keyword">case</span> (_,log)=&gt;log.dir.getParent&#125;</span><br><span class="line">  <span class="keyword">val</span> cleaner: <span class="type">LogCleaner</span> = <span class="keyword">new</span> <span class="type">LogCleaner</span>(cleanerConfig,logDirs,logs)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">startup</span>(</span>) &#123;</span><br><span class="line">    scheduler.schedule(<span class="string">"log-retention"</span>, cleanupLogs)</span><br><span class="line">    scheduler.schedule(<span class="string">"log-flusher"</span>, flushDirtyLogs)</span><br><span class="line">    scheduler.schedule(<span class="string">"recovery-point-checkpoint"</span>,checkpointRecoveryPointOffsets)</span><br><span class="line">    <span class="keyword">if</span>(cleanerConfig.enableCleaner) cleaner.startup()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>LogManager.startup()启动后会在后台运行多个定时任务和线程，表3-7列举了这些线程的方法和用途，这些线程最后都会操作Log实例（幸好我们已经成功地加载了logs），毕竟LogManager从名字来看就是要对Log进行管理（把checkpoint也看做是日志文件的一部分，因为它伴随着日志而生，所以也在LogManager的管理范畴内）。  </p>
+<table>
+<thead>
+<tr>
+<th>线程/任务</th>
+<th>方法</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>日志保留任务（log retention）</td>
+<td>cleanupLogs</td>
+<td>删除失效的Segment或者为了控制日志文件大小要删除一些文件</td>
+</tr>
+<tr>
+<td>日志刷写任务（log flusher）</td>
+<td>flushDirtyLogs</td>
+<td>根据时间策略，将还在操作系统缓存层的文件刷写到磁盘上</td>
+</tr>
+<tr>
+<td>检查点刷写任务（checkpoint）</td>
+<td>checkpointRecoveryPointOffsets</td>
+<td>定时地将checkpoint恢复点状态写到文件中</td>
+</tr>
+<tr>
+<td>日志清理线程（cleaner）</td>
+<td>cleaner.startup()</td>
+<td>日志压缩，针对带有key的消息的清理策略</td>
+</tr>
+</tbody>
+</table>
+<p>表3-7 日志管理类的后台线程</p>
+<p>日志文件和checkpoint的刷写<code>flush</code>都只是将当前最新的数据写到磁盘上。checkpoint检查点也叫做恢复点（顾名思义是从指定的点开始恢复数据），log.dirs的每个目录下只有一个所有Partition共享的全局checkpoint文件。  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//日志文件刷写任务</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">flushDirtyLogs</span>(</span>) = &#123;</span><br><span class="line">  <span class="keyword">for</span> ((topicAndPartition, log) &lt;- logs) &#123;</span><br><span class="line">    <span class="keyword">val</span> timeSinceLastFlush = time.milliseconds - log.lastFlushTime</span><br><span class="line">    <span class="keyword">if</span>(timeSinceLastFlush &gt;= log.config.flushMs) log.flush</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//checkpoint文件刷写任务</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">checkpointRecoveryPointOffsets</span>(</span>) &#123;</span><br><span class="line">  <span class="keyword">this</span>.logDirs.foreach(checkpointLogsInDir)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">checkpointLogsInDir</span>(</span>dir: <span class="type">File</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">  <span class="keyword">val</span> recoveryPoints = <span class="keyword">this</span>.logsByDir.get(dir.toString) <span class="comment">//checkpoint是log.dirs目录级别</span></span><br><span class="line">  <span class="comment">//logsByDir对于每个dir都有多个Partition对应的Log，所以mapValues对每个Log获取recoveryPoint</span></span><br><span class="line">  recoveryPointCheckpoints(dir).write(recoveryPoints.get.mapValues(_.recoveryPoint))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//只有flush的时候才会更新恢复点，不过flush并不是每次写都会发生的</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">flush</span>(</span>offset: <span class="type">Long</span>) : <span class="type">Unit</span> = &#123;</span><br><span class="line">  <span class="keyword">if</span> (offset &lt;= <span class="keyword">this</span>.recoveryPoint) <span class="keyword">return</span></span><br><span class="line">  <span class="keyword">for</span>(segment&lt;-logSegments(<span class="keyword">this</span>.recoveryPoint,offset)) <span class="comment">//选择恢复点和当前之间的Segment</span></span><br><span class="line">    segment.flush() <span class="comment">//会分别刷写log数据文件和index索引文件（调用底层的fsync）</span></span><br><span class="line">  <span class="keyword">if</span>(offset &gt; <span class="keyword">this</span>.recoveryPoint) &#123;</span><br><span class="line">    <span class="keyword">this</span>.recoveryPoint = offset <span class="comment">//recoveryPoint实际上是offset</span></span><br><span class="line">    lastflushedTime.set(time.milliseconds)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为什么所有Partition共用一个checkpoint文件，而不是每个Partition都有自己的checkpoint文件，因为checkpoint数据量不是很大，那么为什么前面分析的索引文件则是以Partition级别，甚至每个Segment都有对应的数据文件和索引文件，索引本身也是offset，它和checkpoint数据量也都是不大的啊，那么是不是也可以每个Partition只有一个索引文件，而不是每个Segment一个索引文件，实际上索引文件的用途是为了更快地查询，该省的地方还是要节约资源（所有Partition只有一个checkpoint文件），不该节省的还是要大方点（每个Segment一个索引文件），做人何尝不是这个道理。  </p>
+<h3 id="3-3-1_日志清理">3.3.1 日志清理</h3><p>清理日志实际上是清理过期的Segment，或者日志文件太大了需要删除最旧的数据，使得整体的日志文件大小不超过指定的值。举例用队列来缓存所有的请求任务，每个任务都有一定的存活时间，超过时间后任务就应该自动被删除掉，同时队列也有一个上限，不能无限制地添加任务，如果超过指定大小时，就要把最旧的任务删除掉，以维持队列的固定大小，这样可以保证队列不至于无限大导致系统资源被耗尽。  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//日志清理任务</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cleanupLogs</span>(</span>) &#123;</span><br><span class="line">  <span class="keyword">for</span>(log &lt;- allLogs; <span class="keyword">if</span> !log.config.compact)</span><br><span class="line">    cleanupExpiredSegments(log) + cleanupSegmentsToMaintainSize(log)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">cleanupExpiredSegments</span>(</span>log: <span class="type">Log</span>): <span class="type">Int</span> = &#123;</span><br><span class="line">  log.deleteOldSegments(time.milliseconds-_.lastModified&gt;log.config.retentionMs)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">cleanupSegmentsToMaintainSize</span>(</span>log: <span class="type">Log</span>): <span class="type">Int</span> = &#123;</span><br><span class="line">  <span class="keyword">var</span> diff = log.size - log.config.retentionSize</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">shouldDelete</span>(</span>segment: <span class="type">LogSegment</span>) = &#123;</span><br><span class="line">    <span class="keyword">if</span>(diff - segment.size &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">      diff -= segment.size</span><br><span class="line">      <span class="literal">true</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="literal">false</span></span><br><span class="line">  &#125;</span><br><span class="line">  log.deleteOldSegments(shouldDelete)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Log的deleteOldSegments方法接收一个高阶函数，参数是Segment，返回布尔类型表示这个Segment是否需要被删除，在LogManager中调用的地方并没有传递Segment，而是在Log中获取每个Segment。这是因为LogManager无法跨过Log直接和Segment通信，LogManager无法直接管理Segment，Segment只属于Log，只能由Log管理。  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">deleteOldSegments</span>(</span>predicate: <span class="type">LogSegment</span> =&gt; <span class="type">Boolean</span>): <span class="type">Int</span> = &#123;</span><br><span class="line">  <span class="comment">//logSegments是Log的所有Segment，s是每个Segment</span></span><br><span class="line">  <span class="keyword">val</span> deletable = logSegments.takeWhile(s =&gt; predicate(s))</span><br><span class="line">  <span class="keyword">if</span>(segments.size == numToDelete) roll()</span><br><span class="line">  deletable.foreach(deleteSegment(_))</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">deleteSegment</span>(</span>segment: <span class="type">LogSegment</span>) &#123;</span><br><span class="line">  segments.remove(segment.baseOffset) <span class="comment">//删除数据结构</span></span><br><span class="line">  asyncDeleteSegment(segment) <span class="comment">//异步删除Segment</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">def</span> <span class="title">asyncDeleteSegment</span>(</span>segment: <span class="type">LogSegment</span>) &#123;</span><br><span class="line">  segment.changeFileSuffixes(<span class="string">""</span>, <span class="type">Log</span>.<span class="type">DeletedFileSuffix</span>)</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">deleteSeg</span>(</span>) = segment.delete() <span class="comment">//和flush一样最后调用log和index.delete</span></span><br><span class="line">  scheduler.schedule(<span class="string">"delete-file"</span>, deleteSeg)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>清理日志有两种策略，一种是上面的cleanupLogs根据时间或大小策略（粗粒度），还有一种是针对每个key的日志删除策略（细粒度）即LogCleaner方式，如果消息没有key，那只能采用第一种清理策略了。删除策略是以topic为级别的，所以不同的topic可以设置不同的删除策略，所以一个集群中可能存在有些topic按照粗粒度模式删除，有些则按照细粒度模式删除，完全取决于你的业务需求（当然要不要给消息设置key是一个关键决策）。  </p>
+<h3 id="3-3-2_日志压缩">3.3.2 日志压缩</h3><p>不管是传统的RDBMS还是分布式的NoSQL存储在数据库中的数据总是会更新的，相同key的新记录更新数据的方式简单来说有两种：直接更新（找到数据库中的已有位置以最新的值替换旧的值），或者以追加的方式（保留旧的值，查询时再合并，或者也有一个后台线程会定期合并）。采用追加记录的做法在节点崩溃时可以用于恢复数据，还有一个好处是写性能很高，因为这样在写的时候就不需要查询操作，这也是表3-8中很多和存储相关的分布式系统都采用这种方式的原因，它的代价就是需要有Compaction操作来保证相同key的多条记录需要合并。  </p>
+<table>
+<thead>
+<tr>
+<th>分布式系统</th>
+<th>更新数据追加到哪里</th>
+<th>数据文件</th>
+<th>是否需要Compaction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ZooKeeper</td>
+<td>log</td>
+<td>snapshot</td>
+<td>不需要，因为数据量不大</td>
+</tr>
+<tr>
+<td>Redis</td>
+<td>aof</td>
+<td>rdb</td>
+<td>不需要，因为是内存数据库</td>
+</tr>
+<tr>
+<td>Cassandra</td>
+<td>commit log</td>
+<td>data.db</td>
+<td>需要，数据存在本地文件</td>
+</tr>
+<tr>
+<td>HBase</td>
+<td>commit log</td>
+<td>HFile</td>
+<td>需要，数据存在HDFS</td>
+</tr>
+<tr>
+<td>Kafka</td>
+<td>commit log</td>
+<td>commit log</td>
+<td>需要，数据存在Partition的多个Segment里</td>
+</tr>
+</tbody>
+</table>
+<p>表3-8 分布式系统的更新操作用commit log保存</p>
+<p>Kafka中如果消息有key，相同key的消息在不同时刻有不同的值，则只允许存在最新的一条消息，这就好比传统数据库的update操作，查询结果一定是最近update的那一条，而不应该查询出多条或者查询出旧的记录，当然对于HBase/Cassandra这种支持多版本的数据库而言，update操作可能导致添加新的列，查询时是合并的结果而不一定就是最新的记录。图3-27中示例了多条消息，一旦key已经存在，相同key的旧的消息会被删除，新的被保留。  </p>
+<p><img src="http://img.blog.csdn.net/20160514104117667" alt="3-27 update operation"><br>图3-27 更新操作要删除旧的消息</p>
+<p>Kafka的更新操作也采用追加（commit log就是追加）也需要有Compaction操作，当然它并不是像上面那样一条消息一条消息地比较，通常Compaction是对多个文件做一次整体的压缩，图3-28是Log的压缩操作前后示例，压缩确保了相同key只存在一个最新的value，旧的value在压缩过程会被删除掉。  </p>
+<p><img src="http://img.blog.csdn.net/20160513080746211" alt="3-28 log compaction"><br>图3-28 LogCompaction的过程</p>
+<p>每个Partition的（Leader Replica的）Log有多个Segment文件，为了不影响正在写的最近的那个activeSegment，日志压缩不应该清理activeSegment，而是清理剩下的所有Segment。清理Segment时也不是一个个Segment慢吞吞地清理，也不是一次性所有Segment想要全部清理，而是几个Segment分成一组，分批清理。清理线程会占用一定的CPU，因为要读取已有的Segment并压缩成新的Segment，为了不影响其他组件（主要是读，因为读操作会读取旧的Segment，而写不会被影响因为写操作只往activeSegment写，而activeSegment不会被清理），可以设置清理线程的线程个数，同时Kakfa还支持Throttler限速（读取旧的Segment时和写入新的Segment都可以限速）。当然也并不是每个Partition在同一时间都进行清理，而是选择其中最需要被清理的Partition。  </p>
+<p>清理/压缩指的是删除旧的更新操作，只保留最近的一个更新操作，清理方式有多种，比如JVM中的垃圾回收算法将存活的对象拷贝/整理到指定的区域，HBase/Cassandra的Compaction会将多个数据文件合并/整理成新的数据文件。Kafka的LogCleaner清理Log时会将所有的Segment在CleanerPoint清理点位置分成Tail和Head两部分，图3-29中每条消息所在的Segment并没有画出来（这些消息可能在不同的Segment里），因为清理是以Partition为级别，就淡化了Segment的边界问题，不过具体的清理动作还是要面向Segment，因为复制消息时不得不面对Segment文件。  </p>
+<p><img src="http://img.blog.csdn.net/20160514104222841" alt="3-29 log tail head"><br>图3-29 Log包括Tail和Head两部分</p>
+<p>清理后Log Head部分每条消息的offset都是逐渐递增的，而Tail部分消息的offset是断断续续的。<code>LogToClean</code>表示需要被清理的日志，其中firstDirtyOffset会作为Tail和Head的分界点，图3-20中举例了在一个Log的分界点发生Compaction的步骤。  </p>
+<p><img src="http://img.blog.csdn.net/20160514104311333" alt="3-30 log compaction example"><br>图3-30 日志分成Tail和Head的消息压缩步骤</p>
+<p>每个Partition的Log都对应一个LogToClean对象，在选择哪个Partition需要优先做Compaction操作时是依据cleanableRatio的比率即Head部分大小（dirtyBytes）除于总大小中最大的，假设日志文件一样大，firstDirtyOffset越小，dirtyBytes就越大。而firstDirtyOffset每次Compaction后都会增加，所以实际上选择算法是优先选择还没有发生或者发生次数比较少的Partition，因为这样的Partition的firstDirtyOffset没有机会增加太多。  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">LogToClean</span>(</span>topicPartition: <span class="type">TopicAndPartition</span>, log: <span class="type">Log</span>, </span><br><span class="line">    firstDirtyOffset: <span class="type">Long</span>) <span class="keyword">extends</span> <span class="type">Ordered</span>[<span class="type">LogToClean</span>] &#123;</span><br><span class="line">  <span class="keyword">val</span> cleanBytes = log.logSegments(-<span class="number">1</span>, firstDirtyOffset).map(_.size).sum</span><br><span class="line">  <span class="keyword">val</span> dirtyBytes = log.logSegments(firstDirtyOffset, </span><br><span class="line">    math.max(firstDirtyOffset, log.activeSegment.baseOffset)).map(_.size).sum</span><br><span class="line">  <span class="keyword">val</span> cleanableRatio = dirtyBytes / totalBytes.toDouble</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">totalBytes</span> =</span> cleanBytes + dirtyBytes</span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">compare</span>(</span>th:<span class="type">LogToClean</span>)=math.signum(<span class="keyword">this</span>.cleanableRatio-th.cleanableRatio)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不仅仅是更新需要清理旧的数据，删除操作也需要清理，生产者客户端如果发送的消息key的value是空的，表示要删除这条消息，发生在删除标记之前的记录都需要删除掉，而发生在删除标记之后的记录则不会被删除。日志压缩保证了：  </p>
+<ol>
+<li>任何消费者如果能够赶上Log的Head部分，它就会看到写入的每条消息，这些消息都是顺序递增（中间不会间断）的offset</li>
+<li>总是维持消息的有序性，压缩并不会对消息进行重新排序，而是移除一些消息</li>
+<li>每条消息的offset永远不会被改变，它是日志文件标识位置的永久编号</li>
+<li>读取/消费时如果从最开始的offset=0开始，那么至少可以看到所有记录按照它们写入的顺序得到的最终状态（状态指的是value，相同key不同value，最终的状态以最新的value为准）：因为这种场景下写入顺序和读取顺序是一致的，写入时和读取时offset都是不断递增。举例写入key1的value在offset=1和offst=5的值分别是v1和v2，那么读取到offset=1时，最终的状态（value值）是v1，读取到offset=5时，最终状态是v2（不能指望说读取到offset=1时就要求状态是v2）</li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2016/05/13/2016-5-13-Kafka-Book-Sample-LogCompaction/">Kafka技术内幕样章 日志压缩</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2016年05月13日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年05月14日 - 18时04分</p>
+  <p>
+    <span>原始链接:</span><a href="/2016/05/13/2016-5-13-Kafka-Book-Sample-LogCompaction/" title="Kafka技术内幕样章 日志压缩">http://github.com/zqhxuyuan/2016/05/13/2016-5-13-Kafka-Book-Sample-LogCompaction/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/05/13/2016-5-13-Kafka-Book-Sample-LogCompaction/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
+
+
+
+<nav id="article-nav">
+  
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2016/12/31/Linux-Daily/">
+        Linux Daily
+      </a>
+    </div>
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2016/05/12/Graph compare/">
+        
+      </a>
+    </div>
+  
+</nav>
+
+  
+</article>
+
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3_日志管理类的后台线程"><span class="toc-number">1.</span> <span class="toc-text">3.3 日志管理类的后台线程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-1_日志清理"><span class="toc-number">1.1.</span> <span class="toc-text">3.3.1 日志清理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-2_日志压缩"><span class="toc-number">1.2.</span> <span class="toc-text">3.3.2 日志压缩</span></a></li></ol></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+    if ($(".toc").length < 1) {
+        $("#toc").css("display","none");
+        $("#tocButton").css("display","none");
+        $(".switch-btn").css("display","block");
+        $(".switch-area").css("display","block");
+    }
+</script>
+
+
+    <style>
+        .toc {
+            white-space: nowrap;
+            overflow-x: hidden;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $(".toc li a").mouseover(function() {
+                var title = $(this).attr('href');
+                $(this).attr("title", title);
+            });
+        })
+    </script>
+
+
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+	</div>
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+</div>
+
+
+
+
+
+
+
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
+
+
+  
+  
+    
+    <div  class="post-nav-button">
+    <a href="/2016/12/31/Linux-Daily/" title="上一篇: Linux Daily">
+    <i class="fa fa-angle-left"></i>
+    </a>
+    <a href="/2016/05/12/Graph compare/" title="下一篇: ">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2016 任何忧伤,都抵不过世界的美丽
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+        </div>
+    </div>
+    <div class="visit">
+      <span id="busuanzi_container_site_pv" style='display:none'>
+        <span id="site-visit" >本站到访数: 
+        <span id="busuanzi_value_site_uv"></span>
+        </span>
+      </span>
+      <span id="busuanzi_container_page_pv" style='display:none'>
+        <span id="page-visit">, 本页阅读量: 
+        <span id="busuanzi_value_page_pv"></span>
+        </span>
+      </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+<script>
+  var backgroundnum = 5;
+  var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+
+  $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+</script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+<a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+<a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
