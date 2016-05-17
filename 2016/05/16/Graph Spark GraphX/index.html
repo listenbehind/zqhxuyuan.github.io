@@ -3,18 +3,22 @@
 <head>
   <meta charset="utf-8">
   
-  <title>使用Kafka Connect构建大规模低延迟的数据管道 | zqhxuyuan</title>
+  <title>图计算入门：GraphX | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Announcing Kafka Connect: Building large-scale low-latency data pipelineshttp://www.confluent.io/blog/announcing-kafka-connect-building-large-scale-low-latency-data-pipelines">
+  <meta name="description" content="http://spark.apache.org/docs/latest/graphx-programming-guide.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用Kafka Connect构建大规模低延迟的数据管道">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2016/02/21/Kafka-connect-pipeline/index.html">
+<meta property="og:title" content="图计算入门：GraphX">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/05/16/Graph Spark GraphX/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="Announcing Kafka Connect: Building large-scale low-latency data pipelineshttp://www.confluent.io/blog/announcing-kafka-connect-building-large-scale-low-latency-data-pipelines">
-<meta property="og:updated_time" content="2016-02-23T03:20:27.000Z">
+<meta property="og:description" content="http://spark.apache.org/docs/latest/graphx-programming-guide.html">
+<meta property="og:image" content="http://img.blog.csdn.net/20160517085756355">
+<meta property="og:image" content="http://img.blog.csdn.net/20160517085808220">
+<meta property="og:image" content="http://img.blog.csdn.net/20160517091512710">
+<meta property="og:image" content="http://img.blog.csdn.net/20160517091610222">
+<meta property="og:updated_time" content="2016-05-17T01:40:42.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用Kafka Connect构建大规模低延迟的数据管道">
-<meta name="twitter:description" content="Announcing Kafka Connect: Building large-scale low-latency data pipelineshttp://www.confluent.io/blog/announcing-kafka-connect-building-large-scale-low-latency-data-pipelines">
+<meta name="twitter:title" content="图计算入门：GraphX">
+<meta name="twitter:description" content="http://spark.apache.org/docs/latest/graphx-programming-guide.html">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -170,11 +174,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-Kafka-connect-pipeline" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Graph Spark GraphX" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/02/21/Kafka-connect-pipeline/" class="article-date">
-  	<time datetime="2016-02-20T16:00:00.000Z" itemprop="datePublished">2016-02-21</time>
+      <a href="/2016/05/16/Graph Spark GraphX/" class="article-date">
+  	<time datetime="2016-05-15T16:00:00.000Z" itemprop="datePublished">2016-05-16</time>
 </a>
     </div>
   
@@ -187,7 +191,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      使用Kafka Connect构建大规模低延迟的数据管道
+      图计算入门：GraphX
     </h1>
   
 
@@ -196,13 +200,13 @@
       <div class="article-info article-info-post">
         
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/translate/">translate</a>
+	<a class="article-category-link" href="/categories/work/">work</a>
 	</div>
 
 
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/graph/">graph</a></li></ul>
 	</div>
 
         <div class="clearfix"></div>
@@ -212,11 +216,29 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>Announcing Kafka Connect: Building large-scale low-latency data pipelines<br><a href="http://www.confluent.io/blog/announcing-kafka-connect-building-large-scale-low-latency-data-pipelines" target="_blank" rel="external">http://www.confluent.io/blog/announcing-kafka-connect-building-large-scale-low-latency-data-pipelines</a><br><a id="more"></a></p>
-<p>很长一段时间以来,数据处理的一个重要部分是运行一个大的批处理作业–从数据库中导出CSV文件,<br>在每天结束时收集所有的日志文件等等. 但是实时的商业交易因为底层软件的缺陷而无法做出实时的响应.<br>为什么非要在每天结束的时候才处理数据,而不是在数据到来时持续地做出响应? 这是流处理最紧迫处理的任务.<br>但是流处理只有在基础数据的抓取用流式的方式抓取才能变得可能.毕竟你不能把一整天的CSV dumps作为一个流.<br>这种流处理的变化使得Apache Kafka变得流行起来. 但是即使是Kafka,构建实时数据管道风格也需要一些工作.<br>现在0.9+版本的kafka已经有了一个全新功能的Kafka Connect,使得构建和管理流式数据管道变得更加容易.  </p>
-<h2 id="流数据平台:_所有数据的集中营">流数据平台: 所有数据的集中营</h2><p>在LinkedIn我们有机会构建基于Kafka的流式数据平台,并且和开源社区以及Confluent客户端一起协作.<br>我们认为未来的流式数据平台的样子: 一个流式数据平台可以作为所有数据的大本营,它在公司范围内运行,<br>并且支持多样化的分布式应用程序和系统,可以实时地以自由的流程来消费和处理数据.  </p>
-<p>一个流式数据平台有两个特点:  </p>
-<p>1.数据集成:平台抓取流式事件,或者数据的变更,将它们注入其他的数据系统中比如数据库,KV存储,Hadoop,数据仓库等.<br>2.流式处理:持续地实时处理,并且对这些相同的流做转换,在系统级别上支持结果是可用的.  </p>
+        <p><a href="http://spark.apache.org/docs/latest/graphx-programming-guide.html" target="_blank" rel="external">http://spark.apache.org/docs/latest/graphx-programming-guide.html</a></p>
+<a id="more"></a>
+<p>属性图（Property Graph）是一张有向多边图（directed multigraph），顶点和边都可以有自定义的属性。<br>顶点有编号和顶点属性，边只有属性，不过边可以连接源顶点和目标顶点。  </p>
+<p>一张图当然会有很多顶点和很多边组成，而Spark的RDD就类似于一个集合，所以图可以用</p>
+<ul>
+<li><code>RDD[(VertexID, VD)]</code>表示一系列的顶点</li>
+<li><code>RDD[Edge[ED]]</code>表示一系列的边</li>
+</ul>
+<p>VertexRDD和EdgeRDD是对上面两个数据结构更高级的封装。VD和ED作为Graph的类型参数表示的是顶点和边的数据，<br>为什么在图中没有VertexID呢，因为顶点编号肯定是必须的！但是顶点数据和边数据则是自定义的。泛型就是为了自定义。<br>所以我们可以肯定VertexRDD一定包含了VertexID，而VD是不会包含VertexID的。  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Graph</span>[</span><span class="type">VD</span>, <span class="type">ED</span>] &#123;</span><br><span class="line">  <span class="keyword">val</span> vertices: <span class="type">VertexRDD</span>[<span class="type">VD</span>]   <span class="comment">// RDD[(VertexID, VD)] 顶点编号，顶点数据（属性）</span></span><br><span class="line">  <span class="keyword">val</span> edges: <span class="type">EdgeRDD</span>[<span class="type">ED</span>]        <span class="comment">// RDD[Edge[ED]] 边数据（属性）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>属性图可以用顶点表和边表来表示，边表有两个外键引用了顶点表的主键，分别表示边的源顶点和目标顶点。<br>顶点和边都可以有自己的属性。  </p>
+<p><img src="http://img.blog.csdn.net/20160517085756355" alt="graph1"></p>
+<p>通过图可以获取顶点视图和边视图，除此之外还提供了triplet三元组，这样通过triplet也可以获得顶点（源顶点和目标顶点）的属性</p>
+<p><img src="http://img.blog.csdn.net/20160517085808220" alt="graph2"></p>
+<p>属性图，提供的操作就是属性操作（Property Operator），可以操作顶点的属性和边的属性。<br>但是顶点的编号，以及边的源编号和目标编号都是不能操作的，因为更改了编号，图就完全变样了。  </p>
+<p>Triplet实际上是继承了Edge，原先的边只有srcId和destId，现在加上了srtAttr和destAttr，信息更加丰富。  </p>
+<ul>
+<li>mapVertices：对图的Vertices做操作，原图的VD类型通过map函数转换为新图的VD2类型</li>
+<li>mapEdges/mapTriplets：对图的顶点做操作，原图的ED类型通过map函数转换为新图的ED2类型</li>
+</ul>
+<p><img src="http://img.blog.csdn.net/20160517091512710" alt="graph3"></p>
+<p>outerJoinVertices，将原图和顶点的新属性表进行out-join，y</p>
+<p><img src="http://img.blog.csdn.net/20160517091610222" alt="graph4"></p>
 
       
     </div>
@@ -225,13 +247,13 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2016/02/21/Kafka-connect-pipeline/">使用Kafka Connect构建大规模低延迟的数据管道</a></p>
+  <p><span>本文标题:</span><a href="/2016/05/16/Graph Spark GraphX/">图计算入门：GraphX</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
-  <p><span>发布时间:</span>2016年02月21日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年02月23日 - 11时20分</p>
+  <p><span>发布时间:</span>2016年05月16日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年05月17日 - 09时40分</p>
   <p>
-    <span>原始链接:</span><a href="/2016/02/21/Kafka-connect-pipeline/" title="使用Kafka Connect构建大规模低延迟的数据管道">http://github.com/zqhxuyuan/2016/02/21/Kafka-connect-pipeline/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/02/21/Kafka-connect-pipeline/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2016/05/16/Graph Spark GraphX/" title="图计算入门：GraphX">http://github.com/zqhxuyuan/2016/05/16/Graph Spark GraphX/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/05/16/Graph Spark GraphX/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -257,15 +279,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2016/02/22/2016-02-22-Kafka-Consumer-new/">
-        Kafka源码分析 KafkaConsumer
+      <a href="/2016/12/31/Monitor Tools/">
+        监控工具集锦
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2016/02/21/Kafka-Connect/">
-        使用Kafka Connect构建一个可扩展的ETL管道
+      <a href="/2016/05/13/2016-5-13-Kafka-Book-Sample-LogCompaction/">
+        Kafka技术内幕样章 日志压缩
       </a>
     </div>
   
@@ -278,7 +300,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#流数据平台:_所有数据的集中营"><span class="toc-number">1.</span> <span class="toc-text">流数据平台: 所有数据的集中营</span></a></li></ol>
+
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -374,10 +396,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2016/02/22/2016-02-22-Kafka-Consumer-new/" title="上一篇: Kafka源码分析 KafkaConsumer">
+    <a href="/2016/12/31/Monitor Tools/" title="上一篇: 监控工具集锦">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2016/02/21/Kafka-Connect/" title="下一篇: 使用Kafka Connect构建一个可扩展的ETL管道">
+    <a href="/2016/05/13/2016-5-13-Kafka-Book-Sample-LogCompaction/" title="下一篇: Kafka技术内幕样章 日志压缩">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
