@@ -8,14 +8,15 @@
   <meta name="description" content="http://spark.apache.org/docs/latest/graphx-programming-guide.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="图计算入门：GraphX">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2016/05/16/Graph Spark GraphX/index.html">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/05/16/Graph-Spark-GraphX/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="http://spark.apache.org/docs/latest/graphx-programming-guide.html">
 <meta property="og:image" content="http://img.blog.csdn.net/20160517085756355">
 <meta property="og:image" content="http://img.blog.csdn.net/20160517085808220">
 <meta property="og:image" content="http://img.blog.csdn.net/20160517091512710">
 <meta property="og:image" content="http://img.blog.csdn.net/20160517091610222">
-<meta property="og:updated_time" content="2016-05-17T01:40:42.000Z">
+<meta property="og:image" content="http://img.blog.csdn.net/20160517145902062">
+<meta property="og:updated_time" content="2016-05-17T07:00:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图计算入门：GraphX">
 <meta name="twitter:description" content="http://spark.apache.org/docs/latest/graphx-programming-guide.html">
@@ -174,10 +175,10 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-Graph Spark GraphX" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Graph-Spark-GraphX" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/05/16/Graph Spark GraphX/" class="article-date">
+      <a href="/2016/05/16/Graph-Spark-GraphX/" class="article-date">
   	<time datetime="2016-05-15T16:00:00.000Z" itemprop="datePublished">2016-05-16</time>
 </a>
     </div>
@@ -237,8 +238,61 @@
 <li>mapEdges/mapTriplets：对图的顶点做操作，原图的ED类型通过map函数转换为新图的ED2类型</li>
 </ul>
 <p><img src="http://img.blog.csdn.net/20160517091512710" alt="graph3"></p>
-<p>outerJoinVertices，将原图和顶点的新属性表进行out-join，y</p>
+<p>outerJoinVertices：顶点本身是一张表，主键是顶点编号，其他属性作为普通的列比如名字和职位组成VD：(String,String)，<br>可以对顶点边转换成新的表，不过新的表的主键也一定仍然是顶点编号，其他列比如只有一个：统计顶点的入度，VD=Int<br>将原图（的顶点表）和新的顶点表进行out-join，相同顶点编号作为一行，剩余一起join的是原表的列，和新表的列。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> v.<span class="keyword">id</span>, v1.<span class="keyword">attr</span>, v2.outDegree <span class="keyword">from</span> vertices v1</span><br><span class="line"><span class="keyword">OUT</span> <span class="keyword">JOIN</span> (</span><br><span class="line">  <span class="keyword">select</span> <span class="keyword">id</span>, <span class="keyword">count</span>(outDegrees) <span class="keyword">as</span> outDegree <span class="keyword">from</span> vertices</span><br><span class="line">) v2 <span class="keyword">ON</span> v1.<span class="keyword">id</span> = v2.<span class="keyword">id</span></span></span><br></pre></td></tr></table></figure>
 <p><img src="http://img.blog.csdn.net/20160517091610222" alt="graph4"></p>
+<p>下面的示例是构造一张PageRank图的初始步骤，每条边包含权重（入度的倒数），每个顶点初始值为1.0。</p>
+<table>
+<thead>
+<tr>
+<th>Triplet</th>
+<th>Type</th>
+<th>A-[relation]-B</th>
+<th></th>
+<th>mapTriplets</th>
+<th>example</th>
+<th></th>
+<th>mapVertices</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>srcAttr</td>
+<td>VD</td>
+<td>3</td>
+<td></td>
+<td>VD</td>
+<td>3</td>
+<td></td>
+<td>VD2</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>destAttr</td>
+<td>VD</td>
+<td>1</td>
+<td></td>
+<td>VD</td>
+<td>1</td>
+<td></td>
+<td>VD2</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>attr</td>
+<td>ED</td>
+<td>professor</td>
+<td></td>
+<td>ED2</td>
+<td>1/3=0.3</td>
+<td></td>
+<td>ED2</td>
+<td>0.3</td>
+</tr>
+</tbody>
+</table>
+<p><img src="http://img.blog.csdn.net/20160517145902062" alt="graph5"></p>
 
       
     </div>
@@ -247,13 +301,13 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2016/05/16/Graph Spark GraphX/">图计算入门：GraphX</a></p>
+  <p><span>本文标题:</span><a href="/2016/05/16/Graph-Spark-GraphX/">图计算入门：GraphX</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年05月16日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年05月17日 - 09时40分</p>
+  <p><span>最后更新:</span>2016年05月17日 - 15时00分</p>
   <p>
-    <span>原始链接:</span><a href="/2016/05/16/Graph Spark GraphX/" title="图计算入门：GraphX">http://github.com/zqhxuyuan/2016/05/16/Graph Spark GraphX/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/05/16/Graph Spark GraphX/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2016/05/16/Graph-Spark-GraphX/" title="图计算入门：GraphX">http://github.com/zqhxuyuan/2016/05/16/Graph-Spark-GraphX/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/05/16/Graph-Spark-GraphX/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -279,8 +333,8 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2016/12/31/Monitor Tools/">
-        监控工具集锦
+      <a href="/2016/05/18/Cassandra-NewFeature/">
+        Cassandra的新特性
       </a>
     </div>
   
@@ -396,7 +450,7 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2016/12/31/Monitor Tools/" title="上一篇: 监控工具集锦">
+    <a href="/2016/05/18/Cassandra-NewFeature/" title="上一篇: Cassandra的新特性">
     <i class="fa fa-angle-left"></i>
     </a>
     <a href="/2016/05/13/2016-5-13-Kafka-Book-Sample-LogCompaction/" title="下一篇: Kafka技术内幕样章 日志压缩">

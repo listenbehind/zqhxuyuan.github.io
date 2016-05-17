@@ -3,18 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>图计算入门：Neo4j | zqhxuyuan</title>
+  <title>Cassandra的新特性 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="TODO">
+  <meta name="description" content="Cassandra的新特性汇总：
+3.0：物化视图">
 <meta property="og:type" content="article">
-<meta property="og:title" content="图计算入门：Neo4j">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2016/05/10/Graph Hello Neo4j/index.html">
+<meta property="og:title" content="Cassandra的新特性">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/05/18/Cassandra-NewFeature/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="TODO">
-<meta property="og:updated_time" content="2016-05-15T02:25:29.000Z">
+<meta property="og:description" content="Cassandra的新特性汇总：
+3.0：物化视图">
+<meta property="og:updated_time" content="2016-05-17T04:06:16.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="图计算入门：Neo4j">
-<meta name="twitter:description" content="TODO">
+<meta name="twitter:title" content="Cassandra的新特性">
+<meta name="twitter:description" content="Cassandra的新特性汇总：
+3.0：物化视图">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -170,11 +173,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-Graph Hello Neo4j" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Cassandra-NewFeature" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/05/10/Graph Hello Neo4j/" class="article-date">
-  	<time datetime="2016-05-09T16:00:00.000Z" itemprop="datePublished">2016-05-10</time>
+      <a href="/2016/05/18/Cassandra-NewFeature/" class="article-date">
+  	<time datetime="2016-05-17T16:00:00.000Z" itemprop="datePublished">2016-05-18</time>
 </a>
     </div>
   
@@ -187,7 +190,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      图计算入门：Neo4j
+      Cassandra的新特性
     </h1>
   
 
@@ -202,7 +205,7 @@
 
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/graph/">graph</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
 	</div>
 
         <div class="clearfix"></div>
@@ -212,9 +215,18 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <a id="more"></a>
-<p>TODO</p>
-
+        <p>Cassandra的新特性汇总：</p>
+<p>3.0：物化视图</p>
+<a id="more"></a>
+<h3 id="物化视图（materialized_view）">物化视图（materialized view）</h3><p>Whereas secondary indexes which are suited for low cardinality data, materialized views are suited for high cardinality data. Secondary indexes on high cardinality data require all nodes in a cluster to be queried, causing high read latency. With materialized views, the data is arranged serially based on the new primary key in a new table. Materialized views will cause hotspots if low cardinality data is inserted.</p>
+<p>创建视图的限制条件：</p>
+<ol>
+<li>原表的PK必须全部作为视图的PK的一部分，也就是说不允许原表的PK有些字段没有作为视图的PK</li>
+<li>原表的普通字段添加到视图中，一次只能添加一个作为视图PK</li>
+<li>也就是说视图的PK组成部分：原表的所有PK + 原表的一个普通字段</li>
+</ol>
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#假设原表的PK只有一个字段cid，当然可以根据业务需求设计PK为一个或多个</span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> cyclist_mv (cid <span class="keyword">UUID</span> PRIMARY <span class="keyword">KEY</span>, <span class="keyword">name</span> <span class="built_in">text</span>, age <span class="built_in">int</span>, birthday <span class="built_in">date</span>, country <span class="built_in">text</span>);</span></span><br><span class="line"></span><br><span class="line">#将普通的age字段作为视图的PK的一部分，类似于二级索引</span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">MATERIALIZED</span> <span class="keyword">VIEW</span> cyclist_by_age <span class="keyword">AS</span> </span><br><span class="line"><span class="keyword">SELECT</span> age, birthday, <span class="keyword">name</span>, country <span class="keyword">FROM</span> cyclist_mv </span><br><span class="line"><span class="keyword">WHERE</span> age <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">AND</span> cid <span class="keyword">IS</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> PRIMARY <span class="keyword">KEY</span> (age, cid);</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">SELECT</span> age, <span class="keyword">name</span>, birthday <span class="keyword">FROM</span> cyclist_by_age <span class="keyword">WHERE</span> age = <span class="number">18</span>;</span></span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -222,13 +234,13 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2016/05/10/Graph Hello Neo4j/">图计算入门：Neo4j</a></p>
+  <p><span>本文标题:</span><a href="/2016/05/18/Cassandra-NewFeature/">Cassandra的新特性</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
-  <p><span>发布时间:</span>2016年05月10日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年05月15日 - 10时25分</p>
+  <p><span>发布时间:</span>2016年05月18日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年05月17日 - 12时06分</p>
   <p>
-    <span>原始链接:</span><a href="/2016/05/10/Graph Hello Neo4j/" title="图计算入门：Neo4j">http://github.com/zqhxuyuan/2016/05/10/Graph Hello Neo4j/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/05/10/Graph Hello Neo4j/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2016/05/18/Cassandra-NewFeature/" title="Cassandra的新特性">http://github.com/zqhxuyuan/2016/05/18/Cassandra-NewFeature/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/05/18/Cassandra-NewFeature/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -254,15 +266,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2016/05/10/Graph Hello Dato/">
-        图计算入门：Dato
+      <a href="/2016/12/31/Linux-Daily/">
+        Linux Daily
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2016/05/10/Graph compare/">
-        图计算乱斗
+      <a href="/2016/05/16/Graph-Spark-GraphX/">
+        图计算入门：GraphX
       </a>
     </div>
   
@@ -275,7 +287,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#物化视图（materialized_view）"><span class="toc-number">1.</span> <span class="toc-text">物化视图（materialized view）</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -371,10 +383,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2016/05/10/Graph Hello Dato/" title="上一篇: 图计算入门：Dato">
+    <a href="/2016/12/31/Linux-Daily/" title="上一篇: Linux Daily">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2016/05/10/Graph compare/" title="下一篇: 图计算乱斗">
+    <a href="/2016/05/16/Graph-Spark-GraphX/" title="下一篇: 图计算入门：GraphX">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
