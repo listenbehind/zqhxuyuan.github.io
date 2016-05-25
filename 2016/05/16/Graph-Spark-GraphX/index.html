@@ -16,7 +16,9 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160517091512710">
 <meta property="og:image" content="http://img.blog.csdn.net/20160517091610222">
 <meta property="og:image" content="http://img.blog.csdn.net/20160517145902062">
-<meta property="og:updated_time" content="2016-05-17T07:00:16.000Z">
+<meta property="og:image" content="http://img.blog.csdn.net/20160518112244490">
+<meta property="og:image" content="http://img.blog.csdn.net/20160518112255522">
+<meta property="og:updated_time" content="2016-05-23T11:11:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图计算入门：GraphX">
 <meta name="twitter:description" content="http://spark.apache.org/docs/latest/graphx-programming-guide.html">
@@ -115,7 +117,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 14.29px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.29px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 11.43px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 14.29px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.29px;">work</a>
 					</div>
 				</section>
 				
@@ -219,7 +221,7 @@
         
         <p><a href="http://spark.apache.org/docs/latest/graphx-programming-guide.html" target="_blank" rel="external">http://spark.apache.org/docs/latest/graphx-programming-guide.html</a></p>
 <a id="more"></a>
-<p>属性图（Property Graph）是一张有向多边图（directed multigraph），顶点和边都可以有自定义的属性。<br>顶点有编号和顶点属性，边只有属性，不过边可以连接源顶点和目标顶点。  </p>
+<h2 id="属性图">属性图</h2><p>属性图（Property Graph）是一张有向多边图（directed multigraph），顶点和边都可以有自定义的属性。<br>顶点有编号和顶点属性，边只有属性，不过边可以连接源顶点和目标顶点。  </p>
 <p>一张图当然会有很多顶点和很多边组成，而Spark的RDD就类似于一个集合，所以图可以用</p>
 <ul>
 <li><code>RDD[(VertexID, VD)]</code>表示一系列的顶点</li>
@@ -293,7 +295,11 @@
 </tbody>
 </table>
 <p><img src="http://img.blog.csdn.net/20160517145902062" alt="graph5"></p>
-
+<p>joinVertices详解：  </p>
+<p><img src="http://img.blog.csdn.net/20160518112244490" alt="graph6"></p>
+<p>outJoinVertices详解：  </p>
+<p><img src="http://img.blog.csdn.net/20160518112255522" alt="graph7"></p>
+<h2 id="PageRank">PageRank</h2>
       
     </div>
     
@@ -304,7 +310,7 @@
   <p><span>本文标题:</span><a href="/2016/05/16/Graph-Spark-GraphX/">图计算入门：GraphX</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年05月16日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年05月17日 - 15时00分</p>
+  <p><span>最后更新:</span>2016年05月23日 - 19时11分</p>
   <p>
     <span>原始链接:</span><a href="/2016/05/16/Graph-Spark-GraphX/" title="图计算入门：GraphX">http://github.com/zqhxuyuan/2016/05/16/Graph-Spark-GraphX/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/05/16/Graph-Spark-GraphX/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -354,7 +360,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#属性图"><span class="toc-number">1.</span> <span class="toc-text">属性图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PageRank"><span class="toc-number">2.</span> <span class="toc-text">PageRank</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {

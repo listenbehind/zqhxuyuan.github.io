@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160511155934888">
 <meta property="og:image" content="http://img.blog.csdn.net/20160511163609340">
 <meta property="og:image" content="http://img.blog.csdn.net/20160512084309447">
-<meta property="og:updated_time" content="2016-05-12T11:11:42.000Z">
+<meta property="og:updated_time" content="2016-05-18T14:44:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图计算入门：Dato">
 <meta name="twitter:description" content="Dato的前身是PowerGraph，GraphLab Create，现在又改名为Dato，其Co-founder貌似是位华人（http://weibo.com/u/1863703874）。
@@ -119,7 +119,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 14.29px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.29px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 11.43px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 14.29px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.29px;">work</a>
 					</div>
 				</section>
 				
@@ -299,6 +299,7 @@
 <p>比如下面第一行第一个元素实际上是artist_name列,第二个元素是release列，所有列组成一个list<br>当然如果要反过来，把list分隔成单独的列，可以用<code>unpack</code>函数</p>
 <figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">+--------------------------------+</span><br><span class="line">|<span class="string">               X1               </span>|</span><br><span class="line">+--------------------------------+</span><br><span class="line">|<span class="string"> [\'Veruca Salt\', \'Eight  ... </span>|</span><br><span class="line">|<span class="string"> ['Les Compagnons De La Cha ... </span>|</span><br><span class="line">|<span class="string"> ['Nelly / Fat Joe / Young  ... </span>|</span><br><span class="line">|<span class="string"> ['The Grouch', 'My Baddest ... </span>|</span><br><span class="line">|<span class="string"> [\'Ozzy Osbourne\', \'Diar ... </span>|</span><br><span class="line">|<span class="string"> ['Peter Hunnigale', 'Regga ... </span>|</span><br><span class="line">|<span class="string"> ['Burning Spear', 'Studio  ... </span>|</span><br><span class="line">|<span class="string"> ['Bond', 'New Classix 2008 ... </span>|</span><br><span class="line">|<span class="string"> ['Lee Coombs feat. Katheri ... </span>|</span><br><span class="line">|<span class="string"> ['Stevie Wonder', 'Songs I ... </span>|</span><br><span class="line">+--------------------------------+</span><br></pre></td></tr></table></figure>
 <h4 id="SparkRDD">SparkRDD</h4><p>将Spark的RDD和GraphLab的SFrame进行转换，实际上Spark也有DataFrame的概念，所以可以认为Spark的DataFrame和GraphLab的SFrame是类似的。（其实它们都借鉴了python pandas的DataFrame概念）  </p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  spark-sframe <span class="string">git:</span>(master) build/mvn <span class="keyword">package</span></span><br><span class="line">[INFO] Replacing <span class="regexp">/Users/</span>zhengqh<span class="regexp">/Github/</span>_graph<span class="regexp">/spark-sframe/</span>target/uber-spark_unity-<span class="number">0.1</span>.jar</span><br></pre></td></tr></table></figure>
 <h3 id="SGraph(图数据)">SGraph(图数据)</h3><p><strong>创建图</strong>  </p>
 <p>SGraph是基于SFrame之上提供支持图操作的一个数据结构。注意SGraph是个不可变对象，所以添加一个顶点或一条边后，要重新赋值。否则原来的graph仍然是空的。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> graphlab <span class="keyword">import</span> SGraph, Vertex, Edge</span><br><span class="line">g = SGraph()</span><br><span class="line">verts = [Vertex(<span class="number">0</span>, attr=&#123;<span class="string">'breed'</span>: <span class="string">'labrador'</span>&#125;),</span><br><span class="line">         Vertex(<span class="number">1</span>, attr=&#123;<span class="string">'breed'</span>: <span class="string">'labrador'</span>&#125;),</span><br><span class="line">         Vertex(<span class="number">2</span>, attr=&#123;<span class="string">'breed'</span>: <span class="string">'vizsla'</span>&#125;)]</span><br><span class="line"><span class="comment">#重新赋值</span></span><br><span class="line">g = g.add_vertices(verts)</span><br><span class="line">g = g.add_edges(Edge(<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line"><span class="keyword">print</span> g</span><br><span class="line"></span><br><span class="line">SGraph(&#123;<span class="string">'num_edges'</span>: <span class="number">1</span>, <span class="string">'num_vertices'</span>: <span class="number">3</span>&#125;)</span><br><span class="line">Vertex Fields:[<span class="string">'__id'</span>, <span class="string">'breed'</span>]</span><br><span class="line">Edge Fields:[<span class="string">'__src_id'</span>, <span class="string">'__dst_id'</span>]</span><br></pre></td></tr></table></figure>
@@ -418,7 +419,7 @@
   <p><span>本文标题:</span><a href="/2016/05/10/Graph-Hello-Dato/">图计算入门：Dato</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年05月10日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年05月12日 - 19时11分</p>
+  <p><span>最后更新:</span>2016年05月18日 - 22时44分</p>
   <p>
     <span>原始链接:</span><a href="/2016/05/10/Graph-Hello-Dato/" title="图计算入门：Dato">http://github.com/zqhxuyuan/2016/05/10/Graph-Hello-Dato/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/05/10/Graph-Hello-Dato/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -447,15 +448,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2016/05/13/2016-5-13-Kafka-Book-Sample-LogCompaction/">
-        Kafka技术内幕样章 日志压缩
+      <a href="/2016/05/10/Graph-compare/">
+        图计算框架乱斗
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2016/05/10/Graph-compare/">
-        图计算框架乱斗
+      <a href="/2016/05/10/Graph-Hello-Neo4j/">
+        图计算入门：Neo4j
       </a>
     </div>
   
@@ -564,10 +565,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2016/05/13/2016-5-13-Kafka-Book-Sample-LogCompaction/" title="上一篇: Kafka技术内幕样章 日志压缩">
+    <a href="/2016/05/10/Graph-compare/" title="上一篇: 图计算框架乱斗">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2016/05/10/Graph-compare/" title="下一篇: 图计算框架乱斗">
+    <a href="/2016/05/10/Graph-Hello-Neo4j/" title="下一篇: 图计算入门：Neo4j">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

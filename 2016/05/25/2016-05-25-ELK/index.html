@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ELK监控 | zqhxuyuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="ELK：Elastic + Logstash + Kibana
+
+
+
+Software
+Version
+安装节点
+
+
+
+
+elasticSearch
+2.3.3
+192.168.6.52
+
+
+logstash
+2.3.2
+本机
+
+
+collectd
+
+192.168.6.52">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ELK监控">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/05/25/2016-05-25-ELK/index.html">
+<meta property="og:site_name" content="zqhxuyuan">
+<meta property="og:description" content="ELK：Elastic + Logstash + Kibana
+
+
+
+Software
+Version
+安装节点
+
+
+
+
+elasticSearch
+2.3.3
+192.168.6.52
+
+
+logstash
+2.3.2
+本机
+
+
+collectd
+
+192.168.6.52">
+<meta property="og:image" content="http://img.blog.csdn.net/20160525131644727">
+<meta property="og:image" content="http://img.blog.csdn.net/20160525131752805">
+<meta property="og:updated_time" content="2016-05-25T05:17:59.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ELK监控">
+<meta name="twitter:description" content="ELK：Elastic + Logstash + Kibana
+
+
+
+Software
+Version
+安装节点
+
+
+
+
+elasticSearch
+2.3.3
+192.168.6.52
+
+
+logstash
+2.3.2
+本机
+
+
+collectd
+
+192.168.6.52">
+  
+    <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">任何忧伤,都抵不过世界的美丽</a></h1>
+		</hgroup>
+
+		
+				
+
+
+		
+			<div id="switch-btn" class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div id="switch-area" class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives/">归档</a></li>
+				        
+							<li><a href="/tags/">标签</a></li>
+				        
+							<li><a href="/about/">关于</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 11.43px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 14.29px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.29px;">work</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">BIG(DATA)</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="/" class="profilepic">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			</a>
+			<hgroup>
+			  <h1 class="header-author"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives/">归档</a></li>
+		        
+					<li><a href="/tags/">标签</a></li>
+		        
+					<li><a href="/about/">关于</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-2016-05-25-ELK" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/05/25/2016-05-25-ELK/" class="article-date">
+  	<time datetime="2016-05-24T16:00:00.000Z" itemprop="datePublished">2016-05-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ELK监控
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/elasticsearch/">elasticsearch</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>ELK：Elastic + Logstash + Kibana</p>
+<table>
+<thead>
+<tr>
+<th>Software</th>
+<th>Version</th>
+<th>安装节点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>elasticSearch</td>
+<td>2.3.3</td>
+<td>192.168.6.52</td>
+</tr>
+<tr>
+<td>logstash</td>
+<td>2.3.2</td>
+<td>本机</td>
+</tr>
+<tr>
+<td>collectd</td>
+<td></td>
+<td>192.168.6.52</td>
+</tr>
+</tbody>
+</table>
+<a id="more"></a>
+<h3 id="std_I/O">std I/O</h3><p>命令行输入输出，通过脚本执行，codec指定如何解码</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cd logstash-<span class="number">2.3</span>.<span class="number">2</span></span><br><span class="line"><span class="variable">$ </span>bin/logstash -e <span class="string">"input &#123;stdin&#123;&#125;&#125; output &#123;stdout&#123;&#125;&#125;"</span> &lt;&lt;&lt; <span class="string">'Hello World'</span></span><br><span class="line"><span class="constant">Settings:</span> <span class="constant">Default </span>pipeline <span class="symbol">workers:</span> <span class="number">4</span></span><br><span class="line"><span class="constant">Pipeline </span>main started</span><br><span class="line"><span class="number">2016</span>-<span class="number">05</span>-<span class="number">25</span><span class="constant">T04:</span><span class="number">00</span><span class="symbol">:</span><span class="number">29.531</span>Z zqhmac <span class="constant">Hello World</span></span><br><span class="line"><span class="constant">Pipeline </span>main has been shutdown</span><br><span class="line">stopping pipeline &#123;<span class="symbol">:id=&gt;<span class="string">"main"</span></span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$ </span>bin/logstash -e <span class="string">'input&#123;stdin&#123;&#125;&#125;output&#123;stdout&#123;codec=&gt;rubydebug&#125;&#125;'</span> &lt;&lt;&lt; <span class="string">'Hello World'</span></span><br><span class="line">&#123;</span><br><span class="line">       <span class="string">"message"</span> =&gt; <span class="string">"Hello World"</span>,</span><br><span class="line">      <span class="string">"@version"</span> =&gt; <span class="string">"1"</span>,</span><br><span class="line">    <span class="string">"@timestamp"</span> =&gt; <span class="string">"2016-05-25T04:01:09.095Z"</span>,</span><br><span class="line">          <span class="string">"host"</span> =&gt; <span class="string">"zqhmac"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$ </span>vi logstash-simple.conf </span><br><span class="line">input &#123; stdin &#123;&#125; &#125;</span><br><span class="line">output &#123;</span><br><span class="line">   stdout &#123; codec=&gt; rubydebug &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$ </span>bin/logstash agent -f logstash-simple.conf --verbose</span><br></pre></td></tr></table></figure>
+<h3 id="collectd">collectd</h3><p>安装collectd，network插件表示要将当前机器的信息发送到远程服务器10.57.2.26的25856端口</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum <span class="operator"><span class="keyword">install</span> collectd</span><br><span class="line">$ sudo mv /etc/collectd.conf /etc/collectd_backup.conf</span><br><span class="line">$ sudo vi /etc/collectd.conf</span><br><span class="line">Hostname <span class="string">"dp0652"</span></span><br><span class="line">FQDNLookup   <span class="literal">true</span></span><br><span class="line">LoadPlugin <span class="keyword">interface</span></span><br><span class="line">LoadPlugin cpu</span><br><span class="line">LoadPlugin <span class="keyword">memory</span></span><br><span class="line">LoadPlugin network</span><br><span class="line">LoadPlugin df</span><br><span class="line">LoadPlugin disk</span><br><span class="line">&lt;<span class="keyword">Plugin</span> <span class="keyword">interface</span>&gt;</span><br><span class="line">    <span class="keyword">Interface</span> <span class="string">"eth0"</span></span><br><span class="line">    IgnoreSelected <span class="literal">false</span></span><br><span class="line">&lt;/<span class="keyword">Plugin</span>&gt;</span><br><span class="line">&lt;<span class="keyword">Plugin</span> network&gt;</span><br><span class="line">    <span class="keyword">Server</span> <span class="string">"10.57.2.26"</span> <span class="string">"25826"</span></span><br><span class="line">&lt;/<span class="keyword">Plugin</span>&gt;</span><br><span class="line"><span class="keyword">Include</span> <span class="string">"/etc/collectd.d"</span></span><br><span class="line">$ sudo service collectd <span class="keyword">start</span></span><br><span class="line"><span class="keyword">Starting</span> collectd:                                         [  OK  ]</span><br><span class="line">$ sudo service collectd <span class="keyword">status</span></span><br><span class="line">collectd (pid  <span class="number">9295</span>) <span class="keyword">is</span> running...</span></span><br></pre></td></tr></table></figure>
+<p>开发机器地址是10.57.2.26，监听25826端口，收集来自于collectd发送的信息</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">$ bin/plugin <span class="keyword">list</span> | grep collect</span><br><span class="line">logstash-codec-collectd</span><br><span class="line"></span><br><span class="line">$ vi collectd.conf</span><br><span class="line">input &#123;</span><br><span class="line">  udp &#123;</span><br><span class="line">    port =&gt; <span class="number">25826</span></span><br><span class="line">    buffer_size =&gt; <span class="number">1452</span></span><br><span class="line">    codec =&gt; collectd &#123; &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">  stdout &#123;</span><br><span class="line">    codec =&gt; rubydebug </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">$ bin/logstash -f collectd.conf</span><br><span class="line">Settings: <span class="keyword">Default</span> pipeline workers: <span class="number">4</span></span><br><span class="line">Pipeline main started</span><br><span class="line">&#123;</span><br><span class="line">               <span class="string">"host"</span> =&gt; <span class="string">"dp0652"</span>,</span><br><span class="line">         <span class="string">"@timestamp"</span> =&gt; <span class="string">"2016-05-25T03:49:52.000Z"</span>,</span><br><span class="line">             <span class="string">"plugin"</span> =&gt; <span class="string">"cpu"</span>,</span><br><span class="line">    <span class="string">"plugin_instance"</span> =&gt; <span class="string">"21"</span>,</span><br><span class="line">      <span class="string">"collectd_type"</span> =&gt; <span class="string">"cpu"</span>,</span><br><span class="line">      <span class="string">"type_instance"</span> =&gt; <span class="string">"system"</span>,</span><br><span class="line">              <span class="string">"value"</span> =&gt; <span class="number">1220568</span>,</span><br><span class="line">           <span class="string">"@version"</span> =&gt; <span class="string">"1"</span></span><br><span class="line">&#125;....</span><br></pre></td></tr></table></figure>
+<h3 id="elastic">elastic</h3><p>启动ES</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">$ cd elasticsearch-<span class="number">2.3</span><span class="number">.3</span></span><br><span class="line">$ vi config/elasticsearch.yml</span><br><span class="line">cluster.name: es52</span><br><span class="line">network.host: <span class="number">192.168</span><span class="number">.6</span><span class="number">.52</span></span><br><span class="line"><span class="preprocessor">#discovery.zen.ping.multicast.enabled: false</span></span><br><span class="line"><span class="preprocessor">#http.cors.allow-origin: <span class="string">"/.*/"</span></span></span><br><span class="line"><span class="preprocessor">#http.cors.enabled: true</span></span><br><span class="line"></span><br><span class="line">$ bin/elasticsearch</span><br><span class="line">$ curl http:<span class="comment">//192.168.6.52:9200/</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span> : <span class="string">"Bastion"</span>,</span><br><span class="line">  <span class="string">"cluster_name"</span> : <span class="string">"es52"</span>,</span><br><span class="line">  <span class="string">"version"</span> : &#123;</span><br><span class="line">    <span class="string">"number"</span> : <span class="string">"2.3.3"</span>,</span><br><span class="line">    <span class="string">"build_hash"</span> : <span class="string">"218bdf10790eef486ff2c41a3df5cfa32dadcfde"</span>,</span><br><span class="line">    <span class="string">"build_timestamp"</span> : <span class="string">"2016-05-17T15:40:04Z"</span>,</span><br><span class="line">    <span class="string">"build_snapshot"</span> : <span class="literal">false</span>,</span><br><span class="line">    <span class="string">"lucene_version"</span> : <span class="string">"5.5.0"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"tagline"</span> : <span class="string">"You Know, for Search"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>把从collectd搜集到的数据转存到elasticsearch中。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">$ vi elastic.conf</span><br><span class="line">input &#123;</span><br><span class="line">  udp &#123;</span><br><span class="line">    port =&gt; <span class="number">25826</span></span><br><span class="line">    buffer_size =&gt; <span class="number">1452</span></span><br><span class="line">    codec =&gt; collectd &#123; &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">    elasticsearch &#123;</span><br><span class="line">        hosts =&gt; [<span class="string">"192.168.6.52:9200"</span>]</span><br><span class="line">        index =&gt; <span class="string">"logstash-%&#123;type&#125;-%&#123;+YYYY.MM.dd&#125;"</span></span><br><span class="line">        document_type =&gt; <span class="string">"%&#123;type&#125;"</span></span><br><span class="line">        workers =&gt; <span class="number">2</span></span><br><span class="line">        flush_size =&gt; <span class="number">1000</span></span><br><span class="line">        idle_flush_time =&gt; <span class="number">5</span></span><br><span class="line">        template_overwrite =&gt; <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$ bin/logstash -f elastic.conf</span><br><span class="line"></span><br><span class="line">$ curl http:<span class="comment">//192.168.6.52:9200/_search?pretty</span></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"took"</span> : <span class="number">4</span>,</span><br><span class="line">  <span class="string">"timed_out"</span> : <span class="literal">false</span>,</span><br><span class="line">  <span class="string">"_shards"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"successful"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"failed"</span> : <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"hits"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">613</span>,</span><br><span class="line">    <span class="string">"max_score"</span> : <span class="number">1.0</span>,</span><br><span class="line">    <span class="string">"hits"</span> : [ &#123;</span><br><span class="line">      <span class="string">"_index"</span> : <span class="string">"logstash-%&#123;type&#125;-2016.05.25"</span>,</span><br><span class="line">      <span class="string">"_type"</span> : <span class="string">"%&#123;type&#125;"</span>,</span><br><span class="line">      <span class="string">"_id"</span> : <span class="string">"AVTmTRv8ihrmowv7fKbo"</span>,</span><br><span class="line">      <span class="string">"_score"</span> : <span class="number">1.0</span>,</span><br><span class="line">      <span class="string">"_source"</span> : &#123;</span><br><span class="line">        <span class="string">"host"</span> : <span class="string">"dp0652"</span>,</span><br><span class="line">        <span class="string">"@timestamp"</span> : <span class="string">"2016-05-25T05:04:42.000Z"</span>,</span><br><span class="line">        <span class="string">"plugin"</span> : <span class="string">"cpu"</span>,</span><br><span class="line">        <span class="string">"plugin_instance"</span> : <span class="string">"22"</span>,</span><br><span class="line">        <span class="string">"collectd_type"</span> : <span class="string">"cpu"</span>,</span><br><span class="line">        <span class="string">"type_instance"</span> : <span class="string">"steal"</span>,</span><br><span class="line">        <span class="string">"value"</span> : <span class="number">0</span>,</span><br><span class="line">        <span class="string">"@version"</span> : <span class="string">"1"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;, ......]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最终的网络拓扑流程图如下：</p>
+<p><img src="http://img.blog.csdn.net/20160525131644727" alt="collectd logstash es"></p>
+<p>实际上collectd是不同的服务器节点（比如Nginx服务器），而logstash和es只需要一台机器即可：</p>
+<p><img src="http://img.blog.csdn.net/20160525131752805" alt="logstash"></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2016/05/25/2016-05-25-ELK/">ELK监控</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2016年05月25日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年05月25日 - 13时17分</p>
+  <p>
+    <span>原始链接:</span><a href="/2016/05/25/2016-05-25-ELK/" title="ELK监控">http://github.com/zqhxuyuan/2016/05/25/2016-05-25-ELK/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/05/25/2016-05-25-ELK/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
+
+
+
+<nav id="article-nav">
+  
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2016/12/31/BigData-Monitor-Tool/">
+        监控工具集锦
+      </a>
+    </div>
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2016/05/18/Cassandra-NewFeature/">
+        Cassandra的新特性
+      </a>
+    </div>
+  
+</nav>
+
+  
+</article>
+
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#std_I/O"><span class="toc-number">1.</span> <span class="toc-text">std I/O</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#collectd"><span class="toc-number">2.</span> <span class="toc-text">collectd</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#elastic"><span class="toc-number">3.</span> <span class="toc-text">elastic</span></a></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+    if ($(".toc").length < 1) {
+        $("#toc").css("display","none");
+        $("#tocButton").css("display","none");
+        $(".switch-btn").css("display","block");
+        $(".switch-area").css("display","block");
+    }
+</script>
+
+
+    <style>
+        .toc {
+            white-space: nowrap;
+            overflow-x: hidden;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $(".toc li a").mouseover(function() {
+                var title = $(this).attr('href');
+                $(this).attr("title", title);
+            });
+        })
+    </script>
+
+
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+	</div>
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+</div>
+
+
+
+
+
+
+
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
+
+
+  
+  
+    
+    <div  class="post-nav-button">
+    <a href="/2016/12/31/BigData-Monitor-Tool/" title="上一篇: 监控工具集锦">
+    <i class="fa fa-angle-left"></i>
+    </a>
+    <a href="/2016/05/18/Cassandra-NewFeature/" title="下一篇: Cassandra的新特性">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2016 任何忧伤,都抵不过世界的美丽
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+        </div>
+    </div>
+    <div class="visit">
+      <span id="busuanzi_container_site_pv" style='display:none'>
+        <span id="site-visit" >本站到访数: 
+        <span id="busuanzi_value_site_uv"></span>
+        </span>
+      </span>
+      <span id="busuanzi_container_page_pv" style='display:none'>
+        <span id="page-visit">, 本页阅读量: 
+        <span id="busuanzi_value_page_pv"></span>
+        </span>
+      </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+<script>
+  var backgroundnum = 5;
+  var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+
+  $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+</script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+<a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+<a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
