@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Kafka技术内幕样章 层级时间轮 | zqhxuyuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Kafka技术内幕样章：层级时间轮（TimingWheel）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka技术内幕样章 层级时间轮">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/05/13/2016-05-13-Kafka-Book-Sample-TimingWheel/index.html">
+<meta property="og:site_name" content="zqhxuyuan">
+<meta property="og:description" content="Kafka技术内幕样章：层级时间轮（TimingWheel）">
+<meta property="og:image" content="http://img.blog.csdn.net/20160526081549571">
+<meta property="og:image" content="http://img.blog.csdn.net/20160525101321479">
+<meta property="og:image" content="http://img.blog.csdn.net/20160526083640235">
+<meta property="og:image" content="http://img.blog.csdn.net/20160526083713204">
+<meta property="og:image" content="http://img.blog.csdn.net/20160526083812418">
+<meta property="og:image" content="http://img.blog.csdn.net/20160526083915607">
+<meta property="og:updated_time" content="2016-05-26T00:42:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kafka技术内幕样章 层级时间轮">
+<meta name="twitter:description" content="Kafka技术内幕样章：层级时间轮（TimingWheel）">
+  
+    <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">任何忧伤,都抵不过世界的美丽</a></h1>
+		</hgroup>
+
+		
+				
+
+
+		
+			<div id="switch-btn" class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div id="switch-area" class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives/">归档</a></li>
+				        
+							<li><a href="/tags/">标签</a></li>
+				        
+							<li><a href="/about/">关于</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 14.29px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 12.86px;">ops</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 11.43px;">work</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">BIG(DATA)</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="/" class="profilepic">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			</a>
+			<hgroup>
+			  <h1 class="header-author"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives/">归档</a></li>
+		        
+					<li><a href="/tags/">标签</a></li>
+		        
+					<li><a href="/about/">关于</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-2016-05-13-Kafka-Book-Sample-TimingWheel" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/05/13/2016-05-13-Kafka-Book-Sample-TimingWheel/" class="article-date">
+  	<time datetime="2016-05-12T16:00:00.000Z" itemprop="datePublished">2016-05-13</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Kafka技术内幕样章 层级时间轮
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Source/">Source</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>Kafka技术内幕样章：层级时间轮（TimingWheel）<br><a id="more"></a></p>
+<h3 id="3-4-4_定时器Timer">3.4.4 定时器Timer</h3><p>那么Kafka的Timer定时器是如何存储DelayedOperation，又是如何在有任务超时的时候能准确地轮询出来。在Java中有多种方案可以做到任务的延迟执行，比如java.util.Timer和TimerTask的调度，或者DelayedQueue和实现Delayed接口的线程。但这些对于Kafka这种动辄成千上万个请求的分布式系统而言都过于重量级，所以Kafka的Timer专门设计了TimingWheel这个数据结构来存储大量的处理请求，不过它的底层还是基于DelayedQueue实现的。  </p>
+<p>被放到延迟队列的每个元素必须实现Delayed接口，本来可以直接将DelayedOperation放入队列中（任务失效的时候是一个一个弹出），不过因为DelayedOperation数量级太大了，可以将多个DelayedOperation组成一个TimerTaskList链表（在同一个列表中的所有任务的失效时间都很相近，但不一定都相等），以TimerTaskList作为队列的元素，所以失效时间会被设置到TimerTaskList上，当失效的时候，整个列表中的所有任务都会一起失效。  </p>
+<h4 id="1-_定时任务链表和条目">1. 定时任务链表和条目</h4><h4 id="2-_TimingWheel时间轮">2. TimingWheel时间轮</h4><p>Purgatory将任务添加到Timer定时器，并且会在Reaper线程中调用<code>advanceClock</code>不断地移动内部的时钟，使得超时的任务可以被取出来执行。任务加入到TimingWheel中需要首先被包装成TimerTaskEntry，然后TimingWheel会根据TimerTaskEntry的失效时间加入到某个TimerTaskList中（TimingWheel的某个bucket）。当TimerTaskList因为超时被轮询出来并不一定代表里面所有的TimerTaskEntry一定就超时，所以对于没有超时的TimerTaskEntry需要重新加入到TimingWheel新的TimerTaskList中，对于超时的TimerTaskEntry则立即执行任务。不过<code>timingWheel.add</code>添加任务时并不需要先判断有没有超时然后再做决定，而是不管三七二十一，先尝试加入TimerTaskEntry，如果添加成功，那很好；如果没有添加成功，说明这个任务要么已经被取消了，要么超时了。  </p>
+<p>添加不成功有两种情况，1）被其他线程完成后任务会被取消，这样保证了只有最先完成的那个线程只会调用一次完成的方法，其他线程就不再需要执行这个任务了。2）任务超时了，但还没有被其他线程完成即还没有被取消，当前线程就应该立即执行任务。  </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Timer</span>(</span>taskExecutor:<span class="type">ExecutorService</span>, tickMs:<span class="type">Long</span>=<span class="number">1</span>,wheelSize:<span class="type">Int</span>=<span class="number">20</span>, </span><br><span class="line">      startMs: <span class="type">Long</span> = <span class="type">System</span>.currentTimeMillis) &#123;</span><br><span class="line">  <span class="keyword">val</span> delayQueue = <span class="keyword">new</span> <span class="type">DelayQueue</span>[<span class="type">TimerTaskList</span>]() <span class="comment">//延迟队列,按照失效时间排序</span></span><br><span class="line">  <span class="keyword">val</span> taskCounter = <span class="keyword">new</span> <span class="type">AtomicInteger</span>(<span class="number">0</span>) <span class="comment">//内存级别的原子共享变量,所有时间轮同一个计数器</span></span><br><span class="line">  <span class="keyword">val</span> timingWheel=<span class="keyword">new</span> <span class="type">TimingWheel</span>(tickMs,wheelSize,startMs,taskCounter,delayQueue)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">add</span>(</span>timerTask: <span class="type">TimerTask</span>) = &#123; <span class="comment">//1.DelayedOperation是一个TimerTask</span></span><br><span class="line">    addTimerTaskEntry(<span class="keyword">new</span> <span class="type">TimerTaskEntry</span>(timerTask)) <span class="comment">//2.被包装成定时任务条目</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">val</span> reinsert=(entry:<span class="type">TimerTaskEntry</span>) =&gt; addTimerTaskEntry(entry)<span class="comment">//高阶函数</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">//add和reinsert都会将TimerTaskEntry加入到时间轮,后者使用已有的TimerTaskEntry</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">addTimerTaskEntry</span>(</span>timerTaskEntry: <span class="type">TimerTaskEntry</span>) &#123;</span><br><span class="line">    <span class="keyword">val</span> addSuccess = timingWheel.add(timerTaskEntry) <span class="comment">//3.添加到时间轮中</span></span><br><span class="line">    <span class="keyword">if</span> (!addSuccess) &#123; <span class="comment">//添加不成功，要么被取消，要么超时了</span></span><br><span class="line">      <span class="keyword">if</span> (!timerTaskEntry.cancelled) <span class="comment">//还没有被取消，那就是超时了</span></span><br><span class="line">        taskExecutor.submit(timerTaskEntry.timerTask) <span class="comment">//执行条目里的定时任务</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">advanceClock</span>(</span>timeoutMs: <span class="type">Long</span>): <span class="type">Boolean</span> = &#123; <span class="comment">//timeout是轮询的最长等待时间</span></span><br><span class="line">    <span class="keyword">var</span> bucket=delayQueue.poll(timeoutMs, <span class="type">TimeUnit</span>.<span class="type">MILLISECONDS</span>)<span class="comment">//没有到超时不会被轮询出</span></span><br><span class="line">    <span class="keyword">if</span> (bucket != <span class="literal">null</span>) &#123; <span class="comment">//从延迟队列轮询出存储的TimerTaskList</span></span><br><span class="line">      <span class="keyword">while</span> (bucket != <span class="literal">null</span>) &#123; <span class="comment">//一次可能会轮询出多个元素,当并不一定是延迟队列所有元素</span></span><br><span class="line">        timingWheel.advanceClock(bucket.getExpiration())</span><br><span class="line">        bucket.flush(reinsert) <span class="comment">//重新插入,函数的entry参数只有真正调用flush方法才能知道</span></span><br><span class="line">        bucket=delayQueue.poll() <span class="comment">//立即再轮询一次(不等待)，直到poll出来没有东西了才停止</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Timer使用TimingWheel时间轮来管理延迟的等待超时的请求，TimingWheel时间轮是一个存储定时任务的数据结构：tickMs表示指针每隔1ms tick一次，wheelSize=20表示走完一圈要tick 20次，所以走完一圈总共要花费20<em>1ms=20ms，如果tickMs=1000ms，wheelSize=60，就和时钟里秒针的滴答完全一样了。taskCounter表示请求数量，如果请求完成则计数器的值会减少，delayQueue是延迟队列用来存储定时任务。可以把Timer看做是<em>*定时器线程</em></em>即模拟秒针每秒钟走一次这个动作，而TimingWheel则负责在秒针tick一次之后将超时的任务完成掉。图3-73举例现实世界的时钟和闹钟（指定时间点）/计时器（多长时间后），假设设置了一个计时器任务要在30秒后离开电脑休息一下，当启动计时器时，时间一秒钟一秒钟地流逝，要执行的任务也渐渐临近，剩余的时间越来越少，当计时器停止时，时间已经走了30秒了，之前设置的任务就应该被执行。TimingWheel的工作原理和计时器是类似的，它允许在不同时刻加入不同计时器，而且对同一个时间点，也允许多个计时器同时触发执行，比如有多个任务都要在30秒后同时执行。  </p>
+<p><img src="http://img.blog.csdn.net/20160526081549571" alt="3-73 mi timer"><br>图3-73 现实世界的时钟/计时器示例</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>[timer] <span class="class"><span class="keyword">class</span> <span class="title">TimingWheel</span>(</span>tickMs:<span class="type">Long</span>,wheelSize:<span class="type">Int</span>,startMs:<span class="type">Long</span>, </span><br><span class="line">    taskCounter: <span class="type">AtomicInteger</span>, queue: <span class="type">DelayQueue</span>[<span class="type">TimerTaskList</span>]) &#123;</span><br><span class="line">  <span class="keyword">val</span> interval = tickMs * wheelSize</span><br><span class="line">  <span class="keyword">val</span> buckets = <span class="type">Array</span>.tabulate[<span class="type">TimerTaskList</span>](wheelSize) &#123;</span><br><span class="line">      _ =&gt; <span class="keyword">new</span> <span class="type">TimerTaskList</span>(taskCounter) &#125; <span class="comment">//每个List共享taskCount计数器</span></span><br><span class="line">  <span class="keyword">var</span> currentTime = startMs - (startMs % tickMs) </span><br><span class="line">  <span class="annotation">@volatile</span> <span class="keyword">var</span> overflowWheel: <span class="type">TimingWheel</span> = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">addOverflowWheel</span>(</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="keyword">if</span> (overflowWheel == <span class="literal">null</span>) &#123; <span class="comment">//创建父级别的时间轮</span></span><br><span class="line">      overflowWheel = <span class="keyword">new</span> <span class="type">TimingWheel</span>(</span><br><span class="line">        tickMs = interval, <span class="comment">//低级别的整个范围作为父级别一个tick</span></span><br><span class="line">        wheelSize = wheelSize, <span class="comment">//bucket的数量不变</span></span><br><span class="line">        startMs = currentTime, <span class="comment">//当前时间通过advanceClock会更新</span></span><br><span class="line">        taskCounter = taskCounter, queue <span class="comment">//全局唯一的计数器和延迟队列</span></span><br><span class="line">      )</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">add</span>(</span>timerTaskEntry: <span class="type">TimerTaskEntry</span>): <span class="type">Boolean</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> expiration = timerTaskEntry.expirationMs</span><br><span class="line">    <span class="keyword">if</span> (timerTaskEntry.cancelled) &#123; <span class="comment">//被其他线程取消了(执行任务时会取消)</span></span><br><span class="line">      <span class="literal">false</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (expiration &lt; currentTime + tickMs) &#123; <span class="comment">//已经超时了</span></span><br><span class="line">      <span class="literal">false</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (expiration &lt; currentTime + interval) &#123;</span><br><span class="line">      <span class="keyword">val</span> virtualId = expiration / tickMs</span><br><span class="line">      <span class="keyword">val</span> bucket = buckets((virtualId % wheelSize.toLong).toInt)</span><br><span class="line">      bucket.add(timerTaskEntry) <span class="comment">//把任务根据失效时间点放到对应的bucket中</span></span><br><span class="line">      <span class="comment">//设置bucket的失效时间点,然后把bucket加入队列中</span></span><br><span class="line">      <span class="keyword">if</span> (bucket.setExpiration(virtualId * tickMs)) queue.offer(bucket)</span><br><span class="line">      <span class="literal">true</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (overflowWheel == <span class="literal">null</span>) addOverflowWheel()</span><br><span class="line">      overflowWheel.add(timerTaskEntry)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">advanceClock</span>(</span>timeMs: <span class="type">Long</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="keyword">if</span> (timeMs &gt;= currentTime + tickMs) &#123;</span><br><span class="line">      currentTime = timeMs - (timeMs % tickMs)</span><br><span class="line">      <span class="keyword">if</span> (overflowWheel != <span class="literal">null</span>) </span><br><span class="line">        overflowWheel.advanceClock(currentTime)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>举例外部的Purgatory添加任务到定时器中，然后通过Reaper线程的advanceClock移动时钟的调用顺序，假设当前时间currentTime是0s，时间轮的tickMs=1000ms=1s，时间轮大小=8，整个时间轮的范围interval=<code>1s*8=8s</code>，Reaper线程循环时轮询一次队列最长timeoutMs=200ms，添加的四个任务的超时时间分别是[A=0s，B=1s，C=1s，D=3s]。添加任务时，任务<code>A=0s&lt;currentTime+tickMs=0s+1s=1s</code>，所以任务A添加失败，执行<code>executor.submit</code>，表示任务A已经超时了；任务B/C/D满足<code>1s=currentTime+tickMs&lt;=expiration&lt;currentTime+interval=8s</code>，所以可以成功加入队列，不会执行<code>executor.submit</code>，表示它们都还没有到执行的时间点。B/C会加入bucket=1%8=1，D加入的bucket=3%8=3。然后Reaper线程开始调用advanceClock，当前时间=0s，在timeout=200ms内并不会从队列中轮询出来任何元素，因为即使200ms过去了，当前时间是200ms，而队列中最先可以被弹出来的都是1s，所以Reaper线程继续调用了多次轮询方法：200ms，400ms，600ms，800ms。  </p>
+<p>在800ms时间点调用轮询时，timeoutMs=200ms，这时候可以终于把bucket1轮询出来（因为800ms时间点+200ms时间间隔=1000ms=1s，而刚好队列中存在延迟时间=1s的bucket），这个bucket1中有两个任务B/C，它们的失效时间都是1s，而且bucket级别的expiration=1s（加入任务时同时确定bucket的失效时间），首先通过advanceClock更新currentTime=1s。</p>
+<p>bucket.flush会尝试将任务B/C重新加入队列中，由于此时currentTime已经被更新为1s，B/C的超时时间=<code>1s&lt;currentTime+tickMs=1s+1s=2s</code>，所以此时添加到队列会失败，于是和最开始的A类似执行<code>executor.submit</code>，也表示任务B/C在当前时间点=800ms时刻的轮询过程中超时了。由于Reaper线程还有其他工作所以即使每次轮询的timeout=200ms，也不一定说每次发生轮询的时间点就是[200m,400ms,600ms]这么刚好，假设轮询的时间点是900ms，那么不用等timeout=200ms只过了100ms就可以把失效时间=1s的bucket轮询出来。图3-74示例了Timer调用TimingWheel添加任务和时钟移动的调用过程，这里为了简单起见，还没有考虑<code>overflowWheel</code>的场景。  </p>
+<p><img src="http://img.blog.csdn.net/20160525101321479" alt="3-74 timer and wheel"><br>图3-74 Timer和TimingWheel的调用示例(没有二级时间轮)</p>
+<p><strong>失效时间和bucket选择</strong>  </p>
+<p>任务的失效时间是一个确定的时间点，所以不管当前时间是什么，即使失效时间相同的两个任务在不同时间点加入队列，它们也会被放入同一个bucket中。当然根据任务的失效时间选择不同的bucket还跟tickMs以及时间轮的大小有关，时间轮的expiration范围<code>expiration=[currentTime+tickMs,currentTime+interval)</code>。图3-75中示例了在相同时间轮大小下三种不同的tickMs，当tickMs=1时，每个bucket中任务的失效时间只有一个值，当tickMs=2时有两种可能，当tickMs=8时就有8种可能，比如失效时间在120-127范围内的任务都会被分配到bucket7中。即使是相同失效时间如果tickMs不同也会被放入不同的bucket，比如任务失效时间=103在tickMs=1时分配到bucket7，在tickMs=2时分配到bucket3。  </p>
+<p><img src="http://img.blog.csdn.net/20160526083640235" alt="3-75 tickMs"><br>图3-75 相同时间轮，不同tickMs</p>
+<p>由tickMs和时间轮的大小决定了这个时间轮所有任务失效时间的一个范围，如果超过这个范围，则不允许加入，图3-76中当前时间等于100时，时间轮的范围=[101..107]，当前时间等于101时，范围=[102..108]以此类推。当前时间所在的bucket实际上是没有任务的，因为任务的失效时间如果和当前时间相等说明任务已经失效了，不应该放入队列中。  </p>
+<p><img src="http://img.blog.csdn.net/20160526083713204" alt="3-76 wheel tick"><br>图3-76 时钟tick影响了时间轮的取值范围</p>
+<p>任务的失效时间和当前时间相等指的是完全相等，比如tickMs=1s，时间轮大小=60，当前时间等于12:00:00，某个任务的超时时间是12:01:00。时钟tick时每隔一秒走动一次:[12:00:01,..12:00:59,12:01:00]，在12:01:00这一刻任务就超时了，不是12:01:00到下一次tick=12:01:01的一半12:01:00.500，也不是过了12:01:00后的下一次tick=12:01:01才超时，当刚刚好进入12:01:00.000时任务就超时了！比如你定了一个12:01:00的任务运行，你当然希望在那个时间点分毫不差地精准地执行任务，多一秒少一秒都不行！  </p>
+<p><strong>层级时间轮</strong>  </p>
+<p>只有一个时间轮虽然在时间移动时可以重用旧的bucket来保存失效时间更往后的任务，但是由于时间轮所允许的范围就那么大，超过这个范围的失效时间就无法很好地存储了。还是以tickMs=1s，时间轮大小=60为例，如果当前时间是12:00:00，你无法设置12:01:01的任务，更谈不上12:02:00以及失效时间更加往后的任务了。在《嵌入式系统的实时概念》第十一章提到使用一个外部的<code>event flow buffer</code>来暂时存储超过interval的事件，不过更好的方式是使用层级的时间轮。<strong>层级时间轮中假设时间轮大小都不变，但是tickMs则是不断递增</strong>，假设Level0的tickMs=1s，则Level1的tickMs=<code>1s*60</code>=60s，Level2的tickMs=<code>60s*60</code>=3600s以此类推。每一层的tickMs表示的是在当前时间轮中移动一格的粒度/单位，Level0=1s，Level1=60s，Level2=3600s。可以用钟表的秒钟，分针，时针的移动来理解这三个时间轮：秒针走动一格需要花费一秒，分针走动一格花费60秒，时针走动一格花费3600秒。而且<strong>更高层级的tickMs等于低一层的整个时间轮范围</strong>，比如Level0的interval=<code>1s*60</code>=60s，刚好作为Level1的tickMs，Level1的interval=<code>60s*60</code>=3600s，也作为Level2的tickMs。也就是说Level1的一格等于Level0走完一圈，Level2的一格等于Level1走完一圈。  </p>
+<p>那么为什么tickMs的单位不同，假设有几个任务的失效时间分别是[20s,60s,70s,120s,3600s]，如果所有时间轮的tickMs都是1s，总共需要3600/60=60个时间轮！既然每个时间轮的tickMs都相等，跟直接用一个大小等于3600的时间轮是没有任何区别的。而如果使用层级时间轮，总共只需要3个时间轮，20s在Level0的第20个单元格，60s和70s在Level1的第一个单元格内，120s在Level1的第二个单元格上，3600在Level2的第一个单元格上（思考下为什么要把60s这种刚好等于当前时间轮范围的任务放在下一个时间轮，而不是当前时间轮上）。  </p>
+<p>confluent有篇博客详细介绍了时间轮的改进和性能对比，图3-77中当前指针指向任务①所在的bucket，则任务①已经超时了，当发生一次tick之后，任务①已经彻底从队列中移除了，tick一次之后当前指针指向了任务②所在的bucket，因为任务②也已经超时了，也就是说tick指针指向哪里，那里就已经超时了，在当前指针所指向的bucket里的任务都应该被取出来执行。  </p>
+<p><img src="http://img.blog.csdn.net/20160526083812418" alt="3-77 tick and expire"><br>图3-77 时间轮tick到当前bucket，这个bucket的任务都超时<br>摘自：<a href="http://www.confluent.io/blog/apache-kafka-purgatory-hierarchical-timing-wheels" target="_blank" rel="external">http://www.confluent.io/blog/apache-kafka-purgatory-hierarchical-timing-wheels</a></p>
+<p>图3-78有两个时间轮分别是Level0和Level1，在Time0时加入了⑦⑧⑨三个任务，任务⑦在Level0的7-8之间，任务⑧⑨在Level1的8-16之间。这里你可能会认为⑧和⑨应该紧接着Level0的7-8的下一个应该放在Level1的0-8，这样才叫做无缝衔接嘛。不过如果把⑧⑨放在Level1的0-8之间，<code>1）</code>本身就不符合取值范围，因为⑧⑨在0-8之外，而放在8-16之间正好满足⑧⑨的取值范围。<code>2）</code>Level1当前指向了0-8表示这个区间的所有任务都已经超时，如果⑧⑨放在这里，那么它们就都会超时，而此时连任务⑦都还没超时，⑧⑨怎么可能超时呢。<code>3）</code>Level1的0-8这一格子对应了Level0的所有格子，所以Level1指向0-8表示任务在0-8之间的正在超时，不过具体0-8之间的任务则还是以Level0为准，这就好比在Time8时，Level1指向了8-16，表示8-16之间的任务正在超时，但是具体8-16之间的任务也是以Level0为准。  </p>
+<p>在Time0之后发生一次Tick后，Level0的指针指向1-2，而Level2的指针没有变化，而Level0的0消失，1添加了9。图3-78中当前时间=Time7时，Level0的指针指向了7-8之间，Level2的指针还是没有变化，任务⑦超时。再次发生tick之后，指针移动到8-9（这里已经不是0-1了），这时候Level1的指针终于移动了一格从原先的0-8移动到8-16（想象下秒针走了一圈60s，分针才终于挪动了一格）。而Level1原先在8-16之间存在任务⑧⑨，那么是不是说这两个任务同时失效了呢？实际上外界真实时钟走动的粒度只和第一个时间轮Level0的tickMs相等，Level1走动一格只表示当前这一格的所有任务在Level0走完一圈后都会失效，就好比Level1指向0-8时表示Level0中任务时间在0-8之间只有Level0走完一圈才会全部失效。因此需要<strong>把Level1的任务⑧⑨从Level1中解除出来，放到更细粒度的Level0中才能真正决定任务什么时候真正失效</strong>。所以在Timer8时，Level1的任务⑧⑨被一一放回Level0的各个bucket中，原先在Level1中挤在同一个单元格里的多个任务被分散在Level0的各个单元格中，这样原先在Level1的各个任务现在就会参照Level0中的tickMs（也就是真实的tickMs）。  </p>
+<p><img src="http://img.blog.csdn.net/20160526083915607" alt="3-78 overflow timer"><br>图3-78 层级时间轮的收敛和发散</p>
+<p>可以这么理解，在Time0到Time7之间，任务⑧⑨在Level1中蓄势待发，但是因为Level0还没有走完一圈，Level1的指针不会移动，只有Level0走完一圈后，Level1才会移动一次，并把Level1一格的任务按照Level0的tickMs粒度重新划分。Level0代表的永远是真实的时钟移动，超时的任务一定是在Level0中被选中的，在其他Level中的任务在接近超时的时候只会源源不断地进入到Level0中。可以认为除了Level0，其他Level都是虚拟出来的时间轮，这些更高级的时间轮因为tickMs粒度比较大，可以存储数据量更大的任务，但是不具备执行超时任务的能力，当高级别的时间轮发生一次tick后，需要把tick指向的所有任务移动到低级别的时间轮中，从而有机会被放到Level0中真正地执行。  </p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2016/05/13/2016-05-13-Kafka-Book-Sample-TimingWheel/">Kafka技术内幕样章 层级时间轮</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2016年05月13日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年05月26日 - 08时42分</p>
+  <p>
+    <span>原始链接:</span><a href="/2016/05/13/2016-05-13-Kafka-Book-Sample-TimingWheel/" title="Kafka技术内幕样章 层级时间轮">http://github.com/zqhxuyuan/2016/05/13/2016-05-13-Kafka-Book-Sample-TimingWheel/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/05/13/2016-05-13-Kafka-Book-Sample-TimingWheel/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
+
+
+
+<nav id="article-nav">
+  
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2016/05/13/2016-05-13-Kafka-Book-Sample-LogCompaction/">
+        Kafka技术内幕样章 日志压缩
+      </a>
+    </div>
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2016/05/10/Graph-compare/">
+        图计算框架乱斗
+      </a>
+    </div>
+  
+</nav>
+
+  
+</article>
+
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-4_定时器Timer"><span class="toc-number">1.</span> <span class="toc-text">3.4.4 定时器Timer</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-_定时任务链表和条目"><span class="toc-number">1.1.</span> <span class="toc-text">1. 定时任务链表和条目</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-_TimingWheel时间轮"><span class="toc-number">1.2.</span> <span class="toc-text">2. TimingWheel时间轮</span></a></li></ol></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+    if ($(".toc").length < 1) {
+        $("#toc").css("display","none");
+        $("#tocButton").css("display","none");
+        $(".switch-btn").css("display","block");
+        $(".switch-area").css("display","block");
+    }
+</script>
+
+
+    <style>
+        .toc {
+            white-space: nowrap;
+            overflow-x: hidden;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $(".toc li a").mouseover(function() {
+                var title = $(this).attr('href');
+                $(this).attr("title", title);
+            });
+        })
+    </script>
+
+
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+	</div>
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+</div>
+
+
+
+
+
+
+
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
+
+
+  
+  
+    
+    <div  class="post-nav-button">
+    <a href="/2016/05/13/2016-05-13-Kafka-Book-Sample-LogCompaction/" title="上一篇: Kafka技术内幕样章 日志压缩">
+    <i class="fa fa-angle-left"></i>
+    </a>
+    <a href="/2016/05/10/Graph-compare/" title="下一篇: 图计算框架乱斗">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2016 任何忧伤,都抵不过世界的美丽
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+        </div>
+    </div>
+    <div class="visit">
+      <span id="busuanzi_container_site_pv" style='display:none'>
+        <span id="site-visit" >本站到访数: 
+        <span id="busuanzi_value_site_uv"></span>
+        </span>
+      </span>
+      <span id="busuanzi_container_page_pv" style='display:none'>
+        <span id="page-visit">, 本页阅读量: 
+        <span id="busuanzi_value_page_pv"></span>
+        </span>
+      </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+<script>
+  var backgroundnum = 5;
+  var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+
+  $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+</script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+<a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+<a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

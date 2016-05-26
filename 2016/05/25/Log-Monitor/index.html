@@ -3,89 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>ELK监控 | zqhxuyuan</title>
+  <title>日志监控系统 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="ELK：Elastic + Logstash + Kibana
-
-
-
-Software
-Version
-安装节点
-
-
-
-
-elasticSearch
-2.3.3
-192.168.6.52
-
-
-logstash
-2.3.2
-本机
-
-
-collectd
-
-192.168.6.52">
+  <meta name="description" content="Collectd: gather statistics on performance, processes, and overall status of the systemGraphite: Store numeric time-series data &amp;amp; Render graphs of this data on demandGrafana: visualization and das">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ELK监控">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2016/05/25/2016-05-25-ELK/index.html">
+<meta property="og:title" content="日志监控系统">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/05/25/Log-Monitor/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="ELK：Elastic + Logstash + Kibana
-
-
-
-Software
-Version
-安装节点
-
-
-
-
-elasticSearch
-2.3.3
-192.168.6.52
-
-
-logstash
-2.3.2
-本机
-
-
-collectd
-
-192.168.6.52">
+<meta property="og:description" content="Collectd: gather statistics on performance, processes, and overall status of the systemGraphite: Store numeric time-series data &amp;amp; Render graphs of this data on demandGrafana: visualization and das">
+<meta property="og:image" content="http://img.blog.csdn.net/20160525153304893">
 <meta property="og:image" content="http://img.blog.csdn.net/20160525131644727">
 <meta property="og:image" content="http://img.blog.csdn.net/20160525131752805">
-<meta property="og:updated_time" content="2016-05-25T05:17:59.000Z">
+<meta property="og:updated_time" content="2016-05-26T00:44:39.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ELK监控">
-<meta name="twitter:description" content="ELK：Elastic + Logstash + Kibana
-
-
-
-Software
-Version
-安装节点
-
-
-
-
-elasticSearch
-2.3.3
-192.168.6.52
-
-
-logstash
-2.3.2
-本机
-
-
-collectd
-
-192.168.6.52">
+<meta name="twitter:title" content="日志监控系统">
+<meta name="twitter:description" content="Collectd: gather statistics on performance, processes, and overall status of the systemGraphite: Store numeric time-series data &amp;amp; Render graphs of this data on demandGrafana: visualization and das">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -181,7 +113,7 @@ collectd
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 11.43px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 14.29px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.29px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 14.29px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 12.86px;">ops</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 11.43px;">work</a>
 					</div>
 				</section>
 				
@@ -241,10 +173,10 @@ collectd
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-2016-05-25-ELK" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Log-Monitor" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/05/25/2016-05-25-ELK/" class="article-date">
+      <a href="/2016/05/25/Log-Monitor/" class="article-date">
   	<time datetime="2016-05-24T16:00:00.000Z" itemprop="datePublished">2016-05-25</time>
 </a>
     </div>
@@ -258,7 +190,7 @@ collectd
         
   
     <h1 class="article-title" itemprop="name">
-      ELK监控
+      日志监控系统
     </h1>
   
 
@@ -267,13 +199,13 @@ collectd
       <div class="article-info article-info-post">
         
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	<a class="article-category-link" href="/categories/work/">work</a>
 	</div>
 
 
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/elasticsearch/">elasticsearch</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ops/">ops</a></li></ul>
 	</div>
 
         <div class="clearfix"></div>
@@ -283,13 +215,23 @@ collectd
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>ELK：Elastic + Logstash + Kibana</p>
+        <p>Collectd: gather statistics on performance, processes, and overall status of the system<br>Graphite: Store numeric time-series data &amp; Render graphs of this data on demand<br>Grafana: visualization and dashboarding tool for time series data  </p>
+<a id="more"></a>
+<p>一个日志监控系统包括：日志收集，日志存储，日志可视化。<br>分别对应Collectd，Graphite（不用graphite本身的web工具），Grafana。<br>时间序列数据库的替代方案有：elasticSearch，influxdb。<br>而logstash可以认为是日志收集和日志存储之间的桥梁，因为它提供了I/O配置方便地在不同系统中进行数据传输。<br>如果没有logstash作为桥梁，日志收集后怎么放到存储中是个问题，需要自己调用客户端API。  </p>
+<p><img src="http://img.blog.csdn.net/20160525153304893" alt="log systems"></p>
+<p>那么这些系统之间如何通信，如何组织？  </p>
+<ol>
+<li>collectd负责收集数据，并通过network可以发送到logstash的指定端口</li>
+<li>logstash的输入是监听步骤1的端口，输出可以写到存储系统中，比如es,influxdb</li>
+<li>grafana通过配置数据源的方式，获取存储系统中的数据，进行可视化展现</li>
+</ol>
 <table>
 <thead>
 <tr>
 <th>Software</th>
 <th>Version</th>
 <th>安装节点</th>
+<th>软件说明</th>
 </tr>
 </thead>
 <tbody>
@@ -297,20 +239,34 @@ collectd
 <td>elasticSearch</td>
 <td>2.3.3</td>
 <td>192.168.6.52</td>
+<td>索引数据库</td>
 </tr>
 <tr>
 <td>logstash</td>
 <td>2.3.2</td>
 <td>本机</td>
+<td>有Input/Outout，因此可以连接各种管道</td>
 </tr>
 <tr>
 <td>collectd</td>
 <td></td>
 <td>192.168.6.52</td>
+<td>收集机器的信息，性能，进程等</td>
+</tr>
+<tr>
+<td>Grafana</td>
+<td></td>
+<td>192.168.6.52</td>
+<td>可视化，可以接入不同的数据源es和influxdb</td>
+</tr>
+<tr>
+<td>influxdb</td>
+<td>0.13</td>
+<td>192.168.6.52</td>
+<td>时间序列数据库</td>
 </tr>
 </tbody>
 </table>
-<a id="more"></a>
 <h3 id="std_I/O">std I/O</h3><p>命令行输入输出，通过脚本执行，codec指定如何解码</p>
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cd logstash-<span class="number">2.3</span>.<span class="number">2</span></span><br><span class="line"><span class="variable">$ </span>bin/logstash -e <span class="string">"input &#123;stdin&#123;&#125;&#125; output &#123;stdout&#123;&#125;&#125;"</span> &lt;&lt;&lt; <span class="string">'Hello World'</span></span><br><span class="line"><span class="constant">Settings:</span> <span class="constant">Default </span>pipeline <span class="symbol">workers:</span> <span class="number">4</span></span><br><span class="line"><span class="constant">Pipeline </span>main started</span><br><span class="line"><span class="number">2016</span>-<span class="number">05</span>-<span class="number">25</span><span class="constant">T04:</span><span class="number">00</span><span class="symbol">:</span><span class="number">29.531</span>Z zqhmac <span class="constant">Hello World</span></span><br><span class="line"><span class="constant">Pipeline </span>main has been shutdown</span><br><span class="line">stopping pipeline &#123;<span class="symbol">:id=&gt;<span class="string">"main"</span></span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$ </span>bin/logstash -e <span class="string">'input&#123;stdin&#123;&#125;&#125;output&#123;stdout&#123;codec=&gt;rubydebug&#125;&#125;'</span> &lt;&lt;&lt; <span class="string">'Hello World'</span></span><br><span class="line">&#123;</span><br><span class="line">       <span class="string">"message"</span> =&gt; <span class="string">"Hello World"</span>,</span><br><span class="line">      <span class="string">"@version"</span> =&gt; <span class="string">"1"</span>,</span><br><span class="line">    <span class="string">"@timestamp"</span> =&gt; <span class="string">"2016-05-25T04:01:09.095Z"</span>,</span><br><span class="line">          <span class="string">"host"</span> =&gt; <span class="string">"zqhmac"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$ </span>vi logstash-simple.conf </span><br><span class="line">input &#123; stdin &#123;&#125; &#125;</span><br><span class="line">output &#123;</span><br><span class="line">   stdout &#123; codec=&gt; rubydebug &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$ </span>bin/logstash agent -f logstash-simple.conf --verbose</span><br></pre></td></tr></table></figure>
 <h3 id="collectd">collectd</h3><p>安装collectd，network插件表示要将当前机器的信息发送到远程服务器10.57.2.26的25856端口</p>
@@ -325,7 +281,14 @@ collectd
 <p><img src="http://img.blog.csdn.net/20160525131644727" alt="collectd logstash es"></p>
 <p>实际上collectd是不同的服务器节点（比如Nginx服务器），而logstash和es只需要一台机器即可：</p>
 <p><img src="http://img.blog.csdn.net/20160525131752805" alt="logstash"></p>
-
+<h2 id="grafana">grafana</h2><p>由于Grafana是存静态的，你只需要下载源代码解压，将它部署在Nginx上面就可以了，或者可以用Python的SimpleHTTPServer来跑</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ wget -c https:<span class="comment">//grafanarel.s3.amazonaws.com/builds/grafana-3.0.3-1463994644.linux-x64.tar.gz</span></span><br><span class="line">$ tar zxf grafana-<span class="number">3.0</span><span class="number">.3</span>-<span class="number">1463994644.l</span>inux-x64.tar.gz</span><br><span class="line">$ cd grafana-<span class="number">3.0</span><span class="number">.3</span></span><br><span class="line">$ python -m SimpleHTTPServer</span><br><span class="line">http:<span class="comment">//127.0.0.1:8000</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ cp config.sample.js config.js</span><br><span class="line">$ vi config.js</span><br><span class="line">datasources: &#123;</span><br><span class="line">  influxdb: &#123;</span><br><span class="line">    <span class="class"><span class="keyword">type</span>:</span> <span class="symbol">'influxd</span>b',</span><br><span class="line">    url: <span class="string">"http://localhost:8086/db/cassandra-metrics"</span>,</span><br><span class="line">    username: <span class="symbol">'admi</span>n',</span><br><span class="line">    password: <span class="symbol">'admi</span>n',</span><br><span class="line">  &#125;,</span><br><span class="line">  grafana: &#123;</span><br><span class="line">    <span class="class"><span class="keyword">type</span>:</span> <span class="symbol">'influxd</span>b',</span><br><span class="line">    url: <span class="string">"http://localhost:8086/db/grafana"</span>,</span><br><span class="line">    username: <span class="symbol">'admi</span>n',</span><br><span class="line">    password: <span class="symbol">'admi</span>n',</span><br><span class="line">    grafanaDB: <span class="literal">true</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<h2 id="influxdb">influxdb</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget -<span class="keyword">c</span> http<span class="variable">s:</span>//<span class="keyword">dl</span>.influxdata.<span class="keyword">com</span>/influxdb/releases/influxdb-<span class="number">0.13</span>.<span class="number">0</span>_linux_amd64.tar.gz</span><br><span class="line">wget -<span class="keyword">c</span> http<span class="variable">s:</span>//<span class="keyword">dl</span>.influxdata.<span class="keyword">com</span>/telegraf/releases/telegraf-<span class="number">0.13</span>.<span class="number">1</span>_linux_i386.tar.gz</span><br><span class="line">wget http<span class="variable">s:</span>//<span class="keyword">dl</span>.influxdata.<span class="keyword">com</span>/kapacitor/releases/kapacitor-<span class="number">0.13</span>.<span class="number">1</span>_linux_amd64.tar.gz</span><br><span class="line">wget http<span class="variable">s:</span>//<span class="keyword">dl</span>.influxdata.<span class="keyword">com</span>/chronograf/releases/chronograf-<span class="number">0.13</span>.<span class="number">0</span>-<span class="number">1</span>.x86_64.rpm</span><br><span class="line">sudo yum localinstall chronograf-<span class="number">0.13</span>.<span class="number">0</span>-<span class="number">1</span>.x86_64.rpm</span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cd influxdb-<span class="number">0.13</span>.<span class="number">0</span>-<span class="number">1</span></span><br><span class="line">$ usr/bin/influxd config &gt; influxdb<span class="class">.generated</span><span class="class">.conf</span></span><br><span class="line">$ usr/bin/influxd -config influxdb<span class="class">.generated</span><span class="class">.conf</span></span><br></pre></td></tr></table></figure>
+<p><a href="http://192.168.6.52:8083/" target="_blank" rel="external">http://192.168.6.52:8083/</a></p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ usr/bin/influx</span><br><span class="line">Connected <span class="keyword">to</span> http:<span class="comment">//localhost:8086 version 0.13.x</span></span><br><span class="line">InfluxDB shell <span class="number">0.13</span>.x</span><br><span class="line">&gt; <span class="keyword">CREATE</span> DATABASE mydb</span><br><span class="line">&gt; USE mydb</span><br><span class="line">&gt; INSERT cpu,host=serverA,region=us_west value=<span class="number">0.64</span></span><br><span class="line">&gt; INSERT temperature,machine=unit42,<span class="keyword">type</span>=<span class="keyword">assembly</span> <span class="keyword">external</span>=<span class="number">25</span>,internal=<span class="number">37</span></span><br><span class="line">&gt; <span class="keyword">SELECT</span> host, region, value <span class="keyword">FROM</span> cpu</span><br><span class="line">&gt; <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> temperature</span><br><span class="line">&gt; <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> /.*/ LIMIT <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vi config.toml</span><br><span class="line"><span class="comment"># Configure the graphite api</span></span><br><span class="line">[input_plugins.graphite]</span><br><span class="line">enabled = <span class="keyword">true</span></span><br><span class="line">address = <span class="string">"192.168.6.52"</span></span><br><span class="line">port = <span class="number">2003</span></span><br><span class="line">database = <span class="string">"cassandra-metrics"</span></span><br><span class="line">udp_enabled = <span class="keyword">true</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$ </span>influxdb -config influxdb.generated.conf reload</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -333,13 +296,13 @@ collectd
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2016/05/25/2016-05-25-ELK/">ELK监控</a></p>
+  <p><span>本文标题:</span><a href="/2016/05/25/Log-Monitor/">日志监控系统</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年05月25日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年05月25日 - 13时17分</p>
+  <p><span>最后更新:</span>2016年05月26日 - 08时44分</p>
   <p>
-    <span>原始链接:</span><a href="/2016/05/25/2016-05-25-ELK/" title="ELK监控">http://github.com/zqhxuyuan/2016/05/25/2016-05-25-ELK/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/05/25/2016-05-25-ELK/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2016/05/25/Log-Monitor/" title="日志监控系统">http://github.com/zqhxuyuan/2016/05/25/Log-Monitor/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/05/25/Log-Monitor/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -386,7 +349,7 @@ collectd
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#std_I/O"><span class="toc-number">1.</span> <span class="toc-text">std I/O</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#collectd"><span class="toc-number">2.</span> <span class="toc-text">collectd</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#elastic"><span class="toc-number">3.</span> <span class="toc-text">elastic</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#std_I/O"><span class="toc-number">1.</span> <span class="toc-text">std I/O</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#collectd"><span class="toc-number">2.</span> <span class="toc-text">collectd</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#elastic"><span class="toc-number">3.</span> <span class="toc-text">elastic</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#grafana"><span class="toc-number"></span> <span class="toc-text">grafana</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#influxdb"><span class="toc-number"></span> <span class="toc-text">influxdb</span></a>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
