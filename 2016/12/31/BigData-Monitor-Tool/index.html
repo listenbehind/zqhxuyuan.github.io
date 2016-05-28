@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160519131446630">
 <meta property="og:image" content="http://img.blog.csdn.net/20160519131501802">
 <meta property="og:image" content="http://img.blog.csdn.net/20160519131513286">
-<meta property="og:updated_time" content="2016-05-26T00:44:43.000Z">
+<meta property="og:updated_time" content="2016-05-27T01:20:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="监控工具集锦">
 <meta name="twitter:description" content="监控工具：ZooKeeper，Kafka，Cassandra…">
@@ -266,7 +266,12 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">INFO [<span class="number">2016</span>-<span class="number">05</span>-<span class="number">19</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">54</span>,<span class="number">195</span>] Thread-<span class="number">7</span> - riemann.config - expired </span><br><span class="line">&#123;:host <span class="number">10.57</span><span class="number">.2</span><span class="number">.36</span>, :service cassandra.db.forseti.velocity_partner.mean_row_size_kb, :state expired, :time <span class="number">292729534839</span>/<span class="number">200</span>, :ttl <span class="number">60</span>&#125;</span><br></pre></td></tr></table></figure>
 <p>查询所有表的read_latency, query中支持不同的查询</p>
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tagged <span class="string">"cassandra"</span>  <span class="keyword">and</span> service =~ <span class="string">"cassandra.db.forseti.%.read_%"</span></span><br></pre></td></tr></table></figure>
-
+<h2 id="Tracing">Tracing</h2><h3 id="zipkin">zipkin</h3><p>准备环境</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">alias <span class="variable">npm=</span><span class="string">"npm --registry=https://registry.npm.taobao.org --disturl=https://npm.taobao.org/mirrors/node"</span></span><br><span class="line">yum install npm -y</span><br><span class="line">git <span class="keyword">clone</span> <span class="title">https</span>://github.com/creationix/nvm.git</span><br><span class="line">source nvm/install.sh</span><br><span class="line"><span class="keyword">node</span><span class="identifier"> </span><span class="title">-v</span> &amp;&amp; npm -v &amp;&amp; nvm -v</span><br><span class="line">nvm install v5.<span class="number">5.0</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ tar zxf zipkin-<span class="number">1.40</span><span class="number">.1</span>.tar.gz</span><br><span class="line">$ cd zipkin-<span class="number">1.40</span><span class="number">.1</span></span><br><span class="line">$ bin/query</span><br></pre></td></tr></table></figure>
+<p>vi zipkin-ui/webpack.config.js</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">:zipkin-ui:npmBuild</span><br><span class="line"></span><br><span class="line">&gt; zipkin-ui@<span class="number">0.0</span><span class="number">.0</span> build /home/qihuang.zheng/zipkin-<span class="number">1.40</span><span class="number">.1</span>/zipkin-ui</span><br><span class="line">&gt; node node_modules/webpack/bin/webpack.js --bail</span><br><span class="line"></span><br><span class="line">ModuleBuildError: Module build failed: Error: /home/qihuang.zheng/zipkin-<span class="number">1.40</span><span class="number">.1</span>/zipkin-ui/node_modules/node-sass/vendor/linux-x64-<span class="number">47</span>/binding.node: ELF load command past end of file</span><br><span class="line">npm ERR! Linux <span class="number">3.10</span><span class="number">.96</span>-<span class="number">1.</span>el6.elrepo.x86_64</span><br><span class="line">npm ERR! argv <span class="string">"/home/qihuang.zheng/zipkin-1.40.1/zipkin-ui/build/nodejs/node-v5.5.0-linux-x64/bin/node"</span> <span class="string">"/home/qihuang.zheng/zipkin-1.40.1/zipkin-ui/build/nodejs/node-v5.5.0-linux-x64/lib/node_modules/npm/bin/npm-cli.js"</span> <span class="string">"run-script"</span> <span class="string">"build"</span></span><br><span class="line">npm ERR! node v5<span class="number">.5</span><span class="number">.0</span></span><br><span class="line">npm ERR! npm  v3<span class="number">.3</span><span class="number">.12</span></span><br><span class="line">npm ERR! code ELIFECYCLE</span><br><span class="line">npm ERR! zipkin-ui@<span class="number">0.0</span><span class="number">.0</span> build: `node node_modules/webpack/bin/webpack.js --bail`</span><br><span class="line">npm ERR! Exit status <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h3 id="cat">cat</h3>
       
     </div>
     
@@ -277,7 +282,7 @@
   <p><span>本文标题:</span><a href="/2016/12/31/BigData-Monitor-Tool/">监控工具集锦</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年12月31日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年05月26日 - 08时44分</p>
+  <p><span>最后更新:</span>2016年05月27日 - 09时20分</p>
   <p>
     <span>原始链接:</span><a href="/2016/12/31/BigData-Monitor-Tool/" title="监控工具集锦">http://github.com/zqhxuyuan/2016/12/31/BigData-Monitor-Tool/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/12/31/BigData-Monitor-Tool/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -313,8 +318,8 @@
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2016/05/25/Log-Monitor/">
-        日志监控系统
+      <a href="/2016/05/26/2016-05-13-Kafka-Book-Sample/">
+        Kafka技术内幕样章
       </a>
     </div>
   
@@ -327,7 +332,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ZooKeeper"><span class="toc-number">1.</span> <span class="toc-text">ZooKeeper</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#node-zk-browser"><span class="toc-number">1.1.</span> <span class="toc-text">node-zk-browser</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#zkui"><span class="toc-number">1.2.</span> <span class="toc-text">zkui</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#zk-web"><span class="toc-number">1.3.</span> <span class="toc-text">zk-web</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka"><span class="toc-number">2.</span> <span class="toc-text">Kafka</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#trifecta"><span class="toc-number">2.1.</span> <span class="toc-text">trifecta</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cassandra"><span class="toc-number">3.</span> <span class="toc-text">Cassandra</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Riemman"><span class="toc-number">3.1.</span> <span class="toc-text">Riemman</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#准备工作"><span class="toc-number">3.1.1.</span> <span class="toc-text">准备工作</span></a></li></ol></li></ol></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ZooKeeper"><span class="toc-number">1.</span> <span class="toc-text">ZooKeeper</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#node-zk-browser"><span class="toc-number">1.1.</span> <span class="toc-text">node-zk-browser</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#zkui"><span class="toc-number">1.2.</span> <span class="toc-text">zkui</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#zk-web"><span class="toc-number">1.3.</span> <span class="toc-text">zk-web</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka"><span class="toc-number">2.</span> <span class="toc-text">Kafka</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#trifecta"><span class="toc-number">2.1.</span> <span class="toc-text">trifecta</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cassandra"><span class="toc-number">3.</span> <span class="toc-text">Cassandra</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Riemman"><span class="toc-number">3.1.</span> <span class="toc-text">Riemman</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#准备工作"><span class="toc-number">3.1.1.</span> <span class="toc-text">准备工作</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tracing"><span class="toc-number">4.</span> <span class="toc-text">Tracing</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#zipkin"><span class="toc-number">4.1.</span> <span class="toc-text">zipkin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cat"><span class="toc-number">4.2.</span> <span class="toc-text">cat</span></a></li></ol></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -426,7 +431,7 @@
     <a href="/2016/12/31/Linux-Daily/" title="上一篇: Linux Daily">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2016/05/25/Log-Monitor/" title="下一篇: 日志监控系统">
+    <a href="/2016/05/26/2016-05-13-Kafka-Book-Sample/" title="下一篇: Kafka技术内幕样章">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
