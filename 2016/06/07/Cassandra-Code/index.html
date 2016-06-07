@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Cassandra源码分析 | zqhxuyuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="开坑：Cassandra-2.1源码分析
+IDEA中运行Cassandra-2.1123➜  cassandra git:(cassandra-2.1) ✗ pwd/Users/zhengqh/Github/_cassandra/cassandra➜  cassandra git:(cassandra-2.1) ✗ ant generate-idea-files
+打开IDEA，导入项目：File&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cassandra源码分析">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/06/07/Cassandra-Code/index.html">
+<meta property="og:site_name" content="zqhxuyuan">
+<meta property="og:description" content="开坑：Cassandra-2.1源码分析
+IDEA中运行Cassandra-2.1123➜  cassandra git:(cassandra-2.1) ✗ pwd/Users/zhengqh/Github/_cassandra/cassandra➜  cassandra git:(cassandra-2.1) ✗ ant generate-idea-files
+打开IDEA，导入项目：File&amp;">
+<meta property="og:image" content="http://img.blog.csdn.net/20160607140510444">
+<meta property="og:image" content="http://img.blog.csdn.net/20160607140528569">
+<meta property="og:updated_time" content="2016-06-07T06:06:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cassandra源码分析">
+<meta name="twitter:description" content="开坑：Cassandra-2.1源码分析
+IDEA中运行Cassandra-2.1123➜  cassandra git:(cassandra-2.1) ✗ pwd/Users/zhengqh/Github/_cassandra/cassandra➜  cassandra git:(cassandra-2.1) ✗ ant generate-idea-files
+打开IDEA，导入项目：File&amp;">
+  
+    <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">任何忧伤,都抵不过世界的美丽</a></h1>
+		</hgroup>
+
+		
+				
+
+
+		
+			<div id="switch-btn" class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div id="switch-area" class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives/">归档</a></li>
+				        
+							<li><a href="/tags/">标签</a></li>
+				        
+							<li><a href="/about/">关于</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 14.29px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 12.86px;">ops</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 11.43px;">work</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">BIG(DATA)</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="/" class="profilepic">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			</a>
+			<hgroup>
+			  <h1 class="header-author"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives/">归档</a></li>
+		        
+					<li><a href="/tags/">标签</a></li>
+		        
+					<li><a href="/about/">关于</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Cassandra-Code" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/06/07/Cassandra-Code/" class="article-date">
+  	<time datetime="2016-06-06T16:00:00.000Z" itemprop="datePublished">2016-06-07</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Cassandra源码分析
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/cassandra/">cassandra</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>开坑：Cassandra-2.1源码分析</p>
+<h2 id="IDEA中运行Cassandra-2-1">IDEA中运行Cassandra-2.1</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  cassandra <span class="string">git:</span>(cassandra-<span class="number">2.1</span>) ✗ pwd</span><br><span class="line"><span class="regexp">/Users/</span>zhengqh<span class="regexp">/Github/</span>_cassandra/cassandra</span><br><span class="line">➜  cassandra <span class="string">git:</span>(cassandra-<span class="number">2.1</span>) ✗ ant generate-idea-files</span><br></pre></td></tr></table></figure>
+<p>打开IDEA，导入项目：File&gt;New选择cassandra文件夹，Ant编译</p>
+<p><img src="http://img.blog.csdn.net/20160607140510444" alt="cass1"></p>
+<p>在IDEA中运行：</p>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby"><span class="constant">Dcassandra</span>-foreground=yes </span><br><span class="line"></span>-<span class="ruby"><span class="constant">Dcassandra</span>.config=<span class="symbol">file:</span>/<span class="regexp">//</span><span class="constant">Users</span>/zhengqh/<span class="constant">Github</span>/_cassandra/cassandra/conf/cassandra.yaml </span><br><span class="line"></span>-<span class="ruby"><span class="constant">Dcassandra</span>.storagedir=<span class="regexp">/Users/zhengqh</span><span class="regexp">/Github/</span>_cassandra/cassandra/data </span><br><span class="line"></span>-<span class="ruby"><span class="constant">Dlogback</span>.configurationFile=<span class="symbol">file:</span>/<span class="regexp">//</span><span class="constant">Users</span>/zhengqh/<span class="constant">Github</span>/_cassandra/cassandra/conf/logback.xml </span><br><span class="line"></span>-<span class="ruby"><span class="constant">Dcassandra</span>.logdir=<span class="regexp">/Users/zhengqh</span><span class="regexp">/Github/</span>_cassandra/cassandra/data/logs </span><br><span class="line"></span>-<span class="ruby"><span class="constant">Dcom</span>.sun.management.jmxremote -<span class="constant">Dcom</span>.sun.management.jmxremote.port=<span class="number">7199</span> </span><br><span class="line"></span>-<span class="ruby"><span class="constant">Dcom</span>.sun.management.jmxremote.local.only=<span class="keyword">false</span> </span><br><span class="line"></span>-<span class="ruby"><span class="constant">Dcom</span>.sun.management.jmxremote.authenticate=<span class="keyword">false</span> </span><br><span class="line"></span>-<span class="ruby"><span class="constant">Dcom</span>.sun.management.jmxremote.ssl=<span class="keyword">false</span> </span><br><span class="line"></span>-<span class="ruby">ea -<span class="constant">Xmx1G</span></span></span><br></pre></td></tr></table></figure>
+<p><img src="http://img.blog.csdn.net/20160607140528569" alt="cass2"></p>
+<h2 id="CQL示例">CQL示例</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">➜  cassandra git:(cassandra-2.1) ✗ bin/cqlsh</span><br><span class="line">Connected to Test Cluster at 127.0.0.1:9042.</span><br><span class="line">[cqlsh 5.0.1 | Cassandra 2.1.12-SNAPSHOT | CQL spec 3.2.1 | Native protocol v3]</span><br><span class="line"><span class="operator"><span class="keyword">Use</span> <span class="keyword">HELP</span> <span class="keyword">for</span> <span class="keyword">help</span>.</span><br><span class="line">cqlsh&gt; <span class="keyword">desc</span> keyspaces;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> KEYSPACE mykeyspace  </span><br><span class="line"><span class="keyword">WITH</span> <span class="keyword">REPLICATION</span> = &#123; <span class="string">'class'</span> : <span class="string">'SimpleStrategy'</span>, <span class="string">'replication_factor'</span> : <span class="number">1</span> &#125;;</span></span><br><span class="line"><span class="operator"><span class="keyword">USE</span> mykeyspace;</span>  </span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">users</span> (</span><br><span class="line">  user_id <span class="built_in">int</span> PRIMARY <span class="keyword">KEY</span>,</span><br><span class="line">  fname <span class="built_in">text</span>,</span><br><span class="line">  lname <span class="built_in">text</span></span><br><span class="line">);</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">users</span> (user_id,  fname, lname) <span class="keyword">VALUES</span> (<span class="number">1745</span>, <span class="string">'john'</span>, <span class="string">'smith'</span>);</span>  </span><br><span class="line"><span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">users</span> (user_id,  fname, lname) <span class="keyword">VALUES</span> (<span class="number">1744</span>, <span class="string">'john'</span>, <span class="string">'doe'</span>);</span>  </span><br><span class="line"><span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">users</span> (user_id,  fname, lname) <span class="keyword">VALUES</span> (<span class="number">1746</span>, <span class="string">'john'</span>, <span class="string">'smith'</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span> <span class="keyword">ON</span> <span class="keyword">users</span> (lname);</span>  </span><br><span class="line"><span class="operator"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> lname = <span class="string">'smith'</span>;</span></span><br></pre></td></tr></table></figure>
+<p>在IDEA的控制台打印出日志：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">INFO  02:06:06 <span class="operator"><span class="keyword">Create</span> <span class="keyword">new</span> Keyspace: KSMetaData&#123;<span class="keyword">name</span>=mykeyspace, strategyClass=SimpleStrategy, strategyOptions=&#123;replication_factor=<span class="number">1</span>&#125;, cfMetaData=&#123;&#125;, durableWrites=<span class="literal">true</span>, userTypes=org.apache.cassandra.config.UTMetaData@<span class="number">306</span>fc698&#125;</span><br><span class="line">INFO  <span class="number">02</span>:<span class="number">06</span>:<span class="number">06</span> Enqueuing <span class="keyword">flush</span> <span class="keyword">of</span> schema_keyspaces: <span class="number">484</span> (<span class="number">0</span>%) <span class="keyword">on</span>-<span class="keyword">heap</span>, <span class="number">0</span> (<span class="number">0</span>%) <span class="keyword">off</span>-<span class="keyword">heap</span></span><br><span class="line">INFO  <span class="number">02</span>:<span class="number">06</span>:<span class="number">06</span> Writing Memtable-schema_keyspaces@<span class="number">1131334912</span>(<span class="number">0.143</span>KiB serialized <span class="keyword">bytes</span>, <span class="number">3</span> ops, <span class="number">0</span>%/<span class="number">0</span>% <span class="keyword">of</span> <span class="keyword">on</span>/<span class="keyword">off</span>-<span class="keyword">heap</span> <span class="keyword">limit</span>)</span><br><span class="line">INFO  <span class="number">02</span>:<span class="number">06</span>:<span class="number">06</span> Completed flushing /<span class="keyword">Users</span>/zhengqh/Github/_cassandra/cassandra/<span class="keyword">data</span>/<span class="keyword">data</span>/<span class="keyword">system</span>/schema_keyspaces-b0f2235744583cdb9631c43e59ce3676/<span class="keyword">system</span>-schema_keyspaces-tmp-ka-<span class="number">2</span>-<span class="keyword">Data</span>.db (<span class="number">0.000</span>KiB) <span class="keyword">for</span> commitlog <span class="keyword">position</span> ReplayPosition(segmentId=<span class="number">1465264873661</span>, <span class="keyword">position</span>=<span class="number">253619</span>)</span><br><span class="line"></span><br><span class="line">INFO  <span class="number">02</span>:<span class="number">06</span>:<span class="number">25</span> <span class="keyword">Create</span> <span class="keyword">new</span> ColumnFamily: org.apache.cassandra.config.CFMetaData@<span class="number">5e22</span>ce80[cfId=<span class="number">709</span>b74d0-<span class="number">2</span>c54-<span class="number">11e6</span>-a6b3-<span class="number">09</span>b80d24c2a2,ksName=mykeyspace,cfName=<span class="keyword">users</span>,cfType=Standard,comparator=org.apache.cassandra.db.marshal.CompositeType(org.apache.cassandra.db.marshal.UTF8Type),<span class="keyword">comment</span>=,readRepairChance=<span class="number">0.0</span>,dcLocalReadRepairChance=<span class="number">0.1</span>,gcGraceSeconds=<span class="number">864000</span>,defaultValidator=org.apache.cassandra.db.marshal.BytesType,keyValidator=org.apache.cassandra.db.marshal.Int32Type,minCompactionThreshold=<span class="number">4</span>,maxCompactionThreshold=<span class="number">32</span>,columnMetadata=[ColumnDefinition&#123;<span class="keyword">name</span>=lname, <span class="keyword">type</span>=org.apache.cassandra.db.marshal.UTF8Type, kind=REGULAR, componentIndex=<span class="number">0</span>, indexName=<span class="literal">null</span>, <span class="keyword">indexType</span>=<span class="literal">null</span>&#125;, ColumnDefinition&#123;<span class="keyword">name</span>=user_id, <span class="keyword">type</span>=org.apache.cassandra.db.marshal.Int32Type, kind=PARTITION_KEY, componentIndex=<span class="literal">null</span>, indexName=<span class="literal">null</span>, <span class="keyword">indexType</span>=<span class="literal">null</span>&#125;, ColumnDefinition&#123;<span class="keyword">name</span>=fname, <span class="keyword">type</span>=org.apache.cassandra.db.marshal.UTF8Type, kind=REGULAR, componentIndex=<span class="number">0</span>, indexName=<span class="literal">null</span>, <span class="keyword">indexType</span>=<span class="literal">null</span>&#125;],compactionStrategyClass=<span class="keyword">class</span> org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy,compactionStrategyOptions=&#123;&#125;,compressionParameters=&#123;sstable_compression=org.apache.cassandra.io.<span class="keyword">compress</span>.LZ4Compressor&#125;,bloomFilterFpChance=<span class="number">0.01</span>,memtableFlushPeriod=<span class="number">0</span>,<span class="keyword">caching</span>=&#123;<span class="string">"keys"</span>:<span class="string">"ALL"</span>, <span class="string">"rows_per_partition"</span>:<span class="string">"NONE"</span>&#125;,defaultTimeToLive=<span class="number">0</span>,minIndexInterval=<span class="number">128</span>,maxIndexInterval=<span class="number">2048</span>,speculativeRetry=<span class="number">99.0</span>PERCENTILE,droppedColumns=&#123;&#125;,<span class="keyword">triggers</span>=[],isDense=<span class="literal">false</span>]</span><br><span class="line">INFO  <span class="number">02</span>:<span class="number">06</span>:<span class="number">25</span> Enqueuing <span class="keyword">flush</span> <span class="keyword">of</span> schema_keyspaces: <span class="number">484</span> (<span class="number">0</span>%) <span class="keyword">on</span>-<span class="keyword">heap</span>, <span class="number">0</span> (<span class="number">0</span>%) <span class="keyword">off</span>-<span class="keyword">heap</span></span><br><span class="line">INFO  <span class="number">02</span>:<span class="number">06</span>:<span class="number">25</span> Writing Memtable-schema_keyspaces@<span class="number">1743874812</span>(<span class="number">0.143</span>KiB serialized <span class="keyword">bytes</span>, <span class="number">3</span> ops, <span class="number">0</span>%/<span class="number">0</span>% <span class="keyword">of</span> <span class="keyword">on</span>/<span class="keyword">off</span>-<span class="keyword">heap</span> <span class="keyword">limit</span>)</span><br><span class="line">INFO  <span class="number">02</span>:<span class="number">06</span>:<span class="number">25</span> Completed flushing /<span class="keyword">Users</span>/zhengqh/Github/_cassandra/cassandra/<span class="keyword">data</span>/<span class="keyword">data</span>/<span class="keyword">system</span>/schema_keyspaces-b0f2235744583cdb9631c43e59ce3676/<span class="keyword">system</span>-schema_keyspaces-tmp-ka-<span class="number">3</span>-<span class="keyword">Data</span>.db (<span class="number">0.000</span>KiB) <span class="keyword">for</span> commitlog <span class="keyword">position</span> ReplayPosition(segmentId=<span class="number">1465264873661</span>, <span class="keyword">position</span>=<span class="number">256744</span>)</span><br><span class="line">INFO  <span class="number">02</span>:<span class="number">06</span>:<span class="number">25</span> Enqueuing <span class="keyword">flush</span> <span class="keyword">of</span> schema_columnfamilies: <span class="number">5834</span> (<span class="number">0</span>%) <span class="keyword">on</span>-<span class="keyword">heap</span>, <span class="number">0</span> (<span class="number">0</span>%) <span class="keyword">off</span>-<span class="keyword">heap</span></span><br><span class="line">INFO  <span class="number">02</span>:<span class="number">06</span>:<span class="number">25</span> Writing Memtable-schema_columnfamilies@<span class="number">1568127712</span>(<span class="number">1.214</span>KiB serialized <span class="keyword">bytes</span>, <span class="number">27</span> ops, <span class="number">0</span>%/<span class="number">0</span>% <span class="keyword">of</span> <span class="keyword">on</span>/<span class="keyword">off</span>-<span class="keyword">heap</span> <span class="keyword">limit</span>)</span><br><span class="line">INFO  <span class="number">02</span>:<span class="number">06</span>:<span class="number">25</span> Completed flushing /<span class="keyword">Users</span>/zhengqh/Github/_cassandra/cassandra/<span class="keyword">data</span>/<span class="keyword">data</span>/<span class="keyword">system</span>/schema_columnfamilies-<span class="number">45</span>f5b36024bc3f83a3631034ea4fa697/<span class="keyword">system</span>-schema_columnfamilies-tmp-ka-<span class="number">2</span>-<span class="keyword">Data</span>.db (<span class="number">0.000</span>KiB) <span class="keyword">for</span> commitlog <span class="keyword">position</span> ReplayPosition(segmentId=<span class="number">1465264873661</span>, <span class="keyword">position</span>=<span class="number">256744</span>)</span><br><span class="line">INFO  <span class="number">02</span>:<span class="number">06</span>:<span class="number">26</span> Enqueuing <span class="keyword">flush</span> <span class="keyword">of</span> schema_columns: <span class="number">5538</span> (<span class="number">0</span>%) <span class="keyword">on</span>-<span class="keyword">heap</span>, <span class="number">0</span> (<span class="number">0</span>%) <span class="keyword">off</span>-<span class="keyword">heap</span></span><br><span class="line">INFO  <span class="number">02</span>:<span class="number">06</span>:<span class="number">26</span> Writing Memtable-schema_columns@<span class="number">278821915</span>(<span class="number">0.761</span>KiB serialized <span class="keyword">bytes</span>, <span class="number">21</span> ops, <span class="number">0</span>%/<span class="number">0</span>% <span class="keyword">of</span> <span class="keyword">on</span>/<span class="keyword">off</span>-<span class="keyword">heap</span> <span class="keyword">limit</span>)</span><br><span class="line">INFO  <span class="number">02</span>:<span class="number">06</span>:<span class="number">26</span> Completed flushing /<span class="keyword">Users</span>/zhengqh/Github/_cassandra/cassandra/<span class="keyword">data</span>/<span class="keyword">data</span>/<span class="keyword">system</span>/schema_columns-<span class="number">296e9</span>c049bec3085827dc17d3df2122a/<span class="keyword">system</span>-schema_columns-tmp-ka-<span class="number">2</span>-<span class="keyword">Data</span>.db (<span class="number">0.000</span>KiB) <span class="keyword">for</span> commitlog <span class="keyword">position</span> ReplayPosition(segmentId=<span class="number">1465264873661</span>, <span class="keyword">position</span>=<span class="number">256744</span>)</span><br><span class="line">INFO  <span class="number">02</span>:<span class="number">06</span>:<span class="number">26</span> Loading org.apache.cassandra.config.CFMetaData@<span class="number">80</span>bbefc[cfId=<span class="number">709</span>b74d0-<span class="number">2</span>c54-<span class="number">11e6</span>-a6b3-<span class="number">09</span>b80d24c2a2,ksName=mykeyspace,cfName=<span class="keyword">users</span>,cfType=Standard,comparator=org.apache.cassandra.db.marshal.CompositeType(org.apache.cassandra.db.marshal.UTF8Type),<span class="keyword">comment</span>=,readRepairChance=<span class="number">0.0</span>,dcLocalReadRepairChance=<span class="number">0.1</span>,gcGraceSeconds=<span class="number">864000</span>,defaultValidator=org.apache.cassandra.db.marshal.BytesType,keyValidator=org.apache.cassandra.db.marshal.Int32Type,minCompactionThreshold=<span class="number">4</span>,maxCompactionThreshold=<span class="number">32</span>,columnMetadata=[ColumnDefinition&#123;<span class="keyword">name</span>=lname, <span class="keyword">type</span>=org.apache.cassandra.db.marshal.UTF8Type, kind=REGULAR, componentIndex=<span class="number">0</span>, indexName=<span class="literal">null</span>, <span class="keyword">indexType</span>=<span class="literal">null</span>&#125;, ColumnDefinition&#123;<span class="keyword">name</span>=user_id, <span class="keyword">type</span>=org.apache.cassandra.db.marshal.Int32Type, kind=PARTITION_KEY, componentIndex=<span class="literal">null</span>, indexName=<span class="literal">null</span>, <span class="keyword">indexType</span>=<span class="literal">null</span>&#125;, ColumnDefinition&#123;<span class="keyword">name</span>=fname, <span class="keyword">type</span>=org.apache.cassandra.db.marshal.UTF8Type, kind=REGULAR, componentIndex=<span class="number">0</span>, indexName=<span class="literal">null</span>, <span class="keyword">indexType</span>=<span class="literal">null</span>&#125;],compactionStrategyClass=<span class="keyword">class</span> org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy,compactionStrategyOptions=&#123;&#125;,compressionParameters=&#123;sstable_compression=org.apache.cassandra.io.<span class="keyword">compress</span>.LZ4Compressor&#125;,bloomFilterFpChance=<span class="number">0.01</span>,memtableFlushPeriod=<span class="number">0</span>,<span class="keyword">caching</span>=&#123;<span class="string">"keys"</span>:<span class="string">"ALL"</span>, <span class="string">"rows_per_partition"</span>:<span class="string">"NONE"</span>&#125;,defaultTimeToLive=<span class="number">0</span>,minIndexInterval=<span class="number">128</span>,maxIndexInterval=<span class="number">2048</span>,speculativeRetry=<span class="number">99.0</span>PERCENTILE,droppedColumns=&#123;&#125;,<span class="keyword">triggers</span>=[],isDense=<span class="literal">false</span>]</span><br><span class="line">INFO  <span class="number">02</span>:<span class="number">06</span>:<span class="number">26</span> Initializing mykeyspace.<span class="keyword">users</span></span><br><span class="line">WARN  <span class="number">02</span>:<span class="number">06</span>:<span class="number">32</span> <span class="keyword">Trigger</span> <span class="keyword">directory</span> doesn<span class="string">'t exist, please create it and try again.</span><br><span class="line"></span><br><span class="line">INFO  02:07:01 Update ColumnFamily '</span>mykeyspace/<span class="keyword">users</span><span class="string">' From org.apache.cassandra.config.CFMetaData@80bbefc[cfId=709b74d0-2c54-11e6-a6b3-09b80d24c2a2,ksName=mykeyspace,cfName=users,cfType=Standard,comparator=org.apache.cassandra.db.marshal.CompositeType(org.apache.cassandra.db.marshal.UTF8Type),comment=,readRepairChance=0.0,dcLocalReadRepairChance=0.1,gcGraceSeconds=864000,defaultValidator=org.apache.cassandra.db.marshal.BytesType,keyValidator=org.apache.cassandra.db.marshal.Int32Type,minCompactionThreshold=4,maxCompactionThreshold=32,columnMetadata=[ColumnDefinition&#123;name=lname, type=org.apache.cassandra.db.marshal.UTF8Type, kind=REGULAR, componentIndex=0, indexName=null, indexType=null&#125;, ColumnDefinition&#123;name=user_id, type=org.apache.cassandra.db.marshal.Int32Type, kind=PARTITION_KEY, componentIndex=null, indexName=null, indexType=null&#125;, ColumnDefinition&#123;name=fname, type=org.apache.cassandra.db.marshal.UTF8Type, kind=REGULAR, componentIndex=0, indexName=null, indexType=null&#125;],compactionStrategyClass=class org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy,compactionStrategyOptions=&#123;&#125;,compressionParameters=&#123;sstable_compression=org.apache.cassandra.io.compress.LZ4Compressor&#125;,bloomFilterFpChance=0.01,memtableFlushPeriod=0,caching=&#123;"keys":"ALL", "rows_per_partition":"NONE"&#125;,defaultTimeToLive=0,minIndexInterval=128,maxIndexInterval=2048,speculativeRetry=99.0PERCENTILE,droppedColumns=&#123;&#125;,triggers=[],isDense=false] To org.apache.cassandra.config.CFMetaData@1d7a7976[cfId=709b74d0-2c54-11e6-a6b3-09b80d24c2a2,ksName=mykeyspace,cfName=users,cfType=Standard,comparator=org.apache.cassandra.db.marshal.CompositeType(org.apache.cassandra.db.marshal.UTF8Type),comment=,readRepairChance=0.0,dcLocalReadRepairChance=0.1,gcGraceSeconds=864000,defaultValidator=org.apache.cassandra.db.marshal.BytesType,keyValidator=org.apache.cassandra.db.marshal.Int32Type,minCompactionThreshold=4,maxCompactionThreshold=32,columnMetadata=[ColumnDefinition&#123;name=lname, type=org.apache.cassandra.db.marshal.UTF8Type, kind=REGULAR, componentIndex=0, indexName=users_lname_idx, indexType=COMPOSITES&#125;, ColumnDefinition&#123;name=user_id, type=org.apache.cassandra.db.marshal.Int32Type, kind=PARTITION_KEY, componentIndex=null, indexName=null, indexType=null&#125;, ColumnDefinition&#123;name=fname, type=org.apache.cassandra.db.marshal.UTF8Type, kind=REGULAR, componentIndex=0, indexName=null, indexType=null&#125;],compactionStrategyClass=class org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy,compactionStrategyOptions=&#123;&#125;,compressionParameters=&#123;sstable_compression=org.apache.cassandra.io.compress.LZ4Compressor&#125;,bloomFilterFpChance=0.01,memtableFlushPeriod=0,caching=&#123;"keys":"ALL", "rows_per_partition":"NONE"&#125;,defaultTimeToLive=0,minIndexInterval=128,maxIndexInterval=2048,speculativeRetry=99.0PERCENTILE,droppedColumns=&#123;&#125;,triggers=[],isDense=false]</span><br><span class="line">INFO  02:07:01 Enqueuing flush of schema_keyspaces: 484 (0%) on-heap, 0 (0%) off-heap</span><br><span class="line">INFO  02:07:01 Writing Memtable-schema_keyspaces@1069875044(0.143KiB serialized bytes, 3 ops, 0%/0% of on/off-heap limit)</span><br><span class="line">INFO  02:07:01 Completed flushing /Users/zhengqh/Github/_cassandra/cassandra/data/data/system/schema_keyspaces-b0f2235744583cdb9631c43e59ce3676/system-schema_keyspaces-tmp-ka-4-Data.db (0.000KiB) for commitlog position ReplayPosition(segmentId=1465264873661, position=465004)</span><br><span class="line">INFO  02:07:01 Compacting [SSTableReader(path='</span>/<span class="keyword">Users</span>/zhengqh/Github/_cassandra/cassandra/<span class="keyword">data</span>/<span class="keyword">data</span>/<span class="keyword">system</span>/schema_keyspaces-b0f2235744583cdb9631c43e59ce3676/<span class="keyword">system</span>-schema_keyspaces-ka-<span class="number">4</span>-<span class="keyword">Data</span>.db<span class="string">'), SSTableReader(path='</span>/<span class="keyword">Users</span>/zhengqh/Github/_cassandra/cassandra/<span class="keyword">data</span>/<span class="keyword">data</span>/<span class="keyword">system</span>/schema_keyspaces-b0f2235744583cdb9631c43e59ce3676/<span class="keyword">system</span>-schema_keyspaces-ka-<span class="number">1</span>-<span class="keyword">Data</span>.db<span class="string">'), SSTableReader(path='</span>/<span class="keyword">Users</span>/zhengqh/Github/_cassandra/cassandra/<span class="keyword">data</span>/<span class="keyword">data</span>/<span class="keyword">system</span>/schema_keyspaces-b0f2235744583cdb9631c43e59ce3676/<span class="keyword">system</span>-schema_keyspaces-ka-<span class="number">3</span>-<span class="keyword">Data</span>.db<span class="string">'), SSTableReader(path='</span>/<span class="keyword">Users</span>/zhengqh/Github/_cassandra/cassandra/<span class="keyword">data</span>/<span class="keyword">data</span>/<span class="keyword">system</span>/schema_keyspaces-b0f2235744583cdb9631c43e59ce3676/<span class="keyword">system</span>-schema_keyspaces-ka-<span class="number">2</span>-<span class="keyword">Data</span>.db<span class="string">')]</span><br><span class="line">INFO  02:07:01 Enqueuing flush of schema_columnfamilies: 5834 (0%) on-heap, 0 (0%) off-heap</span><br><span class="line">INFO  02:07:01 Writing Memtable-schema_columnfamilies@312616385(1.214KiB serialized bytes, 27 ops, 0%/0% of on/off-heap limit)</span><br><span class="line">INFO  02:07:01 Completed flushing /Users/zhengqh/Github/_cassandra/cassandra/data/data/system/schema_columnfamilies-45f5b36024bc3f83a3631034ea4fa697/system-schema_columnfamilies-tmp-ka-3-Data.db (0.000KiB) for commitlog position ReplayPosition(segmentId=1465264873661, position=465004)</span><br><span class="line">INFO  02:07:01 Enqueuing flush of schema_columns: 1962 (0%) on-heap, 0 (0%) off-heap</span><br><span class="line">INFO  02:07:01 Writing Memtable-schema_columns@310066052(0.267KiB serialized bytes, 7 ops, 0%/0% of on/off-heap limit)</span><br><span class="line">INFO  02:07:01 Completed flushing /Users/zhengqh/Github/_cassandra/cassandra/data/data/system/schema_columns-296e9c049bec3085827dc17d3df2122a/system-schema_columns-tmp-ka-3-Data.db (0.000KiB) for commitlog position ReplayPosition(segmentId=1465264873661, position=465004)</span><br><span class="line">INFO  02:07:01 Compacted 4 sstables to [/Users/zhengqh/Github/_cassandra/cassandra/data/data/system/schema_keyspaces-b0f2235744583cdb9631c43e59ce3676/system-schema_keyspaces-ka-5,].  704 bytes to 258 (~36% of original) in 39ms = 0.006309MB/s.  5 total partitions merged to 3.  Partition merge counts were &#123;1:2, 3:1, &#125;</span><br><span class="line">INFO  02:07:01 Initializing mykeyspace.users.users_lname_idx</span><br><span class="line">INFO  02:07:01 Enqueuing flush of users: 1681 (0%) on-heap, 0 (0%) off-heap</span><br><span class="line">INFO  02:07:01 Enqueuing flush of users: 0 (0%) on-heap, 0 (0%) off-heap</span><br><span class="line">INFO  02:07:01 Writing Memtable-users@1154357944(0.147KiB serialized bytes, 9 ops, 0%/0% of on/off-heap limit)</span><br><span class="line">INFO  02:07:01 Completed flushing /Users/zhengqh/Github/_cassandra/cassandra/data/data/mykeyspace/users-709b74d02c5411e6a6b309b80d24c2a2/mykeyspace-users-tmp-ka-1-Data.db (0.000KiB) for commitlog position ReplayPosition(segmentId=1465264873661, position=465844)</span><br><span class="line">INFO  02:07:01 Submitting index build of users.users_lname_idx for data in SSTableReader(path='</span>/<span class="keyword">Users</span>/zhengqh/Github/_cassandra/cassandra/<span class="keyword">data</span>/<span class="keyword">data</span>/mykeyspace/<span class="keyword">users</span>-<span class="number">709</span>b74d02c5411e6a6b309b80d24c2a2/mykeyspace-<span class="keyword">users</span>-ka-<span class="number">1</span>-<span class="keyword">Data</span>.db<span class="string">')</span><br><span class="line">INFO  02:07:01 Enqueuing flush of users.users_lname_idx: 1004 (0%) on-heap, 0 (0%) off-heap</span><br><span class="line">INFO  02:07:01 Writing Memtable-users.users_lname_idx@1367019359(0.051KiB serialized bytes, 3 ops, 0%/0% of on/off-heap limit)</span><br><span class="line">INFO  02:07:01 Completed flushing /Users/zhengqh/Github/_cassandra/cassandra/data/data/mykeyspace/users-709b74d02c5411e6a6b309b80d24c2a2/mykeyspace-users.users_lname_idx-tmp-ka-1-Data.db (0.000KiB) for commitlog position ReplayPosition(segmentId=1465264873661, position=465970)</span><br><span class="line">INFO  02:07:01 Enqueuing flush of IndexInfo: 331 (0%) on-heap, 0 (0%) off-heap</span><br><span class="line">INFO  02:07:01 Writing Memtable-IndexInfo@1621801131(0.036KiB serialized bytes, 1 ops, 0%/0% of on/off-heap limit)</span><br><span class="line">INFO  02:07:01 Completed flushing /Users/zhengqh/Github/_cassandra/cassandra/data/data/system/IndexInfo-9f5c6374d48532299a0a5094af9ad1e3/system-IndexInfo-tmp-ka-1-Data.db (0.000KiB) for commitlog position ReplayPosition(segmentId=1465264873661, position=466071)</span><br><span class="line">INFO  02:07:01 Index build of users.users_lname_idx complete</span></span></span><br></pre></td></tr></table></figure>
+<p>修改logback.xml的root级别为DEBUG，重启Cassandra，并且启动测试用例CassandraTest查询服务：  </p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">DEBUG <span class="number">03</span>:<span class="number">21</span>:<span class="number">03</span> Received: STARTUP <span class="comment">&#123;CQL_VERSION=3.2.1&#125;</span>, v=<span class="number">3</span></span><br><span class="line">DEBUG <span class="number">03</span>:<span class="number">21</span>:<span class="number">03</span> Received: <span class="keyword">REGISTER</span> [TOPOLOGY_CHANGE, STATUS_CHANGE, SCHEMA_CHANGE], v=<span class="number">3</span></span><br><span class="line"></span><br><span class="line">DEBUG <span class="number">03</span>:<span class="number">21</span>:<span class="number">03</span> Received: QUERY <span class="keyword">SELECT</span> peer, data_center, rack, tokens, rpc_address, schema_version <span class="keyword">FROM</span> system.peers, v=<span class="number">3</span></span><br><span class="line">DEBUG <span class="number">03</span>:<span class="number">21</span>:<span class="number">03</span> Received: QUERY <span class="keyword">SELECT</span> cluster_name, data_center, rack, tokens, partitioner, schema_version <span class="keyword">FROM</span> system.local <span class="keyword">WHERE</span> key=<span class="string">'local'</span>, v=<span class="number">3</span></span><br><span class="line"></span><br><span class="line">DEBUG <span class="number">03</span>:<span class="number">21</span>:<span class="number">03</span> Received: QUERY <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> system.schema_keyspaces, v=<span class="number">3</span></span><br><span class="line">DEBUG <span class="number">03</span>:<span class="number">21</span>:<span class="number">03</span> Received: QUERY <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> system.schema_columnfamilies, v=<span class="number">3</span></span><br><span class="line">DEBUG <span class="number">03</span>:<span class="number">21</span>:<span class="number">03</span> Received: QUERY <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> system.schema_columns, v=<span class="number">3</span></span><br><span class="line">DEBUG <span class="number">03</span>:<span class="number">21</span>:<span class="number">03</span> Received: QUERY <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> system.schema_usertypes, v=<span class="number">3</span></span><br><span class="line">DEBUG <span class="number">03</span>:<span class="number">21</span>:<span class="number">03</span> Received: QUERY <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> system.schema_functions, v=<span class="number">3</span></span><br><span class="line">DEBUG <span class="number">03</span>:<span class="number">21</span>:<span class="number">03</span> Received: QUERY <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> system.schema_aggregates, v=<span class="number">3</span></span><br><span class="line">DEBUG <span class="number">03</span>:<span class="number">21</span>:<span class="number">03</span> Received: QUERY <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> system.schema_triggers, v=<span class="number">3</span></span><br><span class="line"></span><br><span class="line">DEBUG <span class="number">03</span>:<span class="number">21</span>:<span class="number">05</span> Received: QUERY <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> forseti.mytab <span class="keyword">where</span> id=<span class="string">'a1'</span>, v=<span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2016/06/07/Cassandra-Code/">Cassandra源码分析</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2016年06月07日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年06月07日 - 14时06分</p>
+  <p>
+    <span>原始链接:</span><a href="/2016/06/07/Cassandra-Code/" title="Cassandra源码分析">http://github.com/zqhxuyuan/2016/06/07/Cassandra-Code/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/06/07/Cassandra-Code/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
+
+
+
+<nav id="article-nav">
+  
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2016/12/31/BigData-Monitor-Tool/">
+        监控工具集锦
+      </a>
+    </div>
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2016/06/01/Middleware/">
+        
+      </a>
+    </div>
+  
+</nav>
+
+  
+</article>
+
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#IDEA中运行Cassandra-2-1"><span class="toc-number">1.</span> <span class="toc-text">IDEA中运行Cassandra-2.1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CQL示例"><span class="toc-number">2.</span> <span class="toc-text">CQL示例</span></a></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+    if ($(".toc").length < 1) {
+        $("#toc").css("display","none");
+        $("#tocButton").css("display","none");
+        $(".switch-btn").css("display","block");
+        $(".switch-area").css("display","block");
+    }
+</script>
+
+
+    <style>
+        .toc {
+            white-space: nowrap;
+            overflow-x: hidden;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $(".toc li a").mouseover(function() {
+                var title = $(this).attr('href');
+                $(this).attr("title", title);
+            });
+        })
+    </script>
+
+
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+	</div>
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+</div>
+
+
+
+
+
+
+
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
+
+
+  
+  
+    
+    <div  class="post-nav-button">
+    <a href="/2016/12/31/BigData-Monitor-Tool/" title="上一篇: 监控工具集锦">
+    <i class="fa fa-angle-left"></i>
+    </a>
+    <a href="/2016/06/01/Middleware/" title="下一篇: ">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2016 任何忧伤,都抵不过世界的美丽
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+        </div>
+    </div>
+    <div class="visit">
+      <span id="busuanzi_container_site_pv" style='display:none'>
+        <span id="site-visit" >本站到访数: 
+        <span id="busuanzi_value_site_uv"></span>
+        </span>
+      </span>
+      <span id="busuanzi_container_page_pv" style='display:none'>
+        <span id="page-visit">, 本页阅读量: 
+        <span id="busuanzi_value_page_pv"></span>
+        </span>
+      </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+<script>
+  var backgroundnum = 5;
+  var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+
+  $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+</script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+<a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+<a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

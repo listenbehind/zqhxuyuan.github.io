@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Meet HBase Again, also Phoenix.">
 <meta property="og:image" content="http://img.blog.csdn.net/20151216161855376">
-<meta property="og:updated_time" content="2015-12-23T09:10:24.000Z">
+<meta property="og:updated_time" content="2016-06-02T07:28:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hello HBase">
 <meta name="twitter:description" content="Meet HBase Again, also Phoenix.">
@@ -232,17 +232,19 @@
 <p>4) 拷贝HADOOP的<code>hdfs-site.xml</code>和<code>core-site.xml</code>到conf下(因为HDFS是HA)</p>
 <p>C.分发hbase目录到集群中所有节点</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp -qr hbase-<span class="number">1.0</span><span class="number">.2</span> <span class="number">192.168</span><span class="number">.47</span><span class="number">.241</span>:~/</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>D.启动HBase集群: <code>start-hbase.sh</code>  </p>
+<p>D.启动HBase集群: <code>bin/start-hbase.sh</code>  </p>
 <ul>
-<li>单独启动HMaster: hbase-daemon.sh start master  </li>
-<li>单独启动所有的RegionServer: hbase-daemons.sh start regionserver</li>
-<li>单独启动一个RegionServer: hbase-daemon.sh start regionserver</li>
+<li>单独启动HMaster: <code>bin/hbase-daemon.sh start master</code> </li>
+<li>单独启动所有的RegionServer: <code>bin/hbase-daemons.sh start regionserver</code></li>
+<li>单独启动一个RegionServer: <code>bin/hbase-daemon.sh start regionserver</code></li>
 </ul>
 <blockquote>
 <p>修改conf/hbase-env.sh的pid文件夹路径,默认是在/tmp下</p>
 </blockquote>
+<p>查看进程：  </p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[admin@spark047213 logs]$ jps -lm | grep hbase</span><br><span class="line"><span class="number">28722</span> org.apache.hadoop.hbase.regionserver.HRegionServer <span class="literal">start</span></span><br><span class="line"><span class="number">28535</span> org.apache.hadoop.hbase.<span class="literal">master</span>.HMaster <span class="literal">start</span></span><br><span class="line">HQuorumPeer    <span class="comment">#单个节点下，没有这个进程</span></span><br></pre></td></tr></table></figure>
 <p>E.测试HBase的CRUD: <code>hbase shell</code> </p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">create</span> <span class="string">'table'</span>,<span class="string">'cf'</span></span><br><span class="line">put <span class="string">'table'</span>,<span class="string">'rowkey1'</span>,<span class="string">'cf:column'</span>,<span class="string">'value'</span></span><br><span class="line"><span class="keyword">get</span> <span class="string">'table'</span>,<span class="string">'rowkey1'</span></span><br><span class="line">put <span class="string">'table'</span>,<span class="string">'rowkey1'</span>,<span class="string">'cf:'</span>,<span class="string">'value'</span></span><br><span class="line"><span class="keyword">scan</span> <span class="string">'table'</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">status</span><br><span class="line">list</span><br><span class="line"><span class="operator"><span class="keyword">create</span> <span class="string">'table'</span>,<span class="string">'cf'</span></span><br><span class="line">put <span class="string">'table'</span>,<span class="string">'rowkey1'</span>,<span class="string">'cf:column'</span>,<span class="string">'value'</span></span><br><span class="line"><span class="keyword">get</span> <span class="string">'table'</span>,<span class="string">'rowkey1'</span></span><br><span class="line">put <span class="string">'table'</span>,<span class="string">'rowkey1'</span>,<span class="string">'cf:'</span>,<span class="string">'value'</span></span><br><span class="line"><span class="keyword">scan</span> <span class="string">'table'</span></span></span><br></pre></td></tr></table></figure>
 <p>F.查看HBase进程. HMaster和HRegionServer</p>
 <p>G.访问: <a href="http://localhost:16010" target="_blank" rel="external">http://localhost:16010</a></p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">map</span>.<span class="built_in">exp</span> <span class="number">213</span> <span class="number">16010</span></span><br></pre></td></tr></table></figure>
@@ -273,6 +275,8 @@
 <p>在shell中能看的之前在phoenix中创建的test.person, 但是在phoenix中并没有看到在shell中创建的test.table:  </p>
 <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="header">0: jdbc:phoenix:192.168.47.83,192.168.47.84,1&gt; !table</span><br><span class="line">+------------------------------------------+------------------------------------------+------------------------------------------+------------------------------------------+------------------------+</span></span><br><span class="line"><span class="header">|                TABLE_CAT                 |               TABLE_SCHEM                |                TABLE_NAME                |                TABLE_TYPE                |                 REMARK |</span><br><span class="line">+------------------------------------------+------------------------------------------+------------------------------------------+------------------------------------------+------------------------+</span></span><br><span class="line">|                                          | SYSTEM                                   | CATALOG                                  | SYSTEM TABLE                             |                        |</span><br><span class="line">|                                          | SYSTEM                                   | FUNCTION                                 | SYSTEM TABLE                             |                        |</span><br><span class="line">|                                          | SYSTEM                                   | SEQUENCE                                 | SYSTEM TABLE                             |                        |</span><br><span class="line">|                                          | SYSTEM                                   | STATS                                    | SYSTEM TABLE                             |                        |</span><br><span class="line"><span class="header">|                                          | TEST                                     | PERSON                                   | TABLE                                    |                        |</span><br><span class="line">+------------------------------------------+------------------------------------------+------------------------------------------+------------------------------------------+------------------------+</span></span><br><span class="line"></span><br><span class="line">0: jdbc:phoenix:192.168.47.83,192.168.47.84,1&gt; select * from test.table;</span><br><span class="line">Error: ERROR 604 (42P00): Syntax error. Mismatched input. Expecting "NAME", got "table" at line 1, column 20. (state=42P00,code=604)</span><br><span class="line">org.apache.phoenix.exception.PhoenixParserException: ERROR 604 (42P00): Syntax error. Mismatched input. Expecting "NAME", got "table" at line 1, column 20.</span><br><span class="line"><span class="code">    at org.apache.phoenix.exception.PhoenixParserException.newException(PhoenixParserException.java:33)</span></span><br><span class="line"><span class="code">    at org.apache.phoenix.parse.SQLParser.parseStatement(SQLParser.java:111)</span></span><br><span class="line"><span class="code">    at org.apache.phoenix.jdbc.PhoenixStatement$PhoenixStatementParser.parseStatement(PhoenixStatement.java:1285)</span></span><br><span class="line"><span class="code">    at org.apache.phoenix.jdbc.PhoenixStatement.parseStatement(PhoenixStatement.java:1366)</span></span><br><span class="line"><span class="code">    at org.apache.phoenix.jdbc.PhoenixStatement.execute(PhoenixStatement.java:1429)</span></span><br><span class="line">Caused by: MismatchedTokenException(140!=98)</span><br><span class="line"><span class="code">    at org.apache.phoenix.parse.PhoenixSQLParser.recoverFromMismatchedToken(PhoenixSQLParser.java:352)</span></span><br><span class="line"><span class="header">0: jdbc:phoenix:192.168.47.83,192.168.47.84,1&gt; select * from test.person;</span><br><span class="line">+------------------------------------------+----------------------+------------------------------------------+</span></span><br><span class="line"><span class="header">|                IDCARDNUM                 |         NAME         |                   AGE                    |</span><br><span class="line">+------------------------------------------+----------------------+------------------------------------------+</span></span><br><span class="line">| 100                                      | 小明                   | 12                                       |</span><br><span class="line">| 101                                      | 小红                   | 15                                       |</span><br><span class="line"><span class="header">| 103                                      | 小王                   | 22                                       |</span><br><span class="line">+------------------------------------------+----------------------+------------------------------------------+</span></span><br><span class="line">3 rows selected (0.129 seconds)</span><br></pre></td></tr></table></figure>
 <p>实际上可以在Phoenix中创建视图来将hbase中的表映射进来: <a href="http://phoenix.apache.org/faq.html#How_I_map_Phoenix_table_to_an_existing_HBase_table" target="_blank" rel="external">http://phoenix.apache.org/faq.html#How_I_map_Phoenix_table_to_an_existing_HBase_table</a></p>
+<h2 id="其他">其他</h2><p>删除ZK中的hbase节点</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">zkCli<span class="class">.sh</span> -server zkHost1,zkHost2</span><br><span class="line">rmr /hbaseSplitWAL</span><br><span class="line">rmr /hbase</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -284,7 +288,7 @@
   <p><span>本文标题:</span><a href="/2015/12/16/2015-12-16-Apache-HBase/">Hello HBase</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月16日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月23日 - 17时10分</p>
+  <p><span>最后更新:</span>2016年06月02日 - 15时28分</p>
   <p>
     <span>原始链接:</span><a href="/2015/12/16/2015-12-16-Apache-HBase/" title="Hello HBase">http://github.com/zqhxuyuan/2015/12/16/2015-12-16-Apache-HBase/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/16/2015-12-16-Apache-HBase/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -313,15 +317,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2015/12/17/Billion-KV/">
-        千亿KV数据存储和查询方案
+      <a href="/2015/12/16/2015-12-16-HBase-Optimize/">
+        HBase性能优化方法总结
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/12/16/2015-12-16-HBase-Optimize/">
-        HBase性能优化方法总结
+      <a href="/2015/12/12/2015-12-12-Apache-Geode/">
+        Apache GEODE 一致性数据库
       </a>
     </div>
   
@@ -334,7 +338,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_HBase"><span class="toc-number">1.</span> <span class="toc-text">Install HBase</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_Phoenix"><span class="toc-number">2.</span> <span class="toc-text">Install Phoenix</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CRUD"><span class="toc-number">2.1.</span> <span class="toc-text">CRUD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell创建的表在Phoenix中看不见"><span class="toc-number">2.2.</span> <span class="toc-text">shell创建的表在Phoenix中看不见</span></a></li></ol></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_HBase"><span class="toc-number">1.</span> <span class="toc-text">Install HBase</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_Phoenix"><span class="toc-number">2.</span> <span class="toc-text">Install Phoenix</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CRUD"><span class="toc-number">2.1.</span> <span class="toc-text">CRUD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell创建的表在Phoenix中看不见"><span class="toc-number">2.2.</span> <span class="toc-text">shell创建的表在Phoenix中看不见</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">3.</span> <span class="toc-text">其他</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -430,10 +434,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2015/12/17/Billion-KV/" title="上一篇: 千亿KV数据存储和查询方案">
+    <a href="/2015/12/16/2015-12-16-HBase-Optimize/" title="上一篇: HBase性能优化方法总结">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/12/16/2015-12-16-HBase-Optimize/" title="下一篇: HBase性能优化方法总结">
+    <a href="/2015/12/12/2015-12-12-Apache-Geode/" title="下一篇: Apache GEODE 一致性数据库">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
