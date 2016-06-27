@@ -5,16 +5,16 @@
   
   <title>中间件 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="中间件。。。">
+  <meta name="description" content="阿里系中间件。。。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="中间件">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2016/06/01/Middleware/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="中间件。。。">
-<meta property="og:updated_time" content="2016-06-07T06:11:19.000Z">
+<meta property="og:description" content="阿里系中间件。。。">
+<meta property="og:updated_time" content="2016-06-23T01:29:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="中间件">
-<meta name="twitter:description" content="中间件。。。">
+<meta name="twitter:description" content="阿里系中间件。。。">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -110,7 +110,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 14.29px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 12.86px;">ops</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 12.86px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 14.29px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 14.29px;">ops</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 12.86px;">work</a>
 					</div>
 				</section>
 				
@@ -212,8 +212,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>中间件。。。<br><a id="more"></a></p>
+        <p>阿里系中间件。。。<br><a id="more"></a></p>
 <h2 id="dubbo">dubbo</h2><h2 id="druid">druid</h2><h2 id="canal">canal</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/my.cnf</span><br><span class="line">[mysqld]</span><br><span class="line">log-bin=mysql-bin</span><br><span class="line">binlog-format=ROW</span><br><span class="line">server_id=1</span><br><span class="line"></span><br><span class="line">$ mysql -uroot</span><br><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">USER</span> canal <span class="keyword">IDENTIFIED</span> <span class="keyword">BY</span> <span class="string">'canal'</span>;</span>  </span><br><span class="line"><span class="operator"><span class="keyword">GRANT</span> ALL <span class="keyword">PRIVILEGES</span> <span class="keyword">ON</span> *.* <span class="keyword">TO</span> <span class="string">'canal'</span>@<span class="string">'%'</span> ;</span></span><br><span class="line"><span class="operator"><span class="keyword">FLUSH</span> <span class="keyword">PRIVILEGES</span>;</span></span><br><span class="line"></span><br><span class="line">$ mysql -h192.168.6.52 -ucanal -pcanal</span><br></pre></td></tr></table></figure>
+<h2 id="OceanBese">OceanBese</h2>
       
     </div>
     
@@ -224,7 +225,7 @@
   <p><span>本文标题:</span><a href="/2016/06/01/Middleware/">中间件</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年06月01日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年06月07日 - 14时11分</p>
+  <p><span>最后更新:</span>2016年06月23日 - 09时29分</p>
   <p>
     <span>原始链接:</span><a href="/2016/06/01/Middleware/" title="中间件">http://github.com/zqhxuyuan/2016/06/01/Middleware/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/06/01/Middleware/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -268,13 +269,39 @@
 </nav>
 
   
+  
+  <! -- 添加捐赠图标 -->
+<div class ="post-donate">
+    <div id="donate_board" class="donate_bar center">
+        <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏"></a>
+        <span class="donate_txt">
+           &uarr;<br>
+		   赏点酒钱
+        </span>
+        <br>
+      </div>  
+	<div id="donate_guide" class="donate_bar center hidden" >
+		<!-- 支付宝打赏图案 -->
+		<img src="/img/zhifubao.png" alt="支付宝打赏"> 
+		<!-- 微信打赏图案 -->
+		<img src="/img/weixin.png" alt="微信打赏">  
+    </div>
+	<script type="text/javascript">
+		document.getElementById('btn_donate').onclick = function(){
+			$('#donate_board').addClass('hidden');
+			$('#donate_guide').removeClass('hidden');
+		}
+	</script>
+</div>
+<! -- 添加捐赠图标 -->
+
 </article>
 
 <!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#dubbo"><span class="toc-number">1.</span> <span class="toc-text">dubbo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#druid"><span class="toc-number">2.</span> <span class="toc-text">druid</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#canal"><span class="toc-number">3.</span> <span class="toc-text">canal</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#dubbo"><span class="toc-number">1.</span> <span class="toc-text">dubbo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#druid"><span class="toc-number">2.</span> <span class="toc-text">druid</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#canal"><span class="toc-number">3.</span> <span class="toc-text">canal</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OceanBese"><span class="toc-number">4.</span> <span class="toc-text">OceanBese</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {

@@ -18,7 +18,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160519131446630">
 <meta property="og:image" content="http://img.blog.csdn.net/20160519131501802">
 <meta property="og:image" content="http://img.blog.csdn.net/20160519131513286">
-<meta property="og:updated_time" content="2016-06-02T05:16:12.000Z">
+<meta property="og:updated_time" content="2016-06-13T23:59:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="监控工具集锦">
 <meta name="twitter:description" content="监控工具：ZooKeeper，Kafka，Cassandra…">
@@ -117,7 +117,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 14.29px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 12.86px;">ops</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 12.86px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 14.29px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 14.29px;">ops</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 15.71px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 12.86px;">work</a>
 					</div>
 				</section>
 				
@@ -266,12 +266,17 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">INFO [<span class="number">2016</span>-<span class="number">05</span>-<span class="number">19</span> <span class="number">16</span>:<span class="number">47</span>:<span class="number">54</span>,<span class="number">195</span>] Thread-<span class="number">7</span> - riemann.config - expired </span><br><span class="line">&#123;:host <span class="number">10.57</span><span class="number">.2</span><span class="number">.36</span>, :service cassandra.db.forseti.velocity_partner.mean_row_size_kb, :state expired, :time <span class="number">292729534839</span>/<span class="number">200</span>, :ttl <span class="number">60</span>&#125;</span><br></pre></td></tr></table></figure>
 <p>查询所有表的read_latency, query中支持不同的查询</p>
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tagged <span class="string">"cassandra"</span>  <span class="keyword">and</span> service =~ <span class="string">"cassandra.db.forseti.%.read_%"</span></span><br></pre></td></tr></table></figure>
-<h2 id="Tracing">Tracing</h2><h3 id="zipkin">zipkin</h3><p>准备环境</p>
+<h2 id="Tracing">Tracing</h2><ul>
+<li><a href="http://htrace.incubator.apache.org/" target="_blank" rel="external">http://htrace.incubator.apache.org/</a></li>
+<li><a href="https://github.com/naver/pinpoint">https://github.com/naver/pinpoint</a></li>
+<li></li>
+</ul>
+<h3 id="zipkin">zipkin</h3><p>准备环境</p>
 <figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">alias <span class="variable">npm=</span><span class="string">"npm --registry=https://registry.npm.taobao.org --disturl=https://npm.taobao.org/mirrors/node"</span></span><br><span class="line">yum install npm -y</span><br><span class="line">git <span class="keyword">clone</span> <span class="title">https</span>://github.com/creationix/nvm.git</span><br><span class="line">source nvm/install.sh</span><br><span class="line"><span class="keyword">node</span><span class="identifier"> </span><span class="title">-v</span> &amp;&amp; npm -v &amp;&amp; nvm -v</span><br><span class="line">nvm install v5.<span class="number">5.0</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ tar zxf zipkin-<span class="number">1.40</span><span class="number">.1</span>.tar.gz</span><br><span class="line">$ cd zipkin-<span class="number">1.40</span><span class="number">.1</span></span><br><span class="line">$ bin/query</span><br></pre></td></tr></table></figure>
 <p>vi zipkin-ui/webpack.config.js</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">:zipkin-ui:npmBuild</span><br><span class="line"></span><br><span class="line">&gt; zipkin-ui@<span class="number">0.0</span><span class="number">.0</span> build /home/qihuang.zheng/zipkin-<span class="number">1.40</span><span class="number">.1</span>/zipkin-ui</span><br><span class="line">&gt; node node_modules/webpack/bin/webpack.js --bail</span><br><span class="line"></span><br><span class="line">ModuleBuildError: Module build failed: Error: /home/qihuang.zheng/zipkin-<span class="number">1.40</span><span class="number">.1</span>/zipkin-ui/node_modules/node-sass/vendor/linux-x64-<span class="number">47</span>/binding.node: ELF load command past end of file</span><br><span class="line">npm ERR! Linux <span class="number">3.10</span><span class="number">.96</span>-<span class="number">1.</span>el6.elrepo.x86_64</span><br><span class="line">npm ERR! argv <span class="string">"/home/qihuang.zheng/zipkin-1.40.1/zipkin-ui/build/nodejs/node-v5.5.0-linux-x64/bin/node"</span> <span class="string">"/home/qihuang.zheng/zipkin-1.40.1/zipkin-ui/build/nodejs/node-v5.5.0-linux-x64/lib/node_modules/npm/bin/npm-cli.js"</span> <span class="string">"run-script"</span> <span class="string">"build"</span></span><br><span class="line">npm ERR! node v5<span class="number">.5</span><span class="number">.0</span></span><br><span class="line">npm ERR! npm  v3<span class="number">.3</span><span class="number">.12</span></span><br><span class="line">npm ERR! code ELIFECYCLE</span><br><span class="line">npm ERR! zipkin-ui@<span class="number">0.0</span><span class="number">.0</span> build: `node node_modules/webpack/bin/webpack.js --bail`</span><br><span class="line">npm ERR! Exit status <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<h3 id="cat">cat</h3><h2 id="Operation">Operation</h2><h3 id="FrameGraph">FrameGraph</h3><p>git clone <a href="https://github.com/brendangregg/FlameGraph">https://github.com/brendangregg/FlameGraph</a><br>cd FlameGraph<br>sudo perf record –call-graph dwarf -p $(pgrep scylla)<br>sudo perf script | <code>pwd</code>/stackcollapse-perf.pl | <code>pwd</code>/flamegraph.pl &gt; flame.svg</p>
+<h3 id="cat">cat</h3><h3 id="HTrace">HTrace</h3><h2 id="Operation">Operation</h2><h3 id="FrameGraph">FrameGraph</h3><p>git clone <a href="https://github.com/brendangregg/FlameGraph">https://github.com/brendangregg/FlameGraph</a><br>cd FlameGraph<br>sudo perf record –call-graph dwarf -p $(pgrep scylla)<br>sudo perf script | <code>pwd</code>/stackcollapse-perf.pl | <code>pwd</code>/flamegraph.pl &gt; flame.svg</p>
 <p><a href="http://blog.csdn.net/justlinux2010/article/details/11520829" target="_blank" rel="external">http://blog.csdn.net/justlinux2010/article/details/11520829</a></p>
 
       
@@ -284,7 +289,7 @@
   <p><span>本文标题:</span><a href="/2016/12/31/BigData-Monitor-Tool/">监控工具集锦</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年12月31日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年06月02日 - 13时16分</p>
+  <p><span>最后更新:</span>2016年06月14日 - 07时59分</p>
   <p>
     <span>原始链接:</span><a href="/2016/12/31/BigData-Monitor-Tool/" title="监控工具集锦">http://github.com/zqhxuyuan/2016/12/31/BigData-Monitor-Tool/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/12/31/BigData-Monitor-Tool/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -313,28 +318,54 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2016/12/31/Linux-Daily/">
-        Linux Daily
+      <a href="/2017/01/01/Kafka-Code-Index/">
+        Kafka技术内幕
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2016/06/07/Cassandra-Code/">
-        Cassandra源码分析
+      <a href="/2016/12/31/Daily/">
+        Daily Work
       </a>
     </div>
   
 </nav>
 
   
+  
+  <! -- 添加捐赠图标 -->
+<div class ="post-donate">
+    <div id="donate_board" class="donate_bar center">
+        <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏"></a>
+        <span class="donate_txt">
+           &uarr;<br>
+		   赏点酒钱
+        </span>
+        <br>
+      </div>  
+	<div id="donate_guide" class="donate_bar center hidden" >
+		<!-- 支付宝打赏图案 -->
+		<img src="/img/zhifubao.png" alt="支付宝打赏"> 
+		<!-- 微信打赏图案 -->
+		<img src="/img/weixin.png" alt="微信打赏">  
+    </div>
+	<script type="text/javascript">
+		document.getElementById('btn_donate').onclick = function(){
+			$('#donate_board').addClass('hidden');
+			$('#donate_guide').removeClass('hidden');
+		}
+	</script>
+</div>
+<! -- 添加捐赠图标 -->
+
 </article>
 
 <!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ZooKeeper"><span class="toc-number">1.</span> <span class="toc-text">ZooKeeper</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#node-zk-browser"><span class="toc-number">1.1.</span> <span class="toc-text">node-zk-browser</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#zkui"><span class="toc-number">1.2.</span> <span class="toc-text">zkui</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#zk-web"><span class="toc-number">1.3.</span> <span class="toc-text">zk-web</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka"><span class="toc-number">2.</span> <span class="toc-text">Kafka</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#trifecta"><span class="toc-number">2.1.</span> <span class="toc-text">trifecta</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cassandra"><span class="toc-number">3.</span> <span class="toc-text">Cassandra</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Riemman"><span class="toc-number">3.1.</span> <span class="toc-text">Riemman</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#准备工作"><span class="toc-number">3.1.1.</span> <span class="toc-text">准备工作</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tracing"><span class="toc-number">4.</span> <span class="toc-text">Tracing</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#zipkin"><span class="toc-number">4.1.</span> <span class="toc-text">zipkin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cat"><span class="toc-number">4.2.</span> <span class="toc-text">cat</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Operation"><span class="toc-number">5.</span> <span class="toc-text">Operation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FrameGraph"><span class="toc-number">5.1.</span> <span class="toc-text">FrameGraph</span></a></li></ol></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ZooKeeper"><span class="toc-number">1.</span> <span class="toc-text">ZooKeeper</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#node-zk-browser"><span class="toc-number">1.1.</span> <span class="toc-text">node-zk-browser</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#zkui"><span class="toc-number">1.2.</span> <span class="toc-text">zkui</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#zk-web"><span class="toc-number">1.3.</span> <span class="toc-text">zk-web</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka"><span class="toc-number">2.</span> <span class="toc-text">Kafka</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#trifecta"><span class="toc-number">2.1.</span> <span class="toc-text">trifecta</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cassandra"><span class="toc-number">3.</span> <span class="toc-text">Cassandra</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Riemman"><span class="toc-number">3.1.</span> <span class="toc-text">Riemman</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#准备工作"><span class="toc-number">3.1.1.</span> <span class="toc-text">准备工作</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tracing"><span class="toc-number">4.</span> <span class="toc-text">Tracing</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#zipkin"><span class="toc-number">4.1.</span> <span class="toc-text">zipkin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cat"><span class="toc-number">4.2.</span> <span class="toc-text">cat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTrace"><span class="toc-number">4.3.</span> <span class="toc-text">HTrace</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Operation"><span class="toc-number">5.</span> <span class="toc-text">Operation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FrameGraph"><span class="toc-number">5.1.</span> <span class="toc-text">FrameGraph</span></a></li></ol></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -450,10 +481,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2016/12/31/Linux-Daily/" title="上一篇: Linux Daily">
+    <a href="/2017/01/01/Kafka-Code-Index/" title="上一篇: Kafka技术内幕">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2016/06/07/Cassandra-Code/" title="下一篇: Cassandra源码分析">
+    <a href="/2016/12/31/Daily/" title="下一篇: Daily Work">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
