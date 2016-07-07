@@ -24,7 +24,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160630174414242">
 <meta property="og:image" content="http://img.blog.csdn.net/20160630175845225">
 <meta property="og:image" content="http://img.blog.csdn.net/20160630175856746">
-<meta property="og:updated_time" content="2016-06-30T10:06:10.000Z">
+<meta property="og:updated_time" content="2016-06-30T10:12:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用实例理解Storm的Stream概念">
 <meta name="twitter:description" content="用实例理解Storm的Stream概念">
@@ -283,7 +283,7 @@
 <p>所以最后实际上拓扑图还是最原始的[spout]-&gt;[split]-&gt;[count]-&gt;[print]，并不会出现之前出现的多条线以及自己指向自己的情况。  </p>
 <p><img src="http://img.blog.csdn.net/20160630172742296" alt="stream-10"></p>
 <h2 id="最后一个Bolt">最后一个Bolt</h2><p>可以把最后一个PrintBolt也都加到每个Bolt的分组策略里吗？</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">builder.setBolt(<span class="string">"split"</span>, <span class="keyword">new</span> SplitSentenceBolt(), <span class="number">2</span>)</span><br><span class="line">        .shuffleGrouping(<span class="string">"spout"</span>, <span class="string">"split-stream"</span>)                      <span class="comment">//⬅</span></span><br><span class="line">        .fieldsGrouping(<span class="string">"split"</span>, <span class="string">"split-stream"</span>, <span class="keyword">new</span> Fields(<span class="string">"word"</span>))</span><br><span class="line">        .shuffleGrouping(<span class="string">"count"</span>, <span class="string">"split-stream"</span>)</span><br><span class="line">        .shuffleGrouping(<span class="string">"print"</span>, <span class="string">"split-stream"</span>)</span><br><span class="line">;</span><br><span class="line">builder.setBolt(<span class="string">"count"</span>, <span class="keyword">new</span> WordCountBolt(), <span class="number">2</span>)</span><br><span class="line">        .shuffleGrouping(<span class="string">"spout"</span>, <span class="string">"count-stream"</span>)</span><br><span class="line">        .fieldsGrouping(<span class="string">"split"</span>, <span class="string">"count-stream"</span>, <span class="keyword">new</span> Fields(<span class="string">"word"</span>))   <span class="comment">//⬅</span></span><br><span class="line">        .shuffleGrouping(<span class="string">"count"</span>, <span class="string">"count-stream"</span>)</span><br><span class="line">        .shuffleGrouping(<span class="string">"print"</span>, <span class="string">"count-stream"</span>)</span><br><span class="line">;</span><br><span class="line">builder.setBolt(<span class="string">"print"</span>, <span class="keyword">new</span> PrinterBolt(), <span class="number">1</span>)</span><br><span class="line">        .shuffleGrouping(<span class="string">"spout"</span>, <span class="string">"print-stream"</span>)</span><br><span class="line">        .fieldsGrouping(<span class="string">"split"</span>, <span class="string">"print-stream"</span>, <span class="keyword">new</span> Fields(<span class="string">"word"</span>))</span><br><span class="line">        .shuffleGrouping(<span class="string">"count"</span>, <span class="string">"print-stream"</span>)                      <span class="comment">//⬅️</span></span><br><span class="line">        .shuffleGrouping(<span class="string">"print"</span>, <span class="string">"print-stream"</span>)</span><br><span class="line">;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">builder.setBolt(<span class="string">"split"</span>, <span class="keyword">new</span> SplitSentenceBolt(), <span class="number">2</span>)</span><br><span class="line">        .shuffleGrouping(<span class="string">"spout"</span>, <span class="string">"split-stream"</span>)                      <span class="comment">//⬅</span></span><br><span class="line">        .fieldsGrouping(<span class="string">"split"</span>, <span class="string">"split-stream"</span>, <span class="keyword">new</span> Fields(<span class="string">"word"</span>))</span><br><span class="line">        .shuffleGrouping(<span class="string">"count"</span>, <span class="string">"split-stream"</span>)</span><br><span class="line">        .shuffleGrouping(<span class="string">"print"</span>, <span class="string">"split-stream"</span>)</span><br><span class="line">;</span><br><span class="line">builder.setBolt(<span class="string">"count"</span>, <span class="keyword">new</span> WordCountBolt(), <span class="number">2</span>)</span><br><span class="line">        .shuffleGrouping(<span class="string">"spout"</span>, <span class="string">"count-stream"</span>)</span><br><span class="line">        .fieldsGrouping(<span class="string">"split"</span>, <span class="string">"count-stream"</span>, <span class="keyword">new</span> Fields(<span class="string">"word"</span>))   <span class="comment">//⬅</span></span><br><span class="line">        .shuffleGrouping(<span class="string">"count"</span>, <span class="string">"count-stream"</span>)</span><br><span class="line">        .shuffleGrouping(<span class="string">"print"</span>, <span class="string">"count-stream"</span>)</span><br><span class="line">;</span><br><span class="line">builder.setBolt(<span class="string">"print"</span>, <span class="keyword">new</span> PrinterBolt(), <span class="number">1</span>)</span><br><span class="line">        .shuffleGrouping(<span class="string">"spout"</span>, <span class="string">"print-stream"</span>)</span><br><span class="line">        .fieldsGrouping(<span class="string">"split"</span>, <span class="string">"print-stream"</span>, <span class="keyword">new</span> Fields(<span class="string">"word"</span>))</span><br><span class="line">        .shuffleGrouping(<span class="string">"count"</span>, <span class="string">"print-stream"</span>)                      <span class="comment">//⬅</span></span><br><span class="line">        .shuffleGrouping(<span class="string">"print"</span>, <span class="string">"print-stream"</span>)</span><br><span class="line">;</span><br></pre></td></tr></table></figure>
 <p>拓扑图是这样的，虚线表示实际上是不存在的（因为输入源本身没有发射到这些stream）。</p>
 <p><img src="http://img.blog.csdn.net/20160630174414242" alt="stream-11"></p>
 <p>Opps….报错显示：[count]组件订阅了[print]组件中一个不存在的[count-stream]</p>
@@ -319,7 +319,7 @@
   <p><span>本文标题:</span><a href="/2016/06/30/Hello-Storm/">用实例理解Storm的Stream概念</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年06月30日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年06月30日 - 18时06分</p>
+  <p><span>最后更新:</span>2016年06月30日 - 18时12分</p>
   <p>
     <span>原始链接:</span><a href="/2016/06/30/Hello-Storm/" title="用实例理解Storm的Stream概念">http://github.com/zqhxuyuan/2016/06/30/Hello-Storm/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/06/30/Hello-Storm/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -348,8 +348,8 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2016/12/31/BigData-Monitor-Tool/">
-        监控工具集锦
+      <a href="/2016/07/07/Cassandra-G1/">
+        Cassandra G1 GC
       </a>
     </div>
   
@@ -507,7 +507,7 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2016/12/31/BigData-Monitor-Tool/" title="上一篇: 监控工具集锦">
+    <a href="/2016/07/07/Cassandra-G1/" title="上一篇: Cassandra G1 GC">
     <i class="fa fa-angle-left"></i>
     </a>
     <a href="/2016/06/07/Cassandra-Code/" title="下一篇: Cassandra源码分析">
