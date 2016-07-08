@@ -15,7 +15,8 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160708093105550">
 <meta property="og:image" content="http://img.blog.csdn.net/20160708093116711">
 <meta property="og:image" content="http://img.blog.csdn.net/20160708093130878">
-<meta property="og:updated_time" content="2016-07-08T03:32:44.000Z">
+<meta property="og:image" content="http://img.blog.csdn.net/20160708113729249">
+<meta property="og:updated_time" content="2016-07-08T03:38:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Storm的CEP框架 flowmix">
 <meta name="twitter:description" content="Flowmix - A Flexible Event Processing Engine for Apache Storm: http://github.com/zqhxuyuan/bigdata/tree/master/storm/storm-flowmix">
@@ -255,7 +256,8 @@
 <p>以AggregateBuilder为例(其他类型的Builder类似)：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AggregateBuilder</span> <span class="keyword">extends</span> <span class="title">AbstractOpBuilder</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Class&lt;? extends Aggregator&gt; aggregatorClass;</span><br><span class="line">    <span class="keyword">private</span> Policy triggerPolicy;   <span class="comment">//触发策略.比如每隔10分钟,或每隔100条数据,统计一次</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> triggerThreshold = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">private</span> Policy evictionPolicy;  <span class="comment">//失效策略.当事件进来10分钟后,或者事件总数到达1000条后,移除</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> evictionThreshold = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> clearOnTrigger = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> windowEvictMillis = <span class="number">3600000</span>;   <span class="comment">// 60 minutes by default</span></span><br><span class="line">    <span class="keyword">private</span> Map&lt;String,String&gt; config = <span class="keyword">new</span> HashMap&lt;String,String&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> AggregateBuilder <span class="title">aggregator</span><span class="params">(Class&lt;? extends Aggregator&gt; aggregatorClass)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.aggregatorClass = aggregatorClass;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> AggregateBuilder <span class="title">trigger</span><span class="params">(Policy policy, <span class="keyword">long</span> threshold)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.triggerPolicy = policy;</span><br><span class="line">        <span class="keyword">this</span>.triggerThreshold = threshold;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//其他方法类似，都set方式，设置成员变量</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> StreamBuilder <span class="title">end</span><span class="params">()</span> </span>&#123; <span class="comment">//实际上是build方法，一定要到最后才能执行</span></span><br><span class="line">      AggregateOp flowOp = <span class="keyword">new</span> AggregateOp(aggregatorClass, </span><br><span class="line">                triggerPolicy, triggerThreshold, evictionPolicy,</span><br><span class="line">                evictionThreshold, config, clearOnTrigger, windowEvictMillis));</span><br><span class="line">      getStreamBuilder().addFlowOp(flowOp);          </span><br><span class="line">      <span class="keyword">return</span> getStreamBuilder();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>FlowOpBuilder用来构建FlowOp，FlowOp算子可以理解为Storm中Spout/Bolt组件的元数据，<br>比如SelectOp选择算子需要知道要select哪些字段，<br>FilterOp过滤算子需要知道过滤方式，AggregateOp聚合算子需要知道聚合的方式（聚合算法，比如Count/Sum等）。</p>
-<p>在Storm中，Topology由Spout/Bolt组件组成一个DAG，Spout/Bolt会从数据源/上游接收Tuple，然后处理Tuple，最后向下游Bolt发送Tuple。<br>Tuple即数据是流动的，而Spout/Bolt组件是不动的，它们只负责接收数据、处理数据、发送数据。  </p>
+<p>在Storm中，Topology由Spout/Bolt组件组成一个DAG，Spout/Bolt会从数据源/上游接收Tuple，然后处理Tuple，最后向下游Bolt发送Tuple。<br>Tuple即数据是流动的，而Spout/Bolt组件是不动的，它们只负责接收数据、处理数据、发送数据。下图中DAG的边是Tuple数据，顶点则是Spout/Bolt计算组件。 </p>
+<p><img src="http://img.blog.csdn.net/20160708113729249" alt="storm-topo1"></p>
 <p>而这里的算子可以认为是Spout/Bolt组件的元数据，但它们本身不是Spout/Bolt，因为它们并没有处理数据。<br>比如AggregeOp算子只是一个Bean Object，定义了聚合算子的元数据！</p>
 <p>正如FlowOp算子是Spout/Bolt组件的元数据，Flow也可以看做是Topology的元数据。<br>元数据不负责接收数据，不负责计算数据，不负责产生数据。  </p>
 <table>
@@ -277,7 +279,6 @@
 </tbody>
 </table>
 <p>目前为止，我们看到在StreamBuilder上依次调用select(),aggregate(),filter()等产生的算子组成的flowOpList是一个ArrayList，数组链表是有序的！<br>这也确保了Flow的各个算子是有序的。比如调用.select().filter().aggregate()或者.filter().aggregate().select()都是不一样的！</p>
-<p>在StreamBuilder中，创建StreamDef时，有几个比较重要的变量：stdInput, stdOutput, outputs。<br>这里主要是用来在不同Stream之间进行数据的交互。我们上面看到的示例定义的Stream都是单独的一个Stream，或者即使定义了多个Stream，也没有关联关系。<br>但是如果想要关联两个Stream，比如进行Join操作，就需要在这里做文章。这部分比较复杂，后面再分析。</p>
 <table>
 <thead>
 <tr>
@@ -300,6 +301,7 @@
 </tr>
 </tbody>
 </table>
+<p>在StreamBuilder中，创建StreamDef时，有几个比较重要的变量：stdInput, stdOutput, outputs。<br>这里主要是用来在不同Stream之间进行数据的交互。我们上面看到的示例定义的Stream都是单独的一个Stream，或者即使定义了多个Stream，也没有关联关系。<br>但是如果想要关联两个Stream，比如进行Join操作，就需要在这里做文章。这部分比较复杂，后面再分析。</p>
 
       
     </div>
@@ -311,7 +313,7 @@
   <p><span>本文标题:</span><a href="/2015/07/26/2015-09-11-Flowmix-CEP/">Storm的CEP框架 flowmix</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年07月26日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年07月08日 - 11时32分</p>
+  <p><span>最后更新:</span>2016年07月08日 - 11时38分</p>
   <p>
     <span>原始链接:</span><a href="/2015/07/26/2015-09-11-Flowmix-CEP/" title="Storm的CEP框架 flowmix">http://github.com/zqhxuyuan/2015/07/26/2015-09-11-Flowmix-CEP/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/07/26/2015-09-11-Flowmix-CEP/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
