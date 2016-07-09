@@ -5,16 +5,61 @@
   
   <title>Cassandra陷阱 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Cassandra的一些陷阱">
+  <meta name="description" content="Cassandra的一些陷阱
+&amp;lt;!-- MarkdownTOC --&amp;gt;
+
+Count查询
+删除数据库 drop keyspace
+Truncate清空表
+Query查询的限制
+where
+fetchSize和limit
+
+
+二级索引的删除
+重命名表
+query
+
+&amp;lt;!-- /MarkdownTOC --&amp;gt;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Cassandra陷阱">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2015/10/15/Cassandra-hole/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="Cassandra的一些陷阱">
-<meta property="og:updated_time" content="2016-06-27T02:00:05.000Z">
+<meta property="og:description" content="Cassandra的一些陷阱
+&amp;lt;!-- MarkdownTOC --&amp;gt;
+
+Count查询
+删除数据库 drop keyspace
+Truncate清空表
+Query查询的限制
+where
+fetchSize和limit
+
+
+二级索引的删除
+重命名表
+query
+
+&amp;lt;!-- /MarkdownTOC --&amp;gt;">
+<meta property="og:updated_time" content="2016-07-09T00:24:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cassandra陷阱">
-<meta name="twitter:description" content="Cassandra的一些陷阱">
+<meta name="twitter:description" content="Cassandra的一些陷阱
+&amp;lt;!-- MarkdownTOC --&amp;gt;
+
+Count查询
+删除数据库 drop keyspace
+Truncate清空表
+Query查询的限制
+where
+fetchSize和limit
+
+
+二级索引的删除
+重命名表
+query
+
+&amp;lt;!-- /MarkdownTOC --&amp;gt;">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -213,7 +258,6 @@
       
         
         <p>Cassandra的一些陷阱</p>
-<a id="more"></a>
 <!-- MarkdownTOC -->
 <ul>
 <li>Count查询</li>
@@ -229,6 +273,7 @@
 <li>query</li>
 </ul>
 <!-- /MarkdownTOC -->
+<a id="more"></a>
 <h2 id="Count查询">Count查询</h2><p>CQL默认显示10万条数据. 如果真正的数量不多, 可以增大limit值.   </p>
 <figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cqlsh:forseti&gt; <span class="keyword">select</span> <span class="built_in">count</span>(*) <span class="keyword">from</span> velocity_app limit <span class="number">100000000</span>;</span><br><span class="line"> <span class="built_in">count</span></span><br><span class="line">--------</span><br><span class="line"> <span class="number">983872</span></span><br></pre></td></tr></table></figure>
 <p>但是如果数据很多, 增大limit也会导致超时, 因为默认的range query时间是15秒.    </p>
@@ -354,7 +399,7 @@ cqlsh:test&gt; select * from test1;
   <p><span>本文标题:</span><a href="/2015/10/15/Cassandra-hole/">Cassandra陷阱</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年10月15日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年06月27日 - 10时00分</p>
+  <p><span>最后更新:</span>2016年07月09日 - 08时24分</p>
   <p>
     <span>原始链接:</span><a href="/2015/10/15/Cassandra-hole/" title="Cassandra陷阱">http://github.com/zqhxuyuan/2015/10/15/Cassandra-hole/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/10/15/Cassandra-hole/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">

@@ -44,7 +44,7 @@ orderby+lim">
 <meta property="og:image" content="http://img.blog.csdn.net/20151115163912127">
 <meta property="og:image" content="http://img.blog.csdn.net/20160324150246681">
 <meta property="og:image" content="http://img.blog.csdn.net/20160324150302634">
-<meta property="og:updated_time" content="2016-06-14T10:20:35.000Z">
+<meta property="og:updated_time" content="2016-07-09T00:23:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cassandra查询">
 <meta name="twitter:description" content="&amp;lt;!-- MarkdownTOC --&amp;gt;
@@ -258,8 +258,7 @@ orderby+lim">
     <div class="article-entry" itemprop="articleBody">
       
         
-        <a id="more"></a>
-<!-- MarkdownTOC -->
+        <!-- MarkdownTOC -->
 <ul>
 <li>Query<ul>
 <li>Range Query</li>
@@ -299,6 +298,7 @@ orderby+lim">
 <li>协调节点超时</li>
 </ul>
 <!-- /MarkdownTOC -->
+<a id="more"></a>
 <h2 id="Query">Query</h2><p><a href="http://www.planetcassandra.org/blog/we-shall-have-order/" target="_blank" rel="external">http://www.planetcassandra.org/blog/we-shall-have-order/</a><br><a href="http://www.planetcassandra.org/blog/composite-keys-in-apache-cassandra/" target="_blank" rel="external">http://www.planetcassandra.org/blog/composite-keys-in-apache-cassandra/</a><br><a href="http://www.datastax.com/dev/blog/cassandra-anti-patterns-queues-and-queue-like-datasets" target="_blank" rel="external">http://www.datastax.com/dev/blog/cassandra-anti-patterns-queues-and-queue-like-datasets</a>  </p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> velocity (</span><br><span class="line">  <span class="keyword">attribute</span> <span class="built_in">text</span>,       //属性值: zhangshan</span><br><span class="line">  partner_code <span class="built_in">text</span>,    //合作方: koudai</span><br><span class="line">  app_name <span class="built_in">text</span>,        //应用: koudai_ios</span><br><span class="line">  <span class="keyword">type</span> <span class="built_in">text</span>,            //属性名称: <span class="keyword">account</span></span><br><span class="line">  <span class="string">"timestamp"</span> <span class="built_in">bigint</span>,   //时间撮</span><br><span class="line">  <span class="keyword">event</span> <span class="built_in">text</span>,           //事件: <span class="keyword">JSON</span>串</span><br><span class="line">  sequence_id <span class="built_in">text</span>,     //序列号</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> ((<span class="keyword">attribute</span>), partner_code, app_name, <span class="keyword">type</span>, <span class="string">"timestamp"</span>)</span><br><span class="line">)</span></span><br></pre></td></tr></table></figure>
 <p><strong>主键primary key</strong>: (attribute), partner_code, app_name, type, “timestamp”<br><strong>分区键partition key</strong>: attribute<br><strong>聚合键clustering key</strong>: partner_code, app_name, type, timestamp</p>
@@ -588,7 +588,7 @@ orderby+lim">
   <p><span>本文标题:</span><a href="/2015/10/16/Cassandra-query/">Cassandra查询</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年10月16日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年06月14日 - 18时20分</p>
+  <p><span>最后更新:</span>2016年07月09日 - 08时23分</p>
   <p>
     <span>原始链接:</span><a href="/2015/10/16/Cassandra-query/" title="Cassandra查询">http://github.com/zqhxuyuan/2015/10/16/Cassandra-query/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/10/16/Cassandra-query/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
