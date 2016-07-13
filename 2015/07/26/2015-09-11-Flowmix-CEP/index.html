@@ -31,7 +31,11 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160713073839872">
 <meta property="og:image" content="http://img.blog.csdn.net/20160713073927302">
 <meta property="og:image" content="http://img.blog.csdn.net/20160713073940811">
-<meta property="og:updated_time" content="2016-07-12T23:49:57.000Z">
+<meta property="og:image" content="http://img.blog.csdn.net/20160713080136719">
+<meta property="og:image" content="http://img.blog.csdn.net/20160713080148140">
+<meta property="og:image" content="http://img.blog.csdn.net/20160713080202171">
+<meta property="og:image" content="http://img.blog.csdn.net/20160713080213890">
+<meta property="og:updated_time" content="2016-07-13T00:03:32.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Storm的CEP框架 flowmix">
 <meta name="twitter:description" content="Flowmix - A Flexible Event Processing Engine for Apache Storm: http://github.com/zqhxuyuan/bigdata/tree/master/storm/storm-flowmix">
@@ -855,40 +859,12 @@ event6.<span class="keyword">put</span>(<span class="keyword">new</span> Tuple(<
 <p><img src="http://img.blog.csdn.net/20160713073940811" alt="many event"></p>
 <p>那么有什么解决办法呢？在添加事件到AggregatorWindow的时候，根据Aggregator算法，只存储对最终计算结果有用的数据！<br>比如CountAggregator，在窗口中保存一个计数器，每条事件进来时，只需要增加计数器的值即可，不需要保存原始的事件！  </p>
 <p>同样其他类似的Aggregator也可以采用类似的思路，比如SumAggregator/MaxAggregator等等，同样只需要一个变量，<br>当然和Count不需要关心现有状态（Count是无状态的），Sum/Max操作需要获取已有的值和当前事件的值进行比较（有状态）。  </p>
-<table>
-<thead>
-<tr>
-<th>Event</th>
-<th>Event Tuple</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>event1</td>
-<td>{“key1”: “val10”, “key2”: “1”, “key3”: “val30”}</td>
-</tr>
-<tr>
-<td>event2</td>
-<td>{“key1”: “val10”, “key2”: “2”, “key3”: “val31”}</td>
-</tr>
-<tr>
-<td>event3</td>
-<td>{“key1”: “val10”, “key2”: “3”, “key3”: “val32”}</td>
-</tr>
-<tr>
-<td>event4</td>
-<td>{“key1”: “val10”, “key2”: “4”, “key3”: “val33”}</td>
-</tr>
-<tr>
-<td>…</td>
-<td>…….</td>
-</tr>
-<tr>
-<td>event1000</td>
-<td>{“key1”: “val10”, “key2”: “1000”, “key3”: “val3999”}</td>
-</tr>
-</tbody>
-</table>
+<p>现在每条事件进入窗口时，由原先存储原始事件改为只存储中间结果，下面是第一条事件：</p>
+<p><img src="http://img.blog.csdn.net/20160713080136719" alt="flowmix9"></p>
+<p>第二条事件以及接下来的事件：</p>
+<p><img src="http://img.blog.csdn.net/20160713080148140" alt="flowmix10"></p>
+<p><img src="http://img.blog.csdn.net/20160713080202171" alt="flowmix11"></p>
+<p><img src="http://img.blog.csdn.net/20160713080213890" alt="flowmix12"></p>
 <h4 id="AggregateOp">AggregateOp</h4><p>从Stream中获得的AggregateOp，会被用来构建AggregatorWindow。应用程序可以定义AggregateOp的各种属性，<br>比如触发策略（Policy.TIME），失效策略（Policy.COUNT），窗口大小（windowEvictMillis），比如下面的示例：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Class&lt;? extends Aggregator&gt; aggregatorClass;</span><br><span class="line"><span class="keyword">private</span> Policy triggerPolicy;   <span class="comment">//触发策略.比如每隔10分钟,或每隔100条数据,统计一次</span></span><br><span class="line"><span class="keyword">private</span> Policy evictionPolicy;  <span class="comment">//失效策略.当事件进来10分钟后,或者事件总数到达1000条后,移除</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> triggerThreshold = -<span class="number">1</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> evictionThreshold = -<span class="number">1</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">boolean</span> clearOnTrigger = <span class="keyword">false</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">long</span> windowEvictMillis = <span class="number">3600000</span>;   <span class="comment">// 60 minutes by default</span></span><br><span class="line"><span class="keyword">private</span> Map&lt;String,String&gt; config = <span class="keyword">new</span> HashMap&lt;String,String&gt;();</span><br></pre></td></tr></table></figure>
 <p>Policy分为三种：<code>COUNT, TIME, TIME_DELTA_LT</code>。  </p>
@@ -941,7 +917,7 @@ event6.<span class="keyword">put</span>(<span class="keyword">new</span> Tuple(<
   <p><span>本文标题:</span><a href="/2015/07/26/2015-09-11-Flowmix-CEP/">Storm的CEP框架 flowmix</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年07月26日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年07月13日 - 07时49分</p>
+  <p><span>最后更新:</span>2016年07月13日 - 08时03分</p>
   <p>
     <span>原始链接:</span><a href="/2015/07/26/2015-09-11-Flowmix-CEP/" title="Storm的CEP框架 flowmix">http://github.com/zqhxuyuan/2015/07/26/2015-09-11-Flowmix-CEP/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/07/26/2015-09-11-Flowmix-CEP/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
