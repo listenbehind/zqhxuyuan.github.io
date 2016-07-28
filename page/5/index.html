@@ -109,7 +109,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.57px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 17.14px;">drill</a> <a href="/tags/druid/" style="font-size: 14.29px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 14.29px;">graph</a> <a href="/tags/hbase/" style="font-size: 15.71px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 14.29px;">ops</a> <a href="/tags/redis/" style="font-size: 11.43px;">redis</a> <a href="/tags/scala/" style="font-size: 12.86px;">scala</a> <a href="/tags/spark/" style="font-size: 14.29px;">spark</a> <a href="/tags/storm/" style="font-size: 17.14px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.86px;">timeseries</a> <a href="/tags/work/" style="font-size: 12.86px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.75px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.25px;">drill</a> <a href="/tags/druid/" style="font-size: 13.75px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.75px;">graph</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.75px;">ops</a> <a href="/tags/redis/" style="font-size: 11.25px;">redis</a> <a href="/tags/scala/" style="font-size: 12.5px;">scala</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.5px;">timeseries</a> <a href="/tags/work/" style="font-size: 12.5px;">work</a>
 					</div>
 				</section>
 				
@@ -170,6 +170,174 @@
 	</div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-2015-12-03-Druid-Design" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/03/2015-12-03-Druid-Design/" class="article-date">
+  	<time datetime="2015-12-02T16:00:00.000Z" itemprop="datePublished">2015-12-03</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/03/2015-12-03-Druid-Design/">Druid OLAP架构设计</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Druid is a fast column-oriented distributed data store. <a href="http://druid.io/">http://druid.io/</a></p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/druid/">druid</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/12/03/2015-12-03-Druid-Design/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-12-02-Hello-Druid" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/02/2015-12-02-Hello-Druid/" class="article-date">
+  	<time datetime="2015-12-01T16:00:00.000Z" itemprop="datePublished">2015-12-02</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/02/2015-12-02-Hello-Druid/">Druid 分布式OLAP入门</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Druid is a fast column-oriented distributed data store. <a href="http://druid.io/">http://druid.io/</a></p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/druid/">druid</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/12/02/2015-12-02-Hello-Druid/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
   
     <article id="post-2015-11-29-StreamCQL-application" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -882,246 +1050,6 @@
         
 
   
-    <article id="post-Cassandra-hole" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/10/15/Cassandra-hole/" class="article-date">
-  	<time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished">2015-10-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/15/Cassandra-hole/">Cassandra陷阱</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Cassandra的一些陷阱</p>
-<!-- MarkdownTOC -->
-<ul>
-<li>Count查询</li>
-<li>删除数据库 drop keyspace</li>
-<li>Truncate清空表</li>
-<li>Query查询的限制<ul>
-<li>where</li>
-<li>fetchSize和limit</li>
-</ul>
-</li>
-<li>二级索引的删除</li>
-<li>重命名表</li>
-<li>query</li>
-</ul>
-<!-- /MarkdownTOC -->
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/work/">work</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/10/15/Cassandra-hole/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-Cassandra-Daily" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/10/15/Cassandra-Daily/" class="article-date">
-  	<time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished">2015-10-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/15/Cassandra-Daily/">Cassandra日常运维</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Cassandra日常运维, OpsCenter</p>
-<!-- MarkdownTOC -->
-<ul>
-<li>Cassandra日常运维<ul>
-<li>线上应急</li>
-<li>机器预估</li>
-<li>准备工作</li>
-<li>2.0升级到2.1</li>
-<li>文件操作</li>
-<li>进程</li>
-<li>CQL查询客户端</li>
-<li>集群维护<ul>
-<li>集群扩容</li>
-<li>集群安装</li>
-<li>删除/下线节点</li>
-<li>授权访问</li>
-</ul>
-</li>
-<li>OpsCenter:<ul>
-<li>安装opscenter</li>
-<li>创建集群和安装agent</li>
-<li>修改agent配置</li>
-<li>堡垒机无法查看opscenter</li>
-<li>手动安装agent</li>
-<li>rolling restart</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>nodetool常用工具(cfstats,cfhistograms,compactionstats,tpstats)</li>
-<li>日志分析<ul>
-<li>ParNew统计</li>
-<li>tombstone与GC的比较</li>
-<li>cfstats和cfhistograms统计</li>
-<li>large partition</li>
-</ul>
-</li>
-<li>性能调优<ul>
-<li>服务端配置指南<ul>
-<li>读写配置</li>
-<li>JVM配置</li>
-<li>从CMS更改为G1 GC</li>
-<li>Memtable</li>
-<li>KeyCache</li>
-<li>RowCache</li>
-<li>compaction</li>
-</ul>
-</li>
-<li>JavaDriver配置<ul>
-<li>Partitioner</li>
-</ul>
-</li>
-<li>Internal</li>
-<li>Ref</li>
-</ul>
-</li>
-</ul>
-<!-- /MarkdownTOC -->
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/work/">work</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/10/15/Cassandra-Daily/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
     <article id="post-Cassandra-exception" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -1191,117 +1119,6 @@
       
         <p class="article-more-link">
           <a  href="/2015/10/15/Cassandra-exception/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-Cassandra-Stress" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/10/15/Cassandra-Stress/" class="article-date">
-  	<time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished">2015-10-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/15/Cassandra-Stress/">Cassandra压力测试</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <!-- MarkdownTOC -->
-<ul>
-<li>cassandra-stress<ul>
-<li>介绍</li>
-<li>单节点测试<ul>
-<li>写入测试</li>
-<li>采用cql3协议写入</li>
-<li>读取测试</li>
-<li>没有预热读取</li>
-<li>给定一段时间测试最大可以读取多少条记录</li>
-<li>混合模式读大于写</li>
-<li>混合模式写大于读</li>
-</ul>
-</li>
-<li>自定义schema<ul>
-<li>示例</li>
-<li>只有写入</li>
-<li>读写混合模式</li>
-<li>只有读取</li>
-</ul>
-</li>
-<li>G1测试</li>
-<li>集群测试</li>
-</ul>
-</li>
-<li>YCSB</li>
-</ul>
-<!-- /MarkdownTOC -->
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/work/">work</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/10/15/Cassandra-Stress/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -1480,11 +1297,11 @@
         
 
   
-    <article id="post-2015-09-10-Storm-Window" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Cassandra-hole" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/09/10/2015-09-10-Storm-Window/" class="article-date">
-  	<time datetime="2015-09-09T16:00:00.000Z" itemprop="datePublished">2015-09-10</time>
+      <a href="/2015/10/15/Cassandra-hole/" class="article-date">
+  	<time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished">2015-10-15</time>
 </a>
     </div>
   
@@ -1497,7 +1314,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/10/2015-09-10-Storm-Window/">Storm的滑动窗口</a>
+      <a class="article-title" href="/2015/10/15/Cassandra-hole/">Cassandra陷阱</a>
     </h1>
   
 
@@ -1506,7 +1323,22 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Storm滑动窗口的实现, 使用TickTuple</p>
+        <p>Cassandra的一些陷阱</p>
+<!-- MarkdownTOC -->
+<ul>
+<li>Count查询</li>
+<li>删除数据库 drop keyspace</li>
+<li>Truncate清空表</li>
+<li>Query查询的限制<ul>
+<li>where</li>
+<li>fetchSize和limit</li>
+</ul>
+</li>
+<li>二级索引的删除</li>
+<li>重命名表</li>
+<li>query</li>
+</ul>
+<!-- /MarkdownTOC -->
       
     </div>
     
@@ -1514,18 +1346,18 @@
       
       
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	<a class="article-category-link" href="/categories/work/">work</a>
 	</div>
 
 
       
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/storm/">storm</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
 	</div>
 
       
         <p class="article-more-link">
-          <a  href="/2015/09/10/2015-09-10-Storm-Window/#more">more >></a>
+          <a  href="/2015/10/15/Cassandra-hole/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -1564,11 +1396,11 @@
         
 
   
-    <article id="post-2015-08-25-Apache-Cassandra" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Cassandra-Stress" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/08/25/2015-08-25-Apache-Cassandra/" class="article-date">
-  	<time datetime="2015-08-24T16:00:00.000Z" itemprop="datePublished">2015-08-25</time>
+      <a href="/2015/10/15/Cassandra-Stress/" class="article-date">
+  	<time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished">2015-10-15</time>
 </a>
     </div>
   
@@ -1581,7 +1413,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/25/2015-08-25-Apache-Cassandra/">Apache Cassandra入门</a>
+      <a class="article-title" href="/2015/10/15/Cassandra-Stress/">Cassandra压力测试</a>
     </h1>
   
 
@@ -1590,7 +1422,34 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Hello Cassandra</p>
+        <!-- MarkdownTOC -->
+<ul>
+<li>cassandra-stress<ul>
+<li>介绍</li>
+<li>单节点测试<ul>
+<li>写入测试</li>
+<li>采用cql3协议写入</li>
+<li>读取测试</li>
+<li>没有预热读取</li>
+<li>给定一段时间测试最大可以读取多少条记录</li>
+<li>混合模式读大于写</li>
+<li>混合模式写大于读</li>
+</ul>
+</li>
+<li>自定义schema<ul>
+<li>示例</li>
+<li>只有写入</li>
+<li>读写混合模式</li>
+<li>只有读取</li>
+</ul>
+</li>
+<li>G1测试</li>
+<li>集群测试</li>
+</ul>
+</li>
+<li>YCSB</li>
+</ul>
+<!-- /MarkdownTOC -->
       
     </div>
     
@@ -1598,7 +1457,7 @@
       
       
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	<a class="article-category-link" href="/categories/work/">work</a>
 	</div>
 
 
@@ -1609,7 +1468,153 @@
 
       
         <p class="article-more-link">
-          <a  href="/2015/08/25/2015-08-25-Apache-Cassandra/#more">more >></a>
+          <a  href="/2015/10/15/Cassandra-Stress/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-Cassandra-Daily" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/10/15/Cassandra-Daily/" class="article-date">
+  	<time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished">2015-10-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/15/Cassandra-Daily/">Cassandra日常运维</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Cassandra日常运维, OpsCenter</p>
+<!-- MarkdownTOC -->
+<ul>
+<li>Cassandra日常运维<ul>
+<li>线上应急</li>
+<li>机器预估</li>
+<li>准备工作</li>
+<li>2.0升级到2.1</li>
+<li>文件操作</li>
+<li>进程</li>
+<li>CQL查询客户端</li>
+<li>集群维护<ul>
+<li>集群扩容</li>
+<li>集群安装</li>
+<li>删除/下线节点</li>
+<li>授权访问</li>
+</ul>
+</li>
+<li>OpsCenter:<ul>
+<li>安装opscenter</li>
+<li>创建集群和安装agent</li>
+<li>修改agent配置</li>
+<li>堡垒机无法查看opscenter</li>
+<li>手动安装agent</li>
+<li>rolling restart</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>nodetool常用工具(cfstats,cfhistograms,compactionstats,tpstats)</li>
+<li>日志分析<ul>
+<li>ParNew统计</li>
+<li>tombstone与GC的比较</li>
+<li>cfstats和cfhistograms统计</li>
+<li>large partition</li>
+</ul>
+</li>
+<li>性能调优<ul>
+<li>服务端配置指南<ul>
+<li>读写配置</li>
+<li>JVM配置</li>
+<li>从CMS更改为G1 GC</li>
+<li>Memtable</li>
+<li>KeyCache</li>
+<li>RowCache</li>
+<li>compaction</li>
+</ul>
+</li>
+<li>JavaDriver配置<ul>
+<li>Partitioner</li>
+</ul>
+</li>
+<li>Internal<ul>
+<li>Partitioner</li>
+<li>Memory</li>
+</ul>
+</li>
+<li>MD5</li>
+<li>Ref</li>
+</ul>
+</li>
+</ul>
+<!-- /MarkdownTOC -->
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/10/15/Cassandra-Daily/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -1650,7 +1655,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
     </nav>
   
 </div>
