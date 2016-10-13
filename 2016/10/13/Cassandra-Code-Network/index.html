@@ -3,16 +3,14 @@
 <head>
   <meta charset="utf-8">
   
-  <title>zqhxuyuan</title>
+  <title>Cassandra源码分析-Network | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="CassandraDaemon启动日志，代表了各个组件的启动顺序
-1234567891011121314151617181920212223242526272829INFO  [main] 2016-10-11 15:39:47,410 ColumnFamilyStore.java:382 - Initializing system.sstable_activityINFO  [main] 201">
+  <meta name="description" content="Cassandra-2.2 源码分析：Netty客户端/服务端、请求处理、消息服务">
 <meta property="og:type" content="article">
-<meta property="og:title" content="zqhxuyuan">
+<meta property="og:title" content="Cassandra源码分析-Network">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2016/10/13/Cassandra-Code-Network/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="CassandraDaemon启动日志，代表了各个组件的启动顺序
-1234567891011121314151617181920212223242526272829INFO  [main] 2016-10-11 15:39:47,410 ColumnFamilyStore.java:382 - Initializing system.sstable_activityINFO  [main] 201">
+<meta property="og:description" content="Cassandra-2.2 源码分析：Netty客户端/服务端、请求处理、消息服务">
 <meta property="og:image" content="http://img.blog.csdn.net/20161013102442935">
 <meta property="og:image" content="http://img.blog.csdn.net/20160928232623843">
 <meta property="og:image" content="http://img.blog.csdn.net/20160928232810333">
@@ -21,11 +19,10 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160928232412715">
 <meta property="og:image" content="http://www.bodhtree.com/blog/wp-content/uploads/2013/12/clip_image0022.jpg">
 <meta property="og:image" content="http://img.blog.csdn.net/20160928232515893">
-<meta property="og:updated_time" content="2016-10-13T03:56:47.000Z">
+<meta property="og:updated_time" content="2016-10-13T04:04:37.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="zqhxuyuan">
-<meta name="twitter:description" content="CassandraDaemon启动日志，代表了各个组件的启动顺序
-1234567891011121314151617181920212223242526272829INFO  [main] 2016-10-11 15:39:47,410 ColumnFamilyStore.java:382 - Initializing system.sstable_activityINFO  [main] 201">
+<meta name="twitter:title" content="Cassandra源码分析-Network">
+<meta name="twitter:description" content="Cassandra-2.2 源码分析：Netty客户端/服务端、请求处理、消息服务">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -185,7 +182,7 @@
   
     <div class="article-meta">
       <a href="/2016/10/13/Cassandra-Code-Network/" class="article-date">
-  	<time datetime="2016-10-13T03:56:47.000Z" itemprop="datePublished">2016-10-13</time>
+  	<time datetime="2016-10-12T16:00:00.000Z" itemprop="datePublished">2016-10-13</time>
 </a>
     </div>
   
@@ -194,10 +191,37 @@
       <input type="hidden" class="isFancy" />
     
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Cassandra源码分析-Network
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/cassandra/">cassandra</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
     <div class="article-entry" itemprop="articleBody">
       
         
-        <h2 id="CassandraDaemon">CassandraDaemon</h2><p>启动日志，代表了各个组件的启动顺序</p>
+        <p>Cassandra-2.2 源码分析：Netty客户端/服务端、请求处理、消息服务<br><a id="more"></a></p>
+<h2 id="CassandraDaemon">CassandraDaemon</h2><p>启动日志，代表了各个组件的启动顺序</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">INFO  [main] 2016-10-11 15:39:47,410 ColumnFamilyStore.java:382 - Initializing system.sstable_activity</span><br><span class="line">INFO  [main] 2016-10-11 15:39:48,950 CacheService.java:111 - Initializing key <span class="operator"><span class="keyword">cache</span> <span class="keyword">with</span> <span class="keyword">capacity</span> <span class="keyword">of</span> <span class="number">49</span> MBs.</span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">48</span>,<span class="number">967</span> CacheService.<span class="keyword">java</span>:<span class="number">133</span> - Initializing <span class="keyword">row</span> <span class="keyword">cache</span> <span class="keyword">with</span> <span class="keyword">capacity</span> <span class="keyword">of</span> <span class="number">0</span> MBs</span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">48</span>,<span class="number">972</span> CacheService.<span class="keyword">java</span>:<span class="number">162</span> - Initializing counter <span class="keyword">cache</span> <span class="keyword">with</span> <span class="keyword">capacity</span> <span class="keyword">of</span> <span class="number">24</span> MBs</span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">48</span>,<span class="number">974</span> CacheService.<span class="keyword">java</span>:<span class="number">173</span> - Scheduling counter <span class="keyword">cache</span> <span class="keyword">save</span> <span class="keyword">to</span> every <span class="number">7200</span> seconds (going <span class="keyword">to</span> <span class="keyword">save</span> all <span class="keyword">keys</span>).</span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">49</span>,<span class="number">080</span> ColumnFamilyStore.<span class="keyword">java</span>:<span class="number">382</span> - Initializing <span class="keyword">system</span>.hints</span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">49</span>,<span class="number">089</span> ColumnFamilyStore.<span class="keyword">java</span>:<span class="number">382</span> - Initializing <span class="keyword">system</span>.......</span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">51</span>,<span class="number">302</span> ColumnFamilyStore.<span class="keyword">java</span>:<span class="number">382</span> - Initializing demo.<span class="keyword">test</span></span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">51</span>,<span class="number">716</span> <span class="keyword">Index</span>.<span class="keyword">java</span>:<span class="number">93</span> - Initializing Lucene <span class="keyword">index</span></span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">52</span>,<span class="number">405</span> <span class="keyword">Index</span>.<span class="keyword">java</span>:<span class="number">101</span> - <span class="keyword">Initialized</span> <span class="keyword">index</span> demo.<span class="keyword">test</span>.idx</span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">52</span>,<span class="number">413</span> ColumnFamilyStore.<span class="keyword">java</span>:<span class="number">382</span> - Initializing demo.tweets</span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">52</span>,<span class="number">419</span> AutoSavingCache.<span class="keyword">java</span>:<span class="number">163</span> - Completed loading (<span class="number">1</span> ms;</span> 21 keys) KeyCache <span class="operator"><span class="keyword">cache</span></span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">52</span>,<span class="number">497</span> CommitLog.<span class="keyword">java</span>:<span class="number">168</span> - Replaying <span class="keyword">bin</span>/../<span class="keyword">data</span>/commitlog/CommitLog-<span class="number">5</span>-<span class="number">1474959171115.</span><span class="keyword">log</span>, ....</span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">52</span>,<span class="number">739</span> CommitLog.<span class="keyword">java</span>:<span class="number">170</span> - <span class="keyword">Log</span> replay <span class="keyword">complete</span>, <span class="number">135</span> replayed mutations</span><br><span class="line"></span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">52</span>,<span class="number">969</span> StorageService.<span class="keyword">java</span>:<span class="number">600</span> - Cassandra <span class="keyword">version</span>: <span class="number">2.2</span><span class="number">.6</span></span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">52</span>,<span class="number">969</span> StorageService.<span class="keyword">java</span>:<span class="number">601</span> - Thrift API <span class="keyword">version</span>: <span class="number">20.1</span><span class="number">.0</span></span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">52</span>,<span class="number">969</span> StorageService.<span class="keyword">java</span>:<span class="number">602</span> - CQL supported <span class="keyword">versions</span>: <span class="number">3.3</span><span class="number">.1</span> (<span class="keyword">default</span>: <span class="number">3.3</span><span class="number">.1</span>)</span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">53</span>,<span class="number">010</span> IndexSummaryManager.<span class="keyword">java</span>:<span class="number">85</span> - Initializing <span class="keyword">index</span> summary manager <span class="keyword">with</span> a <span class="keyword">memory</span> pool <span class="keyword">size</span> <span class="keyword">of</span> <span class="number">49</span> MB <span class="keyword">and</span> a <span class="keyword">resize</span> <span class="built_in">interval</span> <span class="keyword">of</span> <span class="number">60</span> minutes</span><br><span class="line"></span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">53</span>,<span class="number">013</span> StorageService.<span class="keyword">java</span>:<span class="number">621</span> - Loading persisted ring state</span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">53</span>,<span class="number">056</span> StorageService.<span class="keyword">java</span>:<span class="number">794</span> - <span class="keyword">Starting</span> up <span class="keyword">server</span> gossip</span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">53</span>,<span class="number">247</span> MessagingService.<span class="keyword">java</span>:<span class="number">540</span> - <span class="keyword">Starting</span> Messaging Service <span class="keyword">on</span> localhost/<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">7000</span> (lo0)</span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">53</span>,<span class="number">318</span> StorageService.<span class="keyword">java</span>:<span class="number">968</span> - <span class="keyword">Using</span> saved tokens [-<span class="number">1036061867878377743</span>, -<span class="number">1049032071638556980</span>, ]</span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">53</span>,<span class="number">425</span> StorageService.<span class="keyword">java</span>:<span class="number">1937</span> - Node localhost/<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> state jump <span class="keyword">to</span> <span class="keyword">NORMAL</span></span><br><span class="line"></span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">53</span>,<span class="number">785</span> <span class="keyword">Server</span>.<span class="keyword">java</span>:<span class="number">151</span> - Netty <span class="keyword">using</span> <span class="keyword">Java</span> NIO <span class="keyword">event</span> <span class="keyword">loop</span></span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">53</span>,<span class="number">970</span> <span class="keyword">Server</span>.<span class="keyword">java</span>:<span class="number">185</span> - <span class="keyword">Starting</span> listening <span class="keyword">for</span> CQL clients <span class="keyword">on</span> localhost/<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">9042.</span>..</span><br><span class="line">INFO  [<span class="keyword">main</span>] <span class="number">2016</span>-<span class="number">10</span>-<span class="number">11</span> <span class="number">15</span>:<span class="number">39</span>:<span class="number">54</span>,<span class="number">159</span> CassandraDaemon.<span class="keyword">java</span>:<span class="number">439</span> - <span class="keyword">Not</span> <span class="keyword">starting</span> RPC <span class="keyword">server</span> <span class="keyword">as</span> requested. <span class="keyword">Use</span> JMX (StorageService-&gt;startRPCServer()) <span class="keyword">or</span> nodetool (enablethrift) <span class="keyword">to</span> <span class="keyword">start</span> it</span></span><br></pre></td></tr></table></figure>
 <p>停止Cassandra，会停止CassandraDaemon、Server（nativeServer）、Gossiper。因为默认没有启动ThriftServer，所以就不需要停止它了。</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">INFO</span>  <span class="attr_selector">[RMI TCP Connection(5)-127.0.0.1]</span> 2016<span class="tag">-10-11</span> 15<span class="pseudo">:49</span><span class="pseudo">:05</span>,275 <span class="tag">CassandraDaemon</span><span class="class">.java</span><span class="pseudo">:451</span> <span class="tag">-</span> <span class="tag">Cassandra</span> <span class="tag">shutting</span> <span class="tag">down</span>...</span><br><span class="line"><span class="tag">INFO</span>  <span class="attr_selector">[RMI TCP Connection(5)-127.0.0.1]</span> 2016<span class="tag">-10-11</span> 15<span class="pseudo">:49</span><span class="pseudo">:05</span>,286 <span class="tag">Server</span><span class="class">.java</span><span class="pseudo">:218</span> <span class="tag">-</span> <span class="tag">Stop</span> <span class="tag">listening</span> <span class="tag">for</span> <span class="tag">CQL</span> <span class="tag">clients</span></span><br><span class="line"><span class="tag">INFO</span>  <span class="attr_selector">[StorageServiceShutdownHook]</span> 2016<span class="tag">-10-11</span> 15<span class="pseudo">:49</span><span class="pseudo">:05</span>,292 <span class="tag">Gossiper</span><span class="class">.java</span><span class="pseudo">:1448</span> <span class="tag">-</span> <span class="tag">Announcing</span> <span class="tag">shutdown</span></span><br></pre></td></tr></table></figure>
@@ -428,12 +452,12 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2016/10/13/Cassandra-Code-Network/"></a></p>
+  <p><span>本文标题:</span><a href="/2016/10/13/Cassandra-Code-Network/">Cassandra源码分析-Network</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
-  <p><span>发布时间:</span>2016年10月13日 - 11时56分</p>
-  <p><span>最后更新:</span>2016年10月13日 - 11时56分</p>
+  <p><span>发布时间:</span>2016年10月13日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年10月13日 - 12时04分</p>
   <p>
-    <span>原始链接:</span><a href="/2016/10/13/Cassandra-Code-Network/" title="">http://github.com/zqhxuyuan/2016/10/13/Cassandra-Code-Network/</a>
+    <span>原始链接:</span><a href="/2016/10/13/Cassandra-Code-Network/" title="Cassandra源码分析-Network">http://github.com/zqhxuyuan/2016/10/13/Cassandra-Code-Network/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/10/13/Cassandra-Code-Network/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
@@ -581,7 +605,7 @@
 
 <div class="duoshuo" id="comments">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2016/10/13/Cassandra-Code-Network/" data-title="" data-url="http://github.com/zqhxuyuan/2016/10/13/Cassandra-Code-Network/"></div>
+	<div class="ds-thread" data-thread-key="2016/10/13/Cassandra-Code-Network/" data-title="Cassandra源码分析-Network" data-url="http://github.com/zqhxuyuan/2016/10/13/Cassandra-Code-Network/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
