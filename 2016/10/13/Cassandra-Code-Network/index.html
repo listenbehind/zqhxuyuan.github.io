@@ -11,15 +11,18 @@
 <meta property="og:url" content="http://github.com/zqhxuyuan/2016/10/13/Cassandra-Code-Network/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Cassandra-2.2 源码分析：Netty客户端/服务端、请求处理、消息服务">
+<meta property="og:image" content="http://img.blog.csdn.net/20161013140045454">
 <meta property="og:image" content="http://img.blog.csdn.net/20161013102442935">
 <meta property="og:image" content="http://img.blog.csdn.net/20160928232623843">
 <meta property="og:image" content="http://img.blog.csdn.net/20160928232810333">
+<meta property="og:image" content="http://img.blog.csdn.net/20161013142808839">
+<meta property="og:image" content="http://img.blog.csdn.net/20161013143359123">
 <meta property="og:image" content="http://img.blog.csdn.net/20160928233634935">
 <meta property="og:image" content="http://img.blog.csdn.net/20160928232340339">
 <meta property="og:image" content="http://img.blog.csdn.net/20160928232412715">
 <meta property="og:image" content="http://www.bodhtree.com/blog/wp-content/uploads/2013/12/clip_image0022.jpg">
 <meta property="og:image" content="http://img.blog.csdn.net/20160928232515893">
-<meta property="og:updated_time" content="2016-10-13T04:04:37.000Z">
+<meta property="og:updated_time" content="2016-10-13T06:35:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cassandra源码分析-Network">
 <meta name="twitter:description" content="Cassandra-2.2 源码分析：Netty客户端/服务端、请求处理、消息服务">
@@ -234,6 +237,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> CassandraDaemon instance = <span class="keyword">new</span> CassandraDaemon();</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    instance.activate();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">activate</span><span class="params">()</span></span>&#123;</span><br><span class="line">    setup();</span><br><span class="line">    start();</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span></span>&#123;</span><br><span class="line">    StorageService.instance.initServer();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> rpcPort = DatabaseDescriptor.getRpcPort();</span><br><span class="line">    <span class="keyword">int</span> nativePort = DatabaseDescriptor.getNativeTransportPort();</span><br><span class="line">    thriftServer = <span class="keyword">new</span> ThriftServer(rpcAddr, rpcPort, listenBacklog);</span><br><span class="line">    nativeServer = <span class="keyword">new</span> org.apache.cassandra.transport.Server(nativeAddr, nativePort);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    nativeServer.start();</span><br><span class="line">    thriftServer.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>配置文件中端口和对应的实现类：</p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">storage_port</span>: <span class="string">7000              --&gt; StorageService</span></span><br><span class="line"><span class="attribute">native_transport_port</span>: <span class="string">9042     --&gt; nativeServer</span></span><br><span class="line"><span class="attribute">rpc_port</span>: <span class="string">9160                  --&gt; ThriftServer</span></span><br><span class="line"></span><br><span class="line"><span class="livescript"><span class="attribute">start_native_transport</span>: <span class="literal">true</span><span class="function">    --&gt;</span> 默认开启<span class="keyword">native</span>协议</span><br><span class="line"><span class="attribute">start_rpc</span>: <span class="literal">false</span><span class="function">                --&gt;</span> 默认关闭thrift协议</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://img.blog.csdn.net/20161013140045454" alt="c-ports"><br>图片来源：<a href="http://stackoverflow.com/questions/2359159/cassandra-port-usage-how-are-the-ports-used" target="_blank" rel="external">http://stackoverflow.com/questions/2359159/cassandra-port-usage-how-are-the-ports-used</a></p>
 <p>CassandraDaemon的内部类Server有两个实现类，用于Thrift协议的o.a.c.thrift.ThriftServer，以及用于native二进制协议的o.a.c.transport.Server。</p>
 <h2 id="ThriftServer">ThriftServer</h2><p>cassandra.thrift文件在安装包的interface下，主要分为</p>
 <ol>
@@ -330,7 +334,11 @@
 <li>HintedHandOffManager，在节点出现异常时，管理暂时失败的请求</li>
 <li>BatchlogManager，提交日志管理类</li>
 </ol>
-<h3 id="MessagingService">MessagingService</h3><p>消息服务采用原始的ServerSocket，启动服务端线程后，在SocketThread中开始接受客户端请求，客户端请求的类型包括stream和普通的消息。</p>
+<h3 id="MessagingService">MessagingService</h3><blockquote>
+<p>StorageService中启动的MessagingService使用的是storage_port=7000端口（服务器和服务器之间的协议），<br>而使用Netty的nativeServer使用native_transport_port=9042端口（客户端和服务端的协议）。<br>为什么要有两种端口，而且这两种端口，最后的服务都会走到ReadCommand.getRow()上去，为什么不统一成一个端口？<br>这是因为客户端《==》服务器，服务器《==》服务器，两者的处理协议不同。服务器和服务器之间采用原始IO处理消息，不使用Netty。<br><img src="http://img.blog.csdn.net/20161013142808839" alt="c-port-protocol">    </p>
+<p>在下面的分析中，你会看到MessageService的原始ServerSocket也能处理请求（节点之间），而前面分析的CQL等客户端(Netty)通过StorageProxy也可以处理请求。<br><img src="http://img.blog.csdn.net/20161013143359123" alt="c-read-native-message"></p>
+</blockquote>
+<p>消息服务采用原始的ServerSocket，启动服务端线程后，在SocketThread中开始接受客户端请求，客户端请求的类型包括stream和普通的消息。</p>
 <blockquote>
 <p>Streaming消息也包括多种类型，主要发生于节点之间数据的流式交换，比如sstableloader，nodetool repair都会产生streaming线程。<br><a href="http://www.datastax.com/dev/blog/streaming-in-cassandra-2-0" target="_blank" rel="external">http://www.datastax.com/dev/blog/streaming-in-cassandra-2-0</a></p>
 </blockquote>
@@ -455,7 +463,7 @@
   <p><span>本文标题:</span><a href="/2016/10/13/Cassandra-Code-Network/">Cassandra源码分析-Network</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年10月13日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年10月13日 - 12时04分</p>
+  <p><span>最后更新:</span>2016年10月13日 - 14时35分</p>
   <p>
     <span>原始链接:</span><a href="/2016/10/13/Cassandra-Code-Network/" title="Cassandra源码分析-Network">http://github.com/zqhxuyuan/2016/10/13/Cassandra-Code-Network/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/10/13/Cassandra-Code-Network/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
