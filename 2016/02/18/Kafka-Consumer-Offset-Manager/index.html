@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8">
   
-  <title>使用新的Kafka消费者客户端 | zqhxuyuan</title>
+  <title>消费者的Offset管理 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="https://cwiki.apache.org/confluence/display/KAFKA/Inbuilt+Consumer+Offset+Management">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用新的Kafka消费者客户端">
+<meta property="og:title" content="消费者的Offset管理">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2016/02/18/Kafka-Consumer-Offset-Manager/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="https://cwiki.apache.org/confluence/display/KAFKA/Inbuilt+Consumer+Offset+Management">
 <meta property="og:image" content="http://img.blog.csdn.net/20160223142716750">
 <meta property="og:image" content="http://img.blog.csdn.net/20160223142729875">
 <meta property="og:image" content="http://img.blog.csdn.net/20160223142742613">
-<meta property="og:updated_time" content="2016-02-23T09:05:57.000Z">
+<meta property="og:updated_time" content="2016-10-09T02:35:44.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用新的Kafka消费者客户端">
+<meta name="twitter:title" content="消费者的Offset管理">
 <meta name="twitter:description" content="https://cwiki.apache.org/confluence/display/KAFKA/Inbuilt+Consumer+Offset+Management">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
@@ -113,7 +113,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.75px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.25px;">drill</a> <a href="/tags/druid/" style="font-size: 13.75px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.75px;">graph</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.75px;">ops</a> <a href="/tags/redis/" style="font-size: 11.25px;">redis</a> <a href="/tags/scala/" style="font-size: 12.5px;">scala</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.5px;">timeseries</a> <a href="/tags/work/" style="font-size: 12.5px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.75px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.25px;">drill</a> <a href="/tags/druid/" style="font-size: 13.75px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.75px;">graph</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.75px;">ops</a> <a href="/tags/redis/" style="font-size: 11.25px;">redis</a> <a href="/tags/scala/" style="font-size: 12.5px;">scala</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.5px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.75px;">work</a>
 					</div>
 				</section>
 				
@@ -190,7 +190,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      使用新的Kafka消费者客户端
+      消费者的Offset管理
     </h1>
   
 
@@ -216,7 +216,8 @@
       
         
         <p><a href="https://cwiki.apache.org/confluence/display/KAFKA/Inbuilt+Consumer+Offset+Management" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Inbuilt+Consumer+Offset+Management</a><br><a id="more"></a></p>
-<h2 id="介绍">介绍</h2><p>实现内置的消费者这offset管理功能有两种方式:<br>1.让消费者创建一个内置的producer示例,并且像生产消息一样发送offsets<br>2.让消费者使用offset commit请求API来提交offsets. 我们让brokers记录offset消息到磁盘上,<br>并且使用消息的复制特征,达到持久性和可用性. 所以实际上在broker端的offset提交处理和生产者请求<br>的处理是一样的逻辑.在broker端重构代码可以使我们重用已有的代码.  </p>
+<h2 id="介绍">介绍</h2><p>实现内置的消费者offset管理功能有两种方式:  </p>
+<p>1.让消费者创建一个内置的producer示例,并且像生产消息一样发送offsets<br>2.让消费者使用offset commit请求API来提交offsets. 我们让brokers记录offset消息到磁盘上,<br>并且使用消息的复制特征,达到持久性和可用性. 所以实际上在broker端的offset提交处理和生产者请求<br>的处理是一样的逻辑.在broker端重构代码可以使我们重用已有的代码.  </p>
 <h2 id="Offset_Management">Offset Management</h2><h3 id="Offsets_topic">Offsets topic</h3><p>消费者的offset提交请求会作为生产请求发送到”__offsets”的topic. 一个offset提交消息包括下面字段:  </p>
 <table>
 <thead>
@@ -329,12 +330,12 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2016/02/18/Kafka-Consumer-Offset-Manager/">使用新的Kafka消费者客户端</a></p>
+  <p><span>本文标题:</span><a href="/2016/02/18/Kafka-Consumer-Offset-Manager/">消费者的Offset管理</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年02月18日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年02月23日 - 17时05分</p>
+  <p><span>最后更新:</span>2016年10月09日 - 10时35分</p>
   <p>
-    <span>原始链接:</span><a href="/2016/02/18/Kafka-Consumer-Offset-Manager/" title="使用新的Kafka消费者客户端">http://github.com/zqhxuyuan/2016/02/18/Kafka-Consumer-Offset-Manager/</a>
+    <span>原始链接:</span><a href="/2016/02/18/Kafka-Consumer-Offset-Manager/" title="消费者的Offset管理">http://github.com/zqhxuyuan/2016/02/18/Kafka-Consumer-Offset-Manager/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/02/18/Kafka-Consumer-Offset-Manager/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
@@ -482,7 +483,7 @@
 
 <div class="duoshuo" id="comments">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2016/02/18/Kafka-Consumer-Offset-Manager/" data-title="使用新的Kafka消费者客户端" data-url="http://github.com/zqhxuyuan/2016/02/18/Kafka-Consumer-Offset-Manager/"></div>
+	<div class="ds-thread" data-thread-key="2016/02/18/Kafka-Consumer-Offset-Manager/" data-title="消费者的Offset管理" data-url="http://github.com/zqhxuyuan/2016/02/18/Kafka-Consumer-Offset-Manager/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
