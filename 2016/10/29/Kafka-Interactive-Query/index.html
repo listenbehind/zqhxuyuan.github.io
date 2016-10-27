@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>图计算入门：Neo4j | zqhxuyuan</title>
+  <title>Kafka交互式查询和流处理的统一 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="TODO">
+  <meta name="description" content="Unifying Stream Processing and Interactive Queries in Apache Kafkahttp://www.confluent.io/blog/unifying-stream-processing-and-interactive-queries-in-apache-kafka/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="图计算入门：Neo4j">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2016/05/10/Graph-Hello-Neo4j/index.html">
+<meta property="og:title" content="Kafka交互式查询和流处理的统一">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/10/29/Kafka-Interactive-Query/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="TODO">
-<meta property="og:updated_time" content="2016-05-15T02:25:29.000Z">
+<meta property="og:description" content="Unifying Stream Processing and Interactive Queries in Apache Kafkahttp://www.confluent.io/blog/unifying-stream-processing-and-interactive-queries-in-apache-kafka/">
+<meta property="og:updated_time" content="2016-10-27T02:25:58.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="图计算入门：Neo4j">
-<meta name="twitter:description" content="TODO">
+<meta name="twitter:title" content="Kafka交互式查询和流处理的统一">
+<meta name="twitter:description" content="Unifying Stream Processing and Interactive Queries in Apache Kafkahttp://www.confluent.io/blog/unifying-stream-processing-and-interactive-queries-in-apache-kafka/">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -170,11 +170,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-Graph-Hello-Neo4j" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Kafka-Interactive-Query" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/05/10/Graph-Hello-Neo4j/" class="article-date">
-  	<time datetime="2016-05-09T16:00:00.000Z" itemprop="datePublished">2016-05-10</time>
+      <a href="/2016/10/29/Kafka-Interactive-Query/" class="article-date">
+  	<time datetime="2016-10-28T16:00:00.000Z" itemprop="datePublished">2016-10-29</time>
 </a>
     </div>
   
@@ -187,7 +187,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      图计算入门：Neo4j
+      Kafka交互式查询和流处理的统一
     </h1>
   
 
@@ -196,13 +196,13 @@
       <div class="article-info article-info-post">
         
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/work/">work</a>
+	<a class="article-category-link" href="/categories/kafka/">kafka</a>
 	</div>
 
 
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/graph/">graph</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
 	</div>
 
         <div class="clearfix"></div>
@@ -212,8 +212,32 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <a id="more"></a>
-<p>TODO</p>
+        <p>Unifying Stream Processing and Interactive Queries in Apache Kafka<br><a href="http://www.confluent.io/blog/unifying-stream-processing-and-interactive-queries-in-apache-kafka/" target="_blank" rel="external">http://www.confluent.io/blog/unifying-stream-processing-and-interactive-queries-in-apache-kafka/</a><br><a id="more"></a></p>
+<p>Interactive Queries allows you to get more than just processing from streaming. It allows you to treat the stream processing layer as a lightweight, embedded database and directly query the state of your stream processing application, without needing to materialize that state to external databases or storage. Apache Kafka maintains and manages that state and guarantees high availability and fault tolerance. As such, this new feature enables the hyper-convergence of processing and storage into one easy-to-use application that uses the Apache Kafka’s Streams API.</p>
+<blockquote>
+<p>交互式查询（Interactive Queries）并不仅仅是对流数据进行处理（stream processing），它相当于将流处理这一层看做是一个轻量级的、内置的数据库、直接查询流处理应用程序的状态，它不需要将状态（数据）物化（materialize）到外部数据库或存储系统中。Kafka会自己维护和管理状态，并且保证了高可用、容错。这个新特性使得处理逻辑变得高度聚合，并且可以使用Kafka的Streams API存储（状态）到一个易用的应用程序中。  </p>
+</blockquote>
+<p>The idea behind Interactive Queries is not new; a similar concept actually originated in traditional databases where it’s often known as “materialized views.” Though materialized views are very useful, the way they are implemented in databases is not suitable for modern application development – they force you to write your code all in SQL and deploy it into the database server. With our database background combined with our stream processing experience, we visited a key question: can the concept behind materialized views be applied to a modern stream processing engine to create a powerful and general purpose construct for building stateful applications and microservices? In this blog post, we show how Apache Kafka, through Interactive Queries, helps us do exactly that.</p>
+<blockquote>
+<p>交互式查询背后的思想并不新鲜，在传统的数据库中相似的概念是“物化视图”，尽管物化视图非常有用，但是数据库的这种实现方式对现代的应用程序开发并不适合（因为他们会强制你在SQL中编写所有的代码，并部署到服务端）。结合数据库的背景知识和流处理的体验，我们在思考一个关键的问题：物化视图是否如果应用到现代的流处理引擎，就可以构建出一个强壮的、通用的，有状态的应用程序（或者微服务），本篇博文我们会向你展示Apache Kafka如何通过交互式查询帮助我们实现了这个目标。  </p>
+</blockquote>
+<p>When we set out to design the stream processing API for Apache Kafka – Kafka Streams – a key motivation was to rethink the existing solution space for stream processing. Here, our vision has been to move stream processing out of the big data niche and make it available as a mainstream application development model. For us, the key to executing that vision is to radically simplify how users can process data at any scale – small, medium, large – and in fact, one of our mantras is “Build Applications, Not Clusters!” In the past, we wrote about three ways Apache Kafka simplifies the stream processing architecture – by eliminating the need for a separate cluster, having good abstractions for streams and tables and keeping the overall architecture simple. Interactive Queries is another feature to enable this vision.</p>
+<blockquote>
+<p>在为Kafka设计流式处理API时（即Kafka Streams），一个重要的动机是重新思考已有的流处理系统的局限性，我们的焦点已经从大数据领域转到了流处理，并且将其作为可用的主流的应用程序开发模型。执行这个愿景的关键是从根本上简化用户如何处理数据的扩展性问题（不管是小批量的数据、中等规模的、大规模的数据），实际上我们的一个口号是：“构建应用程序，不要集群！”。之前的博文中我们写了Kafka简化流处理的<a href="http://www.confluent.io/blog/introducing-kafka-streams-stream-processing-made-simple/" target="_blank" rel="external">三种模式</a>：不需要单独的集群、对Streams和Table进行良好的抽象、保持整体架构的简洁。现在，交互式查询是这个愿景的另一个特性。</p>
+</blockquote>
+<p>In this blog post, we’ll start by digging deeper into the motivation behind Interactive Queries through a concrete example that outlines its applicability. Then we will describe how Interactive Queries works under the hood and provide a summary of related resources for further reading.</p>
+<blockquote>
+<p>本篇文章我们会先通过一个示例深入研究交互式查询的背后动机，然后会描述交互式是如何工作的。</p>
+</blockquote>
+<h2 id="示例：实时风险管理">示例：实时风险管理</h2><p>Let’s use an end-to-end example to pick up where we left off in our previous article on why stream processing applications need state. In that article, we described some simple stateful operations, e.g., if you are grouping data by some field and counting, then the state you maintain would be the counts that have accumulated so far. Or if you are joining two streams, the state would be the rows in each stream waiting to find a match in the other stream.</p>
+<blockquote>
+<p>在<a href="https://www.oreilly.com/ideas/why-local-state-is-a-fundamental-primitive-in-stream-processing" target="_blank" rel="external">流处理为什么需要状态</a>文章中，我们描述了一些简单的状态操作，比如根据一些字段分组和计数，那么你维护的状态就是目前为止收集到的所有数据的数量。或者如果将两个流进行合并，状态就会是在两个流中找出互相匹配的一行记录（由于流数据的顺序性，一个流要等待另一个流，才能最终获得完整的合并数据）。</p>
+</blockquote>
+<p>Now as a driving example in this blog, consider a financial institution, like a wealth management firm or a hedge fund, that maintains positions in assets held by the firm and/or its client investors. Maintaining positions means that the bank needs to keep track of the risk associated with those particular assets. The bank continuously collects business events and other data that could potentially influence the risk associated with a given position. This data includes market data fluctuations on the price of the asset, foreign exchange rates, research, or even news information that could influence the reputation of people involved with the asset. Any time this data changes, the risk position needs to be recalculated in order to keep a real-time view of the risk associated with each individual asset as well as on entire portfolios of investments.</p>
+<p>Real-time risk management is an example of a stateful application. At a minimum, state is needed to keep track of the latest position for every asset. State is also needed inside the stream processing engine to keep track of various aggregate statistics, like the number of times an asset is traded in a day and the average bid/ask spread. The collected state needs to be continuously updated and queried.</p>
+<blockquote>
+<p>本篇博文举例的是一个金融场景，比如财富管理机构或者对冲基金（投资者）会维护资产的仓位。维护仓位意味着银行会跟踪这些资产的风险。银行会持续地收集商业事件以及其他可能会影响指定仓位风险的数据。这些数据包括资产的市场波动，外汇交换比率，研究机构，甚至是有声望的名人的新闻。任何时候只要数据变化，风险的仓位就需要被重新计算，这样才能对单独的资产，甚至整个投资组合都能够保持实时的风险视图。<br>实时风控管理是有状态的应用程序的一个示例，最小的需求是：状态需要能够跟踪每种资产的最近仓位。状态在流处理引擎中为了跟踪不同的聚合逻辑也是必须的，比如一天中资产的交易次数，平均出价(bid/ask)速度。收集到的状态需要被持续地更新和查询。  </p>
+</blockquote>
 
       
     </div>
@@ -222,13 +246,13 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2016/05/10/Graph-Hello-Neo4j/">图计算入门：Neo4j</a></p>
+  <p><span>本文标题:</span><a href="/2016/10/29/Kafka-Interactive-Query/">Kafka交互式查询和流处理的统一</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
-  <p><span>发布时间:</span>2016年05月10日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年05月15日 - 10时25分</p>
+  <p><span>发布时间:</span>2016年10月29日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年10月27日 - 10时25分</p>
   <p>
-    <span>原始链接:</span><a href="/2016/05/10/Graph-Hello-Neo4j/" title="图计算入门：Neo4j">http://github.com/zqhxuyuan/2016/05/10/Graph-Hello-Neo4j/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/05/10/Graph-Hello-Neo4j/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2016/10/29/Kafka-Interactive-Query/" title="Kafka交互式查询和流处理的统一">http://github.com/zqhxuyuan/2016/10/29/Kafka-Interactive-Query/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/10/29/Kafka-Interactive-Query/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -254,15 +278,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2016/05/10/Graph-Hello-Dato/">
-        图计算入门：Dato
+      <a href="/2016/12/31/BigData-Monitor-Tool/">
+        监控工具集锦
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2016/05/10/Graph-compare/">
-        图计算框架乱斗
+      <a href="/2016/10/27/Kafka-Definitive-Guide-cn-04/">
+        Kafka权威指南-第四章-消费者
       </a>
     </div>
   
@@ -297,7 +321,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#示例：实时风险管理"><span class="toc-number">1.</span> <span class="toc-text">示例：实时风险管理</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -375,7 +399,7 @@
 
 <div class="duoshuo" id="comments">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2016/05/10/Graph-Hello-Neo4j/" data-title="图计算入门：Neo4j" data-url="http://github.com/zqhxuyuan/2016/05/10/Graph-Hello-Neo4j/"></div>
+	<div class="ds-thread" data-thread-key="2016/10/29/Kafka-Interactive-Query/" data-title="Kafka交互式查询和流处理的统一" data-url="http://github.com/zqhxuyuan/2016/10/29/Kafka-Interactive-Query/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -413,10 +437,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2016/05/10/Graph-Hello-Dato/" title="上一篇: 图计算入门：Dato">
+    <a href="/2016/12/31/BigData-Monitor-Tool/" title="上一篇: 监控工具集锦">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2016/05/10/Graph-compare/" title="下一篇: 图计算框架乱斗">
+    <a href="/2016/10/27/Kafka-Definitive-Guide-cn-04/" title="下一篇: Kafka权威指南-第四章-消费者">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

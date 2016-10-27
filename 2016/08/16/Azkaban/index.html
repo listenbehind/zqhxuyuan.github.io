@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20161026214311660">
 <meta property="og:image" content="http://img.blog.csdn.net/20161026214321945">
 <meta property="og:image" content="http://img.blog.csdn.net/20161026214333117">
-<meta property="og:updated_time" content="2016-10-26T13:52:43.000Z">
+<meta property="og:updated_time" content="2016-10-26T13:54:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Azkaban动态修改作业属性">
 <meta name="twitter:description" content="Aakaban动态修改作业属性">
@@ -247,7 +247,8 @@
 <p>这里只有定义了beg和end参数，才可以在Job Properties中修改，如果说脚本是写死的比如：  </p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">type=command</span><br><span class="line">command=sh cross-partner-range.sh <span class="number">2016</span>-<span class="number">6</span>-<span class="number">1</span> <span class="number">2016</span>-<span class="number">6</span>-<span class="number">2</span></span><br></pre></td></tr></table></figure>
 <p>那么就没办法做到动态修改作业的属性了，这样就只能重新创建一个.job文件，然后上传，执行。</p>
-
+<p>再附上生成azkaban的zip包的方式：  </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/IdeaProjects/tongdun/vulcan/cross-partner</span><br><span class="line">mvn clean package</span><br><span class="line"></span><br><span class="line">azkabanProject=cross-partner</span><br><span class="line">rm -rf ~/Downloads/<span class="variable">$azkabanProject</span></span><br><span class="line">rm ~/Downloads/<span class="variable">$azkabanProject</span>.zip</span><br><span class="line">mkdir ~/Downloads/<span class="variable">$azkabanProject</span></span><br><span class="line"></span><br><span class="line">cp target/cross-partner-<span class="number">1.0</span>.<span class="number">0</span>-SNAPSHOT-jar-with-dependencies.jar ~/Downloads/<span class="variable">$azkabanProject</span>/</span><br><span class="line">cp azkaban/* ~/Downloads/<span class="variable">$azkabanProject</span>/</span><br><span class="line">zip -r ~/Downloads/<span class="variable">$azkabanProject</span>.zip ~/Downloads/<span class="variable">$azkabanProject</span></span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -258,7 +259,7 @@
   <p><span>本文标题:</span><a href="/2016/08/16/Azkaban/">Azkaban动态修改作业属性</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年08月16日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年10月26日 - 21时52分</p>
+  <p><span>最后更新:</span>2016年10月26日 - 21时54分</p>
   <p>
     <span>原始链接:</span><a href="/2016/08/16/Azkaban/" title="Azkaban动态修改作业属性">http://github.com/zqhxuyuan/2016/08/16/Azkaban/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/08/16/Azkaban/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">

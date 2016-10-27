@@ -171,6 +171,129 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-Cassandra-query" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/10/16/Cassandra-query/" class="article-date">
+  	<time datetime="2015-10-15T16:00:00.000Z" itemprop="datePublished">2015-10-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/16/Cassandra-query/">Cassandra查询</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- MarkdownTOC -->
+<ul>
+<li>Query<ul>
+<li>Range Query</li>
+<li>问题1: 查询应用内最近的记录存在BUG: 查的不是最近而是最早</li>
+<li>解决方式: 应用内最近记录使用Order By DESC</li>
+<li>问题2: 查询全局范围最近的记录目前的表结构无法实现</li>
+<li>拆表</li>
+</ul>
+</li>
+<li>CLUSTERING ORDER BY</li>
+<li>现实世界的查询: Tombstone<ul>
+<li>tombstone太多查询中断</li>
+<li>orderby+limit查询</li>
+<li>timestamp限制不读取tombstone</li>
+<li>orderby + timestamp</li>
+<li>orderby+limit如果存活的记录数没有超过limit,是否会查询TTL的数据?</li>
+<li>tombstone使用经验</li>
+<li>Slice Query</li>
+</ul>
+</li>
+<li>Paging Query</li>
+<li>Read Time Out<ul>
+<li>Future Interrupt</li>
+</ul>
+</li>
+<li>More Abould Query: Token?</li>
+<li>Node down effect</li>
+<li>TTL<ul>
+<li>TTL是针对行, 还是针对列</li>
+<li>插入数据时using TTL</li>
+<li>测试Table的default ttl</li>
+<li>gc_grace_seconds</li>
+<li>Delete操作</li>
+</ul>
+</li>
+<li>读一致性</li>
+<li>协调节点超时</li>
+</ul>
+<!-- /MarkdownTOC -->
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/10/16/Cassandra-query/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
     <article id="post-Cassandra-Operation" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -311,6 +434,105 @@
         
 
   
+    <article id="post-Cassandra-hole" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/10/15/Cassandra-hole/" class="article-date">
+  	<time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished">2015-10-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/15/Cassandra-hole/">Cassandra陷阱</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Cassandra的一些陷阱</p>
+<!-- MarkdownTOC -->
+<ul>
+<li>Count查询</li>
+<li>删除数据库 drop keyspace</li>
+<li>Truncate清空表</li>
+<li>Query查询的限制<ul>
+<li>where</li>
+<li>fetchSize和limit</li>
+</ul>
+</li>
+<li>二级索引的删除</li>
+<li>重命名表</li>
+<li>query</li>
+</ul>
+<!-- /MarkdownTOC -->
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/10/15/Cassandra-hole/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
     <article id="post-Cassandra-exception" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -380,6 +602,117 @@
       
         <p class="article-more-link">
           <a  href="/2015/10/15/Cassandra-exception/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-Cassandra-Stress" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/10/15/Cassandra-Stress/" class="article-date">
+  	<time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished">2015-10-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/15/Cassandra-Stress/">Cassandra压力测试</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- MarkdownTOC -->
+<ul>
+<li>cassandra-stress<ul>
+<li>介绍</li>
+<li>单节点测试<ul>
+<li>写入测试</li>
+<li>采用cql3协议写入</li>
+<li>读取测试</li>
+<li>没有预热读取</li>
+<li>给定一段时间测试最大可以读取多少条记录</li>
+<li>混合模式读大于写</li>
+<li>混合模式写大于读</li>
+</ul>
+</li>
+<li>自定义schema<ul>
+<li>示例</li>
+<li>只有写入</li>
+<li>读写混合模式</li>
+<li>只有读取</li>
+</ul>
+</li>
+<li>G1测试</li>
+<li>集群测试</li>
+</ul>
+</li>
+<li>YCSB</li>
+</ul>
+<!-- /MarkdownTOC -->
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/work/">work</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/10/15/Cassandra-Stress/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -567,216 +900,6 @@
         
 
   
-    <article id="post-Cassandra-hole" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/10/15/Cassandra-hole/" class="article-date">
-  	<time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished">2015-10-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/15/Cassandra-hole/">Cassandra陷阱</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Cassandra的一些陷阱</p>
-<!-- MarkdownTOC -->
-<ul>
-<li>Count查询</li>
-<li>删除数据库 drop keyspace</li>
-<li>Truncate清空表</li>
-<li>Query查询的限制<ul>
-<li>where</li>
-<li>fetchSize和limit</li>
-</ul>
-</li>
-<li>二级索引的删除</li>
-<li>重命名表</li>
-<li>query</li>
-</ul>
-<!-- /MarkdownTOC -->
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/work/">work</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/10/15/Cassandra-hole/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-Cassandra-Stress" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/10/15/Cassandra-Stress/" class="article-date">
-  	<time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished">2015-10-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/15/Cassandra-Stress/">Cassandra压力测试</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <!-- MarkdownTOC -->
-<ul>
-<li>cassandra-stress<ul>
-<li>介绍</li>
-<li>单节点测试<ul>
-<li>写入测试</li>
-<li>采用cql3协议写入</li>
-<li>读取测试</li>
-<li>没有预热读取</li>
-<li>给定一段时间测试最大可以读取多少条记录</li>
-<li>混合模式读大于写</li>
-<li>混合模式写大于读</li>
-</ul>
-</li>
-<li>自定义schema<ul>
-<li>示例</li>
-<li>只有写入</li>
-<li>读写混合模式</li>
-<li>只有读取</li>
-</ul>
-</li>
-<li>G1测试</li>
-<li>集群测试</li>
-</ul>
-</li>
-<li>YCSB</li>
-</ul>
-<!-- /MarkdownTOC -->
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/work/">work</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/10/15/Cassandra-Stress/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
     <article id="post-2015-09-10-Storm-Window" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -861,90 +984,6 @@
         
 
   
-    <article id="post-2015-08-25-Apache-Cassandra" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/08/25/2015-08-25-Apache-Cassandra/" class="article-date">
-  	<time datetime="2015-08-24T16:00:00.000Z" itemprop="datePublished">2015-08-25</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/25/2015-08-25-Apache-Cassandra/">Apache Cassandra入门</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Hello Cassandra</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/08/25/2015-08-25-Apache-Cassandra/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
     <article id="post-2015-08-25-Cassandra-Architecture" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -991,6 +1030,90 @@
       
         <p class="article-more-link">
           <a  href="/2015/08/25/2015-08-25-Cassandra-Architecture/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-2015-08-25-Apache-Cassandra" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/08/25/2015-08-25-Apache-Cassandra/" class="article-date">
+  	<time datetime="2015-08-24T16:00:00.000Z" itemprop="datePublished">2015-08-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/25/2015-08-25-Apache-Cassandra/">Apache Cassandra入门</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Hello Cassandra</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/08/25/2015-08-25-Apache-Cassandra/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -1495,90 +1618,6 @@
       
         <p class="article-more-link">
           <a  href="/2015/07/13/2015-07-13-drill-phyplan/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-2015-07-12-drill-rpc" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/07/12/2015-07-12-drill-rpc/" class="article-date">
-  	<time datetime="2015-07-11T16:00:00.000Z" itemprop="datePublished">2015-07-12</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/07/12/2015-07-12-drill-rpc/">Apache Drill源码阅读(2) 分析一次查询过程以及RPC</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>大数据源码阅读系列之ApacheDrill: Apache Drill的RPC流程</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/Source/">Source</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/drill/">drill</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/07/12/2015-07-12-drill-rpc/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
