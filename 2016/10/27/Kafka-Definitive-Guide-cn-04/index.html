@@ -3,17 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Kafka权威指南-第四章-消费者 | zqhxuyuan</title>
+  <title>译：Kafka权威指南-第四章-消费者 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Kafka权威指南中文翻译：https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch04.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kafka权威指南-第四章-消费者">
+<meta property="og:title" content="译：Kafka权威指南-第四章-消费者">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2016/10/27/Kafka-Definitive-Guide-cn-04/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Kafka权威指南中文翻译：https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch04.html">
-<meta property="og:updated_time" content="2016-10-27T01:33:13.000Z">
+<meta property="og:image" content="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/assets/ch04_consumer_group_2_consumers.jpg">
+<meta property="og:image" content="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/assets/ch04_consumer_group_4_consumers.jpg">
+<meta property="og:image" content="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/assets/ch04_consumer_group_5_consumers.jpg">
+<meta property="og:image" content="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/assets/ch04_two_consumer_groups.jpg">
+<meta property="og:updated_time" content="2016-10-28T01:40:44.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kafka权威指南-第四章-消费者">
+<meta name="twitter:title" content="译：Kafka权威指南-第四章-消费者">
 <meta name="twitter:description" content="Kafka权威指南中文翻译：https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch04.html">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
@@ -187,7 +191,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Kafka权威指南-第四章-消费者
+      译：Kafka权威指南-第四章-消费者
     </h1>
   
 
@@ -222,9 +226,36 @@
 <blockquote>
 <p>假设你的应用程序要从Kafka的一个主题中读取消息，对消息进行验证，然后将结果写入到其他存储系统中。你的做法会是：创建一个消费者对象，订阅指定的主题，然后开始接收消息、数据验证、结果输出。这种做法在一段时间内可能工作的很好，但是如果生产者写入消息的速度超过应用程序执行验证逻辑的速度怎么办？如果你只有一个消费者负责读取和处理数据，消费者的读取进度最终会越来越跟不上生产者的写入进度，很显然我们需要对主题的消费进行扩展。就像多个生产者可以写到同一个主题一样，我们应该允许多个消费者同时从一个主题读取数据：通过将数据进行分离，每个消费者只负责一部分数据，达到负载均衡的目的。<br>Kafka的消费者通常都属于某一个消费组的一部分，当多个消费者订阅了一个主题并且属于同一个消费组，那么消费组中的每个消费者都会接收到主题的不同子集分区（一个主题分成多个分区，每个消费者分配到了不同的分区）。</p>
 </blockquote>
-<p>假设主题t1有4个分区，刚开始我们创建了一个消费者c1，并且它是消费组g1的唯一成员，c1订阅了主题t1。消费者c1会获取到t1所有4个分区的消息，如图4-1所示。  </p>
-<p>如果添加了新的消费者c1到消费组g1，现在每个消费者（c1、c2）只会各自得到两个分区的消息，比如分区0和分区2的消息会到c1，分区1和分区3的消息会到c2，如图4-2所示。  </p>
-<h3 id="消费组平衡">消费组平衡</h3><h2 id="创建一个新的消费者">创建一个新的消费者</h2><h2 id="订阅主题">订阅主题</h2><h2 id="Poll轮询">Poll轮询</h2><h2 id="提交和Offset">提交和Offset</h2><h3 id="提交当前Offset">提交当前Offset</h3><h3 id="异步提交Offset">异步提交Offset</h3><h3 id="结合同步和异步提交">结合同步和异步提交</h3><h3 id="提交指定的Offset">提交指定的Offset</h3><h2 id="平衡监听器">平衡监听器</h2><h2 id="正好一次的处理语义">正好一次的处理语义</h2><h2 id="如何退出">如何退出</h2><h2 id="反序列化">反序列化</h2><h3 id="自定义反序列化">自定义反序列化</h3><h3 id="Avro反序列化">Avro反序列化</h3><h2 id="消费者配置">消费者配置</h2><h2 id="单机消费者（不使用消费组）">单机消费者（不使用消费组）</h2><h2 id="旧的消费者API">旧的消费者API</h2>
+<p>假设主题t1有4个分区，刚开始我们创建了一个消费者c1，并且它是消费组g1的唯一成员，c1订阅了主题t1。消费者c1会获取到t1所有4个分区的消息。  </p>
+<p>如果添加了新的消费者c1到消费组g1，现在每个消费者（c1、c2）只会各自得到两个分区的消息，比如分区0和分区2的消息会到c1，分区1和分区3的消息会到c2。<br><img src="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/assets/ch04_consumer_group_2_consumers.jpg" alt=""></p>
+<p>如果消费组g1有4个消费者，每个消费者都会读取一个分区的消息。<br><img src="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/assets/ch04_consumer_group_4_consumers.jpg" alt=""></p>
+<p>如果再添加更多的消费者，消费者的数量比分区数量还要多，那么有一些消费者就会空闲而得不到任何消息。<br><img src="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/assets/ch04_consumer_group_5_consumers.jpg" alt=""></p>
+<p>线性扩展消费Kafka主题的数据的主要解决方式是为消费组增加更多的消费者。Kafka消费者通常会做一些延迟较高的操作，比如写入数据库或者HDFS、做一些耗时的数据计算。这种情况下，单一的消费者无法跟上数据流入Kafka主题的速度，所以增加更多的消费者一起共享负载，并且每个消费者只拥有分区和消息的子集，才是扩展消费能力解决之道。因此为主题创建很多分区是一个好的设计，它允许在负载增加的时候可以随时增加更多的消费者（来均衡负载）。不过注意，消费者的数量不能超过主题的分区数，否则有些消费者永远处于空闲状态。  </p>
+<p>除了通过添加消费者来扩展单一的应用程序（的处理能力），多个应用程序需要从同一个主题中读取数据也是很常见。实际上Kafka的一个设计目标就是确保数据生产到Kafka的主题后，对多个应用场景都是可用的。这种情况下我们希望每个业务场景对应的应用程序都能够得到所有的消息，而不是一部分消息子集。为了确保一个应用程序得到主题的所有消息，你要确保每个应用程序有单独的消费组。和其他消息系统不同的是，Kafka可以在不牺牲性能的前提下大规模扩展地消费者和消费组。  </p>
+<p>上面的示例中，如果添加了只有一个消费者的新消费组g2，这个消费者就会得到主题t1的所有消息，而它和消费组g1在做什么事情毫无关系。就像消费组g1一样，消费组g2也可以有多个消费者，每个消费者也可以获得所有分区的子集，从整体上来说消费组g2仍然会得到所有的消息，而不会受其他消费组的影响。<br><img src="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/assets/ch04_two_consumer_groups.jpg" alt=""></p>
+<p>总结下上面的操作过程，你为每个需要读取一个或多个主题所有消息的应用程序都创建了新的消费组，然后为已有的消费组添加消费者来动态地扩展从主题中读取和处理消息的能力，每个新增加的消费者都只会得到消息的子集。  </p>
+<h3 id="消费组平衡">消费组平衡</h3><p>As we’ve seen in the previous section, consumers in a consumer group share ownership of the partitions in the topics they subscribe to. When we add a new consumer to the group it starts consuming messages from partitions which were previously consumed by another consumer. The same thing happens when a consumer shuts down or crashes, it leaves the group, and the partitions it used to consume will be consumed by one of the remaining consumers. Reassignment of partitions to consumers also happen when the topics the consumer group is consuming are modified, for example if an administrator adds new partitions.</p>
+<blockquote>
+<p>上面我们看到了消费组中的消费者共享了它们所订阅的主题的分区。当为消费组添加新消费者时，它会从之前其他消费者消费的分区开始消费消息。同样当发生消费者关闭、进程挂掉、离开消费组，它所使用的分区就会被其他剩余的消费者所消费。为消费者重新分配分区同样也会发生在消费组订阅的主题被修改时，比如管理员会添加一个新的分区。  </p>
+</blockquote>
+<p>The event in which partition ownership is moved from one consumer to another is called a rebalance. Rebalances are important since they provide the consumer group with both high-availability and scalability (allowing us to easily and safely add and remove consumers), but in the normal course of events they are fairly undesirable. During a rebalance, consumers can’t consume messaged, so a rebalance is in effect a short window of unavailability on the entire consumer group. In addition, when partitions are moved from one consumer to another the consumer loses its current state, if it was caching any data, it will need to refresh its caches - slowing down our application until the consumer sets up its state again. Throughout this chapter we will discuss how to safely handle rebalances and how to avoid unnecessary rebalances.</p>
+<blockquote>
+<p>分区的所有权从一个消费者转移给另一个消费者，这个事件叫做平衡（rebalance）。平衡操作的重要性不言而喻，因为它提供了消费组的高可用、可扩展性（允许我们添加或删除消费者变得简单和安全），但对于事件的处理则有点不受欢迎。在平衡期间，消费者不能消费消息，所以平衡实际上造成了消费组短暂的不可用窗口。另外，当分区从一个消费者转移到另一个消费者时会丢失当前的状态，如果它缓存了数据的话，就需要重新刷新缓存，这会使得我们的应用程序响应变慢，知道消费者重新恢复到正常的状态。本章我们会讨论如何安全地处理平衡操作，并且怎么避免不必要的平衡。  </p>
+</blockquote>
+<p>The way consumers maintain their membership in a consumer group and their ownership on the partitions assigned to them is by sending heartbeats to a Kafka broker designated as the Group Coordinator (note that this broker can be different for different consumer groups). As long the consumer is sending heartbeats in regular intervals, it is assumed to be alive, well and processing messages from its partitions. In fact, the act of polling for messages is what causes the consumer to send those heartbeats. If the consumer stops sending heartbeats for long enough, its session will time out and the group coordinator will consider it dead and trigger a rebalance. Note that if a consumer crashed and stopped processing messages, it will take the group coordinator few seconds without heartbeats to decide it is dead and trigger the rebalance. During those seconds, no messages will be processed from the partitions owned by the dead consumer. When closing a consumer cleanly, the consumer will notify the group coordinator that it is leaving, and the group coordinator will trigger a rebalance immediately, reducing the gap in processing. Later in this chapter we will discuss configuration options that control heartbeat frequency and session timeouts and how to set those to match your requirements.</p>
+<blockquote>
+<p>消费者为了维护它们在消费组中的成员地位，以及分配给它们的分区所有权，是通过发送心跳给被指定为消费组协调者（Group Coordinator）的一个Kafka代理（Broker），注意这个代理对于不同的消费组都是不同的。只要消费者能够在正常的时间间隔内发送心跳，它就会被认为是存活的、运行良好，就可以处理分区的消息。实际上消费者轮询消息的动作就是消费者发送心跳的原因。如果消费者很长时间没有发送心跳，它的会话会超时（服务端的协调者会保持每个消费者的连接会话），协调者就会认为消费者挂掉，从而触发一次平衡操作。注意如果消费者自己崩溃并且停止处理消息，协调者会在数秒之后判断消费者没有心跳，才决定它挂掉了并且触发平衡。在这数秒的时间段内，被挂掉消费者拥有的分区上不会处理任何消息。而如果是优雅地关闭一个消费者时，消费者会通知消费组说它正在离开，协调者就会立即触发平衡，从而减少了消息无法被处理的间隙。本章的后面我们会讨论一些关于控制心跳频率、会话超时的配置，以及如何设置它们来匹配我们的需求。</p>
+</blockquote>
+<p>HOW DOES THE PROCESS OF ASSIGNING PARTITIONS TO BROKERS WORK?<br>When a consumer wants to join a group, it sends a JoinGroup request to the group coordinator. The first consumer to join the group becomes the group leader. The leader receives a list of all consumers in the group from the group coordinator (this will include all consumers that sent a heartbeat recently and are therefore considered alive) and it is responsible for assigning a subset of partitions to each consumer. It uses an implementation of PartitionAssignor interface to decide which partitions should be handled by which consumer. Kafka has two built-in partition assignment policies, which we will discuss in more depth in the configuration section. After deciding on the partition assignment, the consumer leader sends the list of assignments to the GroupCoordinator which sends this information to all the consumers. Each consumer only sees his own assignment - the leader is the only client process that has the full list of consumers in the group and their assignments. This process repeats every time a rebalance happens.</p>
+<blockquote>
+<p>为消费者分配Partition是怎么工作的？<br>当一个消费者想要加入一个消费组，它会发送JoinGroup请求给消费组的协调者，第一个加入消费组的消费者会成为组的领导者（Leader）。领导者会从协调者接收到所有的消费者（包括最近发送了心跳，被认为是存活的所有消费者），并且负责为每个消费者分配分区子集。它会使用PartitionAssignor接口来决定哪个消费者应用处理哪些分区。Kafka内置了两种分区分配策略，后面在配置部分会详细介绍。在决定了分区分配之后，领导者发送每个消费者的分配列表给协调者，协调者会发送这些分配信息给所有的消费者。每个消费者只会看到它自己的分配结果。领导者是唯一有所有消费者列表和它们的分配信息的客户端进程。上面这个过程在每次平衡操作发生时都会重复执行。  </p>
+</blockquote>
+<h2 id="创建一个新的消费者">创建一个新的消费者</h2><p>消费者开始消费记录的第一步是创建一个<code>KafkaConsumer</code>实例，创建<code>KafkaConsumer</code>类似于创建<code>KafkaProducer</code>，首先创建一个<code>Properties</code>实例，传递消费者的配置属性。本章后面我们会讨论所有的属性，这里只需要三个必须的属性：<code>bootstrap.servers</code>、<code>key.deserializer</code>和<code>value.deserializer</code>。  </p>
+<p>第一个属性<code>bootstrap.servers</code>指向Kafka集群的连接地址，它和<code>KafkaProducer</code>的使用方式一样。剩余的两个属性<code>key.deserializer</code>和<code>value.deserializer</code>和生产者的<code>serializers</code>类似。</p>
+<p>还有一个属性<code>group.id</code>不是必须的，但现在我们假设它是必须的。<code>group.id</code>指定了<code>KafkaConsumer</code>实例所属的消费组。虽然创建不属于任何消费组的消费者也是可行的，但这种情况很少见，所以本章我们都会假设消费者是消费组的一部分。下面的代码实例了如何创建一个KafkaConsumer：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Properties props = <span class="keyword">new</span> Properties();</span><br><span class="line">props.put(<span class="string">"bootstrap.servers"</span>, <span class="string">"broker1:9092,broker2:9092"</span>);</span><br><span class="line">props.put(<span class="string">"group.id"</span>, <span class="string">"CountryCounter"</span>);</span><br><span class="line">props.put(<span class="string">"key.deserializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringDeserializer"</span>);</span><br><span class="line">props.put(<span class="string">"value.deserializer"</span>, <span class="string">"org.apache.kafka.common.serialization.StringDeserializer"</span>);</span><br><span class="line"></span><br><span class="line">KafkaConsumer&lt;String, String&gt; consumer = <span class="keyword">new</span> KafkaConsumer&lt;String, String&gt;(props);</span><br></pre></td></tr></table></figure>
+<p>如果你读过第三章创建生产者的代码，你会发现这里看到的大部分代码都很熟悉。我们打算消费的消息格式都是字符串类型（反序列化：Kafka中存储的是二进制字节类型，Kafka内部会负责将字节类型转换为字符串类型，所以消费者读取到的消息是字符串类型），所以我们使用了内置的<code>StringDeserializer</code>反序列化器，最后创建的KafkaConsumer泛型类型也是字符串（KafkaConsumer类上的两个泛型类型分别表示消息的键值类型）。只有<code>group.id</code>这个属性可能你没见过，它表示的是这个消费者所属的消费组名称。  </p>
+<h2 id="订阅主题">订阅主题</h2><h2 id="Poll轮询">Poll轮询</h2><h2 id="提交和Offset">提交和Offset</h2><h3 id="提交当前Offset">提交当前Offset</h3><h3 id="异步提交Offset">异步提交Offset</h3><h3 id="结合同步和异步提交">结合同步和异步提交</h3><h3 id="提交指定的Offset">提交指定的Offset</h3><h2 id="平衡监听器">平衡监听器</h2><h2 id="正好一次的处理语义">正好一次的处理语义</h2><h2 id="如何退出">如何退出</h2><h2 id="反序列化">反序列化</h2><h3 id="自定义反序列化">自定义反序列化</h3><h3 id="Avro反序列化">Avro反序列化</h3><h2 id="消费者配置">消费者配置</h2><h2 id="单机消费者（不使用消费组）">单机消费者（不使用消费组）</h2><h2 id="旧的消费者API">旧的消费者API</h2>
       
     </div>
     
@@ -232,12 +263,12 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2016/10/27/Kafka-Definitive-Guide-cn-04/">Kafka权威指南-第四章-消费者</a></p>
+  <p><span>本文标题:</span><a href="/2016/10/27/Kafka-Definitive-Guide-cn-04/">译：Kafka权威指南-第四章-消费者</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年10月27日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年10月27日 - 09时33分</p>
+  <p><span>最后更新:</span>2016年10月28日 - 09时40分</p>
   <p>
-    <span>原始链接:</span><a href="/2016/10/27/Kafka-Definitive-Guide-cn-04/" title="Kafka权威指南-第四章-消费者">http://github.com/zqhxuyuan/2016/10/27/Kafka-Definitive-Guide-cn-04/</a>
+    <span>原始链接:</span><a href="/2016/10/27/Kafka-Definitive-Guide-cn-04/" title="译：Kafka权威指南-第四章-消费者">http://github.com/zqhxuyuan/2016/10/27/Kafka-Definitive-Guide-cn-04/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/10/27/Kafka-Definitive-Guide-cn-04/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
@@ -265,7 +296,7 @@
   
     <div id="article-nav-newer" class="article-nav-title">
       <a href="/2016/10/29/Kafka-Interactive-Query/">
-        Kafka交互式查询和流处理的统一
+        译：Kafka交互式查询和流处理的统一
       </a>
     </div>
   
@@ -385,7 +416,7 @@
 
 <div class="duoshuo" id="comments">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2016/10/27/Kafka-Definitive-Guide-cn-04/" data-title="Kafka权威指南-第四章-消费者" data-url="http://github.com/zqhxuyuan/2016/10/27/Kafka-Definitive-Guide-cn-04/"></div>
+	<div class="ds-thread" data-thread-key="2016/10/27/Kafka-Definitive-Guide-cn-04/" data-title="译：Kafka权威指南-第四章-消费者" data-url="http://github.com/zqhxuyuan/2016/10/27/Kafka-Definitive-Guide-cn-04/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -423,7 +454,7 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2016/10/29/Kafka-Interactive-Query/" title="上一篇: Kafka交互式查询和流处理的统一">
+    <a href="/2016/10/29/Kafka-Interactive-Query/" title="上一篇: 译：Kafka交互式查询和流处理的统一">
     <i class="fa fa-angle-left"></i>
     </a>
     <a href="/2016/10/19/Cassandra-Code-StorageEngine/" title="下一篇: Cassandra源码分析-存储引擎">

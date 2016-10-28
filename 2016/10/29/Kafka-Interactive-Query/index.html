@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Kafka交互式查询和流处理的统一 | zqhxuyuan</title>
+  <title>译：Kafka交互式查询和流处理的统一 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Unifying Stream Processing and Interactive Queries in Apache Kafkahttp://www.confluent.io/blog/unifying-stream-processing-and-interactive-queries-in-apache-kafka/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kafka交互式查询和流处理的统一">
+<meta property="og:title" content="译：Kafka交互式查询和流处理的统一">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2016/10/29/Kafka-Interactive-Query/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Unifying Stream Processing and Interactive Queries in Apache Kafkahttp://www.confluent.io/blog/unifying-stream-processing-and-interactive-queries-in-apache-kafka/">
-<meta property="og:updated_time" content="2016-10-27T02:25:58.000Z">
+<meta property="og:image" content="http://www.confluent.io/wp-content/uploads/2016/10/IQueries-Blog-Diagrams-2-1-1024x381.png">
+<meta property="og:updated_time" content="2016-10-27T05:52:51.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kafka交互式查询和流处理的统一">
+<meta name="twitter:title" content="译：Kafka交互式查询和流处理的统一">
 <meta name="twitter:description" content="Unifying Stream Processing and Interactive Queries in Apache Kafkahttp://www.confluent.io/blog/unifying-stream-processing-and-interactive-queries-in-apache-kafka/">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
@@ -187,7 +188,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Kafka交互式查询和流处理的统一
+      译：Kafka交互式查询和流处理的统一
     </h1>
   
 
@@ -238,6 +239,14 @@
 <blockquote>
 <p>本篇博文举例的是一个金融场景，比如财富管理机构或者对冲基金（投资者）会维护资产的仓位。维护仓位意味着银行会跟踪这些资产的风险。银行会持续地收集商业事件以及其他可能会影响指定仓位风险的数据。这些数据包括资产的市场波动，外汇交换比率，研究机构，甚至是有声望的名人的新闻。任何时候只要数据变化，风险的仓位就需要被重新计算，这样才能对单独的资产，甚至整个投资组合都能够保持实时的风险视图。<br>实时风控管理是有状态的应用程序的一个示例，最小的需求是：状态需要能够跟踪每种资产的最近仓位。状态在流处理引擎中为了跟踪不同的聚合逻辑也是必须的，比如一天中资产的交易次数，平均出价(bid/ask)速度。收集到的状态需要被持续地更新和查询。  </p>
 </blockquote>
+<h2 id="现在的做法">现在的做法</h2><p>在没有Kafka Streams之前，典型的架构图如下：<br><img src="http://www.confluent.io/wp-content/uploads/2016/10/IQueries-Blog-Diagrams-2-1-1024x381.png" alt="arch before"></p>
+<p>图中业务事件会被Kafka捕获，上部分是Hadoop/Spark批处理系统，下部分是流处理系统，这种混合部署模式也被称作Lambda架构，它的缺点也很明显：需要维护监控两套系统，总结现在的通用做法：  </p>
+<ol>
+<li>一个额外的Hadoop集群重复处理数据</li>
+<li>在流处理层也要维护存储，因为流处理需要查询和聚合</li>
+<li>流处理作业和批处理作业的输出都需要维护存储和数据库</li>
+<li>写放大无法避免，</li>
+</ol>
 
       
     </div>
@@ -246,12 +255,12 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2016/10/29/Kafka-Interactive-Query/">Kafka交互式查询和流处理的统一</a></p>
+  <p><span>本文标题:</span><a href="/2016/10/29/Kafka-Interactive-Query/">译：Kafka交互式查询和流处理的统一</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年10月29日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年10月27日 - 10时25分</p>
+  <p><span>最后更新:</span>2016年10月27日 - 13时52分</p>
   <p>
-    <span>原始链接:</span><a href="/2016/10/29/Kafka-Interactive-Query/" title="Kafka交互式查询和流处理的统一">http://github.com/zqhxuyuan/2016/10/29/Kafka-Interactive-Query/</a>
+    <span>原始链接:</span><a href="/2016/10/29/Kafka-Interactive-Query/" title="译：Kafka交互式查询和流处理的统一">http://github.com/zqhxuyuan/2016/10/29/Kafka-Interactive-Query/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/10/29/Kafka-Interactive-Query/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
@@ -286,7 +295,7 @@
   
     <div id="article-nav-older" class="article-nav-title">
       <a href="/2016/10/27/Kafka-Definitive-Guide-cn-04/">
-        Kafka权威指南-第四章-消费者
+        译：Kafka权威指南-第四章-消费者
       </a>
     </div>
   
@@ -321,7 +330,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#示例：实时风险管理"><span class="toc-number">1.</span> <span class="toc-text">示例：实时风险管理</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#示例：实时风险管理"><span class="toc-number">1.</span> <span class="toc-text">示例：实时风险管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#现在的做法"><span class="toc-number">2.</span> <span class="toc-text">现在的做法</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -399,7 +408,7 @@
 
 <div class="duoshuo" id="comments">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2016/10/29/Kafka-Interactive-Query/" data-title="Kafka交互式查询和流处理的统一" data-url="http://github.com/zqhxuyuan/2016/10/29/Kafka-Interactive-Query/"></div>
+	<div class="ds-thread" data-thread-key="2016/10/29/Kafka-Interactive-Query/" data-title="译：Kafka交互式查询和流处理的统一" data-url="http://github.com/zqhxuyuan/2016/10/29/Kafka-Interactive-Query/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -440,7 +449,7 @@
     <a href="/2016/12/31/BigData-Monitor-Tool/" title="上一篇: 监控工具集锦">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2016/10/27/Kafka-Definitive-Guide-cn-04/" title="下一篇: Kafka权威指南-第四章-消费者">
+    <a href="/2016/10/27/Kafka-Definitive-Guide-cn-04/" title="下一篇: 译：Kafka权威指南-第四章-消费者">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

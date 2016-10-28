@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Kafka源码分析 KafkaConsumer | zqhxuyuan</title>
+  <title>Kafka源码分析 KafkaConsumer（翻译和注释） | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Kafka new Consumer 0.9+">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kafka源码分析 KafkaConsumer">
+<meta property="og:title" content="Kafka源码分析 KafkaConsumer（翻译和注释）">
 <meta property="og:url" content="http://github.com/zqhxuyuan/2016/02/22/2016-02-22-Kafka-Consumer-new/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Kafka new Consumer 0.9+">
@@ -16,9 +16,9 @@
 <meta property="og:image" content="https://cwiki.apache.org/confluence/download/attachments/38570548/Consumer%20state%20diagram.jpg?version=10&modificationDate=1400109502000&api=v2">
 <meta property="og:image" content="https://cwiki.apache.org/confluence/download/attachments/38570548/Coordinator%20state%20diagram.jpg?version=5&modificationDate=1399498790000&api=v2">
 <meta property="og:image" content="http://img.blog.csdn.net/20160224164856609">
-<meta property="og:updated_time" content="2016-04-07T02:15:01.000Z">
+<meta property="og:updated_time" content="2016-10-27T03:35:44.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kafka源码分析 KafkaConsumer">
+<meta name="twitter:title" content="Kafka源码分析 KafkaConsumer（翻译和注释）">
 <meta name="twitter:description" content="Kafka new Consumer 0.9+">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
@@ -192,7 +192,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Kafka源码分析 KafkaConsumer
+      Kafka源码分析 KafkaConsumer（翻译和注释）
     </h1>
   
 
@@ -447,12 +447,12 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2016/02/22/2016-02-22-Kafka-Consumer-new/">Kafka源码分析 KafkaConsumer</a></p>
+  <p><span>本文标题:</span><a href="/2016/02/22/2016-02-22-Kafka-Consumer-new/">Kafka源码分析 KafkaConsumer（翻译和注释）</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年02月22日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年04月07日 - 10时15分</p>
+  <p><span>最后更新:</span>2016年10月27日 - 11时35分</p>
   <p>
-    <span>原始链接:</span><a href="/2016/02/22/2016-02-22-Kafka-Consumer-new/" title="Kafka源码分析 KafkaConsumer">http://github.com/zqhxuyuan/2016/02/22/2016-02-22-Kafka-Consumer-new/</a>
+    <span>原始链接:</span><a href="/2016/02/22/2016-02-22-Kafka-Consumer-new/" title="Kafka源码分析 KafkaConsumer（翻译和注释）">http://github.com/zqhxuyuan/2016/02/22/2016-02-22-Kafka-Consumer-new/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/02/22/2016-02-22-Kafka-Consumer-new/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
@@ -480,14 +480,14 @@
   
     <div id="article-nav-newer" class="article-nav-title">
       <a href="/2016/02/23/2016-02-23-Kafka-Controller/">
-        Kafka源码分析 KafkaController
+        Kafka源码分析 KafkaController（翻译和注释）
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
       <a href="/2016/02/21/Kafka-Connect/">
-        使用Kafka Connect构建一个可扩展的ETL管道
+        译：使用Kafka Connect构建一个可扩展的ETL管道
       </a>
     </div>
   
@@ -600,7 +600,7 @@
 
 <div class="duoshuo" id="comments">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2016/02/22/2016-02-22-Kafka-Consumer-new/" data-title="Kafka源码分析 KafkaConsumer" data-url="http://github.com/zqhxuyuan/2016/02/22/2016-02-22-Kafka-Consumer-new/"></div>
+	<div class="ds-thread" data-thread-key="2016/02/22/2016-02-22-Kafka-Consumer-new/" data-title="Kafka源码分析 KafkaConsumer（翻译和注释）" data-url="http://github.com/zqhxuyuan/2016/02/22/2016-02-22-Kafka-Consumer-new/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -638,10 +638,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2016/02/23/2016-02-23-Kafka-Controller/" title="上一篇: Kafka源码分析 KafkaController">
+    <a href="/2016/02/23/2016-02-23-Kafka-Controller/" title="上一篇: Kafka源码分析 KafkaController（翻译和注释）">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2016/02/21/Kafka-Connect/" title="下一篇: 使用Kafka Connect构建一个可扩展的ETL管道">
+    <a href="/2016/02/21/Kafka-Connect/" title="下一篇: 译：使用Kafka Connect构建一个可扩展的ETL管道">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
