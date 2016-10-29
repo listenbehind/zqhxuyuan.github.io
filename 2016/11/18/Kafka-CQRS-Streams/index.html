@@ -3,18 +3,19 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Scala Documentation | zqhxuyuan</title>
+  <title>译：Kafka事件驱动和流处理 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="book notebook : Scala Documentation">
+  <meta name="description" content="http://www.confluent.io/blog/event-sourcing-cqrs-stream-processing-apache-kafka-whats-connection/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Scala Documentation">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2016/01/04/BookNote_Scala_doc/index.html">
+<meta property="og:title" content="译：Kafka事件驱动和流处理">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/11/18/Kafka-CQRS-Streams/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="book notebook : Scala Documentation">
-<meta property="og:updated_time" content="2016-01-04T10:10:41.000Z">
+<meta property="og:description" content="http://www.confluent.io/blog/event-sourcing-cqrs-stream-processing-apache-kafka-whats-connection/">
+<meta property="og:image" content="http://www.confluent.io/wp-content/uploads/2016/09/Event-sourced-based-architecture.jpeg">
+<meta property="og:updated_time" content="2016-10-29T03:50:13.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Scala Documentation">
-<meta name="twitter:description" content="book notebook : Scala Documentation">
+<meta name="twitter:title" content="译：Kafka事件驱动和流处理">
+<meta name="twitter:description" content="http://www.confluent.io/blog/event-sourcing-cqrs-stream-processing-apache-kafka-whats-connection/">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -170,11 +171,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-BookNote_Scala_doc" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Kafka-CQRS-Streams" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/04/BookNote_Scala_doc/" class="article-date">
-  	<time datetime="2016-01-03T16:00:00.000Z" itemprop="datePublished">2016-01-04</time>
+      <a href="/2016/11/18/Kafka-CQRS-Streams/" class="article-date">
+  	<time datetime="2016-11-17T16:00:00.000Z" itemprop="datePublished">2016-11-18</time>
 </a>
     </div>
   
@@ -187,7 +188,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Scala Documentation
+      译：Kafka事件驱动和流处理
     </h1>
   
 
@@ -196,13 +197,13 @@
       <div class="article-info article-info-post">
         
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/language/">language</a>
+	<a class="article-category-link" href="/categories/kafka/">kafka</a>
 	</div>
 
 
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/scala/">scala</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
 	</div>
 
         <div class="clearfix"></div>
@@ -212,22 +213,29 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>book notebook : Scala Documentation<br><a id="more"></a></p>
-<h2 id="Collection">Collection</h2><p>Iterable是一个trait,它的foreach方法(来自于另一个trait:Traversable)使用iterator实现.  </p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">foreach</span>[</span><span class="type">U</span>](f: <span class="type">Elem</span> =&gt; <span class="type">U</span>): <span class="type">Unit</span> = &#123;</span><br><span class="line">  <span class="keyword">val</span> it = iterator                 <span class="comment">//迭代器有next方法获取下一个原始和hasNext判断是否有下一个原始</span></span><br><span class="line">  <span class="keyword">while</span> (it.hasNext) f(it.next())   <span class="comment">//foreach的参数是个函数,因为foreach是个高阶函数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>比如Learning Scala中的</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singular</span>[</span><span class="type">A</span>](element: <span class="type">A</span>) <span class="keyword">extends</span> <span class="type">Traversable</span>[<span class="type">A</span>] &#123;</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">foreach</span>[</span><span class="type">B</span>](f: <span class="type">A</span> =&gt; <span class="type">B</span>) = f(element) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Iterable的grouped和sliding也会返回迭代器,所以为了获取迭代器中的元素,必须基于迭代器不断调用next:  </p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> xs = <span class="type">List</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line"><span class="keyword">val</span> git = xs.grouped(<span class="number">3</span>)</span><br><span class="line">git.next <span class="comment">//List(1,2,3)</span></span><br><span class="line">git.next <span class="comment">//List(4,5)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> sit = xs.sliding(<span class="number">3</span>)</span><br><span class="line">sit.next <span class="comment">//List(1, 2, 3)</span></span><br><span class="line">sit.next <span class="comment">//List(2, 3, 4)</span></span><br><span class="line">sit.next <span class="comment">//List(3, 4, 5)</span></span><br></pre></td></tr></table></figure>
-<p>Seq,Set,Map都实现了PartialFunction. Seq的apply:根据索引获取元素, Set:判断是否存在, Map:根据key选择value</p>
-<p>不可变集合+可变变量</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var s = Set(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)  <span class="comment">//不可变集合Set,但是声明为可变变量</span></span><br><span class="line">s += <span class="number">4</span>              <span class="comment">//因为是可变变量,所以可以更改变量的值</span></span><br><span class="line">s -= <span class="number">2</span>              <span class="comment">//在不可变集合s上运用方法+，并把结果赋回给变量s</span></span><br><span class="line">s</span><br></pre></td></tr></table></figure>
-<p>可变集合+不可变变量</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">val s = collection.<span class="keyword">mutable</span>.Set(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)     <span class="comment">//可变集合, 用不可变变量. 虽然不可变变量不能修改,但是可变集合本身是可以修改的</span></span><br><span class="line">s += <span class="number">4</span>              <span class="comment">//在可变集合值s上调用+=方法,它会改变s的内容: 添加元素到集合s中,并返回产生变化后的集合作为运算结果</span></span><br><span class="line">s -= <span class="number">2</span> </span><br><span class="line">s</span><br></pre></td></tr></table></figure>
+        <p><a href="http://www.confluent.io/blog/event-sourcing-cqrs-stream-processing-apache-kafka-whats-connection/" target="_blank" rel="external">http://www.confluent.io/blog/event-sourcing-cqrs-stream-processing-apache-kafka-whats-connection/</a><br><a id="more"></a></p>
+<p>Event sourcing as an application architecture pattern is rising in popularity. Event sourcing involves modeling the state changes made by applications as an immutable sequence or “log” of events. Instead of modifying the state of the application in-place, event sourcing involves storing the event that triggers the state change in an immutable log and modeling the state changes as responses to the events in the log. We previously wrote about event sourcing, Apache Kafka and how they are related. In this post, I explore these ideas further and show how stream processing and, in particular, Kafka Streams helps to put Event sourcing and CQRS into practice.</p>
 <blockquote>
-<p>对于可变集合或不可变集合, 如果都用val不可变变量声明. 它们都有+方法,都会生成一个新的集合,原集合不变.<br>注意如果是不可变集合, 不可变变量, 则没有+=方法. 使用可变变量+不可变集合,才有+=方法.不过+=操作不是集合上的操作,而是更新变量  </p>
+<p>事件驱动（Event sourcing）作为应用程序架构的一种模式现在越来越流行了。事件驱动包括了将应用程序产生的状态改变数据建模成不可变的序列、或者说是事件的日志。它不是直接就地修改应用程序的状态，事件驱动会将触发状态改变的事件存储到一个不可变的日志，在日志中将状态改变建模成针对发生事件的响应。在<a href="http://www.confluent.io/blog/making-sense-of-stream-processing/" target="_blank" rel="external">之前的文章</a>中，我们阐述了事件驱动和Kafka的关系。本篇文章，我们会更进一步探索这些思想，并且会展示流处理，更准确的说是Kafka Streams，怎么帮助我们将事件驱动和CQRS运用在实际中。  </p>
 </blockquote>
-
+<p>Let’s take an example. Consider a Facebook-like social networking app (albeit a completely hypothetical one) that updates the profiles database when a user updates their Facebook profile. There are several applications that need to be notified when a user updates their profile — the search application so the user’s profile can be reindexed to be searchable on the changed attribute; the newsfeed application so the user’s connections can find out about the profile update; the data warehouse ETL application to load the latest profile data into the central data warehouse that powers various analytical queries and so on.</p>
+<blockquote>
+<p>举例类似于Facebook这样的社交网络应用，当用户在Facebook的设置页面更新自己的信息时会更新profiles数据库。有很多应用因为和个人信息相关，在用户更新他们的设置时，这些应用都需要被通知到。比如通知搜索应用，用户的设置可以被重新索引，被改变的属性就可以被搜索出来；通知新闻订阅应用，这样用户的连接就可以找出被更新过的设置；数据仓库应用，加载最新的设置数据到中央仓库，用于不同维护的数据查询和分析等等。</p>
+</blockquote>
+<p><img src="http://www.confluent.io/wp-content/uploads/2016/09/Event-sourced-based-architecture.jpeg" alt=""><br>基于事件驱动的架构</p>
+<p>Event sourcing involves changing the profile web app to model the profile update as an event — something important that happened — and write it to a central log, like a Kafka topic. In this state of the world, all the applications that need to respond to the profile update event, merely subscribe to the Kafka topic and create the respective materialized views – be it a write to cache, index the event in Elasticsearch or simply compute an in-memory aggregate. The profile web app itself also subscribes to the same Kafka topic and writes the update to the profiles database.</p>
+<blockquote>
+<p>事件驱动会将profile应用程序的profile更新作为一个事件，写入到中央日志系统中，比如一个Kafka的主题。在这个充满状态的世界中，所有需要对profile更新事件作出响应的，所做的工作仅仅是订阅到Kafka的主题，并创建各自的物化视图（消费者读取数据，产生各自的数据），比如将其作为缓存的以写入、Elasticsearch的一个索引事件、或者只是内存中的简单聚合计算。当然profile应用程序本身也要订阅相同的Kafka主题（实际上不是订阅，而是生产，这里的意思是生产者和消费者使用相同的主题，否则生产者生产的消息没有被任何消费者订阅，就没有什么意义了。生产者这里是web应用程序产生的更新事件，消费者是下方各种数据源），并且会将更新写入到profiles数据库。</p>
+</blockquote>
+<h2 id="事件驱动：一些利弊">事件驱动：一些利弊</h2><p>There are several advantages to modeling applications to use event sourcing — It provides a complete log of every state change ever made to an object; so troubleshooting is easier. By expressing the user intent as an ordered log of immutable events, event sourcing gives the business an audit and compliance(合规性审计) log which also has the added benefit of providing data provenance(起源). It enables resilient(弹性) applications; rolling back applications amounts to rewinding(绕回) the event log and reprocessing data. It has better performance characteristics; writes and reads can be scaled independently. It enables a loosely coupled(松耦合) application architecture; one that makes it easier to move towards a microservices-based architecture. But most importantly:</p>
+<p><strong>Event sourcing enables building a forward-compatible(向前兼容) application architecture — the ability to add more applications in the future that need to process the same event but create a different materialized view.</strong></p>
+<blockquote>
+<p>将应用程序建模成事件驱动有很多优点：它提供了针对一个对象的每个状态改变的完整日志，所以排查问题非常简单。</p>
+</blockquote>
+<p>For the upsides mentioned above, there are some downsides as well. Event sourcing has a higher learning curve(曲线); it is a new and unfamiliar programming model. The event log might involve more work to query it as it requires converting the events into the required materialized state suitable to query.</p>
+<p>That was a quick introduction to event sourcing and some tradeoffs. This article is not meant to go into details of event sourcing or advocate for it’s usage. You can read more about event sourcing and various tradeoffs <a href="http://martinfowler.com/eaaDev/EventSourcing.html" target="_blank" rel="external">here</a>.</p>
+<p>除了上面提到的一些优点，当然它也有缺点。事件驱动有更高的学习曲线，它是一种崭新的、不熟悉的编程模型。</p>
+<h2 id="Kafka作为事件驱动的支柱">Kafka作为事件驱动的支柱</h2><h2 id="事件驱动和CQRS">事件驱动和CQRS</h2><h2 id="CQRS和Kafka_Streams">CQRS和Kafka Streams</h2><h3 id="方案1：应用程序状态存储到外部存储">方案1：应用程序状态存储到外部存储</h3><h3 id="方案2：应用程序状态存储到Kafka_Streams的本地状态">方案2：应用程序状态存储到Kafka Streams的本地状态</h3><h2 id="Kafka_Streams的交互式查询">Kafka Streams的交互式查询</h2><h2 id="交互式查询的用例">交互式查询的用例</h2><h2 id="使用Kafka作为事件驱动、CQRS">使用Kafka作为事件驱动、CQRS</h2><h3 id="零售店示例">零售店示例</h3>
       
     </div>
     
@@ -235,13 +243,13 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2016/01/04/BookNote_Scala_doc/">Scala Documentation</a></p>
+  <p><span>本文标题:</span><a href="/2016/11/18/Kafka-CQRS-Streams/">译：Kafka事件驱动和流处理</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
-  <p><span>发布时间:</span>2016年01月04日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年01月04日 - 18时10分</p>
+  <p><span>发布时间:</span>2016年11月18日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年10月29日 - 11时50分</p>
   <p>
-    <span>原始链接:</span><a href="/2016/01/04/BookNote_Scala_doc/" title="Scala Documentation">http://github.com/zqhxuyuan/2016/01/04/BookNote_Scala_doc/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/01/04/BookNote_Scala_doc/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2016/11/18/Kafka-CQRS-Streams/" title="译：Kafka事件驱动和流处理">http://github.com/zqhxuyuan/2016/11/18/Kafka-CQRS-Streams/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/11/18/Kafka-CQRS-Streams/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -267,15 +275,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2016/01/04/Kafka-Intro/">
-        Introduce Kafka
+      <a href="/2016/12/31/BigData-Monitor-Tool/">
+        监控工具集锦
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/12/31/BookNote_Learning_Scala/">
-        Learning Scala学习笔记
+      <a href="/2016/10/29/Kafka-Interactive-Query/">
+        译：Kafka交互式查询和流处理的统一
       </a>
     </div>
   
@@ -310,7 +318,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Collection"><span class="toc-number">1.</span> <span class="toc-text">Collection</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#事件驱动：一些利弊"><span class="toc-number">1.</span> <span class="toc-text">事件驱动：一些利弊</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka作为事件驱动的支柱"><span class="toc-number">2.</span> <span class="toc-text">Kafka作为事件驱动的支柱</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事件驱动和CQRS"><span class="toc-number">3.</span> <span class="toc-text">事件驱动和CQRS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CQRS和Kafka_Streams"><span class="toc-number">4.</span> <span class="toc-text">CQRS和Kafka Streams</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#方案1：应用程序状态存储到外部存储"><span class="toc-number">4.1.</span> <span class="toc-text">方案1：应用程序状态存储到外部存储</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方案2：应用程序状态存储到Kafka_Streams的本地状态"><span class="toc-number">4.2.</span> <span class="toc-text">方案2：应用程序状态存储到Kafka Streams的本地状态</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka_Streams的交互式查询"><span class="toc-number">5.</span> <span class="toc-text">Kafka Streams的交互式查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#交互式查询的用例"><span class="toc-number">6.</span> <span class="toc-text">交互式查询的用例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用Kafka作为事件驱动、CQRS"><span class="toc-number">7.</span> <span class="toc-text">使用Kafka作为事件驱动、CQRS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#零售店示例"><span class="toc-number">7.1.</span> <span class="toc-text">零售店示例</span></a></li></ol></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -388,7 +396,7 @@
 
 <div class="duoshuo" id="comments">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2016/01/04/BookNote_Scala_doc/" data-title="Scala Documentation" data-url="http://github.com/zqhxuyuan/2016/01/04/BookNote_Scala_doc/"></div>
+	<div class="ds-thread" data-thread-key="2016/11/18/Kafka-CQRS-Streams/" data-title="译：Kafka事件驱动和流处理" data-url="http://github.com/zqhxuyuan/2016/11/18/Kafka-CQRS-Streams/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -426,10 +434,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2016/01/04/Kafka-Intro/" title="上一篇: Introduce Kafka">
+    <a href="/2016/12/31/BigData-Monitor-Tool/" title="上一篇: 监控工具集锦">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/12/31/BookNote_Learning_Scala/" title="下一篇: Learning Scala学习笔记">
+    <a href="/2016/10/29/Kafka-Interactive-Query/" title="下一篇: 译：Kafka交互式查询和流处理的统一">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
