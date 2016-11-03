@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Kafka Streams中文翻译 | zqhxuyuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Confluent Kafka Streams Documentation 中文翻译：  http://docs.confluent.io/3.0.1/streams/introduction.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka Streams中文翻译">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/11/02/Kafka-Streams-cn/index.html">
+<meta property="og:site_name" content="zqhxuyuan">
+<meta property="og:description" content="Confluent Kafka Streams Documentation 中文翻译：  http://docs.confluent.io/3.0.1/streams/introduction.html">
+<meta property="og:image" content="http://img.blog.csdn.net/20161103092411029">
+<meta property="og:image" content="http://img.blog.csdn.net/20161103101744946">
+<meta property="og:image" content="http://img.blog.csdn.net/20161103130945109">
+<meta property="og:updated_time" content="2016-11-03T05:11:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kafka Streams中文翻译">
+<meta name="twitter:description" content="Confluent Kafka Streams Documentation 中文翻译：  http://docs.confluent.io/3.0.1/streams/introduction.html">
+  
+    <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">任何忧伤,都抵不过世界的美丽</a></h1>
+		</hgroup>
+
+		
+				
+
+
+		
+			<div id="switch-btn" class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div id="switch-area" class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives/">归档</a></li>
+				        
+							<li><a href="/tags/">标签</a></li>
+				        
+							<li><a href="/about/">关于</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.75px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.25px;">drill</a> <a href="/tags/druid/" style="font-size: 13.75px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.75px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.75px;">ops</a> <a href="/tags/redis/" style="font-size: 11.25px;">redis</a> <a href="/tags/scala/" style="font-size: 12.5px;">scala</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.5px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.75px;">work</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">BIG(DATA)</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="/" class="profilepic">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			</a>
+			<hgroup>
+			  <h1 class="header-author"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives/">归档</a></li>
+		        
+					<li><a href="/tags/">标签</a></li>
+		        
+					<li><a href="/about/">关于</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+						</ul>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Kafka-Streams-cn" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/02/Kafka-Streams-cn/" class="article-date">
+  	<time datetime="2016-11-01T16:00:00.000Z" itemprop="datePublished">2016-11-02</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Kafka Streams中文翻译
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/kafka/">kafka</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>Confluent Kafka Streams Documentation 中文翻译：  <a href="http://docs.confluent.io/3.0.1/streams/introduction.html" target="_blank" rel="external">http://docs.confluent.io/3.0.1/streams/introduction.html</a><br><a id="more"></a></p>
+<h1 id="介绍">介绍</h1><h2 id="Kafka_Streams">Kafka Streams</h2><p>Kafka Streams, a component of open source Apache Kafka, is a powerful, easy-to-use library for building highly scalable, fault-tolerant, distributed stream processing applications on top of Apache Kafka. It builds upon important concepts for stream processing such as properly distinguishing between event-time and processing-time, handling of late-arriving data, and efficient management of application state.</p>
+<blockquote>
+<p>Kafka Streams是构建在Apache Kafka的一个组件，它是一个功能强大的、对于构建高可用、故障容错、分布式流处理应用程序都很容易使用的库。它构建在流处理的重要概念之上，比如正确地区分事件时间（event-time）和处理时间（process-time），处理延时数据，高效的应用程序状态管理。  </p>
+</blockquote>
+<p>One of the mantras(祷文) of Kafka Streams is to “Build apps, not clusters!”, which means to bring stream processing out of the Big Data niche into the world of mainstream application development. Using the Kafka Streams library you can implement standard Java applications to solve your stream processing needs – whether at small or at large scale – and then run these applications on client machines at the perimeter(边界) of your Kafka cluster. Deployment-wise you are free to chose from any technology that can deploy Java applications, including but not limited to Puppet, Chef, Ansible, Docker, Mesos, YARN, Kubernetes, and so on. This lightweight and integrative(综合) approach of Kafka Streams is in stark(完全、突出) contrast(对比) to other stream processing tools that require you to install and operate separate stream processing clusters and similar heavy-weight infrastructure that come with their own special set of rules on how to use and interact with them.</p>
+<blockquote>
+<p>Kafka Streams的一个思想是“构建应用程序，不要集群”，这意味着将流处理从大数据生态圈中解放出来，而专注于主流的应用程序开发。使用Kafka Streams客户端库，你可以用标准的Java应用程序（main方法）来解决你的流处理需求（不管是小规模还是大规模的数据），然后可以在你的Kafka集群之外的客户端机器执行这些应用程序。你可以选择任何可以部署Java应用的技术来部署Kafka Streams，包括但不限于Puppet、Chef、Ansible、Docker、Mesos、YARN、Kubernetes等等。Kafka Streams的轻量级以及综合能力使得它和其他流处理工具形成了鲜明的对比，后者需要你单独安装并维护一个流处理集群，需要依赖重量级的基础架构设施。</p>
+</blockquote>
+<p>The following list highlights several key capabilities and aspects of Kafka Streams that make it a compelling(引人注目) choice for use cases such as stream processing applications, event-driven systems, continuous queries and transformations, reactive applications, and microservices.</p>
+<blockquote>
+<p>下面列出了Kafka Streams的几个重要的功能，对于这些用例都是个吸引人的选择：流处理应用程序、事件驱动系统、持续查询和转换、响应式应用程序、微服务。</p>
+</blockquote>
+<p><strong>Powerful</strong>功能强大</p>
+<ul>
+<li>Highly scalable, elastic, fault-tolerant 高可用、可扩展性、故障容错</li>
+<li>Stateful and stateless processing 有状态和无状态的处理</li>
+<li>Event-time processing with windowing, joins, aggregations 针对事件的窗口函数、联合操作、聚合操作</li>
+</ul>
+<p><strong>Lightweight</strong>轻量级</p>
+<ul>
+<li>No dedicated cluster required 不需要专用的集群</li>
+<li>No external dependencies 不需要外部的依赖</li>
+<li>“It’s a library, not a framework.” 它是一个客户端库，不是一个框架</li>
+</ul>
+<p><strong>Fully integrated</strong>完全完整的</p>
+<ul>
+<li>100% compatible with Kafka 0.10.0.x 和Kafka完全兼容</li>
+<li>Easy to integrate into existing applications 和已有应用程序容易集成</li>
+<li>No artificial rules for deploying applications 对部署方式没有严格的规则限制</li>
+</ul>
+<p><strong>Real-time</strong>实时的</p>
+<ul>
+<li>Millisecond processing latency 微秒级别的处理延迟</li>
+<li>Does not micro-batch messages 不是micro-batch处理</li>
+<li>Windowing with out-of-order data 对无序数据的窗口操作</li>
+<li>Allows for arrival of late data 允许延迟的数据</li>
+</ul>
+<h2 id="A_closer_look">A closer look</h2><p>Before we dive into the details such as the concepts and architecture of Kafka Streams or getting our feet wet by following the Kafka Streams quickstart guide, let us provide more context to the previous list of capabilities.</p>
+<p>在深入研究Kafka Streams的概念和架构细节之前，你应该先看下<a href="http://docs.confluent.io/3.0.1/streams/quickstart.html#streams-quickstart" target="_blank" rel="external">快速指南</a>，现在我们为上面的那些特点提供更多的上下文信息（背景知识）。</p>
+<p>1.Stream Processing Made Simple: Designed as a lightweight library in Apache Kafka, much like the Kafka producer and consumer client libraries. You can easily embed and integrate Kafka Streams into your own applications, which is a significant departure from framework-based stream processing tools that dictate many requirements upon you such as how you must package and “submit” processing jobs to their cluster.</p>
+<blockquote>
+<p>流处理更加简单：被设计为一个轻量级的库，就像Kafka的生产者和消费者客户端库一样。你可以很方便地将Kafka Streams集成到你自己的应用程序中，这是和其他基于框架的流处理工具的主要区别，它们对你会有很多要求，比如你必须打包然后把流处理作业提交到集群上执行。</p>
+</blockquote>
+<p>Has no external dependencies on systems other than Apache Kafka and can be used in any Java application. Read: You do not need to deploy and operate a separate cluster for your stream processing needs. Your Operations and Info Sec teams, among others, will surely be happy to hear this.</p>
+<blockquote>
+<p>在应用程序中除了Apache Kafka之外没有别的依赖：你不需要为你的流处理需求部署或维护一个单独的集群。你们的运维和安全团队肯定听到这个信息肯定很happy吧。</p>
+</blockquote>
+<p>2.Leverages Kafka as its internal messaging layer instead of (re)implementing a custom messaging layer like many other stream processing tools. Notably, Kafka Streams uses Kafka’s partitioning model to horizontally scale processing while maintaining strong ordering guarantees. This ensures high performance, scalability, and operational simplicity for production environments. A key benefit of this design decision is that you do not have to understand and tune two different messaging layers – one for moving data streams at scale (Kafka) plus a separate one for your stream processing tool. Similarly, any performance and reliability improvements of Kafka will automatically be available to Kafka Streams, too, thus tapping into the momentum of Kafka’s strong developer community.</p>
+<blockquote>
+<p>利用Kafka作为它的内部消息层而不像其他流处理工具一样重新造轮子。特别是，Kafka Streams使用Kafka的分区模型在维护强一致性的同时也具备了线性的处理能力，这种设计的优点是：你不需要理解或者调整两种消息模型（一种是线性地移动数据流，另外一种是流处理的消息）。同样，任何针对Kafka的性能和可靠性的提升，Kafka Streams都会自动具备，这也促使了Kafka开发者社区的动力。</p>
+</blockquote>
+<p>3.Is agnostic(不可知论) to resource management and configuration tools, so it integrates much more seamlessly(无缝) into the existing development, packaging, deployment, and operational practices of your organization. You are free to use your favorite tools such as Java application servers, Puppet, Ansible, Mesos, YARN, Docker – or even to run your application manually on a single machine for proof-of-concept scenarios.</p>
+<blockquote>
+<p>Kafka Streams不需要依赖资源管理和配置工具，所以它可以和已有的开发环境、打包、部署等工具无缝集成。可以运行在Java应用服务器，甚至在单机环境下做原型验证（POC）。</p>
+</blockquote>
+<p>4.Supports fault-tolerant local state, which enables very fast and efficient stateful operations like joins and windowed aggregations. Local state is replicated to Kafka so that, in case of a machine failure, another machine can automatically restore the local state and resume the processing from the point of failure.</p>
+<blockquote>
+<p>支持本地状态的故障容错，这使得有状态的操作（比如联合、窗口聚合）更快速和高效。由于本地状态本身通过Kafka进行复制，所以当一个机器宕机时，其他机器可以自动恢复本地状态，并且从故障出错的那个点继续处理。</p>
+</blockquote>
+<p>5.Employs one-record-at-a-time processing to achieve low processing latency, which is crucial(重要，决定性) for a variety of use cases such as fraud detection. This makes Kafka Streams different from micro-batch based stream processing tools.</p>
+<blockquote>
+<p>一次处理一条记录的流处理模型，所以处理延迟很低，对于像欺诈检测等场景来说非常重要。这也是Kafka Streams有别于基于micro-batch的流处理工具的区别。</p>
+</blockquote>
+<p>Furthermore, Kafka Streams has a strong focus on usability(可用性) and a great developer experience. It offers all the necessary stream processing primitives to allow applications to read data from Kafka as streams, process the data, and then either write the resulting data back to Kafka or send the final output to an external system. Developers can choose between a high-level DSL with commonly used operations like filter, map, join, as well as a low-level API for developers who need maximum control and flexibility.</p>
+<blockquote>
+<p>另外，Kafka Streams对开发者是易用和友好的。它提供了所有必要的流处理算子，允许应用程序将从Kafka读取出来的数据作为一个流，然后处理数据，最后可以将处理结果写回到Kafka或者发送给外部系统。开发者可以使用高级DSL（提供很多常用的操作比如filter、map、join）或者低级API两种方式（当需要更好地控制和灵活性时）。</p>
+</blockquote>
+<p>Finally, Kafka Streams helps with scaling developers, too – yes, the human side – because it has a low barrier(接线) to entry and a smooth path to scale from development to production: You can quickly write and run a small-scale proof-of-concept on a single machine because you don’t need to install or understand a distributed stream processing cluster; and you only need to run additional instances of your application on multiple machines to scale up to high-volume production workloads. Kafka Streams transparently(透明地) handles the load balancing of multiple instances of the same application by leveraging Kafka’s parallelism model.</p>
+<blockquote>
+<p>最后，Kafka Streams对于开发者也是扩展的。是的，从程序员的视角来看的话，它从开发环境到生产环境几乎没有界线：你可以在一台机器上运行一个很小批量的POC，因为你不需要安装或者理解一个分布式的流处理集群是怎么样（不需要知道程序在分布式环境下会有什么不同）；在多台机器上时，你只需要多运行几个应用程序实例就可以扩展到大规模的生产负载（生产环境下负载很高，只需多启动几个新的实例）。Kafka Streams会利用Kafka的并行模型透明底在相同应用程序多个实例之间处理负载均衡。</p>
+</blockquote>
+<p>In summary, Kafka Streams is a compelling choice for building stream processing applications. Give it a try and run your first Hello World Streams application! The next sections in this documentation will get you started.</p>
+<blockquote>
+<p>总之Kafka Streams对于构建流处理应用程序是一个非常不错的选择。快来运行一个<a href="http://docs.confluent.io/3.0.1/streams/quickstart.html#streams-quickstart" target="_blank" rel="external">Hello World的流处理应用吧</a>。</p>
+</blockquote>
+<h1 id="快速开始">快速开始</h1><h2 id="本节目标">本节目标</h2><p>The goal of this quickstart guide is to provide you with a first hands-on look at Kafka Streams. We will demonstrate how to run your first Java application that uses the Kafka Streams library by showcasing a simple end-to-end data pipeline powered by Kafka.</p>
+<p>It is worth noting that this quickstart will only scratch the surface of Kafka Streams. More details are provided in the remainder of the Kafka Streams documentation, and we will include pointers throughout the quickstart to give you directions.</p>
+<blockquote>
+<p>本节的目标是让你亲自看看Kafka Streams是如何实现的。我们会向你展示使用Kafka完成的一个端到端的数据流管道，以及运行你的第一个使用Kafka库的Java应用程序。注意这里仅仅会涉及到Kafka Streams的表层，后续的部分会深入一些细节。</p>
+</blockquote>
+<h2 id="我们要做什么">我们要做什么</h2><p>下面是使用Java8实现的WordCount示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Serializers/deserializers (serde) for String and Long types</span></span><br><span class="line"><span class="keyword">final</span> Serde&lt;String&gt; stringSerde = Serdes.String();</span><br><span class="line"><span class="keyword">final</span> Serde&lt;Long&gt; longSerde = Serdes.Long();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Construct a `KStream` from the input topic ""streams-file-input", where message values</span></span><br><span class="line"><span class="comment">// represent lines of text (for the sake of this example, we ignore whatever may be stored in the message keys).</span></span><br><span class="line">KStream&lt;String, String&gt; textLines = builder.stream(stringSerde, stringSerde, <span class="string">"streams-file-input"</span>);</span><br><span class="line"></span><br><span class="line">KStream&lt;String, Long&gt; wordCounts = textLines</span><br><span class="line">    <span class="comment">// Split each text line, by whitespace, into words.  The text lines are the message</span></span><br><span class="line">    <span class="comment">// values, i.e. we can ignore whatever data is in the message keys and thus invoke</span></span><br><span class="line">    <span class="comment">// `flatMapValues` instead of the more generic `flatMap`.</span></span><br><span class="line">    .flatMapValues(value -&gt; Arrays.asList(value.toLowerCase().split(<span class="string">"\\W+"</span>)))</span><br><span class="line">    <span class="comment">// We will subsequently invoke `countByKey` to count the occurrences of words, so we use</span></span><br><span class="line">    <span class="comment">// `map` to ensure the words are available as message keys, too.</span></span><br><span class="line">    .map((key, value) -&gt; <span class="keyword">new</span> KeyValue&lt;&gt;(value, value))</span><br><span class="line">    <span class="comment">// Count the occurrences of each word (message key).</span></span><br><span class="line">    <span class="comment">// This will change the stream type from `KStream&lt;String, String&gt;` to</span></span><br><span class="line">    <span class="comment">// `KTable&lt;String, Long&gt;` (word -&gt; count), hence we must provide serdes for `String` and `Long`.</span></span><br><span class="line">    .countByKey(stringSerde, <span class="string">"Counts"</span>)</span><br><span class="line">    <span class="comment">// Convert the `KTable&lt;String, Long&gt;` into a `KStream&lt;String, Long&gt;`.</span></span><br><span class="line">    .toStream();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Write the `KStream&lt;String, Long&gt;` to the output topic.</span></span><br><span class="line">wordCounts.to(stringSerde, longSerde, <span class="string">"streams-wordcount-output"</span>);</span><br></pre></td></tr></table></figure>
+<p>然后，我们会执行如下步骤来完成第一个流应用程序：</p>
+<ol>
+<li>在一台机器上启动一个Kafka集群</li>
+<li>使用Kafka内置的控制台生产者模拟往一个Kafka主题中写入一些示例数据</li>
+<li>使用Kafka Streams库处理输入的数据，处理程序就是上面的wordcount示例</li>
+<li>使用Kafka内置的控制台消费者检查应用程序的输出</li>
+<li>停止Kafka集群</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">wget http://packages.confluent.io/archive/3.0.1/confluent-3.0.1-2.11.zip</span><br><span class="line">unzip confluent-3.0.1-2.11.zip</span><br><span class="line">cd confluent-3.0.1/</span><br><span class="line">bin/zookeeper-server-<span class="operator"><span class="keyword">start</span> ./etc/kafka/zookeeper.properties</span><br><span class="line"><span class="keyword">bin</span>/kafka-<span class="keyword">server</span>-<span class="keyword">start</span> ./etc/kafka/<span class="keyword">server</span>.properties</span><br><span class="line"></span><br><span class="line"><span class="keyword">bin</span>/kafka-topics <span class="comment">--create \</span></span><br><span class="line">          <span class="comment">--zookeeper localhost:2181 \</span></span><br><span class="line">          <span class="comment">--replication-factor 1 \</span></span><br><span class="line">          <span class="comment">--partitions 1 \</span></span><br><span class="line">          <span class="comment">--topic streams-file-input</span></span><br><span class="line"></span><br><span class="line">echo -<span class="keyword">e</span> <span class="string">"all streams lead to kafka\nhello kafka streams\njoin kafka summit"</span> &gt; /tmp/<span class="keyword">file</span>-<span class="keyword">input</span>.txt</span><br><span class="line"></span><br><span class="line">cat /tmp/<span class="keyword">file</span>-<span class="keyword">input</span>.txt | ./<span class="keyword">bin</span>/kafka-console-producer <span class="comment">--broker-list localhost:9092 --topic streams-file-input</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">bin</span>/kafka-run-<span class="keyword">class</span> org.apache.kafka.streams.examples.wordcount.WordCountDemo</span></span><br></pre></td></tr></table></figure>
+<p>Similar to the bounded variant, it is a stateful algorithm that tracks and updates the counts of words. However, since it must assume potentially unbounded input data, it will periodically output its current state and results while continuing to process more data because it cannot know when it has processed “all” the input data. This is a typical difference between the class of algorithms that operate on unbounded streams of data and, say, batch processing algorithms such as Hadoop MapReduce. It will be easier to understand this difference once we inspect the actual output data later on.</p>
+<blockquote>
+<p>WordCount程序会计算输入单词出现次数的直方图，和之前看到的其他应用程序在有界数据集上不同的是，本例是在一个无限的、无界的数据流上操作。和有界操作相同的是，它也是一个有状态的算法（跟踪和更新单词的次数）。不过，由于它必须假设无限的输入数据，它会定时地输出当前状态和结果，并且持续地处理更多的数据，因为它不知道什么时候它已经处理完了所有的输入数据。这和在有界流数据上的算法是不同的比如Hadoop的MapReduce。在我们检查了实际的输出结果后，你就会更加容易地理解这里的不同点。</p>
+</blockquote>
+<p>The WordCount demo application will read from the input topic streams-file-input, perform the computations of the WordCount algorithm on the input data, and continuously write its current results to the output topic streams-wordcount-output (the names of its input and output topics are hardcoded). The demo will run for a few seconds and then, unlike typical stream processing applications, terminate automatically.</p>
+<blockquote>
+<p>这个WordCount示例会从Kafka的输入主题“streams-file-input”中读取数据，在输入数据上执行WorldCount算法，并且持续地将当前结果写入到输出主题“streams-wordcount-output”。不过和其他流处理程序不同的是，这里为了实验，仅仅运行几秒钟后就会退出，通常实际运行的流应用程序是永远不会停止的。</p>
+</blockquote>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-consumer --zookeeper localhost:<span class="number">2181</span> \</span><br><span class="line">          --topic streams-wordcount-output \</span><br><span class="line">          --from-beginning \</span><br><span class="line">          --formatter kafka<span class="class">.tools</span><span class="class">.DefaultMessageFormatter</span> \</span><br><span class="line">          --property print.key=true \</span><br><span class="line">          --property key.deserializer=org<span class="class">.apache</span><span class="class">.kafka</span><span class="class">.common</span><span class="class">.serialization</span><span class="class">.StringDeserializer</span> \</span><br><span class="line">          --property value.deserializer=org<span class="class">.apache</span><span class="class">.kafka</span><span class="class">.common</span><span class="class">.serialization</span><span class="class">.LongDeserializer</span></span><br></pre></td></tr></table></figure>
+<p>打印信息如下，这里第一列是Kafka消息的键（字符串格式），第二列是消息的值（Long类型）。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">all     <span class="number">1</span></span><br><span class="line">streams <span class="number">1</span></span><br><span class="line">lead    <span class="number">1</span></span><br><span class="line">to      <span class="number">1</span></span><br><span class="line">kafka   <span class="number">1</span></span><br><span class="line">hello   <span class="number">1</span></span><br><span class="line">kafka   <span class="number">2</span></span><br><span class="line">streams <span class="number">2</span></span><br><span class="line">join    <span class="number">1</span></span><br><span class="line">kafka   <span class="number">3</span></span><br><span class="line">summit  <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>等等，输出结果看起来有点奇怪，为什么有重复的条目比如”streams”出现了两次，”kafka”出现了三次，难道不应该是下面这样的吗：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#为什么不是这样，你可能会有疑问</span></span><br><span class="line">all     <span class="number">1</span></span><br><span class="line">lead    <span class="number">1</span></span><br><span class="line">to      <span class="number">1</span></span><br><span class="line">hello   <span class="number">1</span></span><br><span class="line">streams <span class="number">2</span></span><br><span class="line">join    <span class="number">1</span></span><br><span class="line">kafka   <span class="number">3</span></span><br><span class="line">summit  <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>The explanation is that the output of the WordCount application is actually a continuous stream of updates, where each data record (i.e. each line in the original output above) is an updated count of a single word aka record key such as “kafka”. For multiple records with the same key, each later record is an update of the previous one.</p>
+<blockquote>
+<p>合理的解释是：WordCount应用程序的输出实际上是一个持续不断的”更新流”，每条数据记录（上面示例中每一行的输出结果）都是一个单词（记录的key，比如”kafka”）的更新次数。对于相同key的多条记录，后面的记录都是对前面记录的更新。</p>
+</blockquote>
+<p>The two diagrams below illustrate what is essentially(本质) happening behind the scenes. The first column shows the evolution of the current state of the KTable<string, long=""> that is counting word occurrences for countByKey. The second column shows the change records that result from state updates to the KTable and that eventually, once converted to a KStream</string,></p>
+<blockquote>
+<p>下面的两幅图展示了发生在背后的本质，第一列表示<code>KTable&lt;String, Long&gt;</code>的当前状态的进化，通过<code>countByKey</code>计算单词的出现次数。第二列的结果显示了从状态改变到KTable的变更记录，最终被转换为一个KStream。</p>
+</blockquote>
+<p>First the text line “all streams lead to kafka” is being processed. The KTable is being built up as each new word results in a new table entry (highlighted with a green background), and a corresponding change record is sent to the downstream KStream.</p>
+<p>When the second text line “hello kafka streams” is processed, we observe, for the first time, that existing entries in the KTable are being updated (here: for the words “kafka” and for “streams”). And again, change records are being sent to the KStream.</p>
+<blockquote>
+<p>当第一次处理文本行“all streams lead to kafka”时，KTable会在每个表的条目中构建一个新的单词结果（绿色高亮），并且<strong>把对应的变更记录发送给下游的KStream</strong>。<br>当处理第二个文本行“hello kafka streams”时，我们注意到，和第一次不同的是，存在于KTable的条目会被更新（比如这里的”kafka”和”streams”），并且同样的，变更记录也会被发送到KStream。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20161103092411029" alt="10-1 ktable kstream"></p>
+<p>And so on (we skip the illustration of how the third line is being processed). This explains why the output topic has the contents we showed above, because it contains the full record of changes, i.e. the information shown in the second column for KStream above:</p>
+<blockquote>
+<p>第三行的处理也是类似的，这里就不再累述。这就解释了为什么上面输出的主题内容是我们看到的那样，因为它包含了所有完整的变更记录，即上面第二列KStream的内容：</p>
+</blockquote>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">all     <span class="number">1</span></span><br><span class="line">streams <span class="number">1</span></span><br><span class="line">lead    <span class="number">1</span></span><br><span class="line"><span class="built_in">to</span>      <span class="number">1</span></span><br><span class="line">kafka   <span class="number">1</span>  &lt;- <span class="keyword">first</span> <span class="built_in">line</span> <span class="function"><span class="keyword">end</span></span><br><span class="line"><span class="title">hello</span>   <span class="title">1</span></span></span><br><span class="line">kafka   <span class="number">2</span></span><br><span class="line">streams <span class="number">2</span>  &lt;- <span class="keyword">second</span> <span class="built_in">line</span> <span class="function"><span class="keyword">end</span></span><br><span class="line"><span class="title">join</span>    <span class="title">1</span></span></span><br><span class="line">kafka   <span class="number">3</span></span><br><span class="line">summit  <span class="number">1</span>  &lt;- <span class="keyword">third</span> <span class="built_in">line</span> <span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>为什么不输出KTable，这是因为KTable每次处理一条记录，都会发送变更记录给下游的KStream，即KTable每次处理一条记录，产生一条变更记录。而KTable本身是有状态的，可以看到在处理第一个单词时，KTable有一条记录，在处理第二个不同的单词时，KTable有两条记录，这个状态是一直保存的，如果说把KTable作为输出，那么就会有重复的问题，比如下面这样的输出肯定不是我们希望看到的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">all     <span class="number">1</span>  &lt;-处理第一个单词后的KTable</span><br><span class="line">all     <span class="number">1</span></span><br><span class="line">streams <span class="number">1</span>  &lt;-处理第二个单词后的KTable</span><br><span class="line">all     <span class="number">1</span></span><br><span class="line">streams <span class="number">1</span></span><br><span class="line">lead    <span class="number">1</span>  &lt;-处理第三个单词后的KTable</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>Looking beyond the scope of this concrete example, what Kafka Streams is doing here is to leverage the duality(二元性，对偶) between a table and a changelog stream (here: table = the KTable, changelog stream = the downstream KStream): you can publish every change of the table to a stream, and if you consume the entire changelog stream from beginning to end, you can reconstruct the contents of the table.</p>
+<blockquote>
+<p>Kafka Streams这里做的工作利用了一张表和一个变更流的二元性（表指的是KTable，变更流指的是下游的KStream）：你可以将表的每个变更记录发布给一个流，如果你从整个变更流的最开始消费到最后，你就可以重新构造出表的内容。</p>
+</blockquote>
+<h1 id="概念">概念</h1><h2 id="Kafka_101">Kafka 101</h2><p>Kafka Streams is, by deliberate(深思熟虑) design, tightly integrated with Apache Kafka: it uses Kafka as its internal messaging layer. As such it is important to familiarize yourself with the key concepts of Kafka, too, notably the sections 1. Getting Started and 4. Design in the Kafka documentation. In particular you should understand:</p>
+<p>Kafka Streams是经过深思熟虑的设计，它和Apache Kafka仅仅地集成：它使用Kafka作为内部的消息层。所以理解Kafka的关键概念非常重要，如果不熟悉，可以看Kafka的文档。</p>
+<ul>
+<li>The who’s who: Kafka distinguishes producers, consumers, and brokers. In short, producers publish data to Kafka brokers, and consumers read published data from Kafka brokers. Producers and consumers are totally decoupled. A Kafka cluster consists of one or more brokers.</li>
+<li>The data: Data is stored in topics. The topic is the most important abstraction provided by Kafka: it is a category or feed name to which data is published by producers. Every topic in Kafka is split into one or more partitions, which are replicated across Kafka brokers for fault tolerance.</li>
+<li>Parallelism: Partitions of Kafka topics, and especially their number for a given topic, are also the main factor that determines the parallelism of Kafka with regards to reading and writing data. Because of their tight integration the parallelism of Kafka Streams is heavily influenced by and depending on Kafka’s parallelism.</li>
+</ul>
+<ol>
+<li>Kafka分成生产者、消费者、Brokers。生产者发布数据给Kafka的Brokers，消费者从Kafka的Brokers读取发布过的数据。生产者和消费者完全解耦。一个Kafka集群包括一个或多个Broekrs节点。</li>
+<li>数据以主题的形式存储。主题是Kafka提供的最重要的一个抽象：它是生产者发布数据的一种分类（相同类型的消息应该发布到相同的主题）。每个主题会分成一个或多个分区，并且为了故障容错，每个分区都会在Kafka的Brokers中进行复制。</li>
+<li>Kafka主题的分区数量决定了读取或写入数据的并行度。因为Kafka Streams和Kafka结合的很紧，所以Kafka Streams也依赖于Kafka的并行度。</li>
+</ol>
+<h2 id="流、流处理、拓扑、算子">流、流处理、拓扑、算子</h2><p>A stream is the most important abstraction provided by Kafka Streams: it represents an unbounded, continuously updating data set, where unbounded means “of unknown or of unlimited size”. A stream is an ordered, replayable, and fault-tolerant sequence of immutable data records, where a data record is defined as a key-value pair.</p>
+<blockquote>
+<p>流是Kafka Streams提供的最重要的抽象：它代表了一根无界的、持续更新的数据集。流是一个有序的、可重放的、容错的不可变数据记录序列，其中每个数据记录被定位成一个key-value键值对</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20161103101744946" alt="stream-record">  </p>
+<p>A stream processing application is any program that makes use of the Kafka Streams library. In practice, this means it is probably “your” Java application. It may define its computational logic through one or more processor topologies (see next section).</p>
+<blockquote>
+<p>流处理应用程序是任何使用了Kafka Streams库进行开发的应用程序，它会通过一个或多个算子拓扑定义计算逻辑。</p>
+</blockquote>
+<p>A processor topology or simply topology defines the computational logic of the data processing that needs to be performed by a stream processing application. A topology is a graph of stream processors (nodes) that are connected by streams (edges). Developers can define topologies either via the low-level Processor API or via the Kafka Streams DSL, which builds on top of the former.</p>
+<p>算子拓扑或者叫拓扑定义了流处理应用程序对数据处理的计算逻辑。拓扑是一张由流处理算子和相连接的流组成的DAG图，其中算子是图的节点，流是图的边。开发者可以通过低级的Processor API或者高级的Kafka Streams DSL定义拓扑，其中后者实际上是构建在前者之上的。</p>
+<p>A stream processor is a node in the processor topology(as shown in the diagram of section Processor Topology). It represents a processing step in a topology, i.e. it is used to transform data in streams. Standard operations such as map, filter, join, and aggregations are examples of stream processors that are available in Kafka Streams out of the box. A stream processor receives one input record at a time from its upstream processors in the topology, applies its operation to it, and may subsequently produce one or more output records to its downstream processors.</p>
+<blockquote>
+<p>流算子是算子拓扑中的节点，它代表了在拓扑中的处理步骤，比如转换算子会在流中转换数据。标准的算子包括map/filter/join/aggregation，这些都是流算子的示例，并且内置在Kafka Streams中开箱即用。一个流算子从它在拓扑中的上游算子一次接收一条输入记录，将操作运用到记录，并且可能会产生一条或多条输出记录给下游的算子。Kafka Streams提供了两种方式来定义算子：</p>
+</blockquote>
+<ul>
+<li>The Kafka Streams DSL provides the most common data transformation operations such as map and filter so you don’t have to implement these stream processors from scratch.</li>
+<li>The low-level Processor API allows developers to define and connect custom processors as well as to interact with state stores.</li>
+</ul>
+<ol>
+<li>Kafka Streams DSL提供了最通用的数据转换操作，比如map、filter，这样你不需要自己实现这些算子</li>
+<li>低级的Processor API，允许开发者定义和连接定制的算子，并且还可以和状态存储交互</li>
+</ol>
+<h2 id="时间">时间</h2><p>A critical aspect in stream processing is the the notion of time, and how it is modeled and integrated. For example, some operations such as Windowing are defined based on time boundaries.</p>
+<blockquote>
+<p>流处理的一个重要概念是时间，如何对时间进行建模和整合非常重要，因为有些操作比如窗口函数会基于时间的边界来定义。有几种类型的时间表示方式：</p>
+</blockquote>
+<ul>
+<li>Event-time: The point in time when an event or data record occurred, i.e. was originally created “by the source”. Achieving event-time semantics typically requires embedding timestamps in the data records at the time a data record is being produced. Example: If the event is a geo-location change reported by a GPS sensor in a car, then the associated event-time would be the time when the GPS sensor captured the location change.</li>
+<li>Processing-time: The point in time when the event or data record happens to be processed by the stream processing application, i.e. when the record is being consumed. The processing-time may be milliseconds, hours, or days etc. later than the original event-time. Example: Imagine an analytics application that reads and processes the geo-location data reported from car sensors to present it to a fleet management dashboard. Here, processing-time in the analytics application might be milliseconds or seconds (e.g. for real-time pipelines based on Apache Kafka and Kafka Streams) or hours (e.g. for batch pipelines based on Apache Hadoop or Apache Spark) after event-time.</li>
+<li>Ingestion-time: The point in time when an event or data record is stored in a topic partition by a Kafka broker. Ingestion-time is similar to event-time, as a timestamp gets embedded in the data record itself. The difference is, that the timestamp is generated when the record is appended to the target topic by the Kafka broker, not when the record is created “at the source”. Ingestion-time may approximate event-time reasonably well if we assume that the time difference between creation of the record and its ingestion into Kafka is sufficiently small, where “sufficiently” depends on the specific use case. Thus, ingestion-time may be a reasonable alternative for use cases where event-time semantics are not possible, e.g. because the data producers don’t embed timestamps (e.g. older versions of Kafka’s Java producer client) or the producer cannot assign timestamps directly (e.g., it does not have access to a local clock).</li>
+</ul>
+<ol>
+<li>事件时间：事件或数据记录发生的时间点，它是由事件源创建的。实现事件时间予以通常需要在记录中有内置的时间撮字段，表示这条记录在什么时候产生。比如一条事件是车辆传感器报告的地理位置变更，那么对应的事件时间表示GPS传感器捕获位置变更的时间点。</li>
+<li>处理时间：事件被流处理应用程序处理的时间点，比如就被消费的时候，处理时间会比原始的事件时间要晚。举例一个分析应用程序读取并处理车辆上传的地理位置，并且呈现到一个dashboard上。这里分析程序的处理时间可能比事件的时间晚几毫米、几秒、甚至几个小时。</li>
+<li>摄取时间：事件存储到Kafka Brokers的主题分区中的时间点。摄取时间和时间时间类似，它也是作为数据记录本身的一个内置字段，不同的是<strong>摄取时间是在追加到Kafka中时自动生成的，而不是数据源创建的时间</strong>。如果我们假设记录的创建时间和摄取到Kafka的时间间隔足够短的话，可以认为摄取时间近似于事件时间，当然足够短这个时间跟具体的用例有关。什么场景下采用摄取时间比较合理呢？比如数据源没有内置的事件时间（比如旧版本的Java生产者客户端在消息中不会带有时间撮，新版本则有），或者说生产者不能直接分配时间撮（无法获取到本地时钟）。</li>
+</ol>
+<p>The choice between event-time and ingestion-time is actually done through the configuration of Kafka (not Kafka Streams): From Kafka 0.10.x onwards, timestamps are automatically embedded into Kafka messages. Depending on Kafka’s configuration these timestamps represent event-time or ingestion-time. The respective Kafka configuration setting can be specified on the broker level or per topic. The default timestamp extractor in Kafka Streams will retrieve these embedded timestamps as-is. Hence, the effective time semantics of your application depend on the effective Kafka configuration for these embedded timestamps. See :ref:Developer Guide <timestamp extractor=""> for detailed information.</timestamp></p>
+<blockquote>
+<p>选择事件时间还是摄取时间，是通过Kafka的配置文件（不是Kafka Streams的配置），在0.10版本之后，时间撮会自动内嵌到Kafka的消息中。根据Kafka的配置，时间撮可以指定为事件时间还是摄取时间，这个配置可以设置到Broker级别，也可以是每个Topic。默认的Kafka Streams时间撮抽取方式会取出内置的时间撮字段。所以应用程序的有效时间语义依赖于Kafka的内置时间撮。</p>
+</blockquote>
+<p>Kafka Streams assigns a timestamp to every data record via so-called timestamp extractors. These per-record timestamps describe the progress of a stream with regards to time (although records may be out-of-order within the stream) and are leveraged by time-dependent operations such as joins. They are also used to synchronize multiple input streams within the same application.</p>
+<blockquote>
+<p>Kafka Streams会通过时间撮抽取器把一个时间撮分配给每条记录。每条记录的时间撮描述了一条流关于时间的进度（尽管流中的记录可能没有顺序），这个时间撮会被时间相关的操作比如join所使用。同时它们也会被用来在同一个应用程序中多个输入流的同步。</p>
+</blockquote>
+<p>Concrete implementations of timestamp extractors may retrieve or compute timestamps based on the actual contents of data records such as an embedded timestamp field to provide event-time or ingestion-time semantics, or use any other approach such as returning the current wall-clock time at the time of processing, thereby yielding processing-time semantics to stream processing applications. Developers can thus enforce(执行，强制) different notions/semantics of time depending on their business needs.</p>
+<blockquote>
+<p>具体的时间撮抽取器实现，基于数据记录实际内容的时间撮，可能会读取或者计算，比如（数据记录中）提供的事件时间或者摄取时间语义的时间撮字段，或者使用其他的方式，比如返回当前的处理时间，即流处理应用程序的处理时间语义。开发者可以根据他们的业务需求使用不同的时间语义。</p>
+</blockquote>
+<p>Be aware that ingestion-time in Kafka Streams is used slightly different as in other stream processing systems. Ingestion-time could mean the time when a record is fetched by a stream processing application’s source operator. In Kafka Streams, ingestion-time refers to the time when a record was appended to a Kafka topic partition.</p>
+<blockquote>
+<p>注意Kafka Streams的摄取时间可能和其他流处理系统的使用方式有点不同。摄取时间可以表示为被流处理的源算子获取的时间点。而在Kafka Streams中，摄取时间指的是当一条记录被追加到Kafka主题分区的那个时间点（即Producer写入分区的时间）。</p>
+</blockquote>
+<h2 id="有状态的流处理">有状态的流处理</h2><p>Some stream processing applications don’t require state, which means the processing of a message is independent from the processing of all other messages. If you only need to transform one message at a time, or filter out messages based on some condition, the topology defined in your stream processing application can be simple.</p>
+<blockquote>
+<p>有些流处理应用程序并不需要状态，这意味着一条消息的处理和其他所有消息的处理都是独立的。如果你只需要在一个时间点转换一条消息，或者基于某些条件对消息进行过滤，你的流计算应用层序的拓扑可以非常简单。</p>
+</blockquote>
+<p>However, being able to maintain state opens up many possibilities for sophisticated(复杂) stream processing applications: you can join input streams, or group and aggregate data records. Many such stateful operators are provided by the Kafka Streams DSL.</p>
+<blockquote>
+<p>不过，对于复杂的流处理应用程序，为了能够维护状态，会有很多可能性：联合不同的输入流，对数据记录进行分组和聚合。Kafka Streams的DSL提供了很多有状态的操作算子。</p>
+</blockquote>
+<h2 id="Streams和Tables的二元性">Streams和Tables的二元性</h2><p>Before we discuss concepts such as aggregations in Kafka Streams we must first introduce tables, and most importantly the relationship between tables and streams: the so-called stream-table duality. Essentially, this duality means that a stream can be viewed as a table, and vice versa. Kafka’s log compaction feature, for example, exploits(功绩，利用，开发) this duality.</p>
+<p>在介绍Kafka Streams的概念之前（比如聚合），我们必须先介绍tables，以及tables和streams的关系（所谓的stream-table二元性）。从本质上来说，二元性意味着一个流可以被看做是一张表，反过来也是成立的。Kafka的日志压缩特性，可以实现这样的二元转换。一张表，简单来说就是一系列的键值对，或者被叫做字典、关联数组。</p>
+<p><img src="http://img.blog.csdn.net/20161103130945109" alt="k-table"></p>
+<p>stream-table二元性描述了两者的紧密关系：</p>
+<ul>
+<li>Stream as Table: A stream can be considered a changelog of a table, where each data record in the stream captures a state change of the table. A stream is thus a table in disguise, and it can be easily turned into a “real” table by replaying the changelog from beginning to end to reconstruct the table. Similarly, in a more general analogy, aggregating data records in a stream – such as computing the total number of pageviews by user from a stream of pageview events – will return a table (here with the key and the value being the user and its corresponding pageview count, respectively).</li>
+<li>Table as Stream: A table can be considered a snapshot, at a point in time, of the latest value for each key in a stream (a stream’s data records are key-value pairs). A table is thus a stream in disguise, and it can be easily turned into a “real” stream by iterating over each key-value entry in the table.</li>
+</ul>
+<ol>
+<li>将流作为表：一个流可以被认为是一张表的变更记录，</li>
+</ol>
+<h2 id="KStream（记录流）">KStream（记录流）</h2><h2 id="KTable（变更流）">KTable（变更流）</h2><h2 id="窗口操作">窗口操作</h2><h2 id="联合操作">联合操作</h2><h2 id="聚合操作">聚合操作</h2><h1 id="架构">架构</h1><h2 id="拓扑">拓扑</h2><h2 id="并行模型">并行模型</h2><h2 id="状态">状态</h2><h2 id="容错">容错</h2><h2 id="流处理的保证">流处理的保证</h2><h2 id="流控">流控</h2><h2 id="反压">反压</h2><h1 id="开发者指南">开发者指南</h1><h2 id="代码示例">代码示例</h2><h2 id="配置">配置</h2><h2 id="编写一个流处理应用程序">编写一个流处理应用程序</h2><h2 id="运行流处理程序">运行流处理程序</h2><h2 id="数据类型和序列化">数据类型和序列化</h2><h2 id="应用重置工具">应用重置工具</h2>
+      
+    </div>
+    
+  </div>
+  
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2016/11/02/Kafka-Streams-cn/">Kafka Streams中文翻译</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2016年11月02日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年11月03日 - 13时11分</p>
+  <p>
+    <span>原始链接:</span><a href="/2016/11/02/Kafka-Streams-cn/" title="Kafka Streams中文翻译">http://github.com/zqhxuyuan/2016/11/02/Kafka-Streams-cn/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/11/02/Kafka-Streams-cn/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
+
+
+
+<nav id="article-nav">
+  
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2016/11/18/Kafka-CQRS-Streams/">
+        译：Kafka事件驱动和流处理
+      </a>
+    </div>
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2016/10/31/Data-Transform/">
+        
+      </a>
+    </div>
+  
+</nav>
+
+  
+  
+    <div class ="post-donate">
+    <div id="donate_board" class="donate_bar center">
+        <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏"></a>
+        <span class="donate_txt">
+           &uarr;<br>
+		   赏点酒钱
+        </span>
+        <br>
+    </div>  
+	<div id="donate_guide" class="donate_bar center hidden" >
+		<img src="/img/zhifubao.png" alt="支付宝打赏"> 
+		<img src="/img/weixin.png" alt="微信打赏">  
+    </div>
+	<script type="text/javascript">
+		document.getElementById('btn_donate').onclick = function(){
+			$('#donate_board').addClass('hidden');
+			$('#donate_guide').removeClass('hidden');
+		}
+	</script>
+</div>
+  
+</article>
+
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#介绍"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka_Streams"><span class="toc-number">1.1.</span> <span class="toc-text">Kafka Streams</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#A_closer_look"><span class="toc-number">1.2.</span> <span class="toc-text">A closer look</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#快速开始"><span class="toc-number">2.</span> <span class="toc-text">快速开始</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#本节目标"><span class="toc-number">2.1.</span> <span class="toc-text">本节目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#我们要做什么"><span class="toc-number">2.2.</span> <span class="toc-text">我们要做什么</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#概念"><span class="toc-number">3.</span> <span class="toc-text">概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka_101"><span class="toc-number">3.1.</span> <span class="toc-text">Kafka 101</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流、流处理、拓扑、算子"><span class="toc-number">3.2.</span> <span class="toc-text">流、流处理、拓扑、算子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#时间"><span class="toc-number">3.3.</span> <span class="toc-text">时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有状态的流处理"><span class="toc-number">3.4.</span> <span class="toc-text">有状态的流处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Streams和Tables的二元性"><span class="toc-number">3.5.</span> <span class="toc-text">Streams和Tables的二元性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KStream（记录流）"><span class="toc-number">3.6.</span> <span class="toc-text">KStream（记录流）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KTable（变更流）"><span class="toc-number">3.7.</span> <span class="toc-text">KTable（变更流）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#窗口操作"><span class="toc-number">3.8.</span> <span class="toc-text">窗口操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#联合操作"><span class="toc-number">3.9.</span> <span class="toc-text">联合操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聚合操作"><span class="toc-number">3.10.</span> <span class="toc-text">聚合操作</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#架构"><span class="toc-number">4.</span> <span class="toc-text">架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#拓扑"><span class="toc-number">4.1.</span> <span class="toc-text">拓扑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并行模型"><span class="toc-number">4.2.</span> <span class="toc-text">并行模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#状态"><span class="toc-number">4.3.</span> <span class="toc-text">状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容错"><span class="toc-number">4.4.</span> <span class="toc-text">容错</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流处理的保证"><span class="toc-number">4.5.</span> <span class="toc-text">流处理的保证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流控"><span class="toc-number">4.6.</span> <span class="toc-text">流控</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#反压"><span class="toc-number">4.7.</span> <span class="toc-text">反压</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#开发者指南"><span class="toc-number">5.</span> <span class="toc-text">开发者指南</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码示例"><span class="toc-number">5.1.</span> <span class="toc-text">代码示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置"><span class="toc-number">5.2.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编写一个流处理应用程序"><span class="toc-number">5.3.</span> <span class="toc-text">编写一个流处理应用程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行流处理程序"><span class="toc-number">5.4.</span> <span class="toc-text">运行流处理程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据类型和序列化"><span class="toc-number">5.5.</span> <span class="toc-text">数据类型和序列化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#应用重置工具"><span class="toc-number">5.6.</span> <span class="toc-text">应用重置工具</span></a></li></ol></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+    if ($(".toc").length < 1) {
+        $("#toc").css("display","none");
+        $("#tocButton").css("display","none");
+        $(".switch-btn").css("display","block");
+        $(".switch-area").css("display","block");
+    }
+</script>
+
+
+    <style>
+        .toc {
+            white-space: nowrap;
+            overflow-x: hidden;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $(".toc li a").mouseover(function() {
+                var title = $(this).attr('href');
+                $(this).attr("title", title);
+            });
+        })
+    </script>
+
+
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+	</div>
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+</div>
+
+
+
+<div class="duoshuo" id="comments">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2016/11/02/Kafka-Streams-cn/" data-title="Kafka Streams中文翻译" data-url="http://github.com/zqhxuyuan/2016/11/02/Kafka-Streams-cn/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"zqhxuyuan"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
+
+
+  
+  
+    
+    <div  class="post-nav-button">
+    <a href="/2016/11/18/Kafka-CQRS-Streams/" title="上一篇: 译：Kafka事件驱动和流处理">
+    <i class="fa fa-angle-left"></i>
+    </a>
+    <a href="/2016/10/31/Data-Transform/" title="下一篇: ">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2016 任何忧伤,都抵不过世界的美丽
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+        </div>
+    </div>
+    <div class="visit">
+      <span id="busuanzi_container_site_pv" style='display:none'>
+        <span id="site-visit" >本站到访数: 
+        <span id="busuanzi_value_site_uv"></span>
+        </span>
+      </span>
+      <span id="busuanzi_container_page_pv" style='display:none'>
+        <span id="page-visit">, 本页阅读量: 
+        <span id="busuanzi_value_page_pv"></span>
+        </span>
+      </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+<script>
+  var backgroundnum = 5;
+  var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+
+  $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+</script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-80646710-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+<a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+<a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
