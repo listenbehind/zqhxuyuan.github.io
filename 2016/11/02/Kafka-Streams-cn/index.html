@@ -14,7 +14,14 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20161103092411029">
 <meta property="og:image" content="http://img.blog.csdn.net/20161103101744946">
 <meta property="og:image" content="http://img.blog.csdn.net/20161103130945109">
-<meta property="og:updated_time" content="2016-11-03T05:11:24.000Z">
+<meta property="og:image" content="http://img.blog.csdn.net/20161103131309314">
+<meta property="og:image" content="http://img.blog.csdn.net/20161103180445363">
+<meta property="og:image" content="http://img.blog.csdn.net/20161103180512627">
+<meta property="og:image" content="http://img.blog.csdn.net/20161103181154902">
+<meta property="og:image" content="http://img.blog.csdn.net/20161103181203678">
+<meta property="og:image" content="http://img.blog.csdn.net/20161103181630440">
+<meta property="og:image" content="http://img.blog.csdn.net/20161104091711617">
+<meta property="og:updated_time" content="2016-11-04T05:44:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka Streams中文翻译">
 <meta name="twitter:description" content="Confluent Kafka Streams Documentation 中文翻译：  http://docs.confluent.io/3.0.1/streams/introduction.html">
@@ -364,13 +371,13 @@
 <p><img src="http://img.blog.csdn.net/20161103101744946" alt="stream-record">  </p>
 <p>A stream processing application is any program that makes use of the Kafka Streams library. In practice, this means it is probably “your” Java application. It may define its computational logic through one or more processor topologies (see next section).</p>
 <blockquote>
-<p>流处理应用程序是任何使用了Kafka Streams库进行开发的应用程序，它会通过一个或多个算子拓扑定义计算逻辑。</p>
+<p>流处理应用程序是任何使用了Kafka Streams库进行开发的应用程序，它会通过一个或多个处理拓扑定义计算逻辑。</p>
 </blockquote>
 <p>A processor topology or simply topology defines the computational logic of the data processing that needs to be performed by a stream processing application. A topology is a graph of stream processors (nodes) that are connected by streams (edges). Developers can define topologies either via the low-level Processor API or via the Kafka Streams DSL, which builds on top of the former.</p>
-<p>算子拓扑或者叫拓扑定义了流处理应用程序对数据处理的计算逻辑。拓扑是一张由流处理算子和相连接的流组成的DAG图，其中算子是图的节点，流是图的边。开发者可以通过低级的Processor API或者高级的Kafka Streams DSL定义拓扑，其中后者实际上是构建在前者之上的。</p>
+<p>处理拓扑或者叫拓扑定义了流处理应用程序对数据处理的计算逻辑。拓扑是一张由流处理算子和相连接的流组成的DAG图，其中算子是图的节点，流是图的边。开发者可以通过低级的Processor API或者高级的Kafka Streams DSL定义拓扑，其中后者实际上是构建在前者之上的。</p>
 <p>A stream processor is a node in the processor topology(as shown in the diagram of section Processor Topology). It represents a processing step in a topology, i.e. it is used to transform data in streams. Standard operations such as map, filter, join, and aggregations are examples of stream processors that are available in Kafka Streams out of the box. A stream processor receives one input record at a time from its upstream processors in the topology, applies its operation to it, and may subsequently produce one or more output records to its downstream processors.</p>
 <blockquote>
-<p>流算子是算子拓扑中的节点，它代表了在拓扑中的处理步骤，比如转换算子会在流中转换数据。标准的算子包括map/filter/join/aggregation，这些都是流算子的示例，并且内置在Kafka Streams中开箱即用。一个流算子从它在拓扑中的上游算子一次接收一条输入记录，将操作运用到记录，并且可能会产生一条或多条输出记录给下游的算子。Kafka Streams提供了两种方式来定义算子：</p>
+<p>流算子是处理拓扑中的节点，它代表了在拓扑中的处理步骤，比如转换算子会在流中转换数据。标准的算子包括map/filter/join/aggregation，这些都是流算子的示例，并且内置在Kafka Streams中开箱即用。一个流算子从它在拓扑中的上游算子一次接收一条输入记录，将操作运用到记录，并且可能会产生一条或多条输出记录给下游的算子。Kafka Streams提供了两种方式来定义算子：</p>
 </blockquote>
 <ul>
 <li>The Kafka Streams DSL provides the most common data transformation operations such as map and filter so you don’t have to implement these stream processors from scratch.</li>
@@ -423,13 +430,199 @@
 <p><img src="http://img.blog.csdn.net/20161103130945109" alt="k-table"></p>
 <p>stream-table二元性描述了两者的紧密关系：</p>
 <ul>
-<li>Stream as Table: A stream can be considered a changelog of a table, where each data record in the stream captures a state change of the table. A stream is thus a table in disguise, and it can be easily turned into a “real” table by replaying the changelog from beginning to end to reconstruct the table. Similarly, in a more general analogy, aggregating data records in a stream – such as computing the total number of pageviews by user from a stream of pageview events – will return a table (here with the key and the value being the user and its corresponding pageview count, respectively).</li>
+<li>Stream as Table: A stream can be considered a changelog of a table, where each data record in the stream captures a state change of the table. A stream is thus a table in disguise(假装), and it can be easily turned into a “real” table by replaying the changelog from beginning to end to reconstruct the table. Similarly, in a more general analogy(类比), aggregating data records in a stream – such as computing the total number of pageviews by user from a stream of pageview events – will return a table (here with the key and the value being the user and its corresponding pageview count, respectively).</li>
 <li>Table as Stream: A table can be considered a snapshot, at a point in time, of the latest value for each key in a stream (a stream’s data records are key-value pairs). A table is thus a stream in disguise, and it can be easily turned into a “real” stream by iterating over each key-value entry in the table.</li>
 </ul>
 <ol>
-<li>将流作为表：一个流可以被认为是一张表的变更记录，</li>
+<li>将流作为表：一个流可以被认为是一张表的变更记录(changelog)，流中的每条数据记录捕获了表的每个变更状态。一个流可以<em>假装</em>是一张表，也可以通过从头到尾重放变更日志来重构表，很容易地变成<em>真正</em>的表。同样地，在流中聚合记录（比如从PV事件流中计算用户的PV数）会返回一张表（这里键值分别是用户，以及对应的PV数）。</li>
+<li>将表作为流：一张表可以认为是在某个时间点的一份快照，是流的每个key对应的最近的值。一张表因此也可以假装是一个流，也可以通过迭代表中所有的键值条目转换成一个真实的流。</li>
 </ol>
-<h2 id="KStream（记录流）">KStream（记录流）</h2><h2 id="KTable（变更流）">KTable（变更流）</h2><h2 id="窗口操作">窗口操作</h2><h2 id="联合操作">联合操作</h2><h2 id="聚合操作">聚合操作</h2><h1 id="架构">架构</h1><h2 id="拓扑">拓扑</h2><h2 id="并行模型">并行模型</h2><h2 id="状态">状态</h2><h2 id="容错">容错</h2><h2 id="流处理的保证">流处理的保证</h2><h2 id="流控">流控</h2><h2 id="反压">反压</h2><h1 id="开发者指南">开发者指南</h1><h2 id="代码示例">代码示例</h2><h2 id="配置">配置</h2><h2 id="编写一个流处理应用程序">编写一个流处理应用程序</h2><h2 id="运行流处理程序">运行流处理程序</h2><h2 id="数据类型和序列化">数据类型和序列化</h2><h2 id="应用重置工具">应用重置工具</h2>
+<p>Let’s illustrate this with an example. Imagine a table that tracks the total number of pageviews by user (first column of diagram below). Over time, whenever a new pageview event is processed, the state of the table is updated accordingly. Here, the state changes between different points in time – and different revisions(修正) of the table – can be represented as a changelog stream (second column).</p>
+<p>Interestingly, because of the stream-table duality, the same stream can be used to reconstruct the original table (third column):</p>
+<p>举例，一张表会跟踪用户的PV总数（左图第一列），当一条新的pageview事件被处理的时候，表的状态会相应地被更新。这里不同时间点的状态变更（针对表的不同修改），可以作为一个变更日志流（左图第二列）。有趣的是，由于stream-table的二元性，相同的流可以被用来构造出原始的表（右图第三列）。</p>
+<p><img src="http://img.blog.csdn.net/20161103131309314" alt="k stream table durable"></p>
+<p>The same mechanism(机制) is used, for example, to replicate databases via change data capture (CDC) and, within Kafka Streams, to replicate its so-called state stores across machines for fault-tolerance. The stream-table duality is such an important concept that Kafka Streams models it explicitly(明确地) via the KStream and KTable interfaces, which we describe in the next sections.</p>
+<blockquote>
+<p>这种类似的机制也被用在其他系统中，比如通过CDC复制数据库。在Kafka Streams中，为了容错处理，会将它的状态存储复制到多台机器上。stream-table的二元性是很重要的概念，Kafka Streams通过KStream和KTable接口对它们进行建模。</p>
+</blockquote>
+<h2 id="KStream（记录流_record_stream）">KStream（记录流 record stream）</h2><p>A KStream is an abstraction of a record stream, where each data record represents a self-contained datum(基准，资料) in the unbounded data set. Using the table analogy(类比), data records in a record stream are always interpreted as “inserts” – think: append-only ledger(分类) – because no record replaces an existing row with the same key. Examples are a credit card transaction, a page view event, or a server log entry.</p>
+<blockquote>
+<p>一个KStream是对记录流的抽象，每条数据记录能够表示在无限数据集中自包含的数据。用传统数据库中的表这个概念来类比，记录流中的数据可以理解为“插入”（只有追加），因为不会有记录会替换已有的相同key的行。比如信用卡交易、访问时间、服务端日志条目。举例有两条记录发送到流中：  </p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="string">"alice"</span>, <span class="number">1</span>) --&gt; (<span class="string">"alice"</span>, <span class="number">3</span>)  <span class="comment">//这两条记录依次发送到流中</span></span><br></pre></td></tr></table></figure>
+<p>If your stream processing application were to sum the values per user, it would return 4 for alice. Why? Because the second data record would not be considered an update of the previous record. Compare this behavior of KStream to KTable below, which would return 3 for alice.</p>
+<blockquote>
+<p>如果你的流处理应用程序是为每个用户求和（记录的value含义不是很明确，但是我们只是要对value值求和），那么alice用户的返回结果是4。因为第二条记录不会被认为是对前一条记录的更新（第一条记录和第二条记录是同时存在的）。如果将其和下面的KTable对比，KTable中alice用户的返回结果是3。</p>
+</blockquote>
+<h2 id="KTable（变更流_changelog_stream）">KTable（变更流 changelog stream）</h2><p>A KTable is an abstraction of a changelog stream, where each data record represents an update. More precisely, the value in a data record is considered to be an update of the last value for the same record key, if any (if a corresponding key doesn’t exist yet, the update will be considered a create). Using the table analogy, a data record in a changelog stream is interpreted as an update because any existing row with the same key is overwritten.</p>
+<blockquote>
+<p>一个KTable是对变更日志流的抽象，每条数据记录代表的是一个更新。更准确的说，数据记录中的值被认为是对已有相同记录的key的值更新（如果存在key则更新，如果key不存在，更新操作会被认为是创建）。用传统数据库中的表这个概念来类比，变更流中的数据可以理解为“更新”，因为任何已经存在相同key的行都会被覆盖。</p>
+</blockquote>
+<p>If your stream processing application were to sum the values per user, it would return 3 for alice. Why? Because the second data record would be considered an update of the previous record. Compare this behavior of KTable with the illustration for KStream above, which would return 4 for alice.</p>
+<blockquote>
+<p>还是以上面的两条记录发送到流中为例，如果也是为每个用户求和，那么alice用户的返回结果是3。因为第二条记录会被认为是对前一条记录的更新（那么第一条记录实际上就不存在了）。如果将其和上面的KStream对比，KStream中alice用户的返回结果是4。</p>
+</blockquote>
+<p>Effects of Kafka’s log compaction: Another way of thinking about KStream and KTable is as follows: If you were to store a KTable into a Kafka topic, you’d probably want to enable Kafka’s log compaction feature, e.g. to save storage space.</p>
+<blockquote>
+<p>理解KStream和KTable的另外一种思路是：如果将KTable存储到Kafka主题中，你应该开启Kafka的日志压缩功能。</p>
+</blockquote>
+<p>However, it would not be safe to enable log compaction in the case of a KStream because, as soon as log compaction would begin purging older data records of the same key, it would break the semantics of the data. To pick up the illustration example again, you’d suddenly get a 3 for alice instead of a 4 because log compaction would have removed the (“alice”, 1) data record. Hence log compaction is perfectly safe for a KTable (changelog stream) but it is a mistake for a KStream (record stream).</p>
+<blockquote>
+<p>如果是KStream，开启日志压缩不是一个安全的做法，因为日志压缩会清除相同key的不同数据，这会破坏数据的语义。举例，你可能会突然看到用户alice的结果为3而不是4，因为日志压缩会删除(“alice”, 1)这条记录。所以日志压缩对于KTable是安全的，而对KSteram则是错误的用法。</p>
+</blockquote>
+<p>We have already seen an example of a changelog stream in the section Duality of Streams and Tables. Another example are change data capture (CDC) records in the changelog of a relational database, representing which row in a database table was inserted, updated, or deleted.</p>
+<blockquote>
+<p>在stream-table二元性中，我们已经看到了一个变更日志流的示例。另一个示例是关系型数据库中的CDC变更日志，表示数据库中哪一行执行了插入，更新、删除动作。</p>
+</blockquote>
+<p>KTable also provides an ability to look up current values of data records by keys. This table-lookup functionality is available through join operations (see also Joining Streams in the Developer Guide).</p>
+<blockquote>
+<p>KTable也支持根据记录的key查询当前的value，这种特性会在join操作时使用。</p>
+</blockquote>
+<h2 id="窗口操作">窗口操作</h2><p>A stream processor may need to divide data records into time buckets, i.e. to window the stream by time. This is usually needed for for join and aggregation operations, etc. Windowed stream buckets can be maintained in the processor’s local state.</p>
+<blockquote>
+<p>一个流算子可能需要将数据记录分成多个时间段，比如对流按照时间做成一个个窗口。通常在联合和聚合操作时需要这么做。在算子的本地状态中会维护窗口流。</p>
+</blockquote>
+<p>Windowing operations are available in the Kafka Streams DSL, where users can specify a retention period for the window. This allows Kafka Streams to retain old window buckets for a period of time in order to wait for the late arrival of records whose timestamps fall within the window interval. If a record arrives after the retention period has passed, the record cannot be processed and is dropped.</p>
+<blockquote>
+<p>窗口算子在Kafka Stream DSL中可以使用，用户可以指定窗口的保留时间。这样允许Kafka Streams会在一段时间内保留旧的窗口段，目的是等待迟来的记录，这些记录的时间撮落在窗口间隔内（虽然不一定是当前窗口，但可能是旧的窗口，如果没有保留旧窗口的话，迟来的记录就会被直接丢弃了，因为当前窗口不能存放旧记录）。如果一条记录在保留时间过去之后才到达，这条记录就不会被处理，只能被丢弃了。</p>
+</blockquote>
+<p>Late-arriving records are always possible in real-time data streams. However, it depends on the effective time semantics how late records are handled. Using processing-time, the semantics are “when the data is being processed”, which means that the notion of late records is not applicable as, by definition, no record can be late. Hence, late-arriving records only really can be considered as such (i.e. as arriving “late”) for event-time or ingestion-time semantics. In both cases, Kafka Streams is able to properly handle late-arriving records.</p>
+<blockquote>
+<p>迟到的记录在实时数据流中总是可能发生的。不过，它取决于记录到底有多晚才被处理的有效时间语义。使用处理时间，语义是“当数据正在被处理”，这就意味着迟来的记录是不适合的，也就是说不会有记录迟到的。所以迟到的记录只能针对事件时间或者摄取时间这两种语义。这两种情况下，Kafka Streams都可以很好地处理迟到的记录。</p>
+</blockquote>
+<h2 id="联合操作">联合操作</h2><p>A join operation merges two streams based on the keys of their data records, and yields a new stream. A join over record streams usually needs to be performed on a windowing basis because otherwise the number of records that must be maintained for performing the join may grow indefinitely.</p>
+<blockquote>
+<p>联合操作会合并两个流，基于他们的数据记录的keys，并产生一个新的流。在记录流上的join操作通常需要在窗口的基础上执行，否则为了执行join而需要维护的记录数量会无限膨胀（在无限的记录集上无法做join操作，因为你不知道什么时候结束，就无法join，联合操作必须是在有限的记录集上，而窗口正好是有限的记录集）。</p>
+</blockquote>
+<p>The join operations available in the Kafka Streams DSL differ based on which kinds of streams are being joined (e.g. KStream-KStream join versus KStream-KTable join).</p>
+<blockquote>
+<p>Kafka Streams DSL中的join操作跟流的类型有关，比如KStream-KStream进行join，或者KStream-KTable进行join。</p>
+</blockquote>
+<h2 id="聚合操作">聚合操作</h2><p>An aggregation operation takes one input stream, and yields a new stream by combining multiple input records into a single output record. Examples of aggregations are computing counts or sum. An aggregation over record streams usually needs to be performed on a windowing basis because otherwise the number of records that must be maintained for performing the aggregation may grow indefinitely.</p>
+<blockquote>
+<p>一个聚合操作会接受一个输入流，然后通过合并多条输入记录产生一个新的流，最终生成一个单一的输出记录，聚合算子的示例比如计算次数或求和。和join操作一样，聚合操作也需要在窗口的基础上执行。</p>
+</blockquote>
+<p>In the Kafka Streams DSL, an input stream of an aggregation can be a KStream or a KTable, but the output stream will always be a KTable. This allows Kafka Streams to update an aggregate value upon the late arrival of further records after the value was produced and emitted. When such late arrival happens, the aggregating KStream or KTable simply emits a new aggregate value. Because the output is a KTable, the new value is considered to overwrite the old value with the same key in subsequent processing steps.</p>
+<blockquote>
+<p>在Kafka Streams DSL中，<strong>聚合操作的输入流可以是一个KStream或者是一个KTable，但是输出流只能是一个KTable</strong>。这就允许Kafka Streams在value被产生并发送出去之后，即使迟到的记录到来时，也可以更新聚合结果（第一次产生的结果是在当前窗口，然后把结果发送出去，第二次产生的结果已经不在当前窗口，它属于旧的窗口，也会更新对应的聚合结果，然后再把最新的结果发送出去）。当这样的迟到记录到来时，聚合的KStream或者KTable仅仅简单地发送新的聚合结果。由于输出是一个KTable，相同key下，在后续的处理步骤中，新的值会覆盖旧的值。</p>
+</blockquote>
+<h1 id="架构">架构</h1><p>Kafka Streams simplifies application development by building on the Kafka producer and consumer libraries and leveraging the native capabilities of Kafka to offer data parallelism, distributed coordination, fault tolerance, and operational simplicity. In this section, we describe how Kafka Streams works underneath the covers. Below is Logical view of a Kafka Streams application that contains multiple stream threads, each of which in turn containing multiple stream tasks.</p>
+<p>Kafka Streams是构建在Kafka生产者和消费者的库，并且利用了Kafka本身的特性提供了数据的并行、分布式协调、容错，简化了应用程序的开发。下图是Kafka Streams应用程序的逻辑视图，包括了多个流线程，每个线程包括多个流任务。</p>
+<p><img src="http://img.blog.csdn.net/20161103180445363" alt="kstream arch overview"></p>
+<h2 id="拓扑">拓扑</h2><p>A processor topology or simply topology defines the stream processing computational logic for your application, i.e., how input data is transformed into output data. A topology is a graph of stream processors (nodes) that are connected by streams (edges). There are two special processors in the topology:</p>
+<blockquote>
+<p>拓扑定义了流处理应用程序的计算逻辑，比如输入数据怎么转换成输出数据。拓扑是由流处理算子和相连的流组成的一张图。在拓扑中有两种特殊类型的流算子：</p>
+</blockquote>
+<ul>
+<li>Source Processor: A source processor is a special type of stream processor that does not have any upstream processors. It produces an input stream to its topology from one or multiple Kafka topics by consuming records from these topics and forward them to its down-stream processors.</li>
+<li>Sink Processor: A sink processor is a special type of stream processor that does not have down-stream processors. It sends any received records from its up-stream processors to a specified Kafka topic.</li>
+</ul>
+<ol>
+<li>源算子：没有任何上游算子，它从一个或多个Kafka主题中消费记录，然后产生一个到拓扑的输入流，并且转发到下游的算子</li>
+<li>目标算子：没有任何的下游算子，它会把从上游算子接收到的任何记录，发送给指定的Kafka主题</li>
+</ol>
+<p><img src="http://img.blog.csdn.net/20161103180512627" alt="kstream topo"></p>
+<p>A stream processing application – i.e., your application – may define one or more such topologies, though typically it defines only one. Developers can define topologies either via the low-level Processor API or via the Kafka Streams DSL, which builds on top of the former.</p>
+<p>A processor topology is merely a logical abstraction for your stream processing code. At runtime, the logical topology is instantiated and replicated inside the application for parallel processing (see Parallelism Model).</p>
+<p>一个流处理应用程序可以定义一个或多个拓扑，尽管通常你只会定义一个。开发者可以通过低级的Processor API或者高级的DSL方式定义拓扑。一个拓扑仅仅是流处理代码的逻辑抽象，在运行时，逻辑拓扑会被实例化，并且在应用程序中进行复制以获得并行处理的能力。</p>
+<h2 id="并行模型">并行模型</h2><h3 id="Stream_Partitions_and_Tasks">Stream Partitions and Tasks</h3><p>Kafka Streams uses the concepts of partitions and tasks as logical units of its parallelism model. There are close links between Kafka Streams and Kafka in the context of parallelism:</p>
+<p>Kafka Streams使用分区和任务的概念作为它的并行模型的逻辑单元。Kafka Streams和Kafka在并行这个上下文上有紧密的联系：  </p>
+<ul>
+<li>Each stream partition is a totally ordered sequence of data records and maps to a Kafka topic partition.</li>
+<li>A data record in the stream maps to a Kafka message from that topic.</li>
+<li>The keys of data records determine the partitioning of data in both Kafka and Kafka Streams, i.e., how data is routed to specific partitions within topics.</li>
+</ul>
+<ol>
+<li>每个分区流完全是一个有序的数据记录序列，映射到Kafka的主题分区</li>
+<li>流中的一条数据记录，对应了Kafka主题中的一条消息</li>
+<li>数据记录的Key决定了它在Kafka和Kafka Streams中的分区方式，比如数据怎么路由到主题的指定分区</li>
+</ol>
+<p>An application’s processor topology is scaled by breaking it into multiple tasks. More specifically, Kafka Streams creates a fixed number of tasks based on the input stream partitions for the application, with each task assigned a list of partitions from the input streams (i.e., Kafka topics). The assignment of partitions to tasks never changes so that each task is a fixed unit of parallelism of the application. Tasks can then instantiate their own processor topology based on the assigned partitions; they also maintain a buffer for each of its assigned partitions and process messages one-at-a-time from these record buffers. As a result stream tasks can be processed independently and in parallel without manual intervention.</p>
+<blockquote>
+<p>应用程序的处理拓扑会被分成多个任务来进行扩展。更具体来说，Kafka Streams会基于输入流的分区创建固定数量的任务，每个任务会从输入流（Kafka的主题）分配到多个分区。每个任务分配的分区永远不会改变，这样每个任务作为应用程序固定的并行单元。任务可以基于分配给它们的分区实例化它们自己的处理拓扑；它们也会为每个分配的分区维护一个缓冲区，并且从这些记录的缓冲区中一次只处理一条消息。这样的好处是所有的流任务都各自独立地并行处理，并且需要人工干预。</p>
+</blockquote>
+<p>Sub-topologies aka topology sub-graphs: If there are multiple processor topologies specified in a Kafka Streams application, each task will only instantiate one of the topologies for processing. In addition, a single processor topology may be decomposed(分离分解) into independent sub-topologies (sub-graphs) as long as sub-topologies are not connected by any streams in the topology; here, each task may instantiate only one such sub-topology for processing. This further scales out the computational workload to multiple tasks.</p>
+<blockquote>
+<p>子拓扑或者叫拓扑子图：如果在Kafka Streams应用程序中指定了多个处理拓扑，每个任务只会实例化其中的一个拓扑并处理。另外，一个拓扑也可能分成多个独立的子拓扑，只要子拓扑不和拓扑中的任何流存在连接。这里每个任务可能只会实例化一个子拓扑并处理。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20161103181154902" alt="kstream task"></p>
+<p>It is important to understand that Kafka Streams is not a resource manager, but a library that “runs” anywhere its stream processing application runs. Multiple instances of the application are executed either on the same machine, or spread across multiple machines and tasks can be distributed automatically by the library to those running application instances. The assignment of partitions to tasks never changes; if an application instance fails, all its assigned tasks will be restarted on other instances and continue to consume from the same stream partitions.</p>
+<blockquote>
+<p>注意Kafka Streams不是一个资源管理器，而是一个可以在和流处理应用程序一起运行在任何地方的客户端库。你可以在一台机器上运行应用程序的多个实例；或者分散在多台机器上，任务就会自动分布式地运行这些应用程序实例。注意分配给任务的分区永远不会改变（和Kafka消费者有点不同，消费者分配的分区是可以改变的）；如果一个应用程序的实例失败了，它的所有任务会在其他实例上重新启动，并且从相同的流分区继续消费。总结下：一个流处理应用程序实例（进程）有多个Task，每个Task分配多个固定的分区，如果进程挂了，其上的所有Task都会在其他进程上执行。而不会说把分区重新分配给剩下的Task。由于Task的分区固定，实际上Task的数量也是固定的，Task会分布式地在多个进程上执行。</p>
+</blockquote>
+<h3 id="Threading_Model">Threading Model</h3><p>Kafka Streams allows the user to configure the number of threads that the library can use to parallelize processing within an application instance. Each thread can execute one or more tasks with their processor topologies independently.</p>
+<blockquote>
+<p>Kafka Streams允许用户配置线程的数量，这样Kafka Streams库可以用来决定在一个应用程序实例中的处理并行粒度。每个线程可以执行一个或多个任务，它们的拓扑也都是独立的。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20161103181203678" alt="kstream thread"></p>
+<p>Starting more stream threads or more instances of the application merely amounts to replicating the topology and having it process a different subset of Kafka partitions, effectively parallelizing processing. It is worth noting that there is no shared state amongst the threads, so no inter-thread coordination is necessary. This makes it very simple to run topologies in parallel across the application instances and threads. The assignment of Kafka topic partitions amongst the various stream threads is transparently handled by Kafka Streams leveraging Kafka’s server-side coordination functionality.</p>
+<blockquote>
+<p>开启更多的流线程或者更多的应用程序实例仅仅相当于复制拓扑，并且处理不同的Kafka分区子集，有效地并行化处理。注意线程之间不会共享状态，所以不需要内部的线程进行协调。这使得在多个应用程序或者线程之间并行地运行拓扑变得非常简单。不同线程分配到的Kafka主题分区会被Kafka Streams透明地处理，利用的是Kafka服务端的协调者特性。</p>
+</blockquote>
+<p>As we described above, scaling your stream processing application with Kafka Streams is easy: you merely need to start additional instances of your application, and Kafka Streams takes care of distributing partitions amongst tasks that run in the application instances. You can start as many threads of the application as there are input Kafka topic partitions so that, across all running instances of an application, every thread (or rather, the tasks it runs) has at least one input partition to process.</p>
+<blockquote>
+<p>正如上面所描述的，使用Kafka Streams扩展你的流处理应用程序非常简单：你只需要为你的应用程序启动额外的实例，然后Kafka Streams就会自动帮你将分区分布在任务之间，任务会运行在应用程序实例中。你可以启动和Kafka的输入主题分区相同数量的应用程序线程，这样在一个应用程序的所有运行实例中，每个线程（更精确地说，是运行的任务）至少都会处理一个输入分区。</p>
+</blockquote>
+<h3 id="Example">Example</h3><p>To understand the parallelism model that Kafka Streams offers, let’s walk through an example.</p>
+<p>Imagine a Kafka Streams application that consumes from two topics, A and B, with each having 3 partitions. If we now start the application on a single machine with the number of threads configured to 2, we end up with two stream threads instance1-thread1 and instance1-thread2. Kafka Streams will break this topology by default into three tasks because the maximum number of partitions across the input topics A and B is max(3, 3) == 3, and then distribute the six input topic partitions evenly across these three tasks; in this case, each task will consume from one partition of each input topic, for a total of two input partitions per task. Finally, these three tasks will be spread evenly – to the extent this is possible – across the two available threads, which in this example means that the first thread will run 2 tasks (consuming from 4 partitions) and the second thread will run 1 task (consuming from 2 partitions).</p>
+<p>为了理解Kafka Streams提供的并行度模型，我们来看一个示例。假设有一个Kafka Streams应用程序会消费两个主题：A和B，每个主题都有3个分区。如果我们在一台机器上启动了一个应用程序，配置的线程数量为2，最终我们会有两个流线程：instance1-thread1和instance1-thread2。Kafka Streams会默认将拓扑分成三个任务，因为所有输入主题A和B的最大分区数是max(3,3)=3，然后会将6个输入分区平均分配到这三个任务上。这种情况下，每个任务都会消费每个输入主题的一个分区，即每个任务分配到了总共两个分区。最后，这三个任务会被均匀地分散到两个可用的线程中，这里因为有两个线程，这就意味着第一个线程会运行两个任务（消费了4个分区），第二个线程会运行一个任务（消费了2个分区）。</p>
+<p>Now imagine we want to scale out this application later on, perhaps because the data volume has increased significantly. We decide to start running the same application but with only a single thread on another, different machine. A new thread instance2-thread1 will be created, and input partitions will be re-assigned similar to:</p>
+<p>现在假设我们要扩展应用程序，可能是因为数据量增长的很明显。我们决定在其他机器上运行相同的应用程序，不过只配置了一个线程。那么一个新的线程instance2-thread1就会被创建，输入分区会被重新分配成下面右图那样。</p>
+<p><img src="http://img.blog.csdn.net/20161103181630440" alt="kstream example"></p>
+<p>When the re-assignment occurs, some partitions – and hence their corresponding tasks including any local state stores – will be “migrated” from the existing threads to the newly added threads (here: from instance1-thread1 on the first machine to instance2-thread1 on the second machine). As a result, Kafka Streams has effectively rebalanced the workload among instances of the application at the granularity of Kafka topic partitions.</p>
+<blockquote>
+<p>当重新分配发生时，一些分区，以及它们对应的任务，包括本地存储的状态，都会从已有的线程迁移到新添加的线程。比如这里第一台机器的instance1-thread1线程会迁移到第二台机器的instance2-thread1线程。最终，Kafka Streamsh会在所有应用程序实例中有效地平衡负载，而且是以Kafka主题分区的粒度进行负载均衡。</p>
+</blockquote>
+<p>What if we wanted to add even more instances of the same application? We can do so until a certain point, which is when the number of running instances is equal to the number of available input partitions to read from. At this point, before it would make sense to start further application instances, we would first need to increase the number of partitions for topics A and B; otherwise, we would over-provision the application, ending up with idle instances that are waiting for partitions to be assigned to them, which may never happen.</p>
+<p>如果想要添加相同应用程序的更多实例呢？我们可以像上面那样做，直到运行实例的数量等于读取的可用分区数量（所有主题）。在这之后，如果想要启动更多的应用程序实例变得有意义，我们需要先为主题A和B增加分区；否则会存在空闲的应用程序实例，它们会等待有可用的分区分配给它们，但这<strong>可能</strong>永远都不会发生（虽然应用程序的实例比分区多，导致有些应用程序实例是空闲的，但是如果有应用程序挂掉了，那些空闲的应用程序就有可能分配到分区，而不再空闲。就像Kafka的消费者一样，如果消费者数量比分区数要多，空闲的消费者也会得不到分区，但如果有消费者挂掉了，空闲的消费者也是有机会得到分区的。不过我们无法保证空闲的应用程序实例或者消费者就一定有机会得到分区）。</p>
+<h2 id="状态">状态</h2><p>Kafka Streams provides so-called state stores, which can be used by stream processing applications to store and query data, which is an important capability when implementing stateful operations. Every task in Kafka Streams embeds one or more state stores that can be accessed via APIs to store and query data required for processing. These state stores can either be a RocksDB database, an in-memory hash map, or another convenient data structure. Kafka Streams offers fault-tolerance and automatic recovery for local state stores.</p>
+<p>Kafka Streams提供了所谓的状态存储，可以被流处理应用程序用来存储和查询数据，这在实现有状态的操作时是一个非常重要的功能。Kafka Streams中的每个任务内置了一个或多个状态存储，并且可以在流处理时通过API的方式存储或者查询状态存储中的数据。这些状态存储可以是RocksDB数据库、内存的hash map、或者其他的数据结构。Kafka Streams为本地状态存储提供了容错和自动恢复机制。</p>
+<p><img src="http://img.blog.csdn.net/20161104091711617" alt="kstream state"></p>
+<h2 id="容错">容错</h2><p>Kafka Streams builds on fault-tolerance capabilities integrated natively within Kafka. Kafka partitions are highly available and replicated; so when stream data is persisted to Kafka it is available even if the application fails and needs to re-process it. Tasks in Kafka Streams leverage the fault-tolerance capability offered by the Kafka consumer client to handle failures. If a task runs on a machine that fails, Kafka Streams automatically restarts the task in one of the remaining running instances of the application.</p>
+<blockquote>
+<p>Kafka Streams的容错能力基于原生的Kafka，Kafka的分区是高可用和复制的；所以当流数据持久化到Kafka中，即使应用程序失败了或者需要重新处理，数据也还是可用的。Kafka Streams的任务利用了Kafka消费者客户端提供的容错机制来处理故障。如果运行在一台机器上的一个任务失败了，Kafka Streams会在剩余的应用程序实例选择一个自动重启任务。</p>
+</blockquote>
+<p>In addition, Kafka Streams makes sure that the local state stores are robust to failures, too. It follows a similar approach as Apache Samza and, for each state store, maintains a replicated changelog Kafka topic in which it tracks any state updates. These changelog topics are partitioned as well so that each local state store instance, and hence the task accessing the store, has its own dedicated changelog topic partition. Log compaction is enabled on the changelog topics so that old data can be purged safely to prevent the topics from growing indefinitely. If tasks run on a machine that fails and are restarted on another machine, Kafka Streams guarantees to restore their associated state stores to the content before the failure by replaying the corresponding changelog topics prior to resuming the processing on the newly started tasks. As a result, failure handling is completely transparent to the end user.</p>
+<blockquote>
+<p>另外，Kafka Streams确保了本地状态的存储对于故障是鲁棒性的。它采用了和Apache Samza类似的方法，每个状态存储，都维护了具有复制的变更日志（Kafka主题），变更日志（changelog）会跟踪每次状态的更新。这些变更日志主题（change topic）会进行分区，每个本地状态存储的实例（local state store instance），都可以被任务获取，任务都有自己专属的变更日志分区（changelog topic partition）。在变更日志主题上会开启日志压缩，来安全地删除旧数据，防止旧数据无限膨胀。如果在一台机器上的任务运行失败，会在其他机器上重新启动，Kafka Streams可以保证恢复故障发生之前相关的状态存储。这是通过在新启动的任务上恢复处理之前，重放对应的变更日志主题来做到的。最终，故障处理对终端用户而言是透明的。</p>
+</blockquote>
+<p>Optimization: In order to minimize the time for the state restoration and hence the cost of task (re)initialization, users can configure their applications to have shadow copies of local states. When a task migration happens, Kafka Streams then attempts to assign a task to where a standby replica exists in order to minimize the task initialization cost. See setting num.standby.replicas at Optional configuration parameters in the Developer Guide.</p>
+<blockquote>
+<p>优化点：为了最小化恢复状态的时间以及任务重新初始化的代价，用户可以为应用程序配置一个本地状态的shadow副本。当一个任务迁移发生时，Kafka Streams会尝试将任务分配到备用副本所在的节点，以尽可能最小化任务初始化的代价。</p>
+</blockquote>
+<h2 id="流处理的保证">流处理的保证</h2><p>Kafka Streams currently supports at-least-once processing guarantees in the presence of failure. This means that if your stream processing application fails, no data records are lost and fail to be processed, but some data records may be re-read and therefore re-processed.</p>
+<p>It depends on the specific use case whether at-least-once processing guarantees are acceptable or whether you may need exactly-once processing.</p>
+<blockquote>
+<p>Kafka Streams目前支持在错误场景下至少一次的处理语义。这意味着如果你的流处理应用程序失败了，数据不会丢失，也不会被漏掉处理，但是有些数据可能会被重复读取，并被重复处理。根据不同的用例，用户自己决定是否可以接受至少处理一次的保证，还是需要正好一次的处理。</p>
+</blockquote>
+<p>For many processing use cases, at-least-once processing turns out to be perfectly acceptable: Generally, as long as the effect of processing a data record is idempotent, it is safe for the same data record to be processed more than once. Also, some use cases can tolerate processing data records more than once even if the processing is not idempotent. For example, imagine you are counting hits by IP address to auto-generate blacklists that help with mitigating DDoS attacks against your infrastructure; here, some overcounting is tolerable because hits from malicious IP addresses involved(涉及) in an attack(攻击) will vastly(极大地) outnumber hits from benign(良性的) IP addresses anyway.</p>
+<blockquote>
+<p>对于很多处理场景，至少一次的处理被证明是可接受的：通常而言，只要处理一条记录的影响是幂等的，那么多次处理同一条记录就是安全的。同时，有些用例也允许容忍多次处理，即使处理的影响不是幂等的。比如，想象下你要根据IP地址计算命中次数，来生成帮你你与DDOS攻击的黑名单；这里，（重复处理导致）过高的计数也是允许的，因为来自恶意IP地址的计数参与的攻击相比良性的IP地址数量上会更多。</p>
+</blockquote>
+<p>In general however, for non-idempotent operations such as counting, at-least-once processing guarantees may yield incorrect results. If a Kafka Streams application fails and restarts, it may double-count some data records that were processed shortly before the failure. We are planning to address this limitation and will support stronger guarantees and exactly-once processing semantics in a future release of Kafka Streams.</p>
+<blockquote>
+<p>不过非幂等操作比如计数，在至少一次的处理语义下有可能得到错误的结果。如果流应用程序失败或重启，那么在错误发生前一小段时间内，相同的记录可能会被重复计数。我们正在考虑解决这种限制，并且尝试支持更强的消息处理保证。</p>
+</blockquote>
+<h2 id="流控">流控</h2><p>Kafka Streams regulates(控制) the progress of streams by the timestamps of data records by attempting to synchronize all source streams in terms of time. By default, Kafka Streams will provide your application with event-time processing semantics. This is important especially when an application is processing multiple streams (i.e., Kafka topics) with a large amount of historical data. For example, a user may want to re-process past data in case the business logic of an application was changed significantly, e.g. to fix a bug in an analytics algorithm. Now it is easy to retrieve a large amount of past data from Kafka; however, without proper flow control, the processing of the data across topic partitions may become out-of-sync and produce incorrect results.</p>
+<blockquote>
+<p>Kafka Streams通过数据记录的时间撮控制流的进度，它会尝试根据时间来同步所有数据源产生的流。默认Kafka Streams为应用程序提供事件时间的处理语义。对于应用程序处理多个具有大量历史数据的流这种场景是特别重要的。举例应用程序的业务逻辑变化很显著时，用户可能想要重新处理过去的数据，比如在一个分析型的算法中修复一个错误。现在，我们可以很容易地从Kafka中接收大量的历史数据，不过如果没有做恰当的流控，在Kafka主题分区之间的数据处理可能变得不同步，并且产生错误的结果。</p>
+</blockquote>
+<p>As mentioned in the Concepts section, each data record in Kafka Streams is associated with a timestamp. Based on the timestamps of the records in its stream record buffer, stream tasks determine the next assigned partition to process among all its input streams. However, Kafka Streams does not reorder records within a single stream for processing since reordering would break the delivery semantics of Kafka and make it difficult to recover in the face of failure. This flow control is of course best-effort(尽最大努力) because it is not always possible to strictly enforce execution order across streams by record timestamp; in fact, in order to enforce strict execution ordering, one must either wait until the system has received all the records from all streams (which may be quite infeasible in practice) or inject additional information about timestamp boundaries or heuristic estimates(启发式的预估) such as MillWheel’s watermarks.</p>
+<blockquote>
+<p>Kafka Streams中的每条数据记录都关联了一个时间撮。基于<strong>流记录缓冲区</strong>（stream record buffer）中每条记录的时间撮，流任务会在所有输入流中决定下一个需要处理的分配分区。不过Kafka Streams不会在处理一个单一的流时对记录重新排序，因为重新排序会破坏Kafka的消息传递语义，并且在故障发生时不容易恢复（消息的顺序）。这种流控当然会尽最大努力，因为在流中并不可能总是按照记录的时间撮严格限制执行的顺序。实际上，如果要实现严格的执行顺序，一个流要么需要等待，直到系统（流处理应用程序）从所有的流中接收到所有的记录（这在实际中是不可实行的），或者注入关于时间边界的额外信息，或者使用类似MillWheel的水位概念做一些启发式的预估。</p>
+</blockquote>
+<h2 id="背压">背压</h2><p>Kafka Streams does not use a backpressure mechanism because it does not need one. Using a depth-first processing strategy, each record consumed from Kafka will go through the whole processor (sub-)topology for processing and for (possibly) being written back to Kafka before the next record will be processed. As a result, no records are being buffered in-memory between two connected stream processors. Also, Kafka Streams leverages Kafka’s consumer client behind the scenes, which works with a pull-based messaging model that allows downstream processors to control the pace(步伐) at which incoming data records are being read.</p>
+<blockquote>
+<p>Kafka Streams不适用背压机制，因为它并不需要。使用深入优先的处理策略，从Kafka中消费的每条记录在处理时会流经整个处理拓扑，并且有可能会在处理下一条记录之前回写到Kafka。结果就是：在两个链接的流处理算子中不会有记录被缓存在内存中。同时Kafka Streams利用了Kafka中基于消息拉取模型的消费者客户端，允许下游处理算子控制读取的输入数据的消费速度。</p>
+</blockquote>
+<p>The same applies to the case of a processor topology that contains multiple independent sub-topologies, which will be processed independently from each other (cf. Parallelism Model). For example, the following code defines a topology with two independent sub-topologies:</p>
+<blockquote>
+<p>同样的方式也运用在包含多个独立子拓扑的处理拓扑，每个子拓扑都会各自独立地处理，比如下面的代码定义了一个拓扑，具有两个独立的子拓扑：</p>
+</blockquote>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">strea<span class="title">m1.</span>to<span class="comment">("my-topic")</span>;</span><br><span class="line">strea<span class="title">m2</span> = builder.stream<span class="comment">("my-topic")</span>;</span><br></pre></td></tr></table></figure>
+<p>Any data exchange between sub-topologies will happen through Kafka, i.e. there is no direct data exchange (in the example above, data would be exchanged through the topic “my-topic”). For this reason there is no need for a backpressure mechanism in this scenario, too.</p>
+<p>在子拓扑中的任何数据交换都会经过Kafka，在上面的示例中，并没有直接的数据交换，而是通过”my-topic”进行数据交换。基于这些原因，这种场景下也不需要一个背压机制。</p>
+<h1 id="开发者指南">开发者指南</h1><h2 id="代码示例">代码示例</h2><h2 id="配置">配置</h2><h2 id="编写一个流处理应用程序">编写一个流处理应用程序</h2><h2 id="运行流处理程序">运行流处理程序</h2><h2 id="数据类型和序列化">数据类型和序列化</h2><h2 id="应用重置工具">应用重置工具</h2>
       
     </div>
     
@@ -440,7 +633,7 @@
   <p><span>本文标题:</span><a href="/2016/11/02/Kafka-Streams-cn/">Kafka Streams中文翻译</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年11月02日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年11月03日 - 13时11分</p>
+  <p><span>最后更新:</span>2016年11月04日 - 13时44分</p>
   <p>
     <span>原始链接:</span><a href="/2016/11/02/Kafka-Streams-cn/" title="Kafka Streams中文翻译">http://github.com/zqhxuyuan/2016/11/02/Kafka-Streams-cn/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/11/02/Kafka-Streams-cn/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -512,7 +705,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#介绍"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka_Streams"><span class="toc-number">1.1.</span> <span class="toc-text">Kafka Streams</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#A_closer_look"><span class="toc-number">1.2.</span> <span class="toc-text">A closer look</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#快速开始"><span class="toc-number">2.</span> <span class="toc-text">快速开始</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#本节目标"><span class="toc-number">2.1.</span> <span class="toc-text">本节目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#我们要做什么"><span class="toc-number">2.2.</span> <span class="toc-text">我们要做什么</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#概念"><span class="toc-number">3.</span> <span class="toc-text">概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka_101"><span class="toc-number">3.1.</span> <span class="toc-text">Kafka 101</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流、流处理、拓扑、算子"><span class="toc-number">3.2.</span> <span class="toc-text">流、流处理、拓扑、算子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#时间"><span class="toc-number">3.3.</span> <span class="toc-text">时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有状态的流处理"><span class="toc-number">3.4.</span> <span class="toc-text">有状态的流处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Streams和Tables的二元性"><span class="toc-number">3.5.</span> <span class="toc-text">Streams和Tables的二元性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KStream（记录流）"><span class="toc-number">3.6.</span> <span class="toc-text">KStream（记录流）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KTable（变更流）"><span class="toc-number">3.7.</span> <span class="toc-text">KTable（变更流）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#窗口操作"><span class="toc-number">3.8.</span> <span class="toc-text">窗口操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#联合操作"><span class="toc-number">3.9.</span> <span class="toc-text">联合操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聚合操作"><span class="toc-number">3.10.</span> <span class="toc-text">聚合操作</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#架构"><span class="toc-number">4.</span> <span class="toc-text">架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#拓扑"><span class="toc-number">4.1.</span> <span class="toc-text">拓扑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并行模型"><span class="toc-number">4.2.</span> <span class="toc-text">并行模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#状态"><span class="toc-number">4.3.</span> <span class="toc-text">状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容错"><span class="toc-number">4.4.</span> <span class="toc-text">容错</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流处理的保证"><span class="toc-number">4.5.</span> <span class="toc-text">流处理的保证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流控"><span class="toc-number">4.6.</span> <span class="toc-text">流控</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#反压"><span class="toc-number">4.7.</span> <span class="toc-text">反压</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#开发者指南"><span class="toc-number">5.</span> <span class="toc-text">开发者指南</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码示例"><span class="toc-number">5.1.</span> <span class="toc-text">代码示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置"><span class="toc-number">5.2.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编写一个流处理应用程序"><span class="toc-number">5.3.</span> <span class="toc-text">编写一个流处理应用程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行流处理程序"><span class="toc-number">5.4.</span> <span class="toc-text">运行流处理程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据类型和序列化"><span class="toc-number">5.5.</span> <span class="toc-text">数据类型和序列化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#应用重置工具"><span class="toc-number">5.6.</span> <span class="toc-text">应用重置工具</span></a></li></ol></li></ol>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#介绍"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka_Streams"><span class="toc-number">1.1.</span> <span class="toc-text">Kafka Streams</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#A_closer_look"><span class="toc-number">1.2.</span> <span class="toc-text">A closer look</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#快速开始"><span class="toc-number">2.</span> <span class="toc-text">快速开始</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#本节目标"><span class="toc-number">2.1.</span> <span class="toc-text">本节目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#我们要做什么"><span class="toc-number">2.2.</span> <span class="toc-text">我们要做什么</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#概念"><span class="toc-number">3.</span> <span class="toc-text">概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka_101"><span class="toc-number">3.1.</span> <span class="toc-text">Kafka 101</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流、流处理、拓扑、算子"><span class="toc-number">3.2.</span> <span class="toc-text">流、流处理、拓扑、算子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#时间"><span class="toc-number">3.3.</span> <span class="toc-text">时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有状态的流处理"><span class="toc-number">3.4.</span> <span class="toc-text">有状态的流处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Streams和Tables的二元性"><span class="toc-number">3.5.</span> <span class="toc-text">Streams和Tables的二元性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KStream（记录流_record_stream）"><span class="toc-number">3.6.</span> <span class="toc-text">KStream（记录流 record stream）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KTable（变更流_changelog_stream）"><span class="toc-number">3.7.</span> <span class="toc-text">KTable（变更流 changelog stream）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#窗口操作"><span class="toc-number">3.8.</span> <span class="toc-text">窗口操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#联合操作"><span class="toc-number">3.9.</span> <span class="toc-text">联合操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#聚合操作"><span class="toc-number">3.10.</span> <span class="toc-text">聚合操作</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#架构"><span class="toc-number">4.</span> <span class="toc-text">架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#拓扑"><span class="toc-number">4.1.</span> <span class="toc-text">拓扑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并行模型"><span class="toc-number">4.2.</span> <span class="toc-text">并行模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Stream_Partitions_and_Tasks"><span class="toc-number">4.2.1.</span> <span class="toc-text">Stream Partitions and Tasks</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Threading_Model"><span class="toc-number">4.2.2.</span> <span class="toc-text">Threading Model</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Example"><span class="toc-number">4.2.3.</span> <span class="toc-text">Example</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#状态"><span class="toc-number">4.3.</span> <span class="toc-text">状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容错"><span class="toc-number">4.4.</span> <span class="toc-text">容错</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流处理的保证"><span class="toc-number">4.5.</span> <span class="toc-text">流处理的保证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流控"><span class="toc-number">4.6.</span> <span class="toc-text">流控</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#背压"><span class="toc-number">4.7.</span> <span class="toc-text">背压</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#开发者指南"><span class="toc-number">5.</span> <span class="toc-text">开发者指南</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#代码示例"><span class="toc-number">5.1.</span> <span class="toc-text">代码示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置"><span class="toc-number">5.2.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编写一个流处理应用程序"><span class="toc-number">5.3.</span> <span class="toc-text">编写一个流处理应用程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行流处理程序"><span class="toc-number">5.4.</span> <span class="toc-text">运行流处理程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据类型和序列化"><span class="toc-number">5.5.</span> <span class="toc-text">数据类型和序列化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#应用重置工具"><span class="toc-number">5.6.</span> <span class="toc-text">应用重置工具</span></a></li></ol></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
