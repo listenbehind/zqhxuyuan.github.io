@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://cdn2.hubspot.net/hubfs/540072/application-reset-02_after-stopped.png">
 <meta property="og:image" content="http://cdn2.hubspot.net/hubfs/540072/application-reset-03_after-reset_1.png">
 <meta property="og:image" content="http://img.blog.csdn.net/20161106115808194">
-<meta property="og:updated_time" content="2016-11-06T08:52:00.000Z">
+<meta property="og:updated_time" content="2016-11-07T14:03:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka Streams中文翻译">
 <meta name="twitter:description" content="Confluent Kafka Streams Documentation 中文翻译：  http://docs.confluent.io/3.0.1/streams/introduction.html">
@@ -129,7 +129,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.75px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.25px;">drill</a> <a href="/tags/druid/" style="font-size: 13.75px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.75px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.75px;">ops</a> <a href="/tags/redis/" style="font-size: 11.25px;">redis</a> <a href="/tags/scala/" style="font-size: 12.5px;">scala</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.5px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.75px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.75px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.25px;">drill</a> <a href="/tags/druid/" style="font-size: 13.75px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.75px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.75px;">ops</a> <a href="/tags/redis/" style="font-size: 11.25px;">redis</a> <a href="/tags/scala/" style="font-size: 13.75px;">scala</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.5px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.75px;">work</a>
 					</div>
 				</section>
 				
@@ -375,7 +375,7 @@
 </ol>
 <h2 id="流、流处理、拓扑、算子">流、流处理、拓扑、算子</h2><p>A stream is the most important abstraction provided by Kafka Streams: it represents an unbounded, continuously updating data set, where unbounded means “of unknown or of unlimited size”. A stream is an ordered, replayable, and fault-tolerant sequence of immutable data records, where a data record is defined as a key-value pair.</p>
 <blockquote>
-<p>流是Kafka Streams提供的最重要的抽象：它代表了一根无界的、持续更新的数据集。流是一个有序的、可重放的、容错的不可变数据记录序列，其中每个数据记录被定位成一个key-value键值对</p>
+<p>流是Kafka Streams提供的最重要的抽象：它代表了一个无界的、持续更新的数据集。流是一个有序的、可重放的、容错的不可变数据记录序列，其中每个数据记录被定义成一个key-value键值对</p>
 </blockquote>
 <p><img src="http://img.blog.csdn.net/20161103101744946" alt="stream-record">  </p>
 <p>A stream processing application is any program that makes use of the Kafka Streams library. In practice, this means it is probably “your” Java application. It may define its computational logic through one or more processor topologies (see next section).</p>
@@ -822,7 +822,7 @@
 <p>当创建一个（KStream或KTable）实例时，需要指定输入源的Kafka主题，你可能需要指定读取记录的序列化器，如果不指定时，会使用StreamsConfig中指定的序列化器。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.kafka.streams.kstream.KStreamBuilder;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.streams.kstream.KStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.kafka.streams.kstream.KTable;</span><br><span class="line"></span><br><span class="line">KStreamBuilder builder = <span class="keyword">new</span> KStreamBuilder();</span><br><span class="line"></span><br><span class="line"><span class="comment">// In this example we assume that the default serdes for keys and values are</span></span><br><span class="line"><span class="comment">// the String serde and the generic Avro serde, respectively.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Create a stream of page view events from the PageViews topic, where the key of</span></span><br><span class="line"><span class="comment">// a record is assumed to be the user id (String) and the value an Avro GenericRecord</span></span><br><span class="line"><span class="comment">// that represents the full details of the page view event.</span></span><br><span class="line">KStream&lt;String, GenericRecord&gt; pageViews = builder.stream(<span class="string">"PageViews"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Create a changelog stream for user profiles from the UserProfiles topic,</span></span><br><span class="line"><span class="comment">// where the key of a record is assumed to be the user id (String) and its value</span></span><br><span class="line"><span class="comment">// an Avro GenericRecord.</span></span><br><span class="line">KTable&lt;String, GenericRecord&gt; userProfiles = builder.table(<span class="string">"UserProfiles"</span>);</span><br></pre></td></tr></table></figure>
 <h4 id="TRANSFORM_A_STREAM">TRANSFORM A STREAM</h4><p>KStream and KTable support a variety of transformation operations. Each of these operations can be translated into one or more connected processors into the underlying processor topology. Since KStream and KTable are strongly typed, all these transformation operations are defined as generics functions where users could specify the input and output data types.</p>
-<p>KStream和KTable支持很多类型的转换操作。每种操作都可以翻译成底层处理拓扑的一个或多个相连起来的处理算子。由于KStream和KTable是强类型的，所有这些转换操作被定位为通用的函数，这样用户可以指定输入和输出的数据类型。</p>
+<p>KStream和KTable支持很多类型的转换操作。每种操作都可以翻译成底层处理拓扑的一个或多个相连起来的处理算子。由于KStream和KTable是强类型的，所有这些转换操作被定义为通用的函数，这样用户可以指定输入和输出的数据类型。</p>
 <p>Some KStream transformations may generate one or more KStream objects (e.g., filter and map on KStream generate another KStream, while branch on KStream can generate multiple KStream) while some others may generate a KTable object (e.g., aggregation) interpreted(理解) as the changelog stream to the resulted relation. This allows Kafka Streams to continuously update the computed value upon arrivals of late records after it has already been produced to the downstream transformation operators. As for KTable, all its transformation operations can only generate another KTable (though the Kafka Streams DSL does provide a special function to convert a KTable representation into a KStream, which we will describe later). Nevertheless, all these transformation methods can be chained together to compose a complex processor topology.</p>
 <p>有些KStream转换可能产生不止一个KStream对象（在KStream上进行过滤和映射会生成新的KStream，而在KStream上进行分支则会产生多个KStream），而有些可能产生一个KTable对象（比如聚合转换）。这就允许Kafka Streams即使在记录已经发送给下游的转换算子的情况下，在迟到的记录到来时，也可以持续地更新已经计算过的值。对于KTable而言，它的所有转换操作只会生成新的KTable（尽管Kafka Streams DSL提供额外的函数可以将一个KTable转换成KStream）。不仅如此，所有这些转换操作都可以被链接在一起，从而构造出一个复杂的处理拓扑。</p>
 <p>We describe these transformation operations in the following subsections, categorizing them as two categories: stateless and stateful transformations.</p>
@@ -1392,13 +1392,20 @@ c.分区组分配给指定的消费者，而不是采用随机或者轮询方式
 <li>关闭内置的生产者和消费者客户端</li>
 </ol>
 <p>一些重要的类：</p>
-<p>PartitionGroup: a set of partitions along with their queuing buffers and timestamp extraction logic. 分区的集合，联通它们的队列缓冲区，以及时间撮解析逻辑</p>
-<p>ProcessorStateManager: the manager of the local states within a task. 任务的本地状态管理器</p>
-<p>ProcessorTopology: the instance of the topology generated by the TopologyBuilder. 通过TopologyBuilder生成的拓扑实例</p>
-<p>StreamTask: the task of the processing tasks unit, which include a ProcessorTopology, a ProcessorStateManager and a PartitionGroup. 处理任务的单元，包括前面三个概念</p>
-<p>StreamThread: contains multiple StreamTasks, a Consumer and a Producer client. 包括多个流任务，一个生产者、消费者客户端</p>
-<p>KStreamFilter/Map/Branch/…: implementations of high-level KStream topology builder operators. 实现高级KStream拓扑构造器的算子</p>
+<ol>
+<li>PartitionGroup: a set of partitions along with their queuing buffers and timestamp extraction logic. 分区的集合，联通它们的队列缓冲区，以及时间撮解析逻辑</li>
+<li>ProcessorStateManager: the manager of the local states within a task. 任务的本地状态管理器</li>
+<li>ProcessorTopology: the instance of the topology generated by the TopologyBuilder. 通过TopologyBuilder生成的拓扑实例</li>
+<li>StreamTask: the task of the processing tasks unit, which include a ProcessorTopology, a ProcessorStateManager and a PartitionGroup. 处理任务的单元，包括前面三个概念</li>
+<li>StreamThread: contains multiple StreamTasks, a Consumer and a Producer client. 包括多个流任务，一个生产者、消费者客户端</li>
+<li>KStreamFilter/Map/Branch/…: implementations of high-level KStream topology builder operators. 实现高级KStream拓扑构造器的算子</li>
+</ol>
 <h1 id="KIP-67:Queryable_state_for_Kafka_Streams">KIP-67:Queryable state for Kafka Streams</h1><p>翻译：<a href="https://cwiki.apache.org/confluence/display/KAFKA/KIP-67%3A+Queryable+state+for+Kafka+Streams" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/KIP-67%3A+Queryable+state+for+Kafka+Streams</a>  </p>
+<p>Today a Kafka Streams application will implicitly create state. This state is used for storing intermediate data such as aggregation results. The state is also used to store KTable’s data when they are materialized. The problem this document addresses is that this state is hidden from application developers and they cannot access it directly. The DSL allows users to make a copy of the data (using the through operator) but this leads to a doubling in the amount of state that is kept. In addition, this leads to extra IOs to external databases/key value stores that could potentially slow down the entire pipeline. Here is a simple example that illustrates the problem:</p>
+<p>一个Kafka Streams应用程序通常都会在后台隐式地创建状态。这个状态用来存储临时数据，比如聚合的结果。状态也会被用在当物化KTable时存储KTable数据。这篇文档要解决的问题是状态对于应用开发者是隐藏的，他们不能直接访问状态。DSL操作允许用户使用through操作符复制数据，但是导致了需要保存的状态数量翻倍。另外，也导致了和外部数据库/键值存储产生额外的IO开销，这可能会降低整个数据管道的响应。下面模拟了这个问题：</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> KTable&lt;String, Long&gt; wordCounts = textLine</span><br><span class="line"><span class="number">2</span>    .flatMapValues(value<span class="function"> -&gt;</span>Arrays.asList(value.toLowerCase().split(<span class="string">"\\W+"</span>)))</span><br><span class="line"><span class="number">3</span>    .map<span class="function"><span class="params">((key, word) -&gt; <span class="keyword">new</span> KeyValue&lt;&gt;(word, word)</span><br><span class="line"><span class="number">4</span>    .countByKey(<span class="string">"StoreName"</span>)</span><br><span class="line"><span class="number">5</span> wordCounts.<span class="keyword">to</span>(Serdes.String(), Serdes.Long(), <span class="string">"streams-wordcount-output"</span>);</span></span></span><br></pre></td></tr></table></figure>
+<p>In line 4, the aggregation already maintains state in a store called StoreName, however that store cannot be directly queried by the developer. Instead, the developer makes a copy of the data in that store into a topic called streams-wordcount-output. Subsequently, the developer might instantiate its own database after reading the data from that topic (this step is not shown above). This is shown in illustration (a):</p>
+<p>在第四行中，聚合操作维护了一个状态存储叫做“StoreName”，不过这个存储不能直接被开发者用来查询。相反，开发者会在这个存储中复制数据到一个叫做“streams-wordcount-output”的主题。然后，开发者可能会在从这个主题读到数据后，实例化自己的数据库（这里没有展示出用法）。</p>
 
       
     </div>
@@ -1410,7 +1417,7 @@ c.分区组分配给指定的消费者，而不是采用随机或者轮询方式
   <p><span>本文标题:</span><a href="/2016/11/02/Kafka-Streams-cn/">Kafka Streams中文翻译</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年11月02日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年11月06日 - 16时52分</p>
+  <p><span>最后更新:</span>2016年11月07日 - 22时03分</p>
   <p>
     <span>原始链接:</span><a href="/2016/11/02/Kafka-Streams-cn/" title="Kafka Streams中文翻译">http://github.com/zqhxuyuan/2016/11/02/Kafka-Streams-cn/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/11/02/Kafka-Streams-cn/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -1439,15 +1446,15 @@ c.分区组分配给指定的消费者，而不是采用随机或者轮询方式
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2016/11/18/Kafka-CQRS-Streams/">
-        译：Kafka事件驱动和流处理
+      <a href="/2016/11/06/Kafka-Streams-blog/">
+        Kafka Streams 博客
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2016/10/31/Data-Transform/">
-        
+      <a href="/2016/10/29/Kafka-Definitive-Guide-ch05/">
+        译：Kafka权威指南-第五章-内部实现
       </a>
     </div>
   
@@ -1598,10 +1605,10 @@ c.分区组分配给指定的消费者，而不是采用随机或者轮询方式
   
     
     <div  class="post-nav-button">
-    <a href="/2016/11/18/Kafka-CQRS-Streams/" title="上一篇: 译：Kafka事件驱动和流处理">
+    <a href="/2016/11/06/Kafka-Streams-blog/" title="上一篇: Kafka Streams 博客">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2016/10/31/Data-Transform/" title="下一篇: ">
+    <a href="/2016/10/29/Kafka-Definitive-Guide-ch05/" title="下一篇: 译：Kafka权威指南-第五章-内部实现">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
