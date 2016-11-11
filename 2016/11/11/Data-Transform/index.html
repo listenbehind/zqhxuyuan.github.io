@@ -3,42 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>zqhxuyuan</title>
+  <title>ETL Tools | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="SqoopSqoop1
-单张表、全部表、查询条件、Direct方式
-RDBMS导入到HDFS、从HDFS导出到RDBMS
-增量（增量方式、检查列、上一次的值）
-Job用来支持增量和定时（重复执行）
-Evaluation（DDL/DML），RDBMS的客户端工具而已
-
-增量查询示例（how to identify new data）：
-12345678$ sqoop import \--connec">
+  <meta name="description" content="ETL Tools（Sqoop…）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="zqhxuyuan">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2016/11/10/Data-Transform/index.html">
+<meta property="og:title" content="ETL Tools">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/11/11/Data-Transform/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="SqoopSqoop1
-单张表、全部表、查询条件、Direct方式
-RDBMS导入到HDFS、从HDFS导出到RDBMS
-增量（增量方式、检查列、上一次的值）
-Job用来支持增量和定时（重复执行）
-Evaluation（DDL/DML），RDBMS的客户端工具而已
-
-增量查询示例（how to identify new data）：
-12345678$ sqoop import \--connec">
-<meta property="og:updated_time" content="2016-11-10T05:21:54.000Z">
+<meta property="og:description" content="ETL Tools（Sqoop…）">
+<meta property="og:updated_time" content="2016-11-11T09:23:21.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="zqhxuyuan">
-<meta name="twitter:description" content="SqoopSqoop1
-单张表、全部表、查询条件、Direct方式
-RDBMS导入到HDFS、从HDFS导出到RDBMS
-增量（增量方式、检查列、上一次的值）
-Job用来支持增量和定时（重复执行）
-Evaluation（DDL/DML），RDBMS的客户端工具而已
-
-增量查询示例（how to identify new data）：
-12345678$ sqoop import \--connec">
+<meta name="twitter:title" content="ETL Tools">
+<meta name="twitter:description" content="ETL Tools（Sqoop…）">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -134,7 +110,7 @@ Evaluation（DDL/DML），RDBMS的客户端工具而已
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.75px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.25px;">drill</a> <a href="/tags/druid/" style="font-size: 13.75px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.75px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.75px;">ops</a> <a href="/tags/redis/" style="font-size: 11.25px;">redis</a> <a href="/tags/scala/" style="font-size: 13.75px;">scala</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.5px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.75px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.75px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.25px;">drill</a> <a href="/tags/druid/" style="font-size: 13.75px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.75px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.75px;">ops</a> <a href="/tags/redis/" style="font-size: 11.25px;">redis</a> <a href="/tags/scala/" style="font-size: 13.75px;">scala</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.5px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.75px;">work</a>
 					</div>
 				</section>
 				
@@ -197,8 +173,8 @@ Evaluation（DDL/DML），RDBMS的客户端工具而已
       <div class="body-wrap"><article id="post-Data-Transform" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/11/10/Data-Transform/" class="article-date">
-  	<time datetime="2016-11-10T05:21:54.000Z" itemprop="datePublished">2016-11-10</time>
+      <a href="/2016/11/11/Data-Transform/" class="article-date">
+  	<time datetime="2016-11-10T16:00:00.000Z" itemprop="datePublished">2016-11-11</time>
 </a>
     </div>
   
@@ -207,10 +183,37 @@ Evaluation（DDL/DML），RDBMS的客户端工具而已
       <input type="hidden" class="isFancy" />
     
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ETL Tools
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/etl/">etl</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/etl/">etl</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
     <div class="article-entry" itemprop="articleBody">
       
         
-        <h2 id="Sqoop">Sqoop</h2><h3 id="Sqoop1">Sqoop1</h3><ol>
+        <p>ETL Tools（Sqoop…）<br><a id="more"></a></p>
+<h2 id="Sqoop">Sqoop</h2><h3 id="Sqoop1">Sqoop1</h3><ol>
 <li>单张表、全部表、查询条件、Direct方式</li>
 <li>RDBMS导入到HDFS、从HDFS导出到RDBMS</li>
 <li>增量（增量方式、检查列、上一次的值）</li>
@@ -230,13 +233,13 @@ Evaluation（DDL/DML），RDBMS的客户端工具而已
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2016/11/10/Data-Transform/"></a></p>
+  <p><span>本文标题:</span><a href="/2016/11/11/Data-Transform/">ETL Tools</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
-  <p><span>发布时间:</span>2016年11月10日 - 13时21分</p>
-  <p><span>最后更新:</span>2016年11月10日 - 13时21分</p>
+  <p><span>发布时间:</span>2016年11月11日 - 00时00分</p>
+  <p><span>最后更新:</span>2016年11月11日 - 17时23分</p>
   <p>
-    <span>原始链接:</span><a href="/2016/11/10/Data-Transform/" title="">http://github.com/zqhxuyuan/2016/11/10/Data-Transform/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/11/10/Data-Transform/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2016/11/11/Data-Transform/" title="ETL Tools">http://github.com/zqhxuyuan/2016/11/11/Data-Transform/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/11/11/Data-Transform/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -383,7 +386,7 @@ Evaluation（DDL/DML），RDBMS的客户端工具而已
 
 <div class="duoshuo" id="comments">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2016/11/10/Data-Transform/" data-title="" data-url="http://github.com/zqhxuyuan/2016/11/10/Data-Transform/"></div>
+	<div class="ds-thread" data-thread-key="2016/11/11/Data-Transform/" data-title="ETL Tools" data-url="http://github.com/zqhxuyuan/2016/11/11/Data-Transform/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
