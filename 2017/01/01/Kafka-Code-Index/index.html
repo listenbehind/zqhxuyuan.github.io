@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://github.com/zqhxuyuan/2017/01/01/Kafka-Code-Index/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="《Kafka技术内幕》">
-<meta property="og:updated_time" content="2017-01-11T07:46:18.000Z">
+<meta property="og:updated_time" content="2017-01-12T09:01:33.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka技术内幕">
 <meta name="twitter:description" content="《Kafka技术内幕》">
@@ -255,58 +255,10 @@
 </li>
 <li>第2章 生产者<ul>
 <li>2.1 生产者（<code>KafkaProducer</code>）<ul>
-<li>2.1.1 同步和异步发送消息<ul>
-<li><ol>
-<li>选择Partition</li>
-</ol>
-</li>
-<li><ol>
-<li>记录收集器</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>2.1.2 发送线程（Sender）<ul>
-<li><ol>
-<li>准备工作和获取数据</li>
-</ol>
-</li>
-<li><ol>
-<li>生产者客户端请求</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>2.1.3 选择器（Selector）<ul>
-<li><ol>
-<li>connect连接</li>
-</ol>
-</li>
-<li><ol>
-<li>KafkaChannel读写</li>
-</ol>
-</li>
-<li><ol>
-<li>poll轮询</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>2.1.4 客户端网络连接对象（NetworkClient）<ul>
-<li><ol>
-<li>准备工作</li>
-</ol>
-</li>
-<li><ol>
-<li>发送请求</li>
-</ol>
-</li>
-<li><ol>
-<li>轮询处理</li>
-</ol>
-</li>
-</ul>
-</li>
+<li>2.1.1 同步和异步发送消息</li>
+<li>2.1.2 发送线程（Sender）</li>
+<li>2.1.3 选择器（Selector）</li>
+<li>2.1.4 客户端网络连接对象（NetworkClient）</li>
 </ul>
 </li>
 <li>2.2 旧的生产者（Producer）<ul>
@@ -374,67 +326,9 @@
 </li>
 <li>第四章 新消费者<ul>
 <li>4.1 新消费者（KafkaConsumer）<ul>
-<li>4.1.1 订阅和状态<ul>
-<li><ol>
-<li>两种订阅方式</li>
-</ol>
-</li>
-<li><ol>
-<li>Partition状态（TopicPartitionState）</li>
-</ol>
-</li>
-<li><ol>
-<li>更新Partition状态的方法</li>
-</ol>
-</li>
-<li><ol>
-<li>拉取前准备工作</li>
-</ol>
-</li>
-<li><ol>
-<li>确保分配到Partition</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>4.1.2 消费者消费消息<ul>
-<li><ol>
-<li>消费者轮询（poll）</li>
-</ol>
-</li>
-<li><ol>
-<li>Fetcher发送拉取请求</li>
-</ol>
-</li>
-<li><ol>
-<li>消费者获取和消费消息</li>
-</ol>
-</li>
-<li><ol>
-<li>更新拉取位置</li>
-</ol>
-</li>
-<li><ol>
-<li>获取Offset</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>4.1.3 RequestFuture<ul>
-<li><ol>
-<li>客户端发送请求</li>
-</ol>
-</li>
-<li><ol>
-<li>RequestFuture和监听器</li>
-</ol>
-</li>
-<li><ol>
-<li>RequestFuture适配器</li>
-</ol>
-</li>
-</ul>
-</li>
+<li>4.1.1 订阅和状态</li>
+<li>4.1.2 消费者消费消息</li>
+<li>4.1.3 RequestFuture</li>
 <li>4.1.4 客户端轮询</li>
 <li>4.1.5 延迟的任务</li>
 </ul>
@@ -456,103 +350,19 @@
 <li>第五章 协调者<ul>
 <li>5.1 消费者加入消费组<ul>
 <li>5.1.1 发送JoinGroup请求</li>
-<li>5.1.2 JoinGroup和SyncGroup<ul>
-<li><ol>
-<li>RequestFuture的链式调用</li>
-</ol>
-</li>
-<li><ol>
-<li>Leader和Follower消费者</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>5.1.3 分配Partition<ul>
-<li><ol>
-<li>准备和完成Join</li>
-</ol>
-</li>
-<li><ol>
-<li>消费者平衡监听器</li>
-</ol>
-</li>
-<li><ol>
-<li>分配Assignment</li>
-</ol>
-</li>
-<li><ol>
-<li>从消费者元数据到Assignment结果</li>
-</ol>
-</li>
-</ul>
-</li>
+<li>5.1.2 JoinGroup和SyncGroup</li>
+<li>5.1.3 分配Partition</li>
 </ul>
 </li>
 <li>5.2 协调者处理消费者Join请求<ul>
-<li>5.2.1 消费者和消费组元数据<ul>
-<li><ol>
-<li>消费者成员元数据（MemberMetadata）</li>
-</ol>
-</li>
-<li><ol>
-<li>消费者元数据的回调函数</li>
-</ol>
-</li>
-<li><ol>
-<li>消费组元数据（GroupMetadata）</li>
-</ol>
-</li>
-<li><ol>
-<li>消费组状态机</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>5.2.2 协调者处理JoinGroup<ul>
-<li><ol>
-<li>加入消费组的条件</li>
-</ol>
-</li>
-<li><ol>
-<li>处理JoinGroup时的消费组状态机</li>
-</ol>
-</li>
-<li><ol>
-<li>Join操作的延迟和完成</li>
-</ol>
-</li>
-</ul>
-</li>
+<li>5.2.1 消费者和消费组元数据</li>
+<li>5.2.2 协调者处理JoinGroup</li>
 </ul>
 </li>
 <li>5.3 同步消费组<ul>
 <li>5.3.1 Leader消费者分配Assignment</li>
-<li>5.3.2 协调者处理SyncGroup请求<ul>
-<li><ol>
-<li>设置和传播Assignment结果</li>
-</ol>
-</li>
-<li><ol>
-<li>协调者保存groupAssignment</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>5.3.3 异常场景分析<ul>
-<li><ol>
-<li>消费者没有收到JoinGroup响应</li>
-</ol>
-</li>
-<li><ol>
-<li>更改状态为AwaitingSync的时机</li>
-</ol>
-</li>
-<li><ol>
-<li>等待同步时出现了新的消费者</li>
-</ol>
-</li>
-</ul>
-</li>
+<li>5.3.2 协调者处理SyncGroup请求</li>
+<li>5.3.3 异常场景分析</li>
 </ul>
 </li>
 <li>5.4 延迟的心跳<ul>
@@ -576,126 +386,20 @@
 </ul>
 </li>
 <li>6.2 Log日志文件<ul>
-<li>6.2.1 消息<ul>
-<li><ol>
-<li>消息集</li>
-</ol>
-</li>
-<li><ol>
-<li>日志追加</li>
-</ol>
-</li>
-<li><ol>
-<li>分析和验证消息集</li>
-</ol>
-</li>
-<li><ol>
-<li>验证消息和分配Offsets</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>6.2.2 Segment<ul>
-<li><ol>
-<li>滚动创建Segment</li>
-</ol>
-</li>
-<li><ol>
-<li>日志的Offset元数据（LogOffsetMetadata）</li>
-</ol>
-</li>
-<li><ol>
-<li>添加消息到Segment</li>
-</ol>
-</li>
-<li><ol>
-<li>文件形式的消息集</li>
-</ol>
-</li>
-<li><ol>
-<li>索引文件（OffsetIndex）</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>6.2.3 读取日志文件<ul>
-<li><ol>
-<li>读取Log</li>
-</ol>
-</li>
-<li><ol>
-<li>读取LogSegment</li>
-</ol>
-</li>
-</ul>
-</li>
+<li>6.2.1 消息</li>
+<li>6.2.2 Segment</li>
+<li>6.2.3 读取日志文件</li>
 </ul>
 </li>
 <li>6.3 日志管理类的后台线程<ul>
 <li>6.3.1 日志清理</li>
-<li>6.3.2 日志压缩<ul>
-<li><ol>
-<li>日志清理类和管理类</li>
-</ol>
-</li>
-<li><ol>
-<li>清理线程</li>
-</ol>
-</li>
-</ul>
-</li>
+<li>6.3.2 日志压缩</li>
 </ul>
 </li>
 <li>6.4 延迟操作<ul>
-<li>6.4.1 创建延迟对象<ul>
-<li><ol>
-<li>读写日志文件</li>
-</ol>
-</li>
-<li><ol>
-<li>HW、LEO和延迟请求</li>
-</ol>
-</li>
-<li><ol>
-<li>延迟操作的创建过程</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>6.4.2 延迟操作接口<ul>
-<li><ol>
-<li>完成延迟的操作</li>
-</ol>
-</li>
-<li><ol>
-<li>尝试完成延迟的生产</li>
-</ol>
-</li>
-<li><ol>
-<li>尝试完成延迟的拉取</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>6.4.3 延迟操作的缓存<ul>
-<li><ol>
-<li>监视所有Partition</li>
-</ol>
-</li>
-<li><ol>
-<li>监视器（Watchers）</li>
-</ol>
-</li>
-<li><ol>
-<li>清理线程（Reaper）</li>
-</ol>
-</li>
-<li><ol>
-<li>定时器（Timer）</li>
-</ol>
-</li>
-</ul>
-</li>
+<li>6.4.1 创建延迟对象</li>
+<li>6.4.2 延迟操作接口</li>
+<li>6.4.3 延迟操作的缓存</li>
 </ul>
 </li>
 <li>6.5 本章总结</li>
@@ -714,99 +418,15 @@
 <li>7.2.2 控制器上下文（ControllerContext）</li>
 <li>7.2.3 ZooKeeper监听器</li>
 <li>7.2.4 控制器初始化</li>
-<li>7.2.5 状态机<ul>
-<li><ol>
-<li>新创建Partition</li>
-</ol>
-</li>
-<li><ol>
-<li>选举Partition的Leader</li>
-</ol>
-</li>
-<li><ol>
-<li>Broker变化</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>7.2.6 管理工作<ul>
-<li><ol>
-<li>重新分配Partition</li>
-</ol>
-</li>
-<li><ol>
-<li>平衡Partition</li>
-</ol>
-</li>
-<li><ol>
-<li>控制器通道管理器</li>
-</ol>
-</li>
-</ul>
-</li>
+<li>7.2.5 状态机</li>
+<li>7.2.6 管理工作</li>
 </ul>
 </li>
 <li>7.3 Leader和ISR请求<ul>
-<li>7.3.1 ReplicaManager处理请求<ul>
-<li><ol>
-<li>所有Partition分组处理</li>
-</ol>
-</li>
-<li><ol>
-<li>创建Partition过程</li>
-</ol>
-</li>
-<li><ol>
-<li>makeLeaders</li>
-</ol>
-</li>
-<li><ol>
-<li>makeFollowers</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>7.3.2 Partition创建Leader和Follower副本<ul>
-<li><ol>
-<li>本地和远程Replica</li>
-</ol>
-</li>
-<li><ol>
-<li>创建Replica</li>
-</ol>
-</li>
-<li><ol>
-<li>设置Replica的leaderReplicaIdOpt</li>
-</ol>
-</li>
-<li><ol>
-<li>Replica的的HW和LEO</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>7.3.3 Leader副本<ul>
-<li><ol>
-<li>转换Leader的HW元数据</li>
-</ol>
-</li>
-<li><ol>
-<li>增加Leader的HW</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>7.3.4 Follower副本<ul>
-<li><ol>
-<li>Leader节点处理Follower的拉取请求</li>
-</ol>
-</li>
-<li><ol>
-<li>Follower副本处理拉取结果</li>
-</ol>
-</li>
-</ul>
-</li>
+<li>7.3.1 ReplicaManager处理请求</li>
+<li>7.3.2 Partition创建Leader和Follower副本</li>
+<li>7.3.3 Leader副本</li>
+<li>7.3.4 Follower副本</li>
 <li>7.3.5 检查点线程（checkpoint）</li>
 <li>7.3.6 LeaderAndIsr请求和协调者</li>
 </ul>
@@ -831,55 +451,9 @@
 </ul>
 </li>
 <li>8.3 Kafka Connect连接器<ul>
-<li>8.3.1 架构与模型<ul>
-<li><ol>
-<li>数据模型</li>
-</ol>
-</li>
-<li><ol>
-<li>Connector模型</li>
-</ol>
-</li>
-<li><ol>
-<li>Worker模型</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>8.3.2 单机模式<ul>
-<li><ol>
-<li>Standalone模式的Connect和Herder</li>
-</ol>
-</li>
-<li><ol>
-<li>Worker创建Connector和Task</li>
-</ol>
-</li>
-<li><ol>
-<li>WorkerSourceTask拉取消息</li>
-</ol>
-</li>
-<li><ol>
-<li>WorkerSinkTask写入消息</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>8.3.3 开发一个简单的Connector<ul>
-<li><ol>
-<li>读取输入源文件，写入到Kafka</li>
-</ol>
-</li>
-<li><ol>
-<li>恢复上一次的Offset</li>
-</ol>
-</li>
-<li><ol>
-<li>消费Kafka，写入到目标文件</li>
-</ol>
-</li>
-</ul>
-</li>
+<li>8.3.1 架构与模型</li>
+<li>8.3.2 单机模式</li>
+<li>8.3.3 开发一个简单的Connector</li>
 <li>8.3.4 分布式模式</li>
 </ul>
 </li>
@@ -897,36 +471,8 @@
 </ul>
 </li>
 <li>9.2 流处理的线程模型<ul>
-<li>9.2.1 流线程（StreamThread）<ul>
-<li><ol>
-<li>任务分配（StreamPartitionAssignor）</li>
-</ol>
-</li>
-<li><ol>
-<li>创建流任务</li>
-</ol>
-</li>
-<li><ol>
-<li>流线程运行</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>9.2.2 流任务（StreamTask）<ul>
-<li><ol>
-<li>缓冲记录队列</li>
-</ol>
-</li>
-<li><ol>
-<li>处理拓扑链式调用</li>
-</ol>
-</li>
-<li><ol>
-<li>提交流任务</li>
-</ol>
-</li>
-</ul>
-</li>
+<li>9.2.1 流线程（StreamThread）</li>
+<li>9.2.2 流任务（StreamTask）</li>
 </ul>
 </li>
 <li>9.3 状态存储<ul>
@@ -937,29 +483,7 @@
 </li>
 <li>9.4 Kafka Streams DSL<ul>
 <li>9.4.1 KStream和KTable抽象接口</li>
-<li>9.4.2 流转换操作<ul>
-<li><ol>
-<li>记录流（KStream）</li>
-</ol>
-</li>
-<li><ol>
-<li>分组流（KGroupedStream）和聚合操作</li>
-</ol>
-</li>
-<li><ol>
-<li>变更流（KTable）</li>
-</ol>
-</li>
-<li><ol>
-<li>KTable的聚合操作</li>
-</ol>
-</li>
-<li><ol>
-<li>窗口和join操作</li>
-</ol>
-</li>
-</ul>
-</li>
+<li>9.4.2 流转换操作</li>
 </ul>
 </li>
 </ul>
@@ -976,7 +500,7 @@
   <p><span>本文标题:</span><a href="/2017/01/01/Kafka-Code-Index/">Kafka技术内幕</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2017年01月01日 - 00时00分</p>
-  <p><span>最后更新:</span>2017年01月11日 - 15时46分</p>
+  <p><span>最后更新:</span>2017年01月12日 - 17时01分</p>
   <p>
     <span>原始链接:</span><a href="/2017/01/01/Kafka-Code-Index/" title="Kafka技术内幕">http://github.com/zqhxuyuan/2017/01/01/Kafka-Code-Index/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2017/01/01/Kafka-Code-Index/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
