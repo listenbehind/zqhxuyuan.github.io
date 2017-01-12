@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://cdn2.hubspot.net/hubfs/540072/application-reset-02_after-stopped.png">
 <meta property="og:image" content="http://cdn2.hubspot.net/hubfs/540072/application-reset-03_after-reset_1.png">
 <meta property="og:image" content="http://img.blog.csdn.net/20161106115808194">
-<meta property="og:updated_time" content="2016-11-07T14:03:02.000Z">
+<meta property="og:updated_time" content="2017-01-02T04:03:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka Streams中文翻译">
 <meta name="twitter:description" content="Confluent Kafka Streams Documentation 中文翻译：  http://docs.confluent.io/3.0.1/streams/introduction.html">
@@ -406,9 +406,9 @@
 <li>Ingestion-time: The point in time when an event or data record is stored in a topic partition by a Kafka broker. Ingestion-time is similar to event-time, as a timestamp gets embedded in the data record itself. The difference is, that the timestamp is generated when the record is appended to the target topic by the Kafka broker, not when the record is created “at the source”. Ingestion-time may approximate event-time reasonably well if we assume that the time difference between creation of the record and its ingestion into Kafka is sufficiently small, where “sufficiently” depends on the specific use case. Thus, ingestion-time may be a reasonable alternative for use cases where event-time semantics are not possible, e.g. because the data producers don’t embed timestamps (e.g. older versions of Kafka’s Java producer client) or the producer cannot assign timestamps directly (e.g., it does not have access to a local clock).</li>
 </ul>
 <ol>
-<li>事件时间：事件或数据记录发生的时间点，它是由事件源创建的。实现事件时间予以通常需要在记录中有内置的时间撮字段，表示这条记录在什么时候产生。比如一条事件是车辆传感器报告的地理位置变更，那么对应的事件时间表示GPS传感器捕获位置变更的时间点。</li>
+<li>事件时间：事件或数据记录发生的时间点，它是由事件源创建的。实现事件时间语义通常需要在记录中有内置的时间撮字段，表示这条记录在什么时候产生。比如一条事件是车辆传感器报告的地理位置变更，那么对应的事件时间表示GPS传感器捕获位置变更的时间点。</li>
 <li>处理时间：事件被流处理应用程序处理的时间点，比如就被消费的时候，处理时间会比原始的事件时间要晚。举例一个分析应用程序读取并处理车辆上传的地理位置，并且呈现到一个dashboard上。这里分析程序的处理时间可能比事件的时间晚几毫米、几秒、甚至几个小时。</li>
-<li>摄取时间：事件存储到Kafka Brokers的主题分区中的时间点。摄取时间和时间时间类似，它也是作为数据记录本身的一个内置字段，不同的是<strong>摄取时间是在追加到Kafka中时自动生成的，而不是数据源创建的时间</strong>。如果我们假设记录的创建时间和摄取到Kafka的时间间隔足够短的话，可以认为摄取时间近似于事件时间，当然足够短这个时间跟具体的用例有关。什么场景下采用摄取时间比较合理呢？比如数据源没有内置的事件时间（比如旧版本的Java生产者客户端在消息中不会带有时间撮，新版本则有），或者说生产者不能直接分配时间撮（无法获取到本地时钟）。</li>
+<li>摄取时间：事件存储到Kafka Brokers的主题分区中的时间点。摄取时间和事件时间类似，它也是作为数据记录本身的一个内置字段，不同的是<strong>摄取时间是在追加到Kafka中时自动生成的，而不是数据源创建的时间</strong>。如果我们假设记录的创建时间和摄取到Kafka的时间间隔足够短的话，可以认为摄取时间近似于事件时间，当然足够短这个时间跟具体的用例有关。什么场景下采用摄取时间比较合理呢？比如数据源没有内置的事件时间（比如旧版本的Java生产者客户端在消息中不会带有时间撮，新版本则有），或者说生产者不能直接分配时间撮（无法获取到本地时钟）。</li>
 </ol>
 <p>The choice between event-time and ingestion-time is actually done through the configuration of Kafka (not Kafka Streams): From Kafka 0.10.x onwards, timestamps are automatically embedded into Kafka messages. Depending on Kafka’s configuration these timestamps represent event-time or ingestion-time. The respective Kafka configuration setting can be specified on the broker level or per topic. The default timestamp extractor in Kafka Streams will retrieve these embedded timestamps as-is. Hence, the effective time semantics of your application depend on the effective Kafka configuration for these embedded timestamps. See :ref:Developer Guide <timestamp extractor=""> for detailed information.</timestamp></p>
 <blockquote>
@@ -548,7 +548,7 @@
 </ol>
 <p>An application’s processor topology is scaled by breaking it into multiple tasks. More specifically, Kafka Streams creates a fixed number of tasks based on the input stream partitions for the application, with each task assigned a list of partitions from the input streams (i.e., Kafka topics). The assignment of partitions to tasks never changes so that each task is a fixed unit of parallelism of the application. Tasks can then instantiate their own processor topology based on the assigned partitions; they also maintain a buffer for each of its assigned partitions and process messages one-at-a-time from these record buffers. As a result stream tasks can be processed independently and in parallel without manual intervention.</p>
 <blockquote>
-<p>应用程序的处理拓扑会被分成多个任务来进行扩展。更具体来说，Kafka Streams会基于输入流的分区创建固定数量的任务，每个任务会从输入流（Kafka的主题）分配到多个分区。每个任务分配的分区永远不会改变，这样每个任务作为应用程序固定的并行单元。任务可以基于分配给它们的分区实例化它们自己的处理拓扑；它们也会为每个分配的分区维护一个缓冲区，并且从这些记录的缓冲区中一次只处理一条消息。这样的好处是所有的流任务都各自独立地并行处理，并且需要人工干预。</p>
+<p>应用程序的处理拓扑会被分成多个任务来进行扩展。更具体来说，Kafka Streams会基于输入流的分区创建固定数量的任务，每个任务会从输入流（Kafka的主题）分配到多个分区。每个任务分配的分区永远不会改变，这样每个任务作为应用程序固定的并行单元。任务可以基于分配给它们的分区实例化它们自己的处理拓扑；它们也会为每个分配的分区维护一个缓冲区，并且从这些记录的缓冲区中一次只处理一条消息。这样的好处是所有的流任务都各自独立地并行处理，并不需要人工干预。</p>
 </blockquote>
 <p>Sub-topologies aka topology sub-graphs: If there are multiple processor topologies specified in a Kafka Streams application, each task will only instantiate one of the topologies for processing. In addition, a single processor topology may be decomposed(分离分解) into independent sub-topologies (sub-graphs) as long as sub-topologies are not connected by any streams in the topology; here, each task may instantiate only one such sub-topology for processing. This further scales out the computational workload to multiple tasks.</p>
 <blockquote>
@@ -903,7 +903,7 @@
 <li>KStream-to-KTable Joins allow you to perform table lookups against a changelog stream (KTable) upon receiving a new record from another record stream (KStream). An example use case would be to enrich(使丰富) a stream of user activities (KStream) with the latest user profile information (KTable). Only records received from the record stream will trigger the join and produce results via ValueJoiner, not vice versa (i.e., records received from the changelog stream will be used only to update the materialized state store). A new KStream instance representing the result stream of the join is returned from this operator.</li>
 </ul>
 <ol>
-<li><strong>KStream-to-KStrea Join</strong>操作总是针对窗口的Join，否则Join结果的大小会无限膨胀。从其中一个流接收到的新记录会和另外一个流的记录进行Join，后者的流会指定窗口间隔，最后会基于用户提供的<code>ValueJoiner</code>为每个匹配对产生一个结果。这里返回的结果是一个新的KStream实例，代表了Join操作的结果流。</li>
+<li><strong>KStream-to-KStream Join</strong>操作总是针对窗口的Join，否则Join结果的大小会无限膨胀。从其中一个流接收到的新记录会和另外一个流的记录进行Join，后者的流会指定窗口间隔，最后会基于用户提供的<code>ValueJoiner</code>为每个匹配对产生一个结果。这里返回的结果是一个新的KStream实例，代表了Join操作的结果流。</li>
 <li><strong>KTable-to-KTable Join</strong>操作被设计为和关系型数据库类似的操作。两个变更日志流（KTable）都会被物化成本地状态存储，表示数据表的最近快照。当从其中的一个流接收到一条新记录，它会和另外一个流的物化状态存储进行join，并根据用户提供的ValueJoiner产生一个匹配的结果。返回的结果是新的KTable实例，代表Join操作的结果流，它也是一个变更日志流。</li>
 <li><strong>KStream-to-KTable Join</strong>操作允许你在记录流（KStream）上接收到一条新记录时，从一个变更日志流（KTable）上执行表（级别的记录）查询。比如对一个用户活动流（KStream）使用最近的用户个人信息（KTable）进行信息增强。只有从记录流接收的记录才会触发join操作，并通过ValueJoiner产生结果，反过来则不行（比如从变更日志流中接收的新记录只会被用来更新物化的状态存储，而不会和KStream记录流进行join）。返回的结果是一个新的KStream，代表了Join操作的结果流。</li>
 </ol>
@@ -1417,7 +1417,7 @@ c.分区组分配给指定的消费者，而不是采用随机或者轮询方式
   <p><span>本文标题:</span><a href="/2016/11/02/Kafka-Streams-cn/">Kafka Streams中文翻译</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年11月02日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年11月07日 - 22时03分</p>
+  <p><span>最后更新:</span>2017年01月02日 - 12时03分</p>
   <p>
     <span>原始链接:</span><a href="/2016/11/02/Kafka-Streams-cn/" title="Kafka Streams中文翻译">http://github.com/zqhxuyuan/2016/11/02/Kafka-Streams-cn/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/11/02/Kafka-Streams-cn/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -1637,7 +1637,7 @@ c.分区组分配给指定的消费者，而不是采用随机或者轮询方式
   <div class="outer">
     <div id="footer-info">
       <div class="footer-left">
-        &copy; 2016 任何忧伤,都抵不过世界的美丽
+        &copy; 2017 任何忧伤,都抵不过世界的美丽
       </div>
         <div class="footer-right">
           <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
