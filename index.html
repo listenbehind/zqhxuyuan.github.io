@@ -111,7 +111,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 14.44px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.33px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 14.44px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.33px;">work</a>
 					</div>
 				</section>
 				
@@ -175,11 +175,11 @@
 </nav>
       <div class="body-wrap">
   
-    <article id="post-2017-02-17-BigData-ETL" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Kafka-Code-Index" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/02/18/2017-02-17-BigData-ETL/" class="article-date">
-  	<time datetime="2017-02-18T02:09:15.000Z" itemprop="datePublished">2017-02-18</time>
+      <a href="/2018/01/01/Kafka-Code-Index/" class="article-date">
+  	<time datetime="2017-12-31T16:00:00.000Z" itemprop="datePublished">2018-01-01</time>
 </a>
     </div>
   
@@ -188,22 +188,40 @@
       <input type="hidden" class="isFancy" />
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/01/Kafka-Code-Index/">Kafka技术内幕</a>
+    </h1>
+  
+
+      </header>
+      
+    
     <div class="article-entry" itemprop="articleBody">
       
-        
-        <h3 id="ETL_Tools">ETL Tools</h3><h4 id="datatorrent(apex)">datatorrent(apex)</h4><p>执行<code>./datatorrent-rts-community-3.7.0.bin --help</code>打印帮助项</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@dp0653 <span class="operator"><span class="keyword">install</span>]$ sudo -u <span class="keyword">admin</span> ./datatorrent-rts-community-<span class="number">3.7</span><span class="number">.0</span>.<span class="keyword">bin</span> \</span><br><span class="line">-B /usr/<span class="keyword">install</span>/datatorrent-rts -<span class="keyword">g</span> <span class="number">9094</span> \</span><br><span class="line">-<span class="keyword">E</span> DT_LOG_DIR=/home/<span class="keyword">admin</span>/datatorrent \</span><br><span class="line">-<span class="keyword">E</span> DT_RUN_DIR=/home/<span class="keyword">admin</span>/run/datatorrent</span><br><span class="line"></span><br><span class="line">Verifying <span class="keyword">archive</span> integrity... All good.</span><br><span class="line">Uncompressing DataTorrent Distribution  <span class="number">100</span>%</span><br><span class="line"></span><br><span class="line">DataTorrent Platform <span class="number">3.7</span><span class="number">.0</span> will be installed <span class="keyword">under</span> /usr/<span class="keyword">install</span>/datatorrent-rts/releases/<span class="number">3.7</span><span class="number">.0</span></span><br><span class="line"></span><br><span class="line">dtGateway can be <span class="keyword">managed</span> <span class="keyword">with</span>: /usr/<span class="keyword">install</span>/datatorrent-rts/releases/<span class="number">3.7</span><span class="number">.0</span>/<span class="keyword">bin</span>/dtgateway [<span class="keyword">start</span>|<span class="keyword">stop</span>|<span class="keyword">status</span>]</span><br><span class="line">DTGateway <span class="keyword">is</span> running <span class="keyword">as</span> pid <span class="number">24571</span> <span class="keyword">and</span> listening <span class="keyword">on</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>:<span class="number">9094</span></span><br><span class="line"></span><br><span class="line">Please <span class="keyword">finish</span> the remaining installation steps via DataTorrent Console <span class="keyword">at</span>: <span class="keyword">http</span>://dp0653:<span class="number">9094</span>/</span></span><br></pre></td></tr></table></figure>
-<p>name=salesapp<br>version=3.5.0</p>
-<p>mvn -B archetype:generate \<br>  -DarchetypeGroupId=org.apache.apex \<br>  -DarchetypeArtifactId=apex-app-archetype \<br>  -DarchetypeVersion=$version  \<br>  -DgroupId=com.example \<br>  -Dpackage=com.example.$name \<br>  -DartifactId=$name \<br>  -Dversion=1.0-SNAPSHOT</p>
-
+        <p>《Kafka技术内幕》<br>
       
     </div>
     
     <div class="article-info article-info-index">
       
       
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/kafka/">kafka</a>
+	</div>
+
 
       
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2018/01/01/Kafka-Code-Index/#more">more >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -241,11 +259,11 @@
         
 
   
-    <article id="post-Kafka-Code-Index" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-2017-02-17-BigData-ETL" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/01/01/Kafka-Code-Index/" class="article-date">
-  	<time datetime="2016-12-31T16:00:00.000Z" itemprop="datePublished">2017-01-01</time>
+      <a href="/2017/02/15/2017-02-17-BigData-ETL/" class="article-date">
+  	<time datetime="2017-02-14T16:00:00.000Z" itemprop="datePublished">2017-02-15</time>
 </a>
     </div>
   
@@ -258,7 +276,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/01/Kafka-Code-Index/">Kafka技术内幕</a>
+      <a class="article-title" href="/2017/02/15/2017-02-17-BigData-ETL/">开源大数据ETL工具</a>
     </h1>
   
 
@@ -267,7 +285,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>《Kafka技术内幕》<br>
+        <p>BigData ETL Tools<br>
       
     </div>
     
@@ -275,18 +293,18 @@
       
       
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/kafka/">kafka</a>
+	<a class="article-category-link" href="/categories/work/">work</a>
 	</div>
 
 
       
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bigdata/">bigdata</a></li></ul>
 	</div>
 
       
         <p class="article-more-link">
-          <a  href="/2017/01/01/Kafka-Code-Index/#more">more >></a>
+          <a  href="/2017/02/15/2017-02-17-BigData-ETL/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
