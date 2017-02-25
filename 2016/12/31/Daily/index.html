@@ -14,7 +14,7 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20151114125939707">
 <meta property="og:image" content="http://img.blog.csdn.net/20161221111359916">
 <meta property="og:image" content="http://img.blog.csdn.net/20161222135615298">
-<meta property="og:updated_time" content="2017-01-16T10:02:47.000Z">
+<meta property="og:updated_time" content="2017-02-21T08:07:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Daily Work">
 <meta name="twitter:description" content="日常工作常用命令（Linux、Mac）">
@@ -115,7 +115,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.75px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.25px;">drill</a> <a href="/tags/druid/" style="font-size: 13.75px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.75px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.75px;">ops</a> <a href="/tags/redis/" style="font-size: 11.25px;">redis</a> <a href="/tags/scala/" style="font-size: 13.75px;">scala</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.5px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.75px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 14.44px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.33px;">work</a>
 					</div>
 				</section>
 				
@@ -484,6 +484,8 @@
 <p>mat命令行：<a href="http://www.techpaste.com/2015/07/how-to-analyse-large-heap-dumps/" target="_blank" rel="external">http://www.techpaste.com/2015/07/how-to-analyse-large-heap-dumps/</a>  </p>
 <p><img src="http://img.blog.csdn.net/20161221111359916" alt="mat"></p>
 <p><img src="http://img.blog.csdn.net/20161222135615298" alt="mat"></p>
+<p>mysql权限：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> <span class="string">`pontus`</span> <span class="keyword">DEFAULT</span> <span class="built_in">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci;</span></span><br><span class="line"><span class="operator"><span class="keyword">create</span> <span class="keyword">user</span> <span class="string">'pontus'</span>@<span class="string">'%'</span> <span class="keyword">identified</span> <span class="keyword">by</span> <span class="string">'pontus'</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">grant</span> all <span class="keyword">on</span> pontus.* <span class="keyword">to</span> <span class="string">'pontus'</span>@<span class="string">'%'</span> <span class="keyword">identified</span> <span class="keyword">by</span> <span class="string">'pontus'</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">grant</span> all <span class="keyword">on</span> pontus.* <span class="keyword">to</span> <span class="string">'pontus'</span>@<span class="string">'dp0653'</span> <span class="keyword">identified</span> <span class="keyword">by</span> <span class="string">'pontus'</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">flush</span> <span class="keyword">privileges</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">delete</span> <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> <span class="keyword">user</span>=<span class="string">'pontus'</span> <span class="keyword">and</span> host=<span class="string">'dp0653'</span></span><br><span class="line"><span class="keyword">select</span> <span class="keyword">user</span>,<span class="keyword">password</span>,host <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> <span class="keyword">user</span>=<span class="string">'pontus'</span>;</span></span><br></pre></td></tr></table></figure>
 <h2 id="快捷键">快捷键</h2><h3 id="Mac">Mac</h3><p><strong>👉按键</strong>  </p>
 <figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Shift</span> - ⬆️      为什么是向上,因为<span class="keyword">Shift</span>在Ctrl+Alt+<span class="built_in">CMD</span>所有键的上方</span><br></pre></td></tr></table></figure>
 <p><strong>👉触摸板</strong><br>右键: 双指单击<br>三指移动: 当前App移动位置<br>四指滑动: 全屏下App切换屏幕<br>两指滑动: Launchpad切换屏幕  </p>
@@ -623,7 +625,7 @@
   <p><span>本文标题:</span><a href="/2016/12/31/Daily/">Daily Work</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2016年12月31日 - 00时00分</p>
-  <p><span>最后更新:</span>2017年01月16日 - 18时02分</p>
+  <p><span>最后更新:</span>2017年02月21日 - 16时07分</p>
   <p>
     <span>原始链接:</span><a href="/2016/12/31/Daily/" title="Daily Work">http://github.com/zqhxuyuan/2016/12/31/Daily/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/12/31/Daily/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -652,15 +654,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2016/12/31/BigData-Monitor-Tool/">
-        监控工具集锦
+      <a href="/2017/01/01/Kafka-Code-Index/">
+        Kafka技术内幕
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2016/11/18/Kafka-CQRS-Streams/">
-        译：Kafka事件驱动和流处理
+      <a href="/2016/12/31/BigData-Monitor-Tool/">
+        监控工具集锦
       </a>
     </div>
   
@@ -811,10 +813,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2016/12/31/BigData-Monitor-Tool/" title="上一篇: 监控工具集锦">
+    <a href="/2017/01/01/Kafka-Code-Index/" title="上一篇: Kafka技术内幕">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2016/11/18/Kafka-CQRS-Streams/" title="下一篇: 译：Kafka事件驱动和流处理">
+    <a href="/2016/12/31/BigData-Monitor-Tool/" title="下一篇: 监控工具集锦">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
