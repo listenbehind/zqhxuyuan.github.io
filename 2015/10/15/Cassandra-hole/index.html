@@ -41,7 +41,7 @@ fetchSize和limit
 query
 
 &amp;lt;!-- /MarkdownTOC --&amp;gt;">
-<meta property="og:updated_time" content="2016-07-09T00:24:18.000Z">
+<meta property="og:updated_time" content="2017-06-15T02:59:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cassandra陷阱">
 <meta name="twitter:description" content="Cassandra的一些陷阱
@@ -157,7 +157,7 @@ query
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 14.44px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.33px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 14.44px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.44px;">work</a> <a href="/tags/流处理/" style="font-size: 10px;">流处理</a>
 					</div>
 				</section>
 				
@@ -391,7 +391,7 @@ cqlsh:test&gt; select * from test1;
 <figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="keyword">rm</span> -r velocity_partner</span><br><span class="line">sudo mv velocity_partner2 velocity_partner &amp;&amp; <span class="keyword">cd</span> velocity_partner</span><br><span class="line">sudo <span class="keyword">rename</span> partner2 partner *</span><br></pre></td></tr></table></figure>
 <p>5.重启Cassandra</p>
 <figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cqlsh:<span class="keyword">test</span>&gt; select * from velocity_partner;</span><br><span class="line">TSocket <span class="keyword">read</span> 0 bytes</span><br><span class="line">cqlsh:<span class="keyword">test</span>&gt; select * from velocity_partner2;</span><br><span class="line">TSocket <span class="keyword">read</span> 0 bytes</span><br><span class="line">cqlsh:<span class="keyword">test</span>&gt; <span class="keyword">desc</span> <span class="keyword">table</span> velocity_partner;</span><br><span class="line">[Errno 32] Broken pipe</span><br><span class="line">cqlsh:<span class="keyword">test</span>&gt; <span class="keyword">desc</span> <span class="keyword">table</span> velocity_partner2;</span><br><span class="line">[Errno 32] Broken pipe</span><br></pre></td></tr></table></figure>
-<h2 id="query">query</h2><p>WARN  [SharedPool-Worker-5] 2016-06-26 22:27:47,129 NoSpamLogger.java:94 - Unlogged batch covering 15 partitions detected against tables<br>[forseti.account_attached_device, forseti.device_attached_ip, forseti.ip_attached_account, forseti.ip_attached_device,<br>forseti.account_attached_ip, forseti.device_attached_account].<br>You should use a logged batch for atomicity, or asynchronous writes for performance.</p>
+<h2 id="query">query</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">WARN  [SharedPool-Worker-<span class="number">5</span>] <span class="number">2016</span>-<span class="number">06</span>-<span class="number">26</span> <span class="number">22</span>:<span class="number">27</span>:<span class="number">47</span>,<span class="number">129</span> NoSpamLogger<span class="class">.java</span>:<span class="number">94</span> - Unlogged batch covering <span class="number">15</span> partitions detected against tables </span><br><span class="line">[forseti<span class="class">.account_attached_device</span>, forseti<span class="class">.device_attached_ip</span>, forseti<span class="class">.ip_attached_account</span>, forseti<span class="class">.ip_attached_device</span>, </span><br><span class="line">forseti<span class="class">.account_attached_ip</span>, forseti.device_attached_account]. </span><br><span class="line">You should use <span class="tag">a</span> logged batch <span class="keyword">for</span> atomicity, or asynchronous writes <span class="keyword">for</span> performance.</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -403,7 +403,7 @@ cqlsh:test&gt; select * from test1;
   <p><span>本文标题:</span><a href="/2015/10/15/Cassandra-hole/">Cassandra陷阱</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年10月15日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年07月09日 - 08时24分</p>
+  <p><span>最后更新:</span>2017年06月15日 - 10时59分</p>
   <p>
     <span>原始链接:</span><a href="/2015/10/15/Cassandra-hole/" title="Cassandra陷阱">http://github.com/zqhxuyuan/2015/10/15/Cassandra-hole/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/10/15/Cassandra-hole/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -432,15 +432,15 @@ cqlsh:test&gt; select * from test1;
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2015/10/15/Cassandra-Stress/">
-        Cassandra压力测试
+      <a href="/2015/10/15/Cassandra-Daily/">
+        Cassandra日常运维
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/09/10/2015-09-10-Storm-Window/">
-        Storm的滑动窗口
+      <a href="/2015/10/15/Cassandra-exception/">
+        Cassandra常见异常
       </a>
     </div>
   
@@ -591,10 +591,10 @@ cqlsh:test&gt; select * from test1;
   
     
     <div  class="post-nav-button">
-    <a href="/2015/10/15/Cassandra-Stress/" title="上一篇: Cassandra压力测试">
+    <a href="/2015/10/15/Cassandra-Daily/" title="上一篇: Cassandra日常运维">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/09/10/2015-09-10-Storm-Window/" title="下一篇: Storm的滑动窗口">
+    <a href="/2015/10/15/Cassandra-exception/" title="下一篇: Cassandra常见异常">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

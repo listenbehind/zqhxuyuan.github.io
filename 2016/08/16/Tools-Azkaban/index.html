@@ -3,18 +3,28 @@
 <head>
   <meta charset="utf-8">
   
-  <title>译：Kafka权威指南-第五章-内部实现 | zqhxuyuan</title>
+  <title>Azkaban动态修改作业属性 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Kafka权威指南中文翻译：https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch05.html">
+  <meta name="description" content="Aakaban动态修改作业属性">
 <meta property="og:type" content="article">
-<meta property="og:title" content="译：Kafka权威指南-第五章-内部实现">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2016/10/29/Kafka-Definitive-Guide-ch05/index.html">
+<meta property="og:title" content="Azkaban动态修改作业属性">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2016/08/16/Tools-Azkaban/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="Kafka权威指南中文翻译：https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch05.html">
-<meta property="og:updated_time" content="2016-10-29T10:07:46.000Z">
+<meta property="og:description" content="Aakaban动态修改作业属性">
+<meta property="og:image" content="http://img.blog.csdn.net/20161026214345680">
+<meta property="og:image" content="http://img.blog.csdn.net/20161026214206566">
+<meta property="og:image" content="http://img.blog.csdn.net/20161026214219051">
+<meta property="og:image" content="http://img.blog.csdn.net/20161026214247788">
+<meta property="og:image" content="http://img.blog.csdn.net/20161026214259801">
+<meta property="og:image" content="http://img.blog.csdn.net/20161026214311660">
+<meta property="og:image" content="http://img.blog.csdn.net/20161026214321945">
+<meta property="og:image" content="http://img.blog.csdn.net/20161026214333117">
+<meta property="og:image" content="http://img.blog.csdn.net/20170516112428565">
+<meta property="og:image" content="http://img.blog.csdn.net/20170516112450069">
+<meta property="og:updated_time" content="2017-06-22T03:52:10.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="译：Kafka权威指南-第五章-内部实现">
-<meta name="twitter:description" content="Kafka权威指南中文翻译：https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch05.html">
+<meta name="twitter:title" content="Azkaban动态修改作业属性">
+<meta name="twitter:description" content="Aakaban动态修改作业属性">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -112,7 +122,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 14.44px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.33px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 14.44px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.44px;">work</a> <a href="/tags/流处理/" style="font-size: 10px;">流处理</a>
 					</div>
 				</section>
 				
@@ -174,11 +184,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-Kafka-Definitive-Guide-ch05" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Tools-Azkaban" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/29/Kafka-Definitive-Guide-ch05/" class="article-date">
-  	<time datetime="2016-10-28T16:00:00.000Z" itemprop="datePublished">2016-10-29</time>
+      <a href="/2016/08/16/Tools-Azkaban/" class="article-date">
+  	<time datetime="2016-08-15T16:00:00.000Z" itemprop="datePublished">2016-08-16</time>
 </a>
     </div>
   
@@ -191,7 +201,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      译：Kafka权威指南-第五章-内部实现
+      Azkaban动态修改作业属性
     </h1>
   
 
@@ -200,13 +210,13 @@
       <div class="article-info article-info-post">
         
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/mq/">mq</a>
+	<a class="article-category-link" href="/categories/tool/">tool</a>
 	</div>
 
 
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/work/">work</a></li></ul>
 	</div>
 
         <div class="clearfix"></div>
@@ -216,8 +226,42 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p>Kafka权威指南中文翻译：<a href="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch05.html" target="_blank" rel="external">https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch05.html</a><br><a id="more"></a></p>
-
+        <p>Aakaban动态修改作业属性</p>
+<a id="more"></a>
+<p>线上有个任务跑挂了</p>
+<p><img src="http://img.blog.csdn.net/20161026214345680" alt="az0"></p>
+<p>Project有一个可以跑历史任务，但是默认的运行时间是： </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">beg=<span class="number">2016</span>-<span class="number">6</span>-<span class="number">1</span></span><br><span class="line">end=<span class="number">2016</span>-<span class="number">6</span>-<span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://img.blog.csdn.net/20161026214206566" alt="az1"></p>
+<blockquote>
+<p>一个Project中可以创建多个.job文件，比如上面的Project创建了4个.job文件。</p>
+</blockquote>
+<p>如果要跑其他天的任务，可以在Job属性中修改，不过前提是这个任务必须跑过一次后才可以修改，由于之前都没跑过，所以手动执行一次任务。</p>
+<p><img src="http://img.blog.csdn.net/20161026214219051" alt="az2"></p>
+<p>修改Job的参数的路径：点击上面的ExecutorID》进入到任务的详细页面，再点击Detail</p>
+<p><img src="http://img.blog.csdn.net/20161026214247788" alt="az3"></p>
+<p>从日志中可以看到参数是<strong>2016-6-1和2016-6-2</strong>，点击右上角的Job Properties</p>
+<p><img src="http://img.blog.csdn.net/20161026214259801" alt="az5"></p>
+<p>可以修改beg和end参数，然后保存。</p>
+<p><img src="http://img.blog.csdn.net/20161026214311660" alt="az6"></p>
+<p>最后回到任务页面，手动执行（前一个任务必须执行完，或者Kill掉，不允许暂停）。</p>
+<p><img src="http://img.blog.csdn.net/20161026214321945" alt="az7"></p>
+<p>再看任务的日志，可以看到参数变成了<strong>2016-10-8和2016-10-8</strong>，现在就可以重跑线上挂掉的那天的任务了。</p>
+<p><img src="http://img.blog.csdn.net/20161026214333117" alt="az9"></p>
+<p>附上azkaban的.job文件：  </p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span>=command</span><br><span class="line">beg=2016-6-1</span><br><span class="line">end=2016-6-2</span><br><span class="line">command=<span class="keyword">sh</span> <span class="keyword">cross</span>-partner-<span class="keyword">range</span>.<span class="keyword">sh</span> <span class="label">$&#123;beg&#125;</span> <span class="label">$&#123;end&#125;</span></span><br></pre></td></tr></table></figure>
+<p>这里只有定义了beg和end参数，才可以在Job Properties中修改，如果说脚本是写死的比如：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">type=command</span><br><span class="line">command=sh cross-partner-range.sh <span class="number">2016</span>-<span class="number">6</span>-<span class="number">1</span> <span class="number">2016</span>-<span class="number">6</span>-<span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>那么就没办法做到动态修改作业的属性了，这样就只能重新创建一个.job文件，然后上传，执行。</p>
+<p>再附上生成azkaban的zip包的方式：  </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/IdeaProjects/tongdun/vulcan/cross-partner</span><br><span class="line">mvn clean package</span><br><span class="line"></span><br><span class="line">azkabanProject=cross-partner</span><br><span class="line">rm -rf ~/Downloads/<span class="variable">$azkabanProject</span></span><br><span class="line">rm ~/Downloads/<span class="variable">$azkabanProject</span>.zip</span><br><span class="line">mkdir ~/Downloads/<span class="variable">$azkabanProject</span></span><br><span class="line"></span><br><span class="line">cp target/cross-partner-<span class="number">1.0</span>.<span class="number">0</span>-SNAPSHOT-jar-with-dependencies.jar ~/Downloads/<span class="variable">$azkabanProject</span>/</span><br><span class="line">cp azkaban/* ~/Downloads/<span class="variable">$azkabanProject</span>/</span><br><span class="line">zip -r ~/Downloads/<span class="variable">$azkabanProject</span>.zip ~/Downloads/<span class="variable">$azkabanProject</span></span><br></pre></td></tr></table></figure>
+<h2 id="SLA报警">SLA报警</h2><p><img src="http://img.blog.csdn.net/20170516112428565" alt="1"></p>
+<p>最小的单位是分钟，比如5:00表示5个小时。</p>
+<p><img src="http://img.blog.csdn.net/20170516112450069" alt="2"></p>
+<p>设置SLA</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">curl</span> -k -d <span class="string">"ajax=setSla&amp;scheduleId=1&amp;slaEmails=a<span class="variable">@example</span>.com;b<span class="variable">@example</span>.com&amp;settings[0]=aaa,SUCCESS,5:00,true,false&amp;settings[1]=bbb,SUCCESS,10:00,false,true"</span> -b <span class="string">"azkaban.browser.session.id=XXXXXXXXXXXXXX"</span> <span class="string">"http://localhost:8081/schedule"</span></span><br></pre></td></tr></table></figure>
+<p>获取SLA</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">settings</span>" : <span class="value">[ &#123;</span><br><span class="line">    "<span class="attribute">duration</span>" : <span class="value"><span class="string">"300m"</span></span>,</span><br><span class="line">    "<span class="attribute">rule</span>" : <span class="value"><span class="string">"SUCCESS"</span></span>,</span><br><span class="line">    "<span class="attribute">id</span>" : <span class="value"><span class="string">"aaa"</span></span>,</span><br><span class="line">    "<span class="attribute">actions</span>" : <span class="value">[ <span class="string">"EMAIL"</span> ]</span><br><span class="line">  </span>&#125;, &#123;</span><br><span class="line">    "<span class="attribute">duration</span>" : <span class="value"><span class="string">"600m"</span></span>,</span><br><span class="line">    "<span class="attribute">rule</span>" : <span class="value"><span class="string">"SUCCESS"</span></span>,</span><br><span class="line">    "<span class="attribute">id</span>" : <span class="value"><span class="string">"bbb"</span></span>,</span><br><span class="line">    "<span class="attribute">actions</span>" : <span class="value">[ <span class="string">"KILL"</span> ]</span><br><span class="line">  </span>&#125; ]</span>,</span><br><span class="line">  "<span class="attribute">slaEmails</span>" : <span class="value">[ <span class="string">"a@example.com"</span>, <span class="string">"b@example.com"</span> ]</span>,</span><br><span class="line">  "<span class="attribute">allJobNames</span>" : <span class="value">[ <span class="string">"aaa"</span>, <span class="string">"ccc"</span>, <span class="string">"bbb"</span>, <span class="string">"start"</span>, <span class="string">"end"</span> ]</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -225,13 +269,13 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2016/10/29/Kafka-Definitive-Guide-ch05/">译：Kafka权威指南-第五章-内部实现</a></p>
+  <p><span>本文标题:</span><a href="/2016/08/16/Tools-Azkaban/">Azkaban动态修改作业属性</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
-  <p><span>发布时间:</span>2016年10月29日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年10月29日 - 18时07分</p>
+  <p><span>发布时间:</span>2016年08月16日 - 00时00分</p>
+  <p><span>最后更新:</span>2017年06月22日 - 11时52分</p>
   <p>
-    <span>原始链接:</span><a href="/2016/10/29/Kafka-Definitive-Guide-ch05/" title="译：Kafka权威指南-第五章-内部实现">http://github.com/zqhxuyuan/2016/10/29/Kafka-Definitive-Guide-ch05/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/10/29/Kafka-Definitive-Guide-ch05/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2016/08/16/Tools-Azkaban/" title="Azkaban动态修改作业属性">http://github.com/zqhxuyuan/2016/08/16/Tools-Azkaban/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2016/08/16/Tools-Azkaban/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -257,15 +301,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2016/11/02/Kafka-Streams-cn/">
-        Kafka Streams中文翻译
+      <a href="/2016/08/20/Cassandra-Intro/">
+        图解Cassandra
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2016/10/29/Kafka-Interactive-Query/">
-        译：Kafka交互式查询和流处理的统一
+      <a href="/2016/07/26/JVM/">
+        JVM GC
       </a>
     </div>
   
@@ -300,7 +344,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SLA报警"><span class="toc-number">1.</span> <span class="toc-text">SLA报警</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -378,7 +422,7 @@
 
 <div class="duoshuo" id="comments">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2016/10/29/Kafka-Definitive-Guide-ch05/" data-title="译：Kafka权威指南-第五章-内部实现" data-url="http://github.com/zqhxuyuan/2016/10/29/Kafka-Definitive-Guide-ch05/"></div>
+	<div class="ds-thread" data-thread-key="2016/08/16/Tools-Azkaban/" data-title="Azkaban动态修改作业属性" data-url="http://github.com/zqhxuyuan/2016/08/16/Tools-Azkaban/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -416,10 +460,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2016/11/02/Kafka-Streams-cn/" title="上一篇: Kafka Streams中文翻译">
+    <a href="/2016/08/20/Cassandra-Intro/" title="上一篇: 图解Cassandra">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2016/10/29/Kafka-Interactive-Query/" title="下一篇: 译：Kafka交互式查询和流处理的统一">
+    <a href="/2016/07/26/JVM/" title="下一篇: JVM GC">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

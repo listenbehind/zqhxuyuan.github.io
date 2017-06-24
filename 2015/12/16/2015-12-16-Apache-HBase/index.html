@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Meet HBase Again, also Phoenix.">
 <meta property="og:image" content="http://img.blog.csdn.net/20151216161855376">
-<meta property="og:updated_time" content="2016-06-02T07:28:49.000Z">
+<meta property="og:updated_time" content="2017-06-08T08:33:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hello HBase">
 <meta name="twitter:description" content="Meet HBase Again, also Phoenix.">
@@ -113,7 +113,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 14.44px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.33px;">work</a>
+						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 14.44px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.44px;">work</a> <a href="/tags/流处理/" style="font-size: 10px;">流处理</a>
 					</div>
 				</section>
 				
@@ -281,6 +281,55 @@
 <p>实际上可以在Phoenix中创建视图来将hbase中的表映射进来: <a href="http://phoenix.apache.org/faq.html#How_I_map_Phoenix_table_to_an_existing_HBase_table" target="_blank" rel="external">http://phoenix.apache.org/faq.html#How_I_map_Phoenix_table_to_an_existing_HBase_table</a></p>
 <h2 id="其他">其他</h2><p>删除ZK中的hbase节点</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">zkCli<span class="class">.sh</span> -server zkHost1,zkHost2</span><br><span class="line">rmr /hbaseSplitWAL</span><br><span class="line">rmr /hbase</span><br></pre></td></tr></table></figure>
+<h2 id="Snapshot">Snapshot</h2><p><a href="http://wangneng-168.iteye.com/blog/2154669" target="_blank" rel="external">http://wangneng-168.iteye.com/blog/2154669</a></p>
+<blockquote>
+<p>CopyTable的功能可以在同一个集群复制不同的表，或者不同集群复制相同的表。<br>不用CopyTable，因为CopyTable工具采用scan查询，写入新表时采用put和delete API，全是基于hbase的client api进行读写，无法使用Import工具的bulk导入</p>
+</blockquote>
+<p>HBase提供快照功能，下面三个命令是在一个集群内的快照维护/管理。</p>
+<ul>
+<li>对表做快照：snapshot ‘表名’ ‘快照名’</li>
+<li>将快照克隆一份新的表：clone_snapshot ‘快照名’ ‘新的表名’</li>
+<li>恢复快照：disable ‘表名’；restore_snapshot ‘快照名’</li>
+</ul>
+<blockquote>
+<p>克隆快照指定是将快照克隆出一份新的表。在对表做快照后，这份快照的数据结构已经确定了，克隆后的是一张新的表。新表的内容和快照的内容完全一样。<br>恢复快照需要先把表禁用，恢复快照时，不需要指定表名。 因为快照中已经有表名。 恢复快照类似于数据库的恢复、回滚技术。</p>
+</blockquote>
+<p>限制条件：</p>
+<ul>
+<li>clone_snapshot快照时，表名必须不能存在。不允许clone成一个已经存在的表。</li>
+<li>restore_snapshot必须禁用表。如果表已经存在，要从快照恢复数据，只能用restore，不能用clone</li>
+</ul>
+<p>将源集群(srv1)的表拷贝到目标集群(srv2)分成两个步骤：</p>
+<ol>
+<li>在<strong>源集群</strong>执行以下两个命令：</li>
+</ol>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ snapshotTable=<span class="string">"MyTable"</span></span><br><span class="line">$ snapshotName=<span class="string">"snapshot-1"</span></span><br><span class="line"></span><br><span class="line">$ bin/hbase shell -e <span class="string">"snapshot '$snapshotTable', '$snapshotName'"</span></span><br><span class="line">$ bin/hbase org<span class="class">.apache</span><span class="class">.hadoop</span><span class="class">.hbase</span><span class="class">.snapshot</span><span class="class">.ExportSnapshot</span> \</span><br><span class="line">  -snapshot <span class="variable">$snapshotName</span> -mappers <span class="number">16</span> -bandwidth <span class="number">10</span> \</span><br><span class="line">  -copy-to hdfs:<span class="comment">//srv2:8082/hbase</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>hdfs://srv2:8082/hbase</code>是<strong>目标hbase集群</strong>的<code>root.dir</code></p>
+</blockquote>
+<ol>
+<li>在目标集群执行：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ snapshotTable=<span class="string">"MyTable"</span></span><br><span class="line">$ snapshotName=<span class="string">"snapshot-1"</span></span><br><span class="line"></span><br><span class="line">$ bin/hbase shell <span class="operator">-e</span> <span class="string">"disable '<span class="variable">$snapshotTable</span>';restore_snapshot '<span class="variable">$snapshotName</span>';enable '<span class="variable">$snapshotTable</span>'"</span></span><br></pre></td></tr></table></figure>
+<p>第一步的ExportSnapshot只是把快照数据同步到目标集群，还需要恢复才可以将快照运用到目标集群。<br>但是恢复操作需要禁用表，对于一直在线的应用而言，不可接受。</p>
+<p>In case of partial data-loss due to misbehaving client,<br>instead of a full restore that requires the table to be disabled,<br>you can clone the table from the snapshot and<br>use a Map-Reduce job to copy the data that you need, from the clone to the main one.</p>
+<p>因为完全恢复（full restore）需要禁用表时，写入到目标集群表中的数据会丢失。<br>不过你可以使用clone_snapshot复制出一张表（新表），然后使用MR作业将新表复制到旧表，</p>
+<p>一些问题：</p>
+<ol>
+<li>clone_snapshot能不能直接复制旧表。比如两个tableName都一样，是否可行？</li>
+</ol>
+<blockquote>
+<p>snapshot ‘tableName’ ‘快照名’<br>clone_snapshot ‘快照名’ ‘tableName’</p>
+</blockquote>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">hbase</span><span class="params">(main)</span></span>:<span class="number">007</span>:<span class="number">0</span>&gt; snapshot <span class="string">'table_1'</span>,<span class="string">'snapshot_10'</span></span><br><span class="line"><span class="function"><span class="title">hbase</span><span class="params">(main)</span></span>:<span class="number">007</span>:<span class="number">0</span>&gt; clone_snapshot <span class="string">'snapshot_10'</span>,<span class="string">'table_1'</span></span><br><span class="line"></span><br><span class="line">ERROR: Table already exists: table_1!</span><br></pre></td></tr></table></figure>
+<ol>
+<li>开启replciation时，snapshot会有影响吗？</li>
+</ol>
+<p>Since Replication works at log level and snapshots at file-system level,<br>after a restore, the replicas will be in a different state from the master.<br>If you want to use restore, you need to stop replication and redo the bootstrap.</p>
+<p>如果该表开启了replication功能实现主从同步则在使用restore_snapshot功能对主表进行恢复时，<br>必须先停止replication功能并且redo the bootstrap，<br>因为replication是基于WAL日志实现的，而snapshot是直接在hdfs层面不是基于hbase的put、delete等API进行的，不会写WAL日志。</p>
+<blockquote>
+<p>什么是redo bootstrap?重启节点吗？</p>
+</blockquote>
 
       
     </div>
@@ -292,7 +341,7 @@
   <p><span>本文标题:</span><a href="/2015/12/16/2015-12-16-Apache-HBase/">Hello HBase</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月16日 - 00时00分</p>
-  <p><span>最后更新:</span>2016年06月02日 - 15时28分</p>
+  <p><span>最后更新:</span>2017年06月08日 - 16时33分</p>
   <p>
     <span>原始链接:</span><a href="/2015/12/16/2015-12-16-Apache-HBase/" title="Hello HBase">http://github.com/zqhxuyuan/2015/12/16/2015-12-16-Apache-HBase/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/16/2015-12-16-Apache-HBase/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -364,7 +413,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_HBase"><span class="toc-number">1.</span> <span class="toc-text">Install HBase</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_Phoenix"><span class="toc-number">2.</span> <span class="toc-text">Install Phoenix</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CRUD"><span class="toc-number">2.1.</span> <span class="toc-text">CRUD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell创建的表在Phoenix中看不见"><span class="toc-number">2.2.</span> <span class="toc-text">shell创建的表在Phoenix中看不见</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">3.</span> <span class="toc-text">其他</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_HBase"><span class="toc-number">1.</span> <span class="toc-text">Install HBase</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_Phoenix"><span class="toc-number">2.</span> <span class="toc-text">Install Phoenix</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CRUD"><span class="toc-number">2.1.</span> <span class="toc-text">CRUD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell创建的表在Phoenix中看不见"><span class="toc-number">2.2.</span> <span class="toc-text">shell创建的表在Phoenix中看不见</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">3.</span> <span class="toc-text">其他</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Snapshot"><span class="toc-number">4.</span> <span class="toc-text">Snapshot</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
