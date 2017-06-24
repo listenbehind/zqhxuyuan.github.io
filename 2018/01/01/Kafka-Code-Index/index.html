@@ -11,7 +11,9 @@
 <meta property="og:url" content="http://github.com/zqhxuyuan/2018/01/01/Kafka-Code-Index/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="《Kafka技术内幕》">
-<meta property="og:updated_time" content="2017-02-25T07:07:06.000Z">
+<meta property="og:image" content="http://img.blog.csdn.net/20170624225547302">
+<meta property="og:image" content="http://img.blog.csdn.net/20170624225600513">
+<meta property="og:updated_time" content="2017-06-24T14:57:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka技术内幕">
 <meta name="twitter:description" content="《Kafka技术内幕》">
@@ -242,265 +244,13 @@
 <li><a href="http://zqhxuyuan.github.io/2016/10/29/Kafka-Interactive-Query/" target="_blank" rel="external">译：Kafka交互式查询和流处理的统一</a></li>
 </ul>
 <h2 id="《Kafka技术内幕》目录">《Kafka技术内幕》目录</h2><ul>
-<li><a href="http://zqhxuyuan.github.io/2016/05/26/2016-05-13-Kafka-Book-Sample/" target="_blank" rel="external">样章</a>  </li>
-</ul>
-<ul>
-<li>第一章 Kafka入门<ul>
-<li>1.1 介绍<ul>
-<li>1.1.1 流式数据平台</li>
-<li>1.1.2 主要概念</li>
-<li>1.1.3 Kafka的设计实现</li>
-</ul>
+<li><p><a href="http://zqhxuyuan.github.io/2016/05/26/2016-05-13-Kafka-Book-Sample/" target="_blank" rel="external">样章</a>  </p>
 </li>
-<li>1.2 快速开始<ul>
-<li>1.2.1 单机模式</li>
-<li>1.2.2 集群模式</li>
-<li>1.2.3 消费组示例</li>
-</ul>
-</li>
-<li>1.3 环境准备<ul>
-<li>1.3.1 编译运行</li>
-<li>1.3.2 本书导读</li>
-</ul>
+<li><p>目录（2017-6-24）</p>
 </li>
 </ul>
-</li>
-<li>第2章 生产者<ul>
-<li>2.1 生产者<ul>
-<li>2.1.1 同步和异步发送消息</li>
-<li>2.1.2 发送线程（Sender）</li>
-<li>2.1.3 选择器（Selector）</li>
-<li>2.1.4 客户端网络连接对象（NetworkClient）</li>
-</ul>
-</li>
-<li>2.2 旧的生产者（Producer）<ul>
-<li>2.2.1 消息分组</li>
-<li>2.2.2 为消息选择Partition</li>
-<li>2.2.3 发送请求</li>
-</ul>
-</li>
-<li>2.3 服务端网络连接（SocketServer）<ul>
-<li>2.3.1 处理器（Processor）</li>
-<li>2.3.2 请求通道（RequestChannel）</li>
-<li>2.3.3 请求处理器（KafkaRequestHandler）</li>
-<li>2.3.4 服务端请求入口（KafkaApis）</li>
-</ul>
-</li>
-<li>2.4 本章总结</li>
-</ul>
-</li>
-<li>第三章：消费者<ul>
-<li>3.1 消费者启动和初始化<ul>
-<li>3.1.1 ZooKeeper消费者连接器</li>
-<li>3.1.2 Zookeeper节点</li>
-<li>3.1.3 客户端线程模型</li>
-<li>3.1.4 重新初始化消费者</li>
-</ul>
-</li>
-<li>3.2 消费者Rebalancer操作<ul>
-<li>3.2.1 Partition的所有权</li>
-<li>3.2.2 Assignment的上下文信息</li>
-<li>3.2.3 Partition分配算法</li>
-<li>3.2.4 为消费者分配Partition</li>
-<li>3.2.5 PartitionTopicInfo</li>
-<li>3.2.6 更新和关闭Fetcher</li>
-</ul>
-</li>
-<li>3.3 消费者拉取数据<ul>
-<li>3.3.1 选择有Leader的Partition</li>
-<li>3.3.2 创建拉取线程</li>
-<li>3.3.3 将Partition添加到拉取线程</li>
-<li>3.3.4 抽象拉取线程的工作过程</li>
-<li>3.3.5 消费者拉取线程</li>
-</ul>
-</li>
-<li>3.4 消费者消费消息<ul>
-<li>3.4.1 Kafka消息流（KafkaStream）</li>
-<li>3.4.2 消费者迭代消费消息</li>
-</ul>
-</li>
-<li>3.5 消费者提交offset<ul>
-<li>3.5.1 Zookeeper存储offset</li>
-<li>3.5.2 以topic方式存储offset</li>
-<li>3.5.3 连接OffsetManager</li>
-<li>3.5.4 服务端处理offset请求</li>
-</ul>
-</li>
-<li>3.6 消费者低级API示例<ul>
-<li>3.6.1 消息消费主流程</li>
-<li>3.6.2 找出Partition的Leader</li>
-<li>3.6.3 获取Partition最近读取的offset</li>
-<li>3.6.4 发送拉取请求并消费消息</li>
-</ul>
-</li>
-<li>3.7 本章总结</li>
-</ul>
-</li>
-<li>第四章 新消费者<ul>
-<li>4.1 新消费者<ul>
-<li>4.1.1 订阅和状态</li>
-<li>4.1.2 消费者消费消息</li>
-<li>4.1.3 RequestFuture</li>
-<li>4.1.4 客户端轮询</li>
-<li>4.1.5 延迟的任务</li>
-</ul>
-</li>
-<li>4.2 心跳任务<ul>
-<li>4.2.1 心跳发送流程</li>
-<li>4.2.2 心跳监听器</li>
-<li>4.2.3 心跳和协调者的关系</li>
-</ul>
-</li>
-<li>4.3 自动提交任务<ul>
-<li>4.3.1 异步提交offset</li>
-<li>4.3.2 同步提交Offset</li>
-</ul>
-</li>
-<li>4.4 本章总结</li>
-</ul>
-</li>
-<li>第五章 协调者<ul>
-<li>5.1 消费者加入消费组<ul>
-<li>5.1.1 发送JoinGroup请求</li>
-<li>5.1.2 JoinGroup和SyncGroup</li>
-<li>5.1.3 分配Partition</li>
-</ul>
-</li>
-<li>5.2 协调者处理消费者Join请求<ul>
-<li>5.2.1 消费者和消费组元数据</li>
-<li>5.2.2 协调者处理JoinGroup</li>
-</ul>
-</li>
-<li>5.3 同步消费组<ul>
-<li>5.3.1 Leader消费者分配Assignment</li>
-<li>5.3.2 协调者处理SyncGroup请求</li>
-<li>5.3.3 异常场景分析</li>
-</ul>
-</li>
-<li>5.4 延迟的心跳<ul>
-<li>5.4.1 协调者处理心跳</li>
-<li>5.4.2 延迟操作完成时返回响应</li>
-<li>5.4.3 完成和调度下一次心跳</li>
-<li>5.4.4 心跳超时导致消费者失败</li>
-<li>5.4.5 Heartbeat和JoinGroup的关系</li>
-<li>5.4.6 平衡、状态机、心跳</li>
-</ul>
-</li>
-<li>5.5 离开消费组</li>
-<li>5.6 本章总结</li>
-</ul>
-</li>
-<li>第六章 日志存储<ul>
-<li>6.1 追加消息流程<ul>
-<li>6.1.1 Kafka服务（KafkaApis）</li>
-<li>6.1.2 副本管理器（ReplicaManager）</li>
-<li>6.1.3 Partition</li>
-</ul>
-</li>
-<li>6.2 Log日志文件<ul>
-<li>6.2.1 消息</li>
-<li>6.2.2 Segment</li>
-<li>6.2.3 读取日志文件</li>
-</ul>
-</li>
-<li>6.3 日志管理类的后台线程<ul>
-<li>6.3.1 日志清理</li>
-<li>6.3.2 日志压缩</li>
-</ul>
-</li>
-<li>6.4 延迟操作<ul>
-<li>6.4.1 创建延迟对象</li>
-<li>6.4.2 延迟操作接口</li>
-<li>6.4.3 延迟操作的缓存</li>
-</ul>
-</li>
-<li>6.5 本章总结</li>
-</ul>
-</li>
-<li>第七章 控制器<ul>
-<li>7.1 Kafka副本原理<ul>
-<li>7.1.1 负载均衡</li>
-<li>7.1.2 数据同步</li>
-<li>7.1.3 故障处理</li>
-<li>7.1.4 控制器</li>
-</ul>
-</li>
-<li>7.2 KafkaController<ul>
-<li>7.2.1 控制器选举</li>
-<li>7.2.2 控制器上下文（ControllerContext）</li>
-<li>7.2.3 ZooKeeper监听器</li>
-<li>7.2.4 控制器初始化</li>
-<li>7.2.5 状态机</li>
-<li>7.2.6 管理工作</li>
-</ul>
-</li>
-<li>7.3 Leader和ISR请求<ul>
-<li>7.3.1 ReplicaManager处理请求</li>
-<li>7.3.2 Partition创建Leader和Follower副本</li>
-<li>7.3.3 Leader副本</li>
-<li>7.3.4 Follower副本</li>
-<li>7.3.5 检查点线程（checkpoint）</li>
-<li>7.3.6 LeaderAndIsr请求和协调者</li>
-</ul>
-</li>
-<li>7.4 UpdateMetadata<ul>
-<li>7.4.1 共享缓存（MetadataCache）</li>
-<li>7.4.2 获取TopicMetadata</li>
-</ul>
-</li>
-<li>7.5 本章总结</li>
-</ul>
-</li>
-<li>第八章 Kafka高级应用<ul>
-<li>8.1 消息传递语义（Message Delivery Guarantee）<ul>
-<li>8.1.1 生产者的数据可靠性</li>
-<li>8.1.2 消费者的消息处理语义</li>
-</ul>
-</li>
-<li>8.2 镜像同步（MirrorMaker）<ul>
-<li>8.2.1 单机模拟Mirror Maker</li>
-<li>8.2.2 MirrorMaker的生产者和消费者</li>
-</ul>
-</li>
-<li>8.3 Kafka Connect连接器<ul>
-<li>8.3.1 架构与模型</li>
-<li>8.3.2 单机模式</li>
-<li>8.3.3 开发一个简单的Connector</li>
-<li>8.3.4 分布式模式</li>
-</ul>
-</li>
-<li>8.4 其他高级特性<ul>
-<li>8.4.1 Avro序列化、反序列化</li>
-<li>8.4.2 REST服务</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>第九章 Kafka Streams<ul>
-<li>9.1 流处理的拓扑<ul>
-<li>9.1.1 数据流和处理节点</li>
-<li>9.1.2 构建拓扑</li>
-</ul>
-</li>
-<li>9.2 流处理的线程模型<ul>
-<li>9.2.1 流线程（StreamThread）</li>
-<li>9.2.2 流任务（StreamTask）</li>
-</ul>
-</li>
-<li>9.3 状态存储<ul>
-<li>9.3.1 主要概念</li>
-<li>9.3.2 备份任务（StandbyTask）</li>
-<li>9.3.3 状态恢复</li>
-</ul>
-</li>
-<li>9.4 Kafka Streams DSL<ul>
-<li>9.4.1 KStream和KTable抽象接口</li>
-<li>9.4.2 流转换操作</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+<p><img src="http://img.blog.csdn.net/20170624225547302" alt="0"></p>
+<p><img src="http://img.blog.csdn.net/20170624225600513" alt="0"></p>
 
       
     </div>
@@ -512,7 +262,7 @@
   <p><span>本文标题:</span><a href="/2018/01/01/Kafka-Code-Index/">Kafka技术内幕</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2018年01月01日 - 00时00分</p>
-  <p><span>最后更新:</span>2017年02月25日 - 15时07分</p>
+  <p><span>最后更新:</span>2017年06月24日 - 22时57分</p>
   <p>
     <span>原始链接:</span><a href="/2018/01/01/Kafka-Code-Index/" title="Kafka技术内幕">http://github.com/zqhxuyuan/2018/01/01/Kafka-Code-Index/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2018/01/01/Kafka-Code-Index/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
