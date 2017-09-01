@@ -3,31 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>zqhxuyuan</title>
+  <title>Akka并发图解 | zqhxuyuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="https://issues.apache.org/jira/browse/KAFKA
-2944https://github.com/apache/kafka/pull/723
-最后来分析KafkaBasedLog的readToLogEnd()方法如何读取到日志的最末尾，具体步骤如下。
-
-定位到分区的最末尾，通过消费者的seekToEnd()只是声明了重置策略为LATEST，并没有真正定位。客户端">
+  <meta name="description" content="Akka并发图解（Akka Concurrenty）：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="zqhxuyuan">
-<meta property="og:url" content="http://github.com/zqhxuyuan/2017/05/20/JIRA_KAFKA/index.html">
+<meta property="og:title" content="Akka并发图解">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2017/08/16/Akka-Concurrenty/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
-<meta property="og:description" content="https://issues.apache.org/jira/browse/KAFKA
-2944https://github.com/apache/kafka/pull/723
-最后来分析KafkaBasedLog的readToLogEnd()方法如何读取到日志的最末尾，具体步骤如下。
-
-定位到分区的最末尾，通过消费者的seekToEnd()只是声明了重置策略为LATEST，并没有真正定位。客户端">
-<meta property="og:image" content="http://img.blog.csdn.net/20170520193000243">
-<meta property="og:updated_time" content="2017-05-20T15:26:26.000Z">
+<meta property="og:description" content="Akka并发图解（Akka Concurrenty）：">
+<meta property="og:updated_time" content="2017-08-16T08:04:31.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="zqhxuyuan">
-<meta name="twitter:description" content="https://issues.apache.org/jira/browse/KAFKA
-2944https://github.com/apache/kafka/pull/723
-最后来分析KafkaBasedLog的readToLogEnd()方法如何读取到日志的最末尾，具体步骤如下。
-
-定位到分区的最末尾，通过消费者的seekToEnd()只是声明了重置策略为LATEST，并没有真正定位。客户端">
+<meta name="twitter:title" content="Akka并发图解">
+<meta name="twitter:description" content="Akka并发图解（Akka Concurrenty）：">
   
     <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
   
@@ -125,7 +112,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 14.44px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.44px;">work</a> <a href="/tags/流处理/" style="font-size: 10px;">流处理</a>
+						<a href="/tags/akka/" style="font-size: 10px;">akka</a> <a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 14.44px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.44px;">work</a> <a href="/tags/流处理/" style="font-size: 11.11px;">流处理</a>
 					</div>
 				</section>
 				
@@ -187,11 +174,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-JIRA_KAFKA" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Akka-Concurrenty" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/05/20/JIRA_KAFKA/" class="article-date">
-  	<time datetime="2017-05-20T15:26:26.000Z" itemprop="datePublished">2017-05-20</time>
+      <a href="/2017/08/16/Akka-Concurrenty/" class="article-date">
+  	<time datetime="2017-08-15T16:00:00.000Z" itemprop="datePublished">2017-08-16</time>
 </a>
     </div>
   
@@ -200,25 +187,37 @@
       <input type="hidden" class="isFancy" />
     
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Akka并发图解
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/akka/">akka</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/akka/">akka</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
     <div class="article-entry" itemprop="articleBody">
       
         
-        <p><a href="https://issues.apache.org/jira/browse/KAFKA" target="_blank" rel="external">https://issues.apache.org/jira/browse/KAFKA</a></p>
-<h2 id="2944">2944</h2><p><a href="https://github.com/apache/kafka/pull/723">https://github.com/apache/kafka/pull/723</a></p>
-<p>最后来分析<code>KafkaBasedLog</code>的<code>readToLogEnd()</code>方法如何读取到日志的最末尾，具体步骤如下。</p>
-<ol>
-<li>定位到分区的最末尾，通过消费者的<code>seekToEnd()</code>只是声明了重置策略为<code>LATEST</code>，并没有真正定位。客户端还需要调用消费者的轮询方法，才能保证发送拉取请求，并更新消费者的当前位置；</li>
-<li>比较消费者的当前位置（<code>endOffset</code>）与上一次还没定位到最末尾时的位置（<code>startOffset</code>），如果前者大于后者，客户端需要调用<code>seek()</code>方法定位到旧的位置（<code>startOffset</code>）；</li>
-<li>如果步骤(2)回退到旧的位置，需要调用轮询方法消费消息，直到当前位置是分区的最末尾位置。</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">KafkaBasedLog</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; </span>&#123; </span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readToLogEnd</span><span class="params">()</span> </span>&#123; <span class="comment">// 读取到日志的最末尾</span></span><br><span class="line">    <span class="comment">// 1. 定位到分区的最末尾（logEndOffset）</span></span><br><span class="line">    Set&lt;TopicPartition&gt; assignment = consumer.assignment();</span><br><span class="line">    Map&lt;TopicPartition, Long&gt; offsets = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (TopicPartition tp : assignment) &#123;</span><br><span class="line">      <span class="keyword">long</span> offset = consumer.position(tp); <span class="comment">// 获取当前的消费位置</span></span><br><span class="line">      offsets.put(tp, offset); <span class="comment">// 暂存起来</span></span><br><span class="line">      consumer.seekToEnd(singleton(tp)); <span class="comment">// 定位到最末尾的位置</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 2. 回退到开始位置</span></span><br><span class="line">    Map&lt;TopicPartition, Long&gt; endOffsets = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      poll(<span class="number">0</span>);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      <span class="keyword">for</span> (TopicPartition tp : assignment) &#123;</span><br><span class="line">        <span class="keyword">long</span> startOffset = offsets.get(tp); <span class="comment">// 旧的消费位置</span></span><br><span class="line">        <span class="keyword">long</span> endOffset = consumer.position(tp); <span class="comment">// 当前的偏移量等于最末尾的位置</span></span><br><span class="line">        <span class="keyword">if</span> (endOffset &gt; startOffset) &#123; </span><br><span class="line">          endOffsets.put(tp, endOffset); </span><br><span class="line">          consumer.seek(tp, startOffset);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 3. 开始读取，直到读取到分区的最末尾位置</span></span><br><span class="line">    <span class="keyword">while</span> (!endOffsets.isEmpty()) &#123;</span><br><span class="line">      poll(Integer.MAX_VALUE);</span><br><span class="line">      Iterator it = endOffsets.entrySet().iterator();</span><br><span class="line">      <span class="keyword">while</span> (it.hasNext()) &#123;</span><br><span class="line">        Map.Entry&lt;TopicPartition, Long&gt; entry = it.next();</span><br><span class="line">        <span class="keyword">if</span> (consumer.position(entry.getKey()) &lt; entry.getValue()) <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">else</span> it.remove();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>客户端调用<code>readToLogEnd()</code>之前，如果还有新的消息没有消费，当调用<code>readToLogEnd()</code>方法时，可以保证客户端会完全消费新写入的消息。如图8-31（左图）所示，偏移量从<code>3</code>到<code>6</code>是新写入的消息（比如一个连接器配置、两个任务配置、一个提交日志的配置，总共四条消息）。客户端为了读取到分区最近的位置，先定位到最近的位置（<code>7</code>）。注意这时不能立即调用轮询方法，因为如果客户端在最近的位置，调用轮询不会有任何的新消息。客户端应该再定位到上次消费的位置（<code>3</code>），然后才能调用轮询方法，直到消费者的当前位置大于等于最近位置时，就说明客户端读取到了日志的最末尾。右图中，假设客户端已经消费到了日志的最末尾，那么调用<code>readToLogEnd()</code>方法会立即返回。</p>
-<p><img src="http://img.blog.csdn.net/20170520193000243" alt="8"></p>
-<p>图8-31 读取到分区最末尾的位置</p>
-<blockquote>
-<p><strong>注意：</strong>上面的<code>readToLogEnd()</code>方法用到了Kafka新消费者的三个方法。（1）：<code>postion()</code>方法返回消费者当前的位置，即消费进度，这个值比客户端真正消费过的位置要大<code>1</code>。比如客户端消费了两条消息，<code>postion()</code>方法的返回值就等于<code>3</code>。（2）：<code>seekToEnd(tp)</code>方法定位到日志的最末尾，同样，这个值也是实际的偏移量加上<code>1</code>（即<code>nextOffset</code>）。比如分区实际只有六条消息，最末尾的偏移量等于<code>7</code>。（3）：<code>seekTo(tp,offset)</code>方法定位到日志的指定位置。客户端定位到指定位置后，下一步一般是要调用轮询方法，并从这个位置拉取消息。所以如果客户端已经消费了偏移量等于<code>1</code>和<code>2</code>的两条消息，定位的位置是<code>3</code>，表示要拉取第三条的消息。不能定位到<code>2</code>，那样的话，从位置<code>2</code>开始拉取消息，就重复拉取了第二条消息。</p>
-</blockquote>
-<h2 id="2500/2076/KIP-17">2500/2076/KIP-17</h2>
+        <p>Akka并发图解（Akka Concurrenty）：<br><a id="more"></a></p>
+
       
     </div>
     
@@ -226,13 +225,13 @@
   
     
 <div class="copyright">
-  <p><span>本文标题:</span><a href="/2017/05/20/JIRA_KAFKA/"></a></p>
+  <p><span>本文标题:</span><a href="/2017/08/16/Akka-Concurrenty/">Akka并发图解</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
-  <p><span>发布时间:</span>2017年05月20日 - 23时26分</p>
-  <p><span>最后更新:</span>2017年05月20日 - 23时26分</p>
+  <p><span>发布时间:</span>2017年08月16日 - 00时00分</p>
+  <p><span>最后更新:</span>2017年08月16日 - 16时04分</p>
   <p>
-    <span>原始链接:</span><a href="/2017/05/20/JIRA_KAFKA/" title="">http://github.com/zqhxuyuan/2017/05/20/JIRA_KAFKA/</a>
-    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2017/05/20/JIRA_KAFKA/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+    <span>原始链接:</span><a href="/2017/08/16/Akka-Concurrenty/" title="Akka并发图解">http://github.com/zqhxuyuan/2017/08/16/Akka-Concurrenty/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2017/08/16/Akka-Concurrenty/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
         <i class="fa fa-clipboard"></i>
     </span>
   </p>
@@ -258,15 +257,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2017/06/25/2017-06-24-Gearpump/">
-        Deep into Apache Gearpump
+      <a href="/2018/01/01/Kafka-Code-Index/">
+        Kafka技术内幕
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2017/05/19/Spark-Metrics/">
-        
+      <a href="/2017/06/25/2017-06-24-Gearpump/">
+        Deep into Apache Gearpump
       </a>
     </div>
   
@@ -301,7 +300,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#2944"><span class="toc-number">1.</span> <span class="toc-text">2944</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2500/2076/KIP-17"><span class="toc-number">2.</span> <span class="toc-text">2500/2076/KIP-17</span></a></li></ol>
+
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -379,7 +378,7 @@
 
 <div class="duoshuo" id="comments">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="2017/05/20/JIRA_KAFKA/" data-title="" data-url="http://github.com/zqhxuyuan/2017/05/20/JIRA_KAFKA/"></div>
+	<div class="ds-thread" data-thread-key="2017/08/16/Akka-Concurrenty/" data-title="Akka并发图解" data-url="http://github.com/zqhxuyuan/2017/08/16/Akka-Concurrenty/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -417,10 +416,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2017/06/25/2017-06-24-Gearpump/" title="上一篇: Deep into Apache Gearpump">
+    <a href="/2018/01/01/Kafka-Code-Index/" title="上一篇: Kafka技术内幕">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2017/05/19/Spark-Metrics/" title="下一篇: ">
+    <a href="/2017/06/25/2017-06-24-Gearpump/" title="下一篇: Deep into Apache Gearpump">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

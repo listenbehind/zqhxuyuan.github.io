@@ -18,7 +18,9 @@
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/ss5.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/ss6.png">
 <meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/ss7.png">
-<meta property="og:updated_time" content="2015-12-02T12:38:13.000Z">
+<meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/spark9.png">
+<meta property="og:image" content="http://7xjs7x.com1.z0.glb.clouddn.com/spark10.png">
+<meta property="og:updated_time" content="2017-07-13T09:09:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark Stramming入门">
 <meta name="twitter:description" content="Apache Spark Streamming小白入门教程">
@@ -119,7 +121,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 14.44px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.44px;">work</a> <a href="/tags/流处理/" style="font-size: 10px;">流处理</a>
+						<a href="/tags/akka/" style="font-size: 10px;">akka</a> <a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 14.44px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.44px;">work</a> <a href="/tags/流处理/" style="font-size: 11.11px;">流处理</a>
 					</div>
 				</section>
 				
@@ -303,6 +305,19 @@
 <p><img src="http://7xjs7x.com1.z0.glb.clouddn.com/ss6.png" alt=""></p>
 <p>当我们把正在运行的杀掉, 这时候等待运行的就会接着执行</p>
 <p><img src="http://7xjs7x.com1.z0.glb.clouddn.com/ss7.png" alt=""></p>
+<h2 id="SparkHA-Streamming">SparkHA-Streamming</h2><p>如果线上的SparkStreamming程序一直在运行, 而Master发生了切换, 验证下SparkStreamming还能不能正常运行.<br>这个实验的基础是在Spark-Streamming这一节的基础上.  </p>
+<p>还是先启动KafkaProducer[在52上]</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@dp0652 spark-<span class="number">1.4</span><span class="number">.0</span>-bin-hadoop2<span class="number">.6</span>]$ bin/spark-submit --<span class="keyword">class</span> org.apache.spark.examples.streaming.KafkaWordCountProducer /home/qihuang.zheng/spark-intro-<span class="number">1.0</span>-SNAPSHOT-jar-with-dependencies.jar <span class="number">192.168</span><span class="number">.6</span><span class="number">.55</span>:<span class="number">9092</span>,<span class="number">192.168</span><span class="number">.6</span><span class="number">.56</span>:<span class="number">9092</span>,<span class="number">192.168</span><span class="number">.6</span><span class="number">.57</span>:<span class="number">9092</span> kafka-spark-test <span class="number">2000</span> <span class="number">70</span></span><br></pre></td></tr></table></figure>
+<p>然后启动Spark-Streamming程序[也在52上], 注意–master的值  </p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[qihuang.zheng@dp0652 spark-1.4.0-bin-hadoop2.6]$ bin/spark-submit --master spark://dp<span class="number">0652:7077</span>,dp<span class="number">0653:7077</span> --class org.apache.spark.examples.streaming.KafkaWordCount --jars /home/qihuang.zheng/spark-streaming-kafka_<span class="number">2.10-1.4</span>.0.jar /home/qihuang.zheng/spark-intro-1.0-SNAPSHOT-jar-with-dependencies.jar <span class="number">192.168.6.55</span>:<span class="number">2181,192.168</span>.<span class="number">6.56:2181</span>,<span class="number">192.168.6.57</span>:2181 my-consumer-group kafka-spark-test 5</span><br></pre></td></tr></table></figure>
+<p>当前的master是53,我们把53的停掉: <code>sbin/stop-master.sh</code></p>
+<p>可以发现Spark-Streamming的程序并没有受到影响.  也就是说master的变化并不会影响driver程序.<br><strong>只要你的driver指定–master为HA,而不是单点!</strong>  </p>
+<blockquote>
+<p>如果Driver程序比如spark-streamming程序挂掉了怎么办(比如要升级应用程序),那么再起一个streamming程序,这个程序会一直被阻塞住<br>直到旧的程序关掉了, 新的streamming程序就会立马接管过来.  这在<a href="http://zqhxuyuan.github.io/2015/06/28/Spark-Streamming/" target="_blank" rel="external">http://zqhxuyuan.github.io/2015/06/28/Spark-Streamming/</a>中已经做过了  </p>
+</blockquote>
+<p>注意: 不管是dp0652还是dp0653,都无法看到正在运行中的SparkStreamming程序.<br>SparkStreamming程序类似于Driver, 你在那台机器执行,就再这台机器的4040端口查看.<br>比如上面的实验,我们在dp0652上运行了Spark-Streamming程序, 所以在<a href="http://192.168.6.52:4040/streaming/" target="_blank" rel="external">http://192.168.6.52:4040/streaming/</a>查看StreamingUI<br>至于Master的8082端口,则只有主master才可以看到worker, 但是都看不到Running Applications</p>
+<p><img src="http://7xjs7x.com1.z0.glb.clouddn.com/spark9.png" alt="spark-master"></p>
+<p><img src="http://7xjs7x.com1.z0.glb.clouddn.com/spark10.png" alt="spark-stream"></p>
 
       
     </div>
@@ -314,7 +329,7 @@
   <p><span>本文标题:</span><a href="/2015/07/06/2015-07-06-Spark-Streamming/">Spark Stramming入门</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年07月06日 - 00时00分</p>
-  <p><span>最后更新:</span>2015年12月02日 - 20时38分</p>
+  <p><span>最后更新:</span>2017年07月13日 - 17时09分</p>
   <p>
     <span>原始链接:</span><a href="/2015/07/06/2015-07-06-Spark-Streamming/" title="Spark Stramming入门">http://github.com/zqhxuyuan/2015/07/06/2015-07-06-Spark-Streamming/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/07/06/2015-07-06-Spark-Streamming/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -343,15 +358,15 @@
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2015/07/07/2015-07-07-Spark-HA-YARN/">
-        Spark HA和YARN模式
+      <a href="/2015/07/07/2015-07-07-Spark-on-YARN/">
+        Spark on YARN
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/06/25/2015-06-25-Spark-SQL/">
-        Spark SQL入门
+      <a href="/2015/06/20/2015-06-20-Apache-Spark/">
+        Apache Spark入门
       </a>
     </div>
   
@@ -386,7 +401,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#NetworkWordCount"><span class="toc-number">1.</span> <span class="toc-text">NetworkWordCount</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka-SparkStreamming"><span class="toc-number">2.</span> <span class="toc-text">Kafka-SparkStreamming</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于打包"><span class="toc-number">3.</span> <span class="toc-text">关于打包</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IDEA打包"><span class="toc-number">3.1.</span> <span class="toc-text">IDEA打包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Maven打包"><span class="toc-number">3.2.</span> <span class="toc-text">Maven打包</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka-SparkStreamming-Redis"><span class="toc-number">4.</span> <span class="toc-text">Kafka-SparkStreamming-Redis</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#NetworkWordCount"><span class="toc-number">1.</span> <span class="toc-text">NetworkWordCount</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka-SparkStreamming"><span class="toc-number">2.</span> <span class="toc-text">Kafka-SparkStreamming</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关于打包"><span class="toc-number">3.</span> <span class="toc-text">关于打包</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IDEA打包"><span class="toc-number">3.1.</span> <span class="toc-text">IDEA打包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Maven打包"><span class="toc-number">3.2.</span> <span class="toc-text">Maven打包</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka-SparkStreamming-Redis"><span class="toc-number">4.</span> <span class="toc-text">Kafka-SparkStreamming-Redis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SparkHA-Streamming"><span class="toc-number">5.</span> <span class="toc-text">SparkHA-Streamming</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -502,10 +517,10 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2015/07/07/2015-07-07-Spark-HA-YARN/" title="上一篇: Spark HA和YARN模式">
+    <a href="/2015/07/07/2015-07-07-Spark-on-YARN/" title="上一篇: Spark on YARN">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/06/25/2015-06-25-Spark-SQL/" title="下一篇: Spark SQL入门">
+    <a href="/2015/06/20/2015-06-20-Apache-Spark/" title="下一篇: Apache Spark入门">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
