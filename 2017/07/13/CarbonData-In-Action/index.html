@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>CarbonData | zqhxuyuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Apache CarbonData">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CarbonData">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2017/07/13/CarbonData-In-Action/index.html">
+<meta property="og:site_name" content="zqhxuyuan">
+<meta property="og:description" content="Apache CarbonData">
+<meta property="og:image" content="http://img.blog.csdn.net/20170713222930582">
+<meta property="og:image" content="http://img.blog.csdn.net/20170713222957886">
+<meta property="og:image" content="http://img.blog.csdn.net/20170721100001741">
+<meta property="og:image" content="http://img.blog.csdn.net/20170714085833872">
+<meta property="og:image" content="http://img.blog.csdn.net/20170803143703134">
+<meta property="og:updated_time" content="2017-09-13T07:33:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CarbonData">
+<meta name="twitter:description" content="Apache CarbonData">
+  
+    <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">任何忧伤,都抵不过世界的美丽</a></h1>
+		</hgroup>
+
+		
+				
+
+
+		
+			<div id="switch-btn" class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div id="switch-area" class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives/">归档</a></li>
+				        
+							<li><a href="/tags/">标签</a></li>
+				        
+							<li><a href="/about/">关于</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+								<li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+					        
+						</ul>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/akka/" style="font-size: 10px;">akka</a> <a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 17.78px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.44px;">work</a> <a href="/tags/流处理/" style="font-size: 11.11px;">流处理</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">BIG(DATA)</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="/" class="profilepic">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			</a>
+			<hgroup>
+			  <h1 class="header-author"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives/">归档</a></li>
+		        
+					<li><a href="/tags/">标签</a></li>
+		        
+					<li><a href="/about/">关于</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+								<li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+					        
+						</ul>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-CarbonData-In-Action" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/07/13/CarbonData-In-Action/" class="article-date">
+  	<time datetime="2017-07-12T16:00:00.000Z" itemprop="datePublished">2017-07-13</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      CarbonData
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spark/">spark</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>Apache CarbonData</p>
+<a id="more"></a>
+<h2 id="Apache_CarbonData">Apache CarbonData</h2><p>版本：carbondata-1.1.0，spark-2.1.1，hadoop-2.6.0</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ mvn -DskipTests -Pspark-<span class="number">2.1</span> -Dspark.version=<span class="number">2.1</span><span class="number">.1</span> -Dhadoop.version=<span class="number">2.6</span><span class="number">.0</span> clean package</span><br><span class="line"></span><br><span class="line">$ ll assembly/target/scala-<span class="number">2.11</span></span><br><span class="line"><span class="number">8.9</span>M  <span class="number">7</span> <span class="number">12</span> <span class="number">16</span>:<span class="number">14</span> carbondata_2<span class="number">.11</span>-<span class="number">1.1</span><span class="number">.1</span>-shade-hadoop2<span class="number">.6</span><span class="number">.0</span>.jar</span><br></pre></td></tr></table></figure>
+<p>本地模式测试，创建CarbonSession的第一个参数为本地文件系统</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">bin/spark-shell --jars ~/Github/carbondata-parent-<span class="number">1.1</span>.<span class="number">0</span>/assembly/target/scala-<span class="number">2.11</span>/carbondata_2.<span class="number">11</span>-<span class="number">1.1</span>.<span class="number">1</span>-shade-hadoop2.<span class="number">6.0</span><span class="class">.jar</span></span><br><span class="line"></span><br><span class="line">import org<span class="class">.apache</span><span class="class">.spark</span><span class="class">.sql</span><span class="class">.SparkSession</span></span><br><span class="line">import org<span class="class">.apache</span><span class="class">.spark</span><span class="class">.sql</span><span class="class">.CarbonSession</span>._</span><br><span class="line">val carbon = SparkSession.<span class="function"><span class="title">builder</span><span class="params">()</span></span>.<span class="function"><span class="title">config</span><span class="params">(sc.getConf)</span></span>.<span class="function"><span class="title">getOrCreateCarbonSession</span><span class="params">(<span class="string">"/tmp/carbon"</span>)</span></span></span><br><span class="line">carbon.<span class="function"><span class="title">sql</span><span class="params">(<span class="string">"CREATE TABLE IF NOT EXISTS test_table(id string,name string,city string,age Int)STORED BY 'carbondata'"</span>)</span></span></span><br><span class="line">carbon.<span class="function"><span class="title">sql</span><span class="params">(<span class="string">"LOAD DATA INPATH '/Users/zhengqh/Downloads/spark-2.1.1-bin-hadoop2.7/sample.csv' INTO TABLE test_table"</span>)</span></span></span><br><span class="line">carbon.<span class="function"><span class="title">sql</span><span class="params">(<span class="string">"SELECT city, avg(age), sum(age) FROM test_table GROUP BY city"</span>)</span></span>.<span class="function"><span class="title">show</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
+<p>本地文件系统的文件夹包括Fact（表数据）、Metadata(表结构)</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">➜  carbondata-parent-<span class="number">1.1</span><span class="number">.0</span> tree /tmp/carbon</span><br><span class="line">/tmp/carbon</span><br><span class="line">├── <span class="keyword">default</span></span><br><span class="line">│   └── test_table</span><br><span class="line">│       ├── Fact</span><br><span class="line">│       │   └── Part0</span><br><span class="line">│       │       └── Segment_0</span><br><span class="line">│       │           ├── <span class="number">0</span>_batchno0-<span class="number">0</span>-<span class="number">1499845043969.</span>carbonindex</span><br><span class="line">│       │           └── part-<span class="number">0</span>-<span class="number">0</span>_batchno0-<span class="number">0</span>-<span class="number">1499845043969.</span>carbondata</span><br><span class="line">│       └── Metadata</span><br><span class="line">│           ├── <span class="number">3</span>d8bd318-a620-<span class="number">419</span>b-b0fd-c276936375e2.dict</span><br><span class="line">│           ├── <span class="number">3</span>d8bd318-a620-<span class="number">419</span>b-b0fd-c276936375e2.dictmeta</span><br><span class="line">│           ├── <span class="number">3</span>d8bd318-a620-<span class="number">419</span>b-b0fd-c276936375e2_27.sortindex</span><br><span class="line">│           ├── f2f45986-<span class="number">6f</span>b6-<span class="number">42</span>af-b991-<span class="number">513</span>ee43aad01.dict</span><br><span class="line">│           ├── f2f45986-<span class="number">6f</span>b6-<span class="number">42</span>af-b991-<span class="number">513</span>ee43aad01.dictmeta</span><br><span class="line">│           ├── f2f45986-<span class="number">6f</span>b6-<span class="number">42</span>af-b991-<span class="number">513</span>ee43aad01_18.sortindex</span><br><span class="line">│           ├── f93ce55d-b82a-<span class="number">4</span>eca-<span class="number">9076</span>-e21dcd819218.dict</span><br><span class="line">│           ├── f93ce55d-b82a-<span class="number">4</span>eca-<span class="number">9076</span>-e21dcd819218.dictmeta</span><br><span class="line">│           ├── f93ce55d-b82a-<span class="number">4</span>eca-<span class="number">9076</span>-e21dcd819218_30.sortindex</span><br><span class="line">│           ├── schema</span><br><span class="line">│           └── tablestatus</span><br><span class="line">└── modifiedTime.mdt</span><br></pre></td></tr></table></figure>
+<p>yarn模式按照官网部署<a href="http://carbondata.apache.org/installation-guide.html" target="_blank" rel="external">http://carbondata.apache.org/installation-guide.html</a></p>
+<blockquote>
+<p>注意：使用yarn模式，不需要把carbondata通过scp分发到各个节点，只需要在Driver端有就可以。另外，当前版本不依赖kettle</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">cd spark-<span class="number">2.1</span><span class="number">.1</span>*</span><br><span class="line">mkdir carbonlib</span><br><span class="line">cp ~/carbondata_2<span class="number">.11</span>-<span class="number">1.1</span><span class="number">.1</span>-shade-hadoop2<span class="number">.6</span><span class="number">.0</span>.jar carbonlib</span><br><span class="line">cp ~/carbon.properties conf</span><br><span class="line"></span><br><span class="line">tar -zcvf carbondata.tar.gz carbonlib/</span><br><span class="line">mv carbondata.tar.gz carbonlib/</span><br><span class="line"></span><br><span class="line">$ vi conf/spark-defaults.conf</span><br><span class="line">spark.executor.extraJavaOptions -Dcarbon.properties.filepath=/usr/install/spark-<span class="number">2.1</span><span class="number">.1</span>-bin-<span class="number">2.6</span><span class="number">.0</span>-cdh5<span class="number">.9</span><span class="number">.0</span>/conf/carbon.properties</span><br><span class="line">spark.driver.extraJavaOptions   -Dcarbon.properties.filepath=/usr/install/spark-<span class="number">2.1</span><span class="number">.1</span>-bin-<span class="number">2.6</span><span class="number">.0</span>-cdh5<span class="number">.9</span><span class="number">.0</span>/conf/carbon.properties</span><br><span class="line">spark.driver.extraClassPath     /usr/install/spark-<span class="number">2.1</span><span class="number">.1</span>-bin-<span class="number">2.6</span><span class="number">.0</span>-cdh5<span class="number">.9</span><span class="number">.0</span>/carbonlib<span class="comment">/*</span><br><span class="line">spark.executor.extraClassPath   /usr/install/spark-2.1.1-bin-2.6.0-cdh5.9.0/carbonlib<span class="comment">/*</span><br><span class="line">spark.yarn.dist.files           /usr/install/spark-2.1.1-bin-2.6.0-cdh5.9.0/conf/carbon.properties</span><br><span class="line">spark.yarn.dist.archives        /usr/install/spark-2.1.1-bin-2.6.0-cdh5.9.0/carbonlib/carbondata.tar.gz</span></span></span><br></pre></td></tr></table></figure>
+<p>启动spark-shell还需要加上<code>--jars</code>。注意创建CarbonSession时第一个参数必须加上hdfs前缀，否则会报错找不到文件</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ bin/spark-shell <span class="comment">--jars /home/admin/carbondata_2.11-1.1.1-shade-hadoop2.6.0.jar</span></span><br><span class="line"></span><br><span class="line">sql("<span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> test_table1(<span class="keyword">id</span> <span class="keyword">string</span>,<span class="keyword">name</span> <span class="keyword">string</span>,city <span class="keyword">string</span>,age <span class="built_in">Int</span>)<span class="string">")</span><br><span class="line">sql("</span><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">table</span> test_table1 <span class="keyword">values</span>(<span class="string">'1'</span>,<span class="string">'david'</span>,<span class="string">'shenzhen'</span>,<span class="number">31</span>)<span class="string">")</span><br><span class="line">sql("</span><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">table</span> test_table1 <span class="keyword">values</span>(<span class="string">'2'</span>,<span class="string">'eason'</span>,<span class="string">'shenzhen'</span>,<span class="number">20</span>)<span class="string">")</span><br><span class="line">sql("</span><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">table</span> test_table1 <span class="keyword">values</span>(<span class="string">'3'</span>,<span class="string">'jarry'</span>,<span class="string">'wuhan'</span>,<span class="number">35</span>)<span class="string">")</span><br><span class="line"></span><br><span class="line">import org.apache.spark.sql.SparkSession</span><br><span class="line">import org.apache.spark.sql.CarbonSession._</span><br><span class="line">val carbon = SparkSession.builder().config(sc.getConf).getOrCreateCarbonSession("</span>hdfs://tdhdfs/<span class="keyword">user</span>/tongdun/carbon<span class="string">","</span>/home/<span class="keyword">admin</span>/carbon<span class="string">")</span><br><span class="line"></span><br><span class="line">carbon.sql("</span><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> test_table2(<span class="keyword">id</span> <span class="keyword">string</span>,<span class="keyword">name</span> <span class="keyword">string</span>,city <span class="keyword">string</span>,age <span class="built_in">Int</span>)<span class="keyword">STORED</span> <span class="keyword">BY</span> <span class="string">'carbondata'</span><span class="string">")</span><br><span class="line">carbon.sql("</span><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_table2 <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> test_table1<span class="string">") // insert #1</span><br><span class="line">carbon.sql("</span><span class="keyword">select</span> * <span class="keyword">from</span> test_table2<span class="string">").show</span><br><span class="line">carbon.sql("</span><span class="keyword">INSERT</span> <span class="keyword">INTO</span> test_table2 <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> test_table1<span class="string">") // insert again</span><br><span class="line">carbon.sql("</span><span class="keyword">select</span> * <span class="keyword">from</span> test_table2<span class="string">").show</span><br><span class="line"></span><br><span class="line">carbon.sql("</span><span class="keyword">INSERT</span> overwrite <span class="keyword">table</span> test_table2 <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> test_table1<span class="string">") // overwrite</span></span></span><br></pre></td></tr></table></figure>
+<p>carbondata运行在HDFS时，它的事实数据与元数据保存在HDFS上。</p>
+<p><img src="http://img.blog.csdn.net/20170713222930582" alt="carbon"></p>
+<p>将hdfs表数据导入到carbondata建立的表后，执行一些查询语句，观察ui。</p>
+<blockquote>
+<p>注意：导入数据时，carbondata分为两个步骤：全局字典（GlobalDictionary）和CarbonDataRDD。<br>其中全局字典会在Metadata下生产索引文件，CarbonDataRDD会在Fact下生成数据文件。</p>
+</blockquote>
+<p><img src="http://img.blog.csdn.net/20170713222957886" alt="carbon1"></p>
+<h3 id="CarbonData数据导入与查询">CarbonData数据导入与查询</h3><p>建立crosspartner carbondata表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">import org.apache.spark.sql.SparkSession</span><br><span class="line">import org.apache.spark.sql.CarbonSession._</span><br><span class="line">val carbon = SparkSession.builder().config(sc.getConf).getOrCreateCarbonSession("hdfs://tdhdfs/user/tongdun/carbon","/home/admin/carbon")</span><br><span class="line"></span><br><span class="line">carbon.sql("<span class="operator"><span class="keyword">drop</span> <span class="keyword">table</span> cross_partner_carbon<span class="string">")</span><br><span class="line">carbon.sql("""</span><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> cross_partner_carbon(</span><br><span class="line">  partnerCode <span class="keyword">string</span>,</span><br><span class="line">  eventType <span class="keyword">string</span>,</span><br><span class="line">  idNumber <span class="keyword">string</span>,</span><br><span class="line">  accountMobile <span class="keyword">string</span>,</span><br><span class="line">  accountEmail <span class="keyword">string</span>,</span><br><span class="line">  accountPhone <span class="keyword">string</span>,</span><br><span class="line">  deviceId <span class="keyword">string</span>,</span><br><span class="line">  cardNumber <span class="keyword">string</span>,</span><br><span class="line">  contact1Mobile <span class="keyword">string</span>,</span><br><span class="line">  contact2Mobile <span class="keyword">string</span>,</span><br><span class="line">  contact3Mobile <span class="keyword">string</span>,</span><br><span class="line">  contact4Mobile <span class="keyword">string</span>,</span><br><span class="line">  contact5Mobile <span class="keyword">string</span>,</span><br><span class="line">  contact1IdNumber <span class="keyword">string</span>,</span><br><span class="line">  contact2IdNumber <span class="keyword">string</span>,</span><br><span class="line">  contact3IdNumber <span class="keyword">string</span>,</span><br><span class="line">  contact4IdNumber <span class="keyword">string</span>,</span><br><span class="line">  contact5IdNumber <span class="keyword">string</span>,</span><br><span class="line">  sequenceId <span class="keyword">string</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">BY</span> <span class="string">'carbondata'</span></span><br><span class="line">TBLPROPERTIES (<span class="string">'DICTIONARY_EXCLUDE'</span>=<span class="string">'sequenceId'</span>)</span><br><span class="line"><span class="string">""")</span></span></span><br></pre></td></tr></table></figure>
+<p>再生成carbondata表：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">carbon.<span class="function"><span class="title">sql</span><span class="params">(<span class="string">"insert into cross_partner_carbon select * from crosspartner"</span>)</span></span></span><br><span class="line"></span><br><span class="line">spark.<span class="function"><span class="title">sql</span><span class="params">(<span class="string">"select count(*) from cross2partner_dt"</span>)</span></span><span class="class">.show</span></span><br><span class="line">carbon.<span class="function"><span class="title">sql</span><span class="params">(<span class="string">"select count(*) from cross_partner_carbon_dm"</span>)</span></span><span class="class">.show</span></span><br><span class="line"></span><br><span class="line">spark.<span class="function"><span class="title">sql</span><span class="params">(<span class="string">"select * from cross2partner_dt"</span>)</span></span><span class="class">.show</span></span><br><span class="line">carbon.<span class="function"><span class="title">sql</span><span class="params">(<span class="string">"select * from cross_partner_carbon_dm"</span>)</span></span><span class="class">.show</span></span><br><span class="line"></span><br><span class="line">val idnumber=<span class="string">""</span></span><br><span class="line">spark.<span class="function"><span class="title">sql</span><span class="params">(s<span class="string">"select sequenceId from cross2partner_dt where partnerCode='007fenqi' and eventType='Loan' and idNumber='$idnumber'"</span>)</span></span><span class="class">.show</span></span><br><span class="line">carbon.<span class="function"><span class="title">sql</span><span class="params">(s<span class="string">"select sequenceId from cross_partner_carbon_dm where partnerCode='007fenqi' and eventType='Loan' and idNumber='$idnumber'"</span>)</span></span>.show</span><br></pre></td></tr></table></figure>
+<p>比较crosspartner_hdfs的过滤与carbondata的查询</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">carbon.sql("<span class="operator"><span class="keyword">select</span> sequenceId <span class="keyword">from</span> cross_partner_carbon <span class="keyword">where</span> partnerCode=<span class="string">'qufenqi'</span> <span class="keyword">and</span> eventType=<span class="string">'Loan'</span> <span class="keyword">and</span> idNumber=<span class="string">''</span><span class="string">").show</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="实验结果">实验结果</h3><p>创建carbondata表时，如果默认所有字段都加上索引，导入数据时Executor会报错OOM。<br>如果去掉所有字段的索引，导入数据很快，但是查询速度就满了。</p>
+<p>比较磁盘空间的大小，没有索引下，Parquet和Carbondata差不多</p>
+<p><img src="http://img.blog.csdn.net/20170721100001741" alt="1"></p>
+<h3 id="问题">问题</h3><h4 id="1-_Hive表与CarbonData表">1. Hive表与CarbonData表</h4><p>activity事件数据,只取借贷和放贷的数据，并保存成临时表crosspartner_hdfs</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">spark.sql("""<span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> crosspartner_hdfs(</span><br><span class="line">  partnerCode <span class="keyword">string</span>,</span><br><span class="line">  eventType <span class="keyword">string</span>,</span><br><span class="line">  idNumber <span class="keyword">string</span>,</span><br><span class="line">  accountMobile <span class="keyword">string</span>,</span><br><span class="line">  accountEmail <span class="keyword">string</span>,</span><br><span class="line">  accountPhone <span class="keyword">string</span>,</span><br><span class="line">  deviceId <span class="keyword">string</span>,</span><br><span class="line">  cardNumber <span class="keyword">string</span>,</span><br><span class="line">  contact1Mobile <span class="keyword">string</span>,</span><br><span class="line">  contact2Mobile <span class="keyword">string</span>,</span><br><span class="line">  contact3Mobile <span class="keyword">string</span>,</span><br><span class="line">  contact4Mobile <span class="keyword">string</span>,</span><br><span class="line">  contact5Mobile <span class="keyword">string</span>,</span><br><span class="line">  contact1IdNumber <span class="keyword">string</span>,</span><br><span class="line">  contact2IdNumber <span class="keyword">string</span>,</span><br><span class="line">  contact3IdNumber <span class="keyword">string</span>,</span><br><span class="line">  contact4IdNumber <span class="keyword">string</span>,</span><br><span class="line">  contact5IdNumber <span class="keyword">string</span>,</span><br><span class="line">  sequenceId <span class="keyword">string</span></span><br><span class="line">) partitioned <span class="keyword">by</span>(ds <span class="keyword">string</span>)</span><br><span class="line"><span class="string">""")</span><br><span class="line"></span><br><span class="line">spark.sql("""</span><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">table</span> crosspartner_hdfs <span class="keyword">partition</span>(ds=<span class="string">'201706'</span>)</span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line">  activity_map.partnerCode <span class="keyword">as</span> partnerCode,</span><br><span class="line">  activity_map.eventType <span class="keyword">as</span> eventType,</span><br><span class="line">  activity_map.idNumber <span class="keyword">as</span> idNumber,</span><br><span class="line">  activity_map.accountMobile <span class="keyword">as</span> accountMobile,</span><br><span class="line">  activity_map.accountEmail <span class="keyword">as</span> accountEmail,</span><br><span class="line">  activity_map.accountPhone <span class="keyword">as</span> accountPhone,</span><br><span class="line">  activity_map.deviceId <span class="keyword">as</span> deviceId,</span><br><span class="line">  activity_map.cardNumber <span class="keyword">as</span> cardNumber,</span><br><span class="line">  activity_map.contact1Mobile <span class="keyword">as</span> contact1Mobile,</span><br><span class="line">  activity_map.contact2Mobile <span class="keyword">as</span> contact2Mobile,</span><br><span class="line">  activity_map.contact3Mobile <span class="keyword">as</span> contact3Mobile,</span><br><span class="line">  activity_map.contact4Mobile <span class="keyword">as</span> contact4Mobile,</span><br><span class="line">  activity_map.contact5Mobile <span class="keyword">as</span> contact5Mobile,</span><br><span class="line">  activity_map.contact1IdNumber <span class="keyword">as</span> contact1IdNumber,</span><br><span class="line">  activity_map.contact2IdNumber <span class="keyword">as</span> contact2IdNumber,</span><br><span class="line">  activity_map.contact3IdNumber <span class="keyword">as</span> contact3IdNumber,</span><br><span class="line">  activity_map.contact4IdNumber <span class="keyword">as</span> contact4IdNumber,</span><br><span class="line">  activity_map.contact5IdNumber <span class="keyword">as</span> contact5IdNumber,</span><br><span class="line">  activity_map.sequenceId <span class="keyword">as</span> sequenceId</span><br><span class="line"><span class="keyword">from</span> activity </span><br><span class="line"><span class="keyword">where</span> <span class="keyword">year</span>=<span class="number">2017</span> <span class="keyword">and</span> <span class="keyword">month</span>=<span class="number">6</span></span><br><span class="line"><span class="keyword">and</span> activity_map.eventType <span class="keyword">in</span>(<span class="string">'Loan'</span>,<span class="string">'Lending'</span>)</span><br><span class="line"><span class="string">""")</span></span></span><br></pre></td></tr></table></figure>
+<p>上面如果建表时没有指定存储为parquet,最后是part-xxx。<br>而且即使指定了parquet,insert sql也不能指定分区数量。  </p>
+<p><strong>下面改用parquet文件夹加上手动分区的形式:cross_partner_hdfs</strong>。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.text.<span class="type">SimpleDateFormat</span></span><br><span class="line"><span class="keyword">import</span> java.util.&#123;<span class="type">Calendar</span>,<span class="type">Date</span>&#125;</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">year</span>(</span>ymd: <span class="type">String</span>) = ymd.substring(<span class="number">0</span>,<span class="number">4</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">month</span>(</span>ymd: <span class="type">String</span>) = &#123;</span><br><span class="line">  <span class="keyword">var</span> month=ymd.substring(<span class="number">4</span>,<span class="number">6</span>)</span><br><span class="line">  <span class="keyword">if</span>(month.startsWith(<span class="string">"0"</span>)) month=ymd.substring(<span class="number">5</span>,<span class="number">6</span>)</span><br><span class="line">  month</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">day</span>(</span>ymd: <span class="type">String</span>) = &#123;</span><br><span class="line">  <span class="keyword">var</span> d=ymd.substring(<span class="number">6</span>,<span class="number">8</span>)</span><br><span class="line">  <span class="keyword">if</span>(d.startsWith(<span class="string">"0"</span>)) d=ymd.substring(<span class="number">7</span>,<span class="number">8</span>)</span><br><span class="line">  d</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//写成parquet文件夹</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">genCrossData</span>(</span>beg: <span class="type">String</span>, end: <span class="type">String</span>) = &#123;</span><br><span class="line">    <span class="keyword">var</span> cal = <span class="type">Calendar</span>.getInstance()</span><br><span class="line">    <span class="keyword">var</span> datef=<span class="keyword">new</span> <span class="type">SimpleDateFormat</span>(<span class="string">"yyyyMMdd"</span>)</span><br><span class="line">    <span class="keyword">var</span> beginTime=datef.parse(beg)</span><br><span class="line">    <span class="keyword">var</span> endTime=datef.parse(end)</span><br><span class="line">    <span class="keyword">while</span>(beginTime.compareTo(endTime)&lt;=<span class="number">0</span>)&#123;</span><br><span class="line">      cal.setTime(beginTime);</span><br><span class="line">      <span class="keyword">var</span> ymd=datef.format(beginTime)</span><br><span class="line">      println(ymd)</span><br><span class="line">      <span class="keyword">var</span> y=year(ymd)</span><br><span class="line">      <span class="keyword">var</span> m=month(ymd)</span><br><span class="line">      <span class="keyword">var</span> d=day(ymd)</span><br><span class="line">      spark.sql(s<span class="string">"""</span><br><span class="line">        select </span><br><span class="line">          activity_map.partnerCode as partnerCode,</span><br><span class="line">          activity_map.eventType as eventType,</span><br><span class="line">          activity_map.idNumber as idNumber,</span><br><span class="line">          activity_map.accountMobile as accountMobile,</span><br><span class="line">          activity_map.accountEmail as accountEmail,</span><br><span class="line">          activity_map.accountPhone as accountPhone,</span><br><span class="line">          activity_map.deviceId as deviceId,</span><br><span class="line">          activity_map.cardNumber as cardNumber,</span><br><span class="line">          activity_map.contact1Mobile as contact1Mobile,</span><br><span class="line">          activity_map.contact2Mobile as contact2Mobile,</span><br><span class="line">          activity_map.contact3Mobile as contact3Mobile,</span><br><span class="line">          activity_map.contact4Mobile as contact4Mobile,</span><br><span class="line">          activity_map.contact5Mobile as contact5Mobile,</span><br><span class="line">          activity_map.contact1IdNumber as contact1IdNumber,</span><br><span class="line">          activity_map.contact2IdNumber as contact2IdNumber,</span><br><span class="line">          activity_map.contact3IdNumber as contact3IdNumber,</span><br><span class="line">          activity_map.contact4IdNumber as contact4IdNumber,</span><br><span class="line">          activity_map.contact5IdNumber as contact5IdNumber,</span><br><span class="line">          activity_map.sequenceId as sequenceId</span><br><span class="line">        from activity </span><br><span class="line">        where year=$y and month=$m and day=$d </span><br><span class="line">        and activity_map.eventType in('Loan','Lending')</span><br><span class="line">        """</span>).repartition(<span class="number">1</span>).write.mode(<span class="string">"overwrite"</span>).parquet(s<span class="string">"/user/hive/warehouse/cross_partner_hdfs/ds=$ymd"</span>)</span><br><span class="line">      cal.add(<span class="type">Calendar</span>.<span class="type">DATE</span>,<span class="number">1</span>);</span><br><span class="line">      beginTime=cal.getTime();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">genCrossData(<span class="string">"20170101"</span>,<span class="string">"20170630"</span>)</span><br><span class="line"></span><br><span class="line">genCrossData(<span class="string">"20170621"</span>,<span class="string">"20170630"</span>)</span><br></pre></td></tr></table></figure>
+<p>查询parquet，建立临时表，使用SparkSQL查询</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">val df=spark<span class="class">.read</span><span class="class">.parquet</span>(<span class="string">"/user/hive/warehouse/cross_partner_hdfs/*"</span>)</span><br><span class="line">df.<span class="function"><span class="title">createOrReplaceTempView</span><span class="params">(<span class="string">"cross_partner_hdfs"</span>)</span></span></span><br><span class="line"></span><br><span class="line">spark.<span class="function"><span class="title">sql</span><span class="params">(<span class="string">"select * from cross_partner_hdfs"</span>)</span></span><span class="class">.show</span></span><br><span class="line"></span><br><span class="line">spark.<span class="function"><span class="title">sql</span><span class="params">(<span class="string">"select sequenceId from cross_partner_hdfs where partnerCode='qufenqi' and eventType='Loan' and idNumber=''"</span>)</span></span>.show</span><br></pre></td></tr></table></figure>
+<p>使用临时表的数据插入到carbondata table</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">val df=spark<span class="class">.read</span><span class="class">.parquet</span>(<span class="string">"/user/hive/warehouse/cross_partner_hdfs/*"</span>)</span><br><span class="line">df.<span class="function"><span class="title">createOrReplaceTempView</span><span class="params">(<span class="string">"cross_partner_hdfs"</span>)</span></span></span><br><span class="line"></span><br><span class="line">carbon.<span class="function"><span class="title">sql</span><span class="params">(<span class="string">"insert into cross_partner_carbon select * from cross_partner_hdfs"</span>)</span></span></span><br></pre></td></tr></table></figure>
+<p>carbondata不认识用df注册的临时表：</p>
+<p><img src="http://img.blog.csdn.net/20170714085833872" alt="10"></p>
+<p>创建hive表时指定parquet格式，并从parquet文件夹的数据直接生成表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">spark.sql("""<span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> crosspartner(</span><br><span class="line">  partnerCode <span class="keyword">string</span>,</span><br><span class="line">  eventType <span class="keyword">string</span>,</span><br><span class="line">  idNumber <span class="keyword">string</span>,</span><br><span class="line">  accountMobile <span class="keyword">string</span>,</span><br><span class="line">  accountEmail <span class="keyword">string</span>,</span><br><span class="line">  accountPhone <span class="keyword">string</span>,</span><br><span class="line">  deviceId <span class="keyword">string</span>,</span><br><span class="line">  cardNumber <span class="keyword">string</span>,</span><br><span class="line">  contact1Mobile <span class="keyword">string</span>,</span><br><span class="line">  contact2Mobile <span class="keyword">string</span>,</span><br><span class="line">  contact3Mobile <span class="keyword">string</span>,</span><br><span class="line">  contact4Mobile <span class="keyword">string</span>,</span><br><span class="line">  contact5Mobile <span class="keyword">string</span>,</span><br><span class="line">  contact1IdNumber <span class="keyword">string</span>,</span><br><span class="line">  contact2IdNumber <span class="keyword">string</span>,</span><br><span class="line">  contact3IdNumber <span class="keyword">string</span>,</span><br><span class="line">  contact4IdNumber <span class="keyword">string</span>,</span><br><span class="line">  contact5IdNumber <span class="keyword">string</span>,</span><br><span class="line">  sequenceId <span class="keyword">string</span></span><br><span class="line">) partitioned <span class="keyword">by</span>(ds <span class="keyword">string</span>) <span class="keyword">stored</span> <span class="keyword">as</span> parquet</span><br><span class="line"><span class="string">""")</span><br><span class="line"></span><br><span class="line">import java.text.SimpleDateFormat</span><br><span class="line">import java.util.&#123;Calendar,Date&#125;</span><br><span class="line">def genCrossData(beg: String, end: String) = &#123;</span><br><span class="line">    var cal = Calendar.getInstance()</span><br><span class="line">    var datef=new SimpleDateFormat("</span>yyyyMMdd<span class="string">")</span><br><span class="line">    var beginTime=datef.parse(beg)</span><br><span class="line">    var endTime=datef.parse(end)</span><br><span class="line">    while(beginTime.compareTo(endTime)&lt;=0)&#123;</span><br><span class="line">      cal.setTime(beginTime);</span><br><span class="line">      var ymd=datef.format(beginTime)</span><br><span class="line">      var df = spark.read.parquet(s"</span>/<span class="keyword">user</span>/hive/warehouse/cross_partner_hdfs/ds=$ymd<span class="string">")</span><br><span class="line">      df.repartition(1).write.mode("</span>overwrite<span class="string">").parquet(s"</span>/<span class="keyword">user</span>/hive/warehouse/crosspartner/ds=$ymd<span class="string">")</span><br><span class="line">      spark.sql(s"</span><span class="keyword">alter</span> <span class="keyword">table</span> crosspartner <span class="keyword">add</span> <span class="keyword">partition</span>(ds=<span class="string">'$ymd'</span>)<span class="string">")</span><br><span class="line">      cal.add(Calendar.DATE,1);</span><br><span class="line">      beginTime=cal.getTime();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">genCrossData("</span><span class="number">20170101</span><span class="string">","</span><span class="number">20170630</span><span class="string">")</span></span></span><br></pre></td></tr></table></figure>
+<p>或者直接用parquet文件创建外部表：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">spark.sql(<span class="string">"""</span><br><span class="line">create external table cross2partner_dt(</span><br><span class="line">  partnerCode string,</span><br><span class="line">  eventType string,</span><br><span class="line">  idNumber string,</span><br><span class="line">  accountMobile string,</span><br><span class="line">  accountEmail string,</span><br><span class="line">  accountPhone string,</span><br><span class="line">  deviceId string,</span><br><span class="line">  cardNumber string,</span><br><span class="line">  contact1Mobile string,</span><br><span class="line">  contact2Mobile string,</span><br><span class="line">  contact3Mobile string,</span><br><span class="line">  contact4Mobile string,</span><br><span class="line">  contact5Mobile string,</span><br><span class="line">  contact1IdNumber string,</span><br><span class="line">  contact2IdNumber string,</span><br><span class="line">  contact3IdNumber string,</span><br><span class="line">  contact4IdNumber string,</span><br><span class="line">  contact5IdNumber string,</span><br><span class="line">  sequenceId string    </span><br><span class="line">) </span><br><span class="line">partitioned by (ds string)</span><br><span class="line">stored as parquet</span><br><span class="line">location '/user/hive/warehouse/cross_partner_hdfs'</span><br><span class="line">"""</span>)</span><br><span class="line">spark.sql(s<span class="string">"alter table cross2partner_dt add partition(ds='20170101')"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.text.<span class="type">SimpleDateFormat</span></span><br><span class="line"><span class="keyword">import</span> java.util.&#123;<span class="type">Calendar</span>,<span class="type">Date</span>&#125;</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">genCrossData</span>(</span>beg: <span class="type">String</span>, end: <span class="type">String</span>) = &#123;</span><br><span class="line">    <span class="keyword">var</span> cal = <span class="type">Calendar</span>.getInstance()</span><br><span class="line">    <span class="keyword">var</span> datef=<span class="keyword">new</span> <span class="type">SimpleDateFormat</span>(<span class="string">"yyyyMMdd"</span>)</span><br><span class="line">    <span class="keyword">var</span> beginTime=datef.parse(beg)</span><br><span class="line">    <span class="keyword">var</span> endTime=datef.parse(end)</span><br><span class="line">    <span class="keyword">while</span>(beginTime.compareTo(endTime)&lt;=<span class="number">0</span>)&#123;</span><br><span class="line">      cal.setTime(beginTime);</span><br><span class="line">      <span class="keyword">var</span> ymd=datef.format(beginTime)</span><br><span class="line">      spark.sql(s<span class="string">"alter table cross2partner_dt add partition(ds='$ymd')"</span>)</span><br><span class="line">      cal.add(<span class="type">Calendar</span>.<span class="type">DATE</span>,<span class="number">1</span>);</span><br><span class="line">      beginTime=cal.getTime();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">genCrossData(<span class="string">"20170102"</span>,<span class="string">"20170630"</span>)</span><br></pre></td></tr></table></figure>
+<p>一次性将所有数据插入carbondata太慢了</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">carbon.sql(s"<span class="operator"><span class="keyword">insert</span> <span class="keyword">into</span> cross_partner_carbon <span class="keyword">select</span> * <span class="keyword">from</span> crosspartner <span class="keyword">where</span> ds <span class="keyword">like</span> <span class="string">'$ymd%'</span><span class="string">")</span></span></span><br></pre></td></tr></table></figure>
+<p><strong>改用按月/天插入carbondata表</strong></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.text.<span class="type">SimpleDateFormat</span></span><br><span class="line"><span class="keyword">import</span> java.util.&#123;<span class="type">Calendar</span>,<span class="type">Date</span>&#125;</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">genCrossCarbonData</span>(</span>beg: <span class="type">String</span>, end: <span class="type">String</span>) = &#123;</span><br><span class="line">    <span class="keyword">var</span> cal = <span class="type">Calendar</span>.getInstance()</span><br><span class="line">    <span class="keyword">var</span> datef=<span class="keyword">new</span> <span class="type">SimpleDateFormat</span>(<span class="string">"yyyyMM"</span>)</span><br><span class="line">    <span class="keyword">var</span> beginTime=datef.parse(beg)</span><br><span class="line">    <span class="keyword">var</span> endTime=datef.parse(end)</span><br><span class="line">    <span class="keyword">while</span>(beginTime.compareTo(endTime)&lt;=<span class="number">0</span>)&#123;</span><br><span class="line">      cal.setTime(beginTime);</span><br><span class="line">      <span class="keyword">var</span> ymd=datef.format(beginTime)</span><br><span class="line">      println(ymd) </span><br><span class="line">      carbon.sql(s<span class="string">"insert into cross_partner_carbon select * from cross2partner_dt where ds like '$ymd%'"</span>)</span><br><span class="line">      cal.add(<span class="type">Calendar</span>.<span class="type">DATE</span>,<span class="number">1</span>);</span><br><span class="line">      beginTime=cal.getTime();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">genCrossCarbonData(<span class="string">"201701"</span>,<span class="string">"201706"</span>)</span><br></pre></td></tr></table></figure>
+<p>导入数据时还是会报错：</p>
+<p>增加内存：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bin/spark/shell \</span><br><span class="line">--conf spark<span class="class">.executor</span><span class="class">.instances</span>=<span class="number">15</span> \</span><br><span class="line">--conf spark<span class="class">.executor</span><span class="class">.cores</span>=<span class="number">2</span> \</span><br><span class="line">--conf spark<span class="class">.executor</span><span class="class">.memory</span>=<span class="number">8</span>g \</span><br><span class="line">--conf spark<span class="class">.driver</span><span class="class">.memory</span>=<span class="number">8</span>g \</span><br></pre></td></tr></table></figure>
+<h4 id="2-_carbondata其他设置">2. carbondata其他设置</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">carbon.sql("""<span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> crosspartner1(</span><br><span class="line">...</span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">BY</span> <span class="string">'carbondata'</span></span><br><span class="line">TBLPROPERTIES (<span class="string">'DICTIONARY_EXCLUDE'</span>=<span class="string">'sequenceId,idNumber,accountMobile,accountEmail,accountPhone,deviceId,cardNumber,contact1Mobile,contact2Mobile,contact3Mobile,contact4Mobile,contact5Mobile,contact1IdNumber,contact2IdNumber,contact3IdNumber,contact4IdNumber,contact5IdNumber'</span>)</span><br><span class="line"><span class="string">""")</span><br><span class="line"></span><br><span class="line">carbon.sql("</span><span class="keyword">insert</span> <span class="keyword">into</span> crosspartner1 <span class="keyword">select</span> * <span class="keyword">from</span> cross_partner_hdfs<span class="string">")</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="3-_carbon_thrift_server">3. carbon thrift server</h4><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="stylus">bin/spark-submit \</span><br><span class="line">--conf spark<span class="class">.sql</span><span class="class">.hive</span><span class="class">.thriftServer</span><span class="class">.singleSession</span>=true \</span><br><span class="line">--hiveconf hive<span class="class">.server2</span><span class="class">.thrift</span><span class="class">.port</span>=<span class="number">10002</span> \</span><br><span class="line">--hiveconf hive<span class="class">.server2</span><span class="class">.thrift</span><span class="class">.bind</span><span class="class">.host</span>=<span class="string">"192.168.39.25"</span> \</span><br><span class="line">--class org<span class="class">.apache</span><span class="class">.carbondata</span><span class="class">.spark</span><span class="class">.thriftserver</span><span class="class">.CarbonThriftServer</span> \</span><br><span class="line">carbonlib/carbondata_2.<span class="number">11</span>-<span class="number">1.1</span>.<span class="number">1</span>-shade-hadoop2.<span class="number">6.0</span><span class="class">.jar</span> \</span><br><span class="line">hdfs:<span class="comment">//tdhdfs/user/tongdun/carbon</span></span><br><span class="line">hdfs:<span class="comment">//tdhdfs/user/hive/warehouse/carbon.store</span></span><br><span class="line">hdfs:<span class="comment">//tdhdfs/user/tongdun/carbondata/CarbonStore</span></span></span><br></pre></td></tr></table></figure>
+<h4 id="4-_spark-2-2-0">4. spark-2.2.0</h4><p>carbondata-1.1.1目前不支持spark2.2。如果加上profile，更改spark版本为2.2.0，编译不通过</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">$ mvn -DskipTests -Pspark-2.2 -Dspark.version=2.2.0 -Dhadoop.version=2.6.0 clean package</span><br><span class="line"></span><br><span class="line"><span class="comment">[WARNING]</span> /Users/zhengqh/Github/carbondata-parent-1.1.1/integration/spark-common/src/main/scala/org/apache/carbondata/spark/rdd/UpdateCoalescedRDD.scala:23: warning: imported `RDD' <span class="keyword">is</span> permanently hidden by definition <span class="keyword">of</span> class RDD in package rdd</span><br><span class="line"><span class="comment">[INFO]</span> import org.apache.spark.rdd.&#123;CoalescedRDDPartition, DataLoadPartitionCoalescer, RDD&#125;</span><br><span class="line"><span class="comment">[INFO]</span>                                                                                 ^</span><br><span class="line"><span class="comment">[WARNING]</span> /Users/zhengqh/Github/carbondata-parent-1.1.1/integration/spark-common/src/main/scala/org/apache/carbondata/spark/util/CarbonScalaUtil.scala:125: warning: non-variable type argument Any in type pattern scala.collection.Map<span class="comment">[Any,Any]</span> <span class="keyword">is</span> unchecked since it <span class="keyword">is</span> eliminated by erasure</span><br><span class="line"><span class="comment">[INFO]</span>         case m: scala.collection.Map<span class="comment">[Any, Any]</span> =&gt;</span><br><span class="line"><span class="comment">[INFO]</span>                                  ^</span><br><span class="line"><span class="comment">[ERROR]</span> /Users/zhengqh/Github/carbondata-parent-1.1.1/integration/spark-common/src/main/scala/org/apache/spark/sql/optimizer/CarbonDecoderOptimizerHelper.scala:87: error: value child <span class="keyword">is</span> not a member <span class="keyword">of</span> org.apache.spark.sql.catalyst.plans.logical.InsertIntoTable</span><br><span class="line"><span class="comment">[INFO]</span>       case i: InsertIntoTable =&gt; process(i.child, nodeList)</span><br><span class="line"><span class="comment">[INFO]</span>                                            ^</span><br><span class="line"><span class="comment">[WARNING]</span> 11 warnings found</span><br><span class="line"><span class="comment">[ERROR]</span> one error found</span><br><span class="line"><span class="comment">[INFO]</span> ------------------------------------------------------------------------</span><br><span class="line"><span class="comment">[INFO]</span> Reactor Summary:</span><br><span class="line"><span class="comment">[INFO]</span></span><br><span class="line"><span class="comment">[INFO]</span> Apache CarbonData :: Parent ........................ SUCCESS <span class="comment">[  5.140 s]</span></span><br><span class="line"><span class="comment">[INFO]</span> Apache CarbonData :: Common ........................ SUCCESS <span class="comment">[ 10.114 s]</span></span><br><span class="line"><span class="comment">[INFO]</span> Apache CarbonData :: Core .......................... SUCCESS <span class="comment">[ 29.232 s]</span></span><br><span class="line"><span class="comment">[INFO]</span> Apache CarbonData :: Processing .................... SUCCESS <span class="comment">[  9.828 s]</span></span><br><span class="line"><span class="comment">[INFO]</span> Apache CarbonData :: Hadoop ........................ SUCCESS <span class="comment">[  5.719 s]</span></span><br><span class="line"><span class="comment">[INFO]</span> Apache CarbonData :: Spark Common .................. FAILURE <span class="comment">[01:10 min]</span></span><br><span class="line"><span class="comment">[INFO]</span> Apache CarbonData :: Spark Common Test ............. SKIPPED</span><br><span class="line"><span class="comment">[INFO]</span> Apache CarbonData :: Assembly ...................... SKIPPED</span><br><span class="line"><span class="comment">[INFO]</span> Apache CarbonData :: Spark2 ........................ SKIPPED</span><br><span class="line"><span class="comment">[INFO]</span> Apache CarbonData :: Spark2 Examples ............... SKIPPED</span><br><span class="line"><span class="comment">[INFO]</span> ------------------------------------------------------------------------</span><br><span class="line"><span class="comment">[INFO]</span> BUILD FAILURE</span><br><span class="line"><span class="comment">[INFO]</span> ------------------------------------------------------------------------</span><br><span class="line"><span class="comment">[INFO]</span> Total time: 02:10 min</span><br><span class="line"><span class="comment">[INFO]</span> Finished at: 2017-08-03T14:39:55+08:00</span><br><span class="line"><span class="comment">[INFO]</span> Final Memory: 72M/786M</span><br><span class="line"><span class="comment">[INFO]</span> ------------------------------------------------------------------------</span><br><span class="line"><span class="comment">[ERROR]</span> Failed to execute goal org.scala-tools:maven-scala-plugin:2.15.2:compile (default) on project carbondata-spark-common: wrap: org.apache.commons.exec.ExecuteException: Process exited with an error: 1(Exit value: 1) -&gt; <span class="comment">[Help 1]</span></span><br><span class="line"><span class="comment">[ERROR]</span></span><br><span class="line"><span class="comment">[ERROR]</span> To see the full stack trace <span class="keyword">of</span> the errors, re-run Maven with the -e switch.</span><br><span class="line"><span class="comment">[ERROR]</span> Re-run Maven using the -X switch to enable full debug logging.</span><br><span class="line"><span class="comment">[ERROR]</span></span><br><span class="line"><span class="comment">[ERROR]</span> For more information about the errors and possible solutions, please read the following articles:</span><br><span class="line"><span class="comment">[ERROR]</span> <span class="comment">[Help 1]</span> http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException</span><br><span class="line"><span class="comment">[ERROR]</span></span><br><span class="line"><span class="comment">[ERROR]</span> After correcting the problems, you can resume the build with the command</span><br><span class="line"><span class="comment">[ERROR]</span>   mvn &lt;goals&gt; -rf :carbondata-spark-common</span><br></pre></td></tr></table></figure>
+<p>如果使用spark2.1.1编译的二进制包，放到spark2.2.0下，也会报错：</p>
+<p><img src="http://img.blog.csdn.net/20170803143703134" alt="car"></p>
+<p>spark-1.6.2</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">InsertIntoTable</span>(</span></span><br><span class="line">    table: <span class="type">LogicalPlan</span>,</span><br><span class="line">    partition: <span class="type">Map</span>[<span class="type">String</span>, <span class="type">Option</span>[<span class="type">String</span>]],</span><br><span class="line">    child: <span class="type">LogicalPlan</span>,</span><br><span class="line">    overwrite: <span class="type">Boolean</span>,</span><br><span class="line">    ifNotExists: <span class="type">Boolean</span>)</span><br><span class="line">  <span class="keyword">extends</span> <span class="type">LogicalPlan</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">children</span>:</span> <span class="type">Seq</span>[<span class="type">LogicalPlan</span>] = child :: <span class="type">Nil</span></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">output</span>:</span> <span class="type">Seq</span>[<span class="type">Attribute</span>] = <span class="type">Seq</span>.empty</span><br><span class="line"></span><br><span class="line">  assert(overwrite || !ifNotExists)</span><br><span class="line">  <span class="keyword">override</span> <span class="keyword">lazy</span> <span class="keyword">val</span> resolved: <span class="type">Boolean</span> = childrenResolved &amp;&amp; child.output.zip(table.output).forall &#123;</span><br><span class="line">    <span class="keyword">case</span> (childAttr, tableAttr) =&gt;</span><br><span class="line">      <span class="type">DataType</span>.equalsIgnoreCompatibleNullability(childAttr.dataType, tableAttr.dataType)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>spark-2.2.0</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">InsertIntoTable</span>(</span></span><br><span class="line">    table: <span class="type">LogicalPlan</span>,</span><br><span class="line">    partition: <span class="type">Map</span>[<span class="type">String</span>, <span class="type">Option</span>[<span class="type">String</span>]],</span><br><span class="line">    query: <span class="type">LogicalPlan</span>,</span><br><span class="line">    overwrite: <span class="type">Boolean</span>,</span><br><span class="line">    ifPartitionNotExists: <span class="type">Boolean</span>)</span><br><span class="line">  <span class="keyword">extends</span> <span class="type">LogicalPlan</span> &#123;</span><br><span class="line">  <span class="comment">// We don't want `table` in children as sometimes we don't want to transform it.</span></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">children</span>:</span> <span class="type">Seq</span>[<span class="type">LogicalPlan</span>] = query :: <span class="type">Nil</span></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">output</span>:</span> <span class="type">Seq</span>[<span class="type">Attribute</span>] = <span class="type">Seq</span>.empty</span><br><span class="line">  <span class="keyword">override</span> <span class="keyword">lazy</span> <span class="keyword">val</span> resolved: <span class="type">Boolean</span> = <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>更改为i.query后，重新编译：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[INFO] Apache CarbonData :: Assembly ...................... FAILURE [  2.180 s]</span><br><span class="line">[INFO] Apache CarbonData :: Spark2 ........................ SKIPPED</span><br><span class="line">[INFO] Apache CarbonData :: Spark2 Examples ............... SKIPPED</span><br><span class="line">[INFO] <span class="comment">------------------------------------------------------------------------</span></span><br><span class="line">[INFO] BUILD FAILURE</span><br><span class="line">[INFO] <span class="comment">------------------------------------------------------------------------</span></span><br><span class="line">[INFO] Total time: 01:57 min</span><br><span class="line">[INFO] Finished at: 2017-08-03T15:33:59+08:00</span><br><span class="line">[INFO] Final Memory: 83M/728M</span><br><span class="line">[INFO] <span class="comment">------------------------------------------------------------------------</span></span><br><span class="line">[ERROR] Failed to <span class="operator"><span class="keyword">execute</span> goal <span class="keyword">on</span> <span class="keyword">project</span> carbondata-<span class="keyword">assembly</span>: Could <span class="keyword">not</span> resolve dependencies <span class="keyword">for</span> <span class="keyword">project</span> org.apache.carbondata:carbondata-<span class="keyword">assembly</span>:pom:<span class="number">1.1</span><span class="number">.1</span>: Could <span class="keyword">not</span> find artifact org.apache.carbondata:carbondata-spark:jar:<span class="number">1.1</span><span class="number">.1</span> <span class="keyword">in</span> central (<span class="keyword">http</span>://repo1.maven.org/maven2) -&gt; [<span class="keyword">Help</span> <span class="number">1</span>]</span><br><span class="line">[<span class="keyword">ERROR</span>]</span><br><span class="line">[<span class="keyword">ERROR</span>] <span class="keyword">To</span> see the <span class="keyword">full</span> stack <span class="keyword">trace</span> <span class="keyword">of</span> the <span class="keyword">errors</span>, re-run Maven <span class="keyword">with</span> the -<span class="keyword">e</span> <span class="keyword">switch</span>.</span><br><span class="line">[<span class="keyword">ERROR</span>] Re-run Maven <span class="keyword">using</span> the -X <span class="keyword">switch</span> <span class="keyword">to</span> <span class="keyword">enable</span> <span class="keyword">full</span> debug <span class="keyword">logging</span>.</span><br><span class="line">[<span class="keyword">ERROR</span>]</span><br><span class="line">[<span class="keyword">ERROR</span>] <span class="keyword">For</span> more information about the <span class="keyword">errors</span> <span class="keyword">and</span> possible solutions, please <span class="keyword">read</span> the <span class="keyword">following</span> articles:</span><br><span class="line">[<span class="keyword">ERROR</span>] [<span class="keyword">Help</span> <span class="number">1</span>] <span class="keyword">http</span>://cwiki.apache.org/confluence/display/MAVEN/DependencyResolutionException</span><br><span class="line">[<span class="keyword">ERROR</span>]</span><br><span class="line">[<span class="keyword">ERROR</span>] <span class="keyword">After</span> correcting the problems, you can <span class="keyword">resume</span> the <span class="keyword">build</span> <span class="keyword">with</span> the command</span><br><span class="line">[<span class="keyword">ERROR</span>]   mvn &lt;goals&gt; -rf :carbondata-<span class="keyword">assembly</span></span></span><br></pre></td></tr></table></figure>
+<p>默认1.6版本的assembly无法下载1.1.1的pom,将默认版本改为(添加)2.2.0</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">profile</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">id</span>&gt;</span>spark-2.2<span class="tag">&lt;/<span class="title">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">activation</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="title">activeByDefault</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="title">activation</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.carbondata<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>carbondata-spark2<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">version</span>&gt;</span>$&#123;project.version&#125;<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">profile</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2017/07/13/CarbonData-In-Action/">CarbonData</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2017年07月13日 - 00时00分</p>
+  <p><span>最后更新:</span>2017年09月13日 - 15时33分</p>
+  <p>
+    <span>原始链接:</span><a href="/2017/07/13/CarbonData-In-Action/" title="CarbonData">http://github.com/zqhxuyuan/2017/07/13/CarbonData-In-Action/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2017/07/13/CarbonData-In-Action/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
+
+
+
+<nav id="article-nav">
+  
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2017/07/13/SnappyData-In-Action/">
+        SnappyData
+      </a>
+    </div>
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2017/06/25/2017-06-24-Gearpump/">
+        Deep into Apache Gearpump
+      </a>
+    </div>
+  
+</nav>
+
+  
+  
+    <div class ="post-donate">
+    <div id="donate_board" class="donate_bar center">
+        <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏"></a>
+        <span class="donate_txt">
+           &uarr;<br>
+		   赏点酒钱
+        </span>
+        <br>
+    </div>  
+	<div id="donate_guide" class="donate_bar center hidden" >
+		<img src="/img/zhifubao.png" alt="支付宝打赏"> 
+		<img src="/img/weixin.png" alt="微信打赏">  
+    </div>
+	<script type="text/javascript">
+		document.getElementById('btn_donate').onclick = function(){
+			$('#donate_board').addClass('hidden');
+			$('#donate_guide').removeClass('hidden');
+		}
+	</script>
+</div>
+  
+</article>
+
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Apache_CarbonData"><span class="toc-number">1.</span> <span class="toc-text">Apache CarbonData</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CarbonData数据导入与查询"><span class="toc-number">1.1.</span> <span class="toc-text">CarbonData数据导入与查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实验结果"><span class="toc-number">1.2.</span> <span class="toc-text">实验结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#问题"><span class="toc-number">1.3.</span> <span class="toc-text">问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-_Hive表与CarbonData表"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. Hive表与CarbonData表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-_carbondata其他设置"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. carbondata其他设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_carbon_thrift_server"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. carbon thrift server</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-_spark-2-2-0"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. spark-2.2.0</span></a></li></ol></li></ol></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+    if ($(".toc").length < 1) {
+        $("#toc").css("display","none");
+        $("#tocButton").css("display","none");
+        $(".switch-btn").css("display","block");
+        $(".switch-area").css("display","block");
+    }
+</script>
+
+
+    <style>
+        .toc {
+            white-space: nowrap;
+            overflow-x: hidden;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $(".toc li a").mouseover(function() {
+                var title = $(this).attr('href');
+                $(this).attr("title", title);
+            });
+        })
+    </script>
+
+
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+	</div>
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+</div>
+
+
+
+<div class="duoshuo" id="comments">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2017/07/13/CarbonData-In-Action/" data-title="CarbonData" data-url="http://github.com/zqhxuyuan/2017/07/13/CarbonData-In-Action/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"zqhxuyuan"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
+
+
+  
+  
+    
+    <div  class="post-nav-button">
+    <a href="/2017/07/13/SnappyData-In-Action/" title="上一篇: SnappyData">
+    <i class="fa fa-angle-left"></i>
+    </a>
+    <a href="/2017/06/25/2017-06-24-Gearpump/" title="下一篇: Deep into Apache Gearpump">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2017 任何忧伤,都抵不过世界的美丽
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+        </div>
+    </div>
+    <div class="visit">
+      <span id="busuanzi_container_site_pv" style='display:none'>
+        <span id="site-visit" >本站到访数: 
+        <span id="busuanzi_value_site_uv"></span>
+        </span>
+      </span>
+      <span id="busuanzi_container_page_pv" style='display:none'>
+        <span id="page-visit">, 本页阅读量: 
+        <span id="busuanzi_value_page_pv"></span>
+        </span>
+      </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+<script>
+  var backgroundnum = 5;
+  var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+
+  $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+</script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-80646710-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+<a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+<a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

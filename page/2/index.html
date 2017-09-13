@@ -111,7 +111,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/akka/" style="font-size: 10px;">akka</a> <a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 15.56px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.44px;">work</a> <a href="/tags/流处理/" style="font-size: 11.11px;">流处理</a>
+						<a href="/tags/akka/" style="font-size: 10px;">akka</a> <a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 10px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 17.78px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.44px;">work</a> <a href="/tags/流处理/" style="font-size: 11.11px;">流处理</a>
 					</div>
 				</section>
 				
@@ -175,6 +175,229 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-Play-Quickstart" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/11/Play-Quickstart/" class="article-date">
+  	<time datetime="2016-11-10T16:00:00.000Z" itemprop="datePublished">2016-11-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/11/Play-Quickstart/">PlayFramework快速入门</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Scala PlayFramework（2.4）入门<br>示例程序：<a href="https://github.com/zqhxuyuan/first-player">https://github.com/zqhxuyuan/first-player</a></p>
+<!-- MarkdownTOC -->
+<ul>
+<li>Run! Run!! Run!!!</li>
+<li>Hello World!<ul>
+<li>路由和Controller</li>
+<li>页面和渲染<ul>
+<li>模板编译</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Products Example<ul>
+<li>implicit</li>
+</ul>
+</li>
+<li>Spark集成<ul>
+<li>play-spark-module</li>
+<li>Spark Launcher<ul>
+<li>mesos</li>
+<li>问题</li>
+</ul>
+</li>
+<li>Spark Cassandra</li>
+<li>预览</li>
+<li>Actor</li>
+<li>Quartz<ul>
+<li>Job依赖注入</li>
+<li>Quartz作业的自动重启</li>
+</ul>
+</li>
+<li>Kafka</li>
+</ul>
+</li>
+<li>附录<ul>
+<li>sbt私服</li>
+<li>Play MultiProject</li>
+<li>Run &amp; Debug With IDEA<ul>
+<li><ol>
+<li>Play App（❌）</li>
+</ol>
+</li>
+<li><ol>
+<li>Sbt Task（✅）</li>
+</ol>
+</li>
+<li><ol>
+<li>jvm-debug（✅）</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!-- /MarkdownTOC -->
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/scala/">scala</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/scala/">scala</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/11/11/Play-Quickstart/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-Kafka-Streams-blog" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/06/Kafka-Streams-blog/" class="article-date">
+  	<time datetime="2016-11-05T16:00:00.000Z" itemprop="datePublished">2016-11-06</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/06/Kafka-Streams-blog/">Kafka Streams 博客</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Kafka Streams流处理 英文博客翻译<br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/kafka/">kafka</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/11/06/Kafka-Streams-blog/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
     <article id="post-Kafka-Streams-cn" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -221,174 +444,6 @@
       
         <p class="article-more-link">
           <a  href="/2016/11/02/Kafka-Streams-cn/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-Kafka-Definitive-Guide-cn-11" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/29/Kafka-Definitive-Guide-cn-11/" class="article-date">
-  	<time datetime="2016-10-28T16:00:00.000Z" itemprop="datePublished">2016-10-29</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/29/Kafka-Definitive-Guide-cn-11/">译：Kafka权威指南-第11章-流处理</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Kafka权威指南中文翻译：<a href="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch11.html">https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch11.html</a><br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/mq/">mq</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/10/29/Kafka-Definitive-Guide-cn-11/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-Kafka-Definitive-Guide-cn-08" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/10/29/Kafka-Definitive-Guide-cn-08/" class="article-date">
-  	<time datetime="2016-10-28T16:00:00.000Z" itemprop="datePublished">2016-10-29</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/29/Kafka-Definitive-Guide-cn-08/">译：Kafka权威指南-第8章-跨数据中心的数据复制</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Kafka权威指南中文翻译：<a href="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch08.html">https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch08.html</a><br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/mq/">mq</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/10/29/Kafka-Definitive-Guide-cn-08/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -595,10 +650,10 @@
         
 
   
-    <article id="post-Kafka-Definitive-Guide-cn-03" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Kafka-Definitive-Guide-cn-07" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/29/Kafka-Definitive-Guide-cn-03/" class="article-date">
+      <a href="/2016/10/29/Kafka-Definitive-Guide-cn-07/" class="article-date">
   	<time datetime="2016-10-28T16:00:00.000Z" itemprop="datePublished">2016-10-29</time>
 </a>
     </div>
@@ -612,7 +667,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/29/Kafka-Definitive-Guide-cn-03/">译：Kafka权威指南-第3章-生产者</a>
+      <a class="article-title" href="/2016/10/29/Kafka-Definitive-Guide-cn-07/">译：Kafka权威指南-第7章-构建数据管道</a>
     </h1>
   
 
@@ -621,7 +676,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Kafka权威指南中文翻译：<a href="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch03.html">https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch03.html</a><br>
+        <p>Kafka权威指南中文翻译：<a href="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch07.html">https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch07.html</a><br>
       
     </div>
     
@@ -640,7 +695,7 @@
 
       
         <p class="article-more-link">
-          <a  href="/2016/10/29/Kafka-Definitive-Guide-cn-03/#more">more >></a>
+          <a  href="/2016/10/29/Kafka-Definitive-Guide-cn-07/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -763,10 +818,10 @@
         
 
   
-    <article id="post-Kafka-Definitive-Guide-cn-07" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-Kafka-Definitive-Guide-cn-11" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/10/29/Kafka-Definitive-Guide-cn-07/" class="article-date">
+      <a href="/2016/10/29/Kafka-Definitive-Guide-cn-11/" class="article-date">
   	<time datetime="2016-10-28T16:00:00.000Z" itemprop="datePublished">2016-10-29</time>
 </a>
     </div>
@@ -780,7 +835,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/29/Kafka-Definitive-Guide-cn-07/">译：Kafka权威指南-第7章-构建数据管道</a>
+      <a class="article-title" href="/2016/10/29/Kafka-Definitive-Guide-cn-11/">译：Kafka权威指南-第11章-流处理</a>
     </h1>
   
 
@@ -789,7 +844,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Kafka权威指南中文翻译：<a href="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch07.html">https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch07.html</a><br>
+        <p>Kafka权威指南中文翻译：<a href="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch11.html">https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch11.html</a><br>
       
     </div>
     
@@ -808,7 +863,175 @@
 
       
         <p class="article-more-link">
-          <a  href="/2016/10/29/Kafka-Definitive-Guide-cn-07/#more">more >></a>
+          <a  href="/2016/10/29/Kafka-Definitive-Guide-cn-11/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-Kafka-Definitive-Guide-cn-08" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/29/Kafka-Definitive-Guide-cn-08/" class="article-date">
+  	<time datetime="2016-10-28T16:00:00.000Z" itemprop="datePublished">2016-10-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/29/Kafka-Definitive-Guide-cn-08/">译：Kafka权威指南-第8章-跨数据中心的数据复制</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Kafka权威指南中文翻译：<a href="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch08.html">https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch08.html</a><br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/mq/">mq</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/10/29/Kafka-Definitive-Guide-cn-08/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
+    <article id="post-Kafka-Definitive-Guide-cn-03" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/29/Kafka-Definitive-Guide-cn-03/" class="article-date">
+  	<time datetime="2016-10-28T16:00:00.000Z" itemprop="datePublished">2016-10-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/29/Kafka-Definitive-Guide-cn-03/">译：Kafka权威指南-第3章-生产者</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Kafka权威指南中文翻译：<a href="https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch03.html">https://www.safaribooksonline.com/library/view/kafka-the-definitive/9781491936153/ch03.html</a><br>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/mq/">mq</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kafka/">kafka</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/10/29/Kafka-Definitive-Guide-cn-03/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
@@ -1229,174 +1452,6 @@
       
         <p class="article-more-link">
           <a  href="/2016/08/16/Tools-Azkaban/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-JVM" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/07/26/JVM/" class="article-date">
-  	<time datetime="2016-07-25T16:00:00.000Z" itemprop="datePublished">2016-07-26</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/07/26/JVM/">JVM GC</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>JVM GC<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/jvm/">jvm</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jvm/">jvm</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/07/26/JVM/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-Storm-Picture" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/07/15/Storm-Picture/" class="article-date">
-  	<time datetime="2016-07-14T16:00:00.000Z" itemprop="datePublished">2016-07-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/07/15/Storm-Picture/">Storm Picture</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>图解Storm<br>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/storm/">storm</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/storm/">storm</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2016/07/15/Storm-Picture/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
