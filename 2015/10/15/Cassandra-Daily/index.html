@@ -92,7 +92,7 @@ GC
 <meta property="og:image" content="http://img.blog.csdn.net/20161103115428917">
 <meta property="og:image" content="http://img.blog.csdn.net/20161103115320422">
 <meta property="og:image" content="http://img.blog.csdn.net/20161103115620060">
-<meta property="og:updated_time" content="2017-06-01T01:30:57.000Z">
+<meta property="og:updated_time" content="2017-09-25T15:19:55.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cassandra日常运维">
 <meta name="twitter:description" content="Cassandra日常运维, OpsCenter
@@ -228,7 +228,7 @@ GC
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/akka/" style="font-size: 10px;">akka</a> <a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 11.11px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 17.78px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.44px;">work</a> <a href="/tags/流处理/" style="font-size: 11.11px;">流处理</a>
+						<a href="/tags/akka/" style="font-size: 10px;">akka</a> <a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.75px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.25px;">drill</a> <a href="/tags/druid/" style="font-size: 13.75px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.75px;">graph</a> <a href="/tags/hadoop/" style="font-size: 11.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/midd/" style="font-size: 10px;">midd</a> <a href="/tags/ops/" style="font-size: 13.75px;">ops</a> <a href="/tags/redis/" style="font-size: 11.25px;">redis</a> <a href="/tags/scala/" style="font-size: 13.75px;">scala</a> <a href="/tags/spark/" style="font-size: 17.5px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.5px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.75px;">work</a> <a href="/tags/流处理/" style="font-size: 11.25px;">流处理</a>
 					</div>
 				</section>
 				
@@ -509,7 +509,7 @@ GC
 <p>4.🙅跳板机直接访问线上数据库</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">在跳板机上生成建表语句: </span><br><span class="line"><span class="regexp">/usr/</span>install<span class="regexp">/cassandra/</span>bin/cqlsh -e <span class="string">'desc keyspace forseti_fp'</span> <span class="number">192.168</span><span class="number">.50</span><span class="number">.20</span> &gt; forseti_fp.cql</span><br><span class="line"></span><br><span class="line">创建<span class="string">keyspace:</span></span><br><span class="line">CREATE KEYSPACE forseti_fp WITH REPLICATION = &#123; <span class="string">'class'</span> : <span class="string">'SimpleStrategy'</span>, <span class="string">'replication_factor'</span> : <span class="number">1</span> &#125;;</span><br><span class="line"></span><br><span class="line">修改副本数: </span><br><span class="line">ALTER KEYSPACE forseti_fp WITH REPLICATION = &#123; <span class="string">'class'</span> : <span class="string">'SimpleStrategy'</span>, <span class="string">'replication_factor'</span> : <span class="number">1</span> &#125;;</span><br><span class="line">ALTER KEYSPACE forseti WITH REPLICATION = &#123;<span class="string">'class'</span> : <span class="string">'NetworkTopologyStrategy'</span>, <span class="string">'DC1'</span> : <span class="number">3</span>&#125;;</span><br><span class="line">ALTER KEYSPACE model_result WITH REPLICATION = &#123;<span class="string">'class'</span> : <span class="string">'NetworkTopologyStrategy'</span>, <span class="string">'DC1'</span> : <span class="number">1</span>&#125;;</span><br><span class="line">ALTER KEYSPACE realtime WITH replication = &#123;<span class="string">'class'</span>: <span class="string">'NetworkTopologyStrategy'</span>, <span class="string">'dc1'</span>: <span class="string">'3'</span>&#125;  AND durable_writes = <span class="literal">true</span>;</span><br><span class="line">ALTER KEYSPACE gaea WITH REPLICATION = &#123;<span class="string">'class'</span> : <span class="string">'NetworkTopologyStrategy'</span>, <span class="string">'dc1'</span> : <span class="number">3</span>&#125;;</span><br><span class="line"><span class="label"></span><br><span class="line">https:</span><span class="comment">//docs.datastax.com/en/cql/3.1/cql/cql_reference/compactSubprop.html?scroll=compactSubprop__compactionSubpropertiesSTCS</span></span><br><span class="line"></span><br><span class="line">ALTER TABLE device WITH compaction = &#123;<span class="string">'class'</span> : <span class="string">'SizeTieredCompactionStrategy'</span>, <span class="string">'min_threshold'</span> : <span class="number">6</span> &#125;;</span><br><span class="line"></span><br><span class="line">在跳板机上执行建表语句:</span><br><span class="line"><span class="regexp">/usr/</span>install<span class="regexp">/cassandra/</span>bin/cqlsh <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span> -f forseti_fp.cql</span><br><span class="line"></span><br><span class="line">在跳板机上查询:</span><br><span class="line">[qihuang.zheng<span class="annotation">@fd</span>047022 ~]$ <span class="regexp">/usr/</span>install<span class="regexp">/cassandra/</span>bin/cqlsh <span class="number">192.168</span><span class="number">.47</span><span class="number">.227</span></span><br><span class="line">cqlsh&gt; desc KEYSPACES ;</span><br><span class="line">system  forseti_fp  system_traces</span><br><span class="line"></span><br><span class="line">cqlsh&gt; use forseti_fp ;</span><br><span class="line"><span class="string">cqlsh:</span>forseti_fp&gt; desc TABLES ;</span><br><span class="line">analysis                device              ios_device_info     tcp_stack_ua</span><br></pre></td></tr></table></figure>
 <h2 id="集群维护">集群维护</h2><h3 id="删除/下线节点">删除/下线节点</h3><p>A.正在运行的节点: <code>nodetool decommission</code><br>B.挂掉的节点:   </p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nohup nodetool removenode host-<span class="property">id</span> &amp;</span><br><span class="line">nodetool removenode status</span><br><span class="line">nodetool removenode force</span><br></pre></td></tr></table></figure>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nohup nodetool removenode host-<span class="property">id</span> &amp;</span><br><span class="line">nodetool removenode force</span><br><span class="line"></span><br><span class="line">nodetool removenode status</span><br></pre></td></tr></table></figure>
 <h3 id="集群拷贝数据">集群拷贝数据</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sstableloader -d <span class="number">10.21</span><span class="number">.21</span><span class="number">.133</span> -t <span class="number">1</span> model_result/mobile_score</span><br></pre></td></tr></table></figure>
 <h3 id="节点上线、扩容">节点上线、扩容</h3><h4 id="初始化一个新的集群">初始化一个新的集群</h4><p><strong>auto_bootstrap</strong>：默认该选项在cassandra.yaml中不存在，表示auto_bootstrap=true</p>
 <p><a href="http://docs.datastax.com/en/archived/cassandra/2.2/cassandra/initialize/initSingleDS.html" target="_blank" rel="external">http://docs.datastax.com/en/archived/cassandra/2.2/cassandra/initialize/initSingleDS.html</a></p>
@@ -992,7 +992,7 @@ GC
   <p><span>本文标题:</span><a href="/2015/10/15/Cassandra-Daily/">Cassandra日常运维</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年10月15日 - 00时00分</p>
-  <p><span>最后更新:</span>2017年06月01日 - 09时30分</p>
+  <p><span>最后更新:</span>2017年09月25日 - 23时19分</p>
   <p>
     <span>原始链接:</span><a href="/2015/10/15/Cassandra-Daily/" title="Cassandra日常运维">http://github.com/zqhxuyuan/2015/10/15/Cassandra-Daily/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/10/15/Cassandra-Daily/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -1021,15 +1021,15 @@ GC
 <nav id="article-nav">
   
     <div id="article-nav-newer" class="article-nav-title">
-      <a href="/2015/10/15/Cassandra-Stress/">
-        Cassandra压力测试
+      <a href="/2015/10/15/Cassandra-exception/">
+        Cassandra常见异常
       </a>
     </div>
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2015/10/15/Cassandra-Operation/">
-        Cassandra操作
+      <a href="/2015/10/15/Cassandra-Stress/">
+        Cassandra压力测试
       </a>
     </div>
   
@@ -1180,10 +1180,10 @@ GC
   
     
     <div  class="post-nav-button">
-    <a href="/2015/10/15/Cassandra-Stress/" title="上一篇: Cassandra压力测试">
+    <a href="/2015/10/15/Cassandra-exception/" title="上一篇: Cassandra常见异常">
     <i class="fa fa-angle-left"></i>
     </a>
-    <a href="/2015/10/15/Cassandra-Operation/" title="下一篇: Cassandra操作">
+    <a href="/2015/10/15/Cassandra-Stress/" title="下一篇: Cassandra压力测试">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>

@@ -13,7 +13,7 @@
 <meta property="og:description" content="《Kafka技术内幕》">
 <meta property="og:image" content="http://img.blog.csdn.net/20170624225547302">
 <meta property="og:image" content="http://img.blog.csdn.net/20170624225600513">
-<meta property="og:updated_time" content="2017-09-08T12:40:50.000Z">
+<meta property="og:updated_time" content="2017-09-20T16:53:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka技术内幕">
 <meta name="twitter:description" content="《Kafka技术内幕》">
@@ -114,7 +114,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/akka/" style="font-size: 10px;">akka</a> <a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.89px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.67px;">drill</a> <a href="/tags/druid/" style="font-size: 13.33px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.33px;">graph</a> <a href="/tags/hadoop/" style="font-size: 11.11px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15.56px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/ops/" style="font-size: 13.33px;">ops</a> <a href="/tags/redis/" style="font-size: 11.11px;">redis</a> <a href="/tags/scala/" style="font-size: 13.33px;">scala</a> <a href="/tags/spark/" style="font-size: 17.78px;">spark</a> <a href="/tags/storm/" style="font-size: 17.78px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.22px;">timeseries</a> <a href="/tags/work/" style="font-size: 14.44px;">work</a> <a href="/tags/流处理/" style="font-size: 11.11px;">流处理</a>
+						<a href="/tags/akka/" style="font-size: 10px;">akka</a> <a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.75px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.25px;">drill</a> <a href="/tags/druid/" style="font-size: 13.75px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.75px;">graph</a> <a href="/tags/hadoop/" style="font-size: 11.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/midd/" style="font-size: 10px;">midd</a> <a href="/tags/ops/" style="font-size: 13.75px;">ops</a> <a href="/tags/redis/" style="font-size: 11.25px;">redis</a> <a href="/tags/scala/" style="font-size: 13.75px;">scala</a> <a href="/tags/spark/" style="font-size: 17.5px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.5px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.75px;">work</a> <a href="/tags/流处理/" style="font-size: 11.25px;">流处理</a>
 					</div>
 				</section>
 				
@@ -233,6 +233,18 @@
 <li>第十章介绍了Kafka的一些高级特性，比如客户端的配额、新的消息格式、事务特性。</li>
 </ul>
 <p>本书相关的示例代码在笔者的Github主页<a href="https://github.com/zqhxuyuan/kafka-book">https://github.com/zqhxuyuan/kafka-book</a>上，另外，限于篇幅，本书的附录部分会放在个人博客上。由于个人能力有限，文中的错误在所难免，读者在阅读本书的过程中，发现不妥之处，可以私信笔者的微博：<a href="http://weibo.com/xuyuantree" target="_blank" rel="external">http://weibo.com/xuyuantree</a>，笔者会定期将勘误表更新到个人博客上。</p>
+<h2 id="English_Introduce">English Introduce</h2><p>《Apache Kafka Internal》</p>
+<p>This book mostly based on Kafka-0.10, and some part of 0.11 for streaming. It has nearly 400 pictures to analysis Kafka internal implementation. The book written from client to coordinator, from storage to controller, and also including Kafka Connect and Kafka Streams. Here is content introduction of each chapter:</p>
+<p>Chapter 1: Being a streaming platform, kafka composed of message system, storage and streaming processing. There are three model of Kafka basic concepts: Partition model, Consumer model and Distributed model. We also introduce some important design ideas of kafka, such as file system persistent, data transformation, producer and consumer, replication and HA.</p>
+<p>Chapter 2: From a producer example into how client send message. The whole workflow include record accumulator, sender thread, grouping message, create request and at last send to different target broker. Then we introduce Kafka channel, selector and also how server use NIO reactor to handle client request.</p>
+<p>Chapter 3: From a old high-level consumer example into zookeeper based api. The most important of high-level consuemr is consumer thread model. Then we introduce two approach to commit consumer offset which is zookeeper or internal topic. After that, we illustrate how to write low-level consumer to ensure processing messages stability and robust.</p>
+<p>Chapter 4: New version consumer client use subscription state and polling fetch instead of fetcher thread. We also introduce how consumer use callback, handler, listener, adapter, chain to implement different asynchronous request mode. Last we introduce heartbeat, offset commit and three consumer processing semantic: at-most-once,at-least-once,exactly-once.</p>
+<p>Chapter 5: New consumer communicate with server coordinator by ConsumerCoordinator, there’re mainly two request/response involved: Join-group and Sync-group. This process also called consumer group rebalance. We also discussed how server coordinator use state machine to ensure group state transformation, such as PreparingRebalance,AwaitingSync,Stable. This chapter also give some different scene to help reader understand how consumer group worked in production environment.</p>
+<p>Chapter 6: Kafka’s storage layer process include log read/write, log manager, log compaction. In server side, ReplicationManager is responsible for client’s request. Then we introduce Replication mechanism concepts, such as Partition, Replication, HW, LEO. Last we introduce delayed operation and delayed purgatory. If server can’t response immediately to client, they have to cache request and send response to client some times later.</p>
+<p>Chapter 7: Kafka Controller component is in charge of managing PartitionState, ReplicationState, and some listeners, such as broker up/down, topic deletion, partition reassign. The main duty of controller is selecting partition’s leader and sent LeaderAndIsr request down to brokers. Target brokers receiving request will decide to be partition leader or follower. Furthermore, we introduce the different between local replication and remote replication, also the function of metadata cache.</p>
+<p>Chapter 8: First we introduce two kind of cluster synchronization: Kafka internal MirrorMaker and Uber open sourced uReplicator, we also show how apache helix build replicated uReplicator. Next we introduce new build-in kafka connect framework and how to develop a custom connector plugin. Then we deep into connector’s architecture, mainly concentrate on data model, connector model, worker model.</p>
+<p>Chapter 9: Introduce Kafka Streams two api: low-level processor and high-level DSL. This chapter focus on streaming thread model, including stream instance, thread and task. We also introduce local state store used by standby task for recovery. After that, we introduce two abstract components in High-level DSL: KStream and KTable, they both based on low-level processor, support common operator and advance function, such as window, join and so on.</p>
+<p>Chapter 10: Introduce some advanced features. such as client quota, new message format in 0.11 and also  transaction support.</p>
 <h2 id="目录">目录</h2><p><img src="http://img.blog.csdn.net/20170624225547302" alt="0"></p>
 <p><img src="http://img.blog.csdn.net/20170624225600513" alt="0"></p>
 <hr>
@@ -272,7 +284,7 @@
   <p><span>本文标题:</span><a href="/2018/01/01/Kafka-Code-Index/">Kafka技术内幕</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2018年01月01日 - 00时00分</p>
-  <p><span>最后更新:</span>2017年09月08日 - 20时40分</p>
+  <p><span>最后更新:</span>2017年09月21日 - 00时53分</p>
   <p>
     <span>原始链接:</span><a href="/2018/01/01/Kafka-Code-Index/" title="Kafka技术内幕">http://github.com/zqhxuyuan/2018/01/01/Kafka-Code-Index/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2018/01/01/Kafka-Code-Index/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -302,8 +314,8 @@
   
   
     <div id="article-nav-older" class="article-nav-title">
-      <a href="/2017/09/15/2017-09-15-Spark-DataSources/">
-        Spark DataSources Implementation
+      <a href="/2017/10/11/Midd-canal/">
+        深入解析中间件之-Cannal
       </a>
     </div>
   
@@ -338,7 +350,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#本书介绍："><span class="toc-number">1.</span> <span class="toc-text">本书介绍：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#目录"><span class="toc-number">2.</span> <span class="toc-text">目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduce"><span class="toc-number">3.</span> <span class="toc-text">Introduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码分析汇总"><span class="toc-number">4.</span> <span class="toc-text">源码分析汇总</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka_Connect"><span class="toc-number">5.</span> <span class="toc-text">Kafka Connect</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka_Streams"><span class="toc-number">6.</span> <span class="toc-text">Kafka Streams</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#本书介绍："><span class="toc-number">1.</span> <span class="toc-text">本书介绍：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#English_Introduce"><span class="toc-number">2.</span> <span class="toc-text">English Introduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#目录"><span class="toc-number">3.</span> <span class="toc-text">目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduce"><span class="toc-number">4.</span> <span class="toc-text">Introduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码分析汇总"><span class="toc-number">5.</span> <span class="toc-text">源码分析汇总</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka_Connect"><span class="toc-number">6.</span> <span class="toc-text">Kafka Connect</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka_Streams"><span class="toc-number">7.</span> <span class="toc-text">Kafka Streams</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -454,7 +466,7 @@
   
     <div  class="post-nav-button">
     <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
-    <a href="/2017/09/15/2017-09-15-Spark-DataSources/" title="下一篇: Spark DataSources Implementation">
+    <a href="/2017/10/11/Midd-canal/" title="下一篇: 深入解析中间件之-Cannal">
     <i class="fa fa-angle-right"></i>
     </a>
     </div>
