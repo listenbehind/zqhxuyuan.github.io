@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://github.com/zqhxuyuan/2017/09/15/2017-09-15-Spark-DataSources/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Spark数据源扩展与实践(40行代码实现一个自定义的DataSource)">
-<meta property="og:updated_time" content="2017-09-15T07:17:35.000Z">
+<meta property="og:updated_time" content="2017-10-17T06:43:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark DataSources Implementation">
 <meta name="twitter:description" content="Spark数据源扩展与实践(40行代码实现一个自定义的DataSource)">
@@ -217,7 +217,7 @@
       
         
         <p>Spark数据源扩展与实践(40行代码实现一个自定义的DataSource)<br><a id="more"></a></p>
-<p>Spark的DataSource API可以方便地扩展。如果没有使用META-INFO这种ServiceLocator机制，则自定义的数据源名称必须是DefaultSource.<br>并且必须实现RelationProvider接口。</p>
+<h2 id="简单示例">简单示例</h2><p>Spark的DataSource API可以方便地扩展。如果没有使用META-INFO这种ServiceLocator机制，则自定义的数据源名称必须是DefaultSource.<br>并且必须实现RelationProvider接口。</p>
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DefaultSource</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">RelationProvider</span> &#123;</span></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">createRelation</span>(</span>sqlContext: <span class="type">SQLContext</span>,</span><br><span class="line">                              parameters: <span class="type">Map</span>[<span class="type">String</span>, <span class="type">String</span>]): <span class="type">BaseRelation</span> = &#123;</span><br><span class="line">    ???</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>通常自定义数据源都有不同的配置文件，所以我们也要实现自己的BaseRelation</p>
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DefaultSource</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">RelationProvider</span>&#123;</span></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">createRelation</span>(</span>sqlContext: <span class="type">SQLContext</span>, parameters: <span class="type">Map</span>[<span class="type">String</span>, <span class="type">String</span>]): <span class="type">BaseRelation</span> = &#123;</span><br><span class="line">    <span class="type">EmptyRelation</span>()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">EmptyRelation</span>(</span>) <span class="keyword">extends</span> <span class="type">BaseRelation</span> &#123;</span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">sqlContext</span>:</span> <span class="type">SQLContext</span> = ???</span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">schema</span>:</span> <span class="type">StructType</span> = ???</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -233,7 +233,15 @@
 <figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">object</span> TestExample &#123;</span><br><span class="line"></span><br><span class="line">  def <span class="function">main</span>(args<span class="value">: Array[String]) &#123;</span><br><span class="line">    val spark = SparkSession.<span class="function">builder</span>().<span class="function">master</span>(<span class="string">"local"</span>).<span class="function">getOrCreate</span>()</span><br><span class="line">    val df = spark.read.<span class="function">format</span>(<span class="string">"com.zqh.spark.connectors.test.empty"</span>).<span class="function">load</span>()</span><br><span class="line">    df.<span class="function">printSchema</span>()</span><br><span class="line">    df.<span class="function">show</span>()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
 <p>什么，只有40行代码，就实现了自定义的DataSource!!!</p>
 <figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">root</span><br><span class="line"><span class="code"> |-- id: integer (nullable = true)</span></span><br><span class="line"><span class="code"> |-- name: string (nullable = true)</span></span><br><span class="line"><span class="code"> |-- age: integer (nullable = true)</span></span><br><span class="line"></span><br><span class="line"><span class="code">+---+</span>----<span class="code">+---+</span></span><br><span class="line"><span class="header">| id|name|age|</span><br><span class="line">+---+----+---+</span></span><br><span class="line"><span class="header">|  1|   A| 20|</span><br><span class="line">+---+----+---+</span></span><br></pre></td></tr></table></figure>
-
+<p>上面示例EmptyRelation中，schema方法和buildScan方法有如下特点：</p>
+<ul>
+<li>schema定义了三个字段，则buildScan中每一行Row都必须有三个元素</li>
+<li>RDD的每一行Row是数据，而schema对应了数据的元数据，schema可以任意指定</li>
+</ul>
+<p>总结下自定义数据源相关的类：</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">RelationProvider                  BaseRelation    TableScan</span><br><span class="line">       /|<span class="string">\                            /</span>|<span class="string">\            /</span>|<span class="string">\                   spark</span><br><span class="line">        </span>|<span class="string">                              </span>|<span class="string">              </span>|<span class="string">        ------------------</span><br><span class="line">        </span>|<span class="string">                              </span>|<span class="string">              </span>|<span class="string">                    user</span><br><span class="line">        </span>|<span class="string">                           schema()     buildScan()    </span><br><span class="line">DefaultSource                          </span>|<span class="string">              </span>|</span><br><span class="line">        |<span class="string">                              </span>|<span class="string">              </span>|</span><br><span class="line">        |<span class="string">                              </span>|<span class="string">              </span>|</span><br><span class="line">        ·                              |<span class="string">              </span>|</span><br><span class="line">createRelation()  --------------------&gt; EmptyRelation</span><br></pre></td></tr></table></figure>
+<h2 id="JDBC_DataSource">JDBC DataSource</h2><p>jdbc数据源的定义类是：JdbcRelationProvider</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -244,7 +252,7 @@
   <p><span>本文标题:</span><a href="/2017/09/15/2017-09-15-Spark-DataSources/">Spark DataSources Implementation</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2017年09月15日 - 00时00分</p>
-  <p><span>最后更新:</span>2017年09月15日 - 15时17分</p>
+  <p><span>最后更新:</span>2017年10月17日 - 14时43分</p>
   <p>
     <span>原始链接:</span><a href="/2017/09/15/2017-09-15-Spark-DataSources/" title="Spark DataSources Implementation">http://github.com/zqhxuyuan/2017/09/15/2017-09-15-Spark-DataSources/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2017/09/15/2017-09-15-Spark-DataSources/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -274,7 +282,7 @@
   
     <div id="article-nav-newer" class="article-nav-title">
       <a href="/2017/10/11/Midd-canal/">
-        深入解析中间件之-Cannal
+        深入解析中间件之-Canal
       </a>
     </div>
   
@@ -316,7 +324,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简单示例"><span class="toc-number">1.</span> <span class="toc-text">简单示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JDBC_DataSource"><span class="toc-number">2.</span> <span class="toc-text">JDBC DataSource</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
@@ -432,7 +440,7 @@
   
     
     <div  class="post-nav-button">
-    <a href="/2017/10/11/Midd-canal/" title="上一篇: 深入解析中间件之-Cannal">
+    <a href="/2017/10/11/Midd-canal/" title="上一篇: 深入解析中间件之-Canal">
     <i class="fa fa-angle-left"></i>
     </a>
     <a href="/2017/09/04/2017-09-04-StreamingPro/" title="下一篇: StreamingPro">
