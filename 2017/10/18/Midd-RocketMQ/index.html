@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深入解析中间件之-RocketMQ | zqhxuyuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Apache RocketMQ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入解析中间件之-RocketMQ">
+<meta property="og:url" content="http://github.com/zqhxuyuan/2017/10/18/Midd-RocketMQ/index.html">
+<meta property="og:site_name" content="zqhxuyuan">
+<meta property="og:description" content="Apache RocketMQ">
+<meta property="og:updated_time" content="2017-10-19T01:44:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入解析中间件之-RocketMQ">
+<meta name="twitter:description" content="Apache RocketMQ">
+  
+    <link rel="alternative" href="/atom.xml" title="zqhxuyuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">任何忧伤,都抵不过世界的美丽</a></h1>
+		</hgroup>
+
+		
+				
+
+
+		
+			<div id="switch-btn" class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div id="switch-area" class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives/">归档</a></li>
+				        
+							<li><a href="/tags/">标签</a></li>
+				        
+							<li><a href="/about/">关于</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+								<li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+					        
+						</ul>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/akka/" style="font-size: 10px;">akka</a> <a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/cassandra/" style="font-size: 18.75px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.25px;">drill</a> <a href="/tags/druid/" style="font-size: 13.75px;">druid</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.75px;">graph</a> <a href="/tags/hadoop/" style="font-size: 11.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/midd/" style="font-size: 10px;">midd</a> <a href="/tags/ops/" style="font-size: 13.75px;">ops</a> <a href="/tags/redis/" style="font-size: 11.25px;">redis</a> <a href="/tags/rocketmq/" style="font-size: 10px;">rocketmq</a> <a href="/tags/scala/" style="font-size: 13.75px;">scala</a> <a href="/tags/spark/" style="font-size: 17.5px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.5px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.75px;">work</a> <a href="/tags/流处理/" style="font-size: 11.25px;">流处理</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">BIG(DATA)</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<a href="/" class="profilepic">
+				<img lazy-src="https://avatars1.githubusercontent.com/u/1088525?v=3&amp;s=180" class="js-avatar">
+			</a>
+			<hgroup>
+			  <h1 class="header-author"><a href="/" title="回到主页">任何忧伤,都抵不过世界的美丽</a></h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives/">归档</a></li>
+		        
+					<li><a href="/tags/">标签</a></li>
+		        
+					<li><a href="/about/">关于</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+						<ul class="social">
+							
+								<li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/xuyuantree" title="新浪微博"></a></li>
+					        
+								<li id="GitHub"><a class="GitHub" target="_blank" href="http://github.com/zqhxuyuan" title="GitHub"></a></li>
+					        
+								<li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+					        
+						</ul>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-Midd-RocketMQ" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/10/18/Midd-RocketMQ/" class="article-date">
+  	<time datetime="2017-10-17T16:00:00.000Z" itemprop="datePublished">2017-10-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      深入解析中间件之-RocketMQ
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/mq/">mq</a>
+	</div>
+
+
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/rocketmq/">rocketmq</a></li></ul>
+	</div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>Apache RocketMQ<br><a id="more"></a></p>
+<h1 id="基本流程">基本流程</h1><h2 id="Remoting_RPC示例">Remoting RPC示例</h2><p>rocketmq-remoting模块采用Netty封装了RPC的调用，包括客户端和服务端之间的交互。</p>
+<p>不同分布式系统在通信上都会实现RPC模块，比如Kafka、Hadoop等都有各自的RPC实现。</p>
+<p>先来查看测试用例RemotingServerTest的使用方法：</p>
+<ul>
+<li>启动RemotingServer和RemotingClient</li>
+<li>调用RemotingClient的invokeAsync()或者invokeSync()、invokeOneway()方法</li>
+</ul>
+<p>以异步调用为例，RemotingClient的invokeAsync()方法主要有三个参数：</p>
+<ul>
+<li>服务端地址，RPC调用需要指定服务端的地址，这样客户端才能发送请求，让服务端处理</li>
+<li>远程指令（RemotingCommand），即客户端发送的请求</li>
+<li>回调对象（InvokeCallback），即客户端收到服务端返回的响应结果后，如何处理</li>
+</ul>
+<p>RPC调用的具体步骤如下：</p>
+<ul>
+<li>启动客户端和服务端</li>
+<li>客户端构造远程指令对象</li>
+<li>客户端通过RemotingClient同步或者异步调用</li>
+<li>服务端在启动时注册的处理器，会处理客户端发送的请求，即调用处理器的processRequest()方法</li>
+<li>服务端处理完请求后，返回响应给客户端</li>
+<li>客户端收到服务端返回的响应结果，会触发回调对象调用operationComplete()方法</li>
+</ul>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function">RemotingServer <span class="title">createRemotingServer</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    NettyServerConfig config = <span class="keyword">new</span> NettyServerConfig();</span><br><span class="line">    RemotingServer remotingServer = <span class="keyword">new</span> NettyRemotingServer(config);</span><br><span class="line">    remotingServer.registerProcessor(<span class="number">0</span>, <span class="keyword">new</span> NettyRequestProcessor() &#123;</span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="function">RemotingCommand <span class="title">processRequest</span><span class="params">(ChannelHandlerContext ctx, RemotingCommand request)</span> </span>&#123;</span><br><span class="line">            request.setRemark(<span class="string">"Hi "</span> + ctx.channel().remoteAddress());</span><br><span class="line">            <span class="keyword">return</span> request;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, Executors.newCachedThreadPool());</span><br><span class="line">    remotingServer.start();</span><br><span class="line">    <span class="keyword">return</span> remotingServer;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">testInvokeAsync</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException, RemotingConnectException,</span><br><span class="line">    RemotingTimeoutException, RemotingTooMuchRequestException, RemotingSendRequestException </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> CountDownLatch latch = <span class="keyword">new</span> CountDownLatch(<span class="number">1</span>);</span><br><span class="line">    RemotingCommand request = RemotingCommand.createRequestCommand(<span class="number">0</span>, <span class="keyword">null</span>);</span><br><span class="line">    request.setRemark(<span class="string">"messi"</span>);</span><br><span class="line">    remotingClient.invokeAsync(<span class="string">"localhost:8888"</span>, request, <span class="number">1000</span> * <span class="number">3</span>, <span class="keyword">new</span> InvokeCallback() &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">operationComplete</span><span class="params">(ResponseFuture responseFuture)</span> </span>&#123;</span><br><span class="line">            latch.countDown();</span><br><span class="line">            assertThat(responseFuture.getResponseCommand().getExtFields()).hasSize(<span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    latch.await();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>RemotingServer的registerProcessor()方法有三个参数：</p>
+<ul>
+<li>请求编码，比如SEND_MESSAGE表示（生产者）客户端发送消息的请求</li>
+<li>请求处理器，比如服务端如何处理客户端发送消息的处理器，实现类为：SendMessageProcessor</li>
+<li>处理线程，每种请求编码都对应一个处理线程池。如果没有指定，则使用默认的线程池</li>
+</ul>
+<p>客户端调用服务端有三种方式：同步（Sync）、异步（Async）、一次性（OneWay）。前两种有响应结果，最后一种不产生响应结果。</p>
+<h2 id="Netty_RPC">Netty RPC</h2><p><code>NettyRemotingServer</code>在启动时，会绑定NettyServerHandler。Netty RPC的特点如下：</p>
+<ul>
+<li>请求和响应都是用RemotingCommand对象来表示</li>
+<li>服务端（NettyRemotingServer）和客户端（NettyRemotingClient）实现了抽象的NettyRemotingAbstract</li>
+<li>抽象类根据不同的指令类型调用不同的处理方法，比如处理请求调用processRequestCommand，处理响应调用processResponseCommand</li>
+</ul>
+<p>下面举例客户端和服务端执行一次RPC调用链路的过程：</p>
+<ul>
+<li>客户端发送请求给服务端，通过Netty的Channel发送请求给服务端</li>
+<li>服务端处理客户端发送的请求，NettyServerHandler接收的消息类型为REQUEST_COMMAND，调用processRequestCommand方法</li>
+<li>服务端处理完成后，通过Netty的Channel发送响应结果给客户端</li>
+<li>客户端处理服务端发送的响应，NettyClientHandler接收的消息类型为RESPONSE_COMMAND，调用processResponseCommand方法</li>
+</ul>
+<p>NettyRemotingAbstract用<code>processorTable</code>变量记录了请求编码、处理器、线程池之间的关系。</p>
+<ul>
+<li>每个请求编码都对应了一种唯一的处理器，相同请求编码的处理器是相同的</li>
+<li>由于处理器与线程池组成一对，所以相同请求编码的请求在相同的线程池中执行</li>
+</ul>
+<p>不同的请求编码在不同的线程池中运行，以发送消息和消费消息为例：</p>
+<table>
+<thead>
+<tr>
+<th>请求编码（request code）</th>
+<th>处理器</th>
+<th>线程池</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SEND_MESSAGE</td>
+<td>SendMessageProcessor</td>
+<td>ExecutorService#1</td>
+</tr>
+<tr>
+<td>GET_MESSAGE</td>
+<td>PullMessageProcessor</td>
+<td>ExecutorService#2</td>
+</tr>
+</tbody>
+</table>
+<p>以经典的RPC通信模型来看，客户端向服务端发起RPC调用请求。那么<code>processorTable</code>主要针对服务端，<code>responseTable</code>则主要针对客户端。</p>
+<ul>
+<li>客户端发起RPC调动时，会创建异步的响应对象，并放入将opaque和ResponseFuture的映射关系放入responseTable</li>
+<li>当客户端收到服务端发送的响应结果后，会将opaque以及ResponseFuture从responseTable中移除</li>
+</ul>
+<p>那么opaque是如何在请求和响应之间进行关联的呢？下面代码中的注释说明了opaque在请求和响应之间的设置和获取流程。</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> HashMap&lt;Integer<span class="comment">/* request code */</span>, Pair&lt;NettyRequestProcessor, ExecutorService&gt;&gt; processorTable =</span><br><span class="line">    <span class="keyword">new</span> HashMap&lt;Integer, Pair&lt;NettyRequestProcessor, ExecutorService&gt;&gt;(<span class="number">64</span>);</span><br><span class="line"> <span class="keyword">protected</span> <span class="keyword">final</span> ConcurrentMap&lt;Integer <span class="comment">/* opaque */</span>, ResponseFuture&gt; responseTable =</span><br><span class="line">    <span class="keyword">new</span> ConcurrentHashMap&lt;Integer, ResponseFuture&gt;(<span class="number">256</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">processMessageReceived</span><span class="params">(ChannelHandlerContext ctx, RemotingCommand msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> RemotingCommand cmd = msg;</span><br><span class="line">    <span class="keyword">if</span> (cmd != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">switch</span> (cmd.getType()) &#123;</span><br><span class="line">            <span class="keyword">case</span> REQUEST_COMMAND:</span><br><span class="line">                processRequestCommand(ctx, cmd);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> RESPONSE_COMMAND:</span><br><span class="line">                processResponseCommand(ctx, cmd);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 处理请求，比如服务端处理客户端发送的请求，NettyServerHandler会调用到这里</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">processRequestCommand</span><span class="params">(<span class="keyword">final</span> ChannelHandlerContext ctx, <span class="keyword">final</span> RemotingCommand cmd)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Pair&lt;NettyRequestProcessor, ExecutorService&gt; matched = <span class="keyword">this</span>.processorTable.get(cmd.getCode());</span><br><span class="line">    <span class="comment">// 4. 从请求对象中获取opaque，那么什么时候opaque设置到请求中？</span></span><br><span class="line">    <span class="comment">// 这里的cmd实际上是步骤3的request，因为步骤1已经有opaque，所以这里也能取到opaque</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> opaque = cmd.getOpaque();</span><br><span class="line">    <span class="keyword">final</span> RemotingCommand response = pair.getObject1().processRequest(ctx, cmd);</span><br><span class="line">    <span class="comment">// 5. 将opaque设置到响应对象中</span></span><br><span class="line">    response.setOpaque(opaque);</span><br><span class="line">    <span class="comment">// 6. 发送响应对象给客户端</span></span><br><span class="line">    ctx.writeAndFlush(response);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 处理响应，比如客户端处理服务端发送的响应，NettyClientHandler会调用到这里</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">processResponseCommand</span><span class="params">(ChannelHandlerContext ctx, RemotingCommand cmd)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 7. 从响应对象中获取opaque，那么什么时候opaque设置到响应里？答案在步骤5中</span></span><br><span class="line">    <span class="comment">// 这里的cmd是步骤5的response，而response的opaque来自于request</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> opaque = cmd.getOpaque();</span><br><span class="line">    <span class="comment">// 8. 根据opaque从responseTable中获取出对应的ResponseFuture</span></span><br><span class="line">    <span class="keyword">final</span> ResponseFuture responseFuture = responseTable.get(opaque);</span><br><span class="line">    <span class="keyword">if</span> (responseFuture != <span class="keyword">null</span>) &#123;</span><br><span class="line">        responseFuture.setResponseCommand(cmd);</span><br><span class="line">        responseFuture.release();</span><br><span class="line">        <span class="comment">// 9. 将opaque与ResponseFuture的映射关系从responseTable中移除，与步骤2互相对应</span></span><br><span class="line">        responseTable.remove(opaque);</span><br><span class="line">        <span class="comment">// 执行客户端在发送RPC调用时定义的回调函数</span></span><br><span class="line">        <span class="keyword">if</span> (responseFuture.getInvokeCallback() != <span class="keyword">null</span>) &#123;</span><br><span class="line">            executeInvokeCallback(responseFuture);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            responseFuture.putResponse(cmd);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 客户端发起RPC调用</span></span><br><span class="line"><span class="keyword">public</span> <span class="function">RemotingCommand <span class="title">invokeSyncImpl</span><span class="params">(<span class="keyword">final</span> Channel channel, <span class="keyword">final</span> RemotingCommand request)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 1. 从请求中获取opaque</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> opaque = request.getOpaque();</span><br><span class="line">    <span class="keyword">final</span> ResponseFuture responseFuture = <span class="keyword">new</span> ResponseFuture(opaque, timeoutMillis, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">    <span class="comment">// 2. 创建ResponseFuture，并记录到responseTable</span></span><br><span class="line">    <span class="keyword">this</span>.responseTable.put(opaque, responseFuture);</span><br><span class="line">    <span class="keyword">final</span> SocketAddress addr = channel.remoteAddress();</span><br><span class="line">    <span class="comment">// 3. 发起RPC调用</span></span><br><span class="line">    channel.writeAndFlush(request);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="生产者发送消息">生产者发送消息</h2><p>以example/quickstart下的Producer发送消息为例，入口方法走到DefaultMQProducerImpl的sendDefaultImpl()方法。</p>
+<p>发送消息过程涉及下面几个步骤：</p>
+<ul>
+<li>tryToFindTopicPublishInfo()：根据消息的Topic获取TopicPublishInfo</li>
+<li>selectOneMessageQueue()：选择一个MessageQueue</li>
+<li>sendKernelImpl()：调用内核的发送方法</li>
+<li>如果是同步调用，返回SendResult，否则返回空</li>
+</ul>
+<p>接下来进入DefaultMQProducerImpl的内核发送方法，主要的参数有：Message、MessageQueue、TopicPublishInfo</p>
+<ul>
+<li>如果有Hook，构造SendMessageContext，将Message、MessageQueue等都设置为上下文对象的成员变量</li>
+<li>构造SendMessageRequestHeader</li>
+<li>从MQClientFactory获取getMQClientAPIImpl()实现类MQClientAPIImpl，调用sendMessage()方法</li>
+</ul>
+<p>接下来进入MQClientAPIImpl的sendMessage()方法</p>
+<ul>
+<li>根据RequestCode.SEND_MESSAGE（请求编码）和SendMessageRequestHeader（请求头）创建RemotingCommand对象</li>
+<li>设置请求的body为消息内容：request.setBody(msg.getBody())</li>
+<li>调用remotingClient.invokeAsync()或者invokeSync()方法</li>
+<li>对于同步调用，因为要等待结果返回，所以会立即调用processSendResponse()</li>
+<li>processSendResponse()方法返回一个SendResult对象</li>
+</ul>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> SendResult sendMessageSync(</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">String</span> addr, <span class="comment">// Broker的地址</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">String</span> brokerName, <span class="comment">// Broker的名字</span></span><br><span class="line">    <span class="keyword">final</span> Message msg, <span class="comment">// 消息内容</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">long</span> timeoutMillis,</span><br><span class="line">    <span class="keyword">final</span> RemotingCommand request <span class="comment">// 请求对象</span></span><br><span class="line">) &#123;</span><br><span class="line">    <span class="comment">// RPC调用示例，这里的客户端是生产者，通过MQClientAPIImpl调用</span></span><br><span class="line">    RemotingCommand response = <span class="keyword">this</span>.remotingClient.invokeSync(addr, request, timeoutMillis);</span><br><span class="line">    <span class="keyword">assert</span> response != <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.processSendResponse(brokerName, msg, response);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>生产者通过MQClientAPIImpl发起RPC调用，request请求对象的编码是SEND_MESSAGE。这里的地址指的是Broker的地址，而不是NameServer。<br>虽然生产者连接的是NameServer，但这中间会有选择MessageQueue，再选择Broker的过程，由于这里先关注整体的流程，暂时不去分析具体的细节。</p>
+<p>客户端通过<code>RemotingClient</code>调用了服务端Broker，接下来看服务端<code>BrokerController</code>的处理。</p>
+<p>BrokerController启动时会为各种请求类型注册不同的请求处理器，比如SEND_MESSAGE注册了SendMessageProcessor处理器：</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">registerProcessor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    SendMessageProcessor sendProcessor = <span class="keyword">new</span> SendMessageProcessor(<span class="keyword">this</span>);</span><br><span class="line">    <span class="comment">// SendMessageProcessor有两个Hook：发送消息和消费消息的Hook。</span></span><br><span class="line">    sendProcessor.registerSendMessageHook(sendMessageHookList);</span><br><span class="line">    sendProcessor.registerConsumeMessageHook(consumeMessageHookList);</span><br><span class="line">    <span class="keyword">this</span>.remotingServer.registerProcessor(RequestCode.SEND_MESSAGE, sendProcessor, <span class="keyword">this</span>.sendMessageExecutor);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>SendMessageProcessor的processRequest()方法会处理生产者客户端发送的SEND_MESSAGE请求。</p>
+<p>客户端在发送请求之前构建了<code>SendMessageContext</code>和<code>SendMessageRequestHeader</code>，这里对应的会首先从RemotingCommand反解析出着两个对象</p>
+<ul>
+<li>解析请求的body，创建MessageExtBrokerInner对象</li>
+<li>获取MessageStore，并调用putMessage方法，传入MessageExtBrokerInner对象</li>
+<li>返回PutMessageResult，并调用handlePutMessageResult方法</li>
+<li>最后返回的是一个RemotingCommand响应对象，会返回给客户端</li>
+</ul>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function">RemotingCommand <span class="title">processRequest</span><span class="params">(ChannelHandlerContext ctx,</span><br><span class="line">    RemotingCommand request)</span> <span class="keyword">throws</span> RemotingCommandException </span>&#123;</span><br><span class="line">    SendMessageContext mqtraceContext;</span><br><span class="line">    <span class="keyword">switch</span> (request.getCode()) &#123;</span><br><span class="line">        <span class="keyword">case</span> RequestCode.CONSUMER_SEND_MSG_BACK:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.consumerSendMsgBack(ctx, request);</span><br><span class="line">        <span class="keyword">default</span>: // SEND_MESSAGE的处理逻辑...</span><br><span class="line">            SendMessageRequestHeader requestHeader = parseRequestHeader(request);</span><br><span class="line">            mqtraceContext = buildMsgContext(ctx, requestHeader);</span><br><span class="line">            <span class="keyword">this</span>.executeSendMessageHookBefore(ctx, request, mqtraceContext);</span><br><span class="line">            RemotingCommand response;</span><br><span class="line">            <span class="keyword">if</span> (requestHeader.isBatch()) &#123;</span><br><span class="line">                response = <span class="keyword">this</span>.sendBatchMessage(ctx, request, mqtraceContext, requestHeader);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                response = <span class="keyword">this</span>.sendMessage(ctx, request, mqtraceContext, requestHeader);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">this</span>.executeSendMessageHookAfter(response, mqtraceContext);</span><br><span class="line">            <span class="keyword">return</span> response;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来进入DefaultMessageStore的putMessage()方法，这个方法会调用CommitLog的putMessage()方法</p>
+<ul>
+<li>BrokerController和SendMessageProcessor都在broker模块</li>
+<li>MessageStore和CommitLog则在store模块</li>
+</ul>
+<p>CommitLog首先获取最近的MappedFile，然后追加消息到映射文件中。</p>
+<ul>
+<li>追加消息的回调类DefaultAppendMessageCallback是执行数据写入文件的真正方法。</li>
+<li>追加完成后，有多种的磁盘刷写方式，比如同步和异步</li>
+</ul>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public <span class="type">PutMessageResult</span> putMessage(final <span class="type">MessageExtBrokerInner</span> msg) &#123;</span><br><span class="line">    <span class="type">MappedFile</span> mappedFile = this.mappedFileQueue.getLastMappedFile();</span><br><span class="line">    <span class="type">AppendMessageResult</span> <span class="literal">result</span> = mappedFile.appendMessage(msg, this.appendMessageCallback);</span><br><span class="line">    <span class="type">PutMessageResult</span> putMessageResult = new <span class="type">PutMessageResult</span>(<span class="type">PutMessageStatus</span>.<span class="type">PUT_OK</span>, <span class="literal">result</span>);</span><br><span class="line">    handleDiskFlush(<span class="literal">result</span>, putMessageResult, msg);</span><br><span class="line">    handleHA(<span class="literal">result</span>, putMessageResult, msg);</span><br><span class="line">    <span class="keyword">return</span> putMessageResult;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同样，我们省略了具体写入到CommitLog中的细节，以及如何处理磁盘的刷写、HA等细枝末节。实际上，到这里为止，<br>生产者客户端发起RPC调用，到服务端处理请求，服务端返回响应，客户端接收响应结果，这个过程已经分析完毕了。</p>
+<h2 id="Pull_Consumer">Pull Consumer</h2><p>PULL_MESSAGE对应的处理器是PullMessageProcessor。与生产消息调用MessageStore的putMessage()类似，<br>消费消息调用MessageStore的getMessage()方法，并返回GetMessageResult。</p>
+<table>
+<thead>
+<tr>
+<th>请求编码</th>
+<th>消息处理器</th>
+<th>消息存储</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SEND_MESSAGE</td>
+<td>SendMessageProcessor</td>
+<td>putMessage()</td>
+<td>PutMessageResult</td>
+</tr>
+<tr>
+<td>PULL_MESSAGE</td>
+<td>PullMessageProcessor</td>
+<td>getMessage()</td>
+<td>GetMessageResult</td>
+</tr>
+</tbody>
+</table>
+<p>消费者还需要提交偏移量，对应ConsumerOffsetManager的commitOffset()方法。</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function">RemotingCommand <span class="title">processRequest</span><span class="params">(<span class="keyword">final</span> Channel channel, RemotingCommand request, <span class="keyword">boolean</span> brokerAllowSuspend)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> GetMessageResult getMessageResult = <span class="keyword">this</span>.brokerController.getMessageStore().getMessage(</span><br><span class="line">            requestHeader.getConsumerGroup(),   <span class="comment">// 消费组</span></span><br><span class="line">            requestHeader.getTopic(),           <span class="comment">// 主题</span></span><br><span class="line">            requestHeader.getQueueId(),         <span class="comment">// 队列编号</span></span><br><span class="line">            requestHeader.getQueueOffset(),     <span class="comment">// 队列的偏移量</span></span><br><span class="line">            requestHeader.getMaxMsgNums(),      <span class="comment">// 最大的消息数量</span></span><br><span class="line">            messageFilter);                     <span class="comment">// 过滤器</span></span><br><span class="line">    <span class="comment">// .......................................................</span></span><br><span class="line">    <span class="keyword">if</span> (storeOffsetEnable) &#123;</span><br><span class="line">        <span class="keyword">this</span>.brokerController.getConsumerOffsetManager().commitOffset(</span><br><span class="line">            RemotingHelper.parseChannelRemoteAddr(channel),</span><br><span class="line">            requestHeader.getConsumerGroup(), </span><br><span class="line">            requestHeader.getTopic(), </span><br><span class="line">            requestHeader.getQueueId(), </span><br><span class="line">            requestHeader.getCommitOffset());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>存储层设计到文件操作时，生产消息会写到CommitLog，消费消息则会调用getMessage方法，给定偏移量和大小。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<div class="copyright">
+  <p><span>本文标题:</span><a href="/2017/10/18/Midd-RocketMQ/">深入解析中间件之-RocketMQ</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
+  <p><span>发布时间:</span>2017年10月18日 - 00时00分</p>
+  <p><span>最后更新:</span>2017年10月19日 - 09时44分</p>
+  <p>
+    <span>原始链接:</span><a href="/2017/10/18/Midd-RocketMQ/" title="深入解析中间件之-RocketMQ">http://github.com/zqhxuyuan/2017/10/18/Midd-RocketMQ/</a>
+    <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2017/10/18/Midd-RocketMQ/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
+        <i class="fa fa-clipboard"></i>
+    </span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。</p>
+  <script src="/js/clipboard.min.js"></script>
+  <script> var clipboard = new Clipboard('.btn'); </script>
+</div>
+<style type="text/css">
+  .copyright p .btn {
+    margin-left: 1em;
+  }
+  .copyright:hover p .btn::after {
+    content: "复制"
+  }
+  .copyright p .btn:hover {
+      color: gray;
+      cursor: pointer;
+    };
+</style>
+
+
+
+<nav id="article-nav">
+  
+    <div id="article-nav-newer" class="article-nav-title">
+      <a href="/2017/12/31/Kafka-Book-Appendix/">
+        Kafka技术内幕附录
+      </a>
+    </div>
+  
+  
+    <div id="article-nav-older" class="article-nav-title">
+      <a href="/2017/10/11/Midd-Canal/">
+        深入解析中间件之-Canal
+      </a>
+    </div>
+  
+</nav>
+
+  
+  
+    <div class ="post-donate">
+    <div id="donate_board" class="donate_bar center">
+        <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏"></a>
+        <span class="donate_txt">
+           &uarr;<br>
+		   赏点酒钱
+        </span>
+        <br>
+    </div>  
+	<div id="donate_guide" class="donate_bar center hidden" >
+		<img src="/img/zhifubao.png" alt="支付宝打赏"> 
+		<img src="/img/weixin.png" alt="微信打赏">  
+    </div>
+	<script type="text/javascript">
+		document.getElementById('btn_donate').onclick = function(){
+			$('#donate_board').addClass('hidden');
+			$('#donate_guide').removeClass('hidden');
+		}
+	</script>
+</div>
+  
+</article>
+
+<!-- 默认显示文章目录，在文章---前输入toc: false关闭目录 -->
+<!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
+<div id="toc" class="toc-article">
+<strong class="toc-title">文章目录</strong>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基本流程"><span class="toc-number">1.</span> <span class="toc-text">基本流程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Remoting_RPC示例"><span class="toc-number">1.1.</span> <span class="toc-text">Remoting RPC示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Netty_RPC"><span class="toc-number">1.2.</span> <span class="toc-text">Netty RPC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#生产者发送消息"><span class="toc-number">1.3.</span> <span class="toc-text">生产者发送消息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pull_Consumer"><span class="toc-number">1.4.</span> <span class="toc-text">Pull Consumer</span></a></li></ol></li></ol>
+</div>
+<style type="text/css">
+  .left-col .switch-btn {
+    display: none;
+  }
+  .left-col .switch-area {
+    display: none;
+  }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script type="text/javascript">
+  var toc_button= document.getElementById("tocButton");
+  var toc_div= document.getElementById("toc");
+  /* Show or hide toc when click on tocButton.
+  通过点击设置的按钮显示或者隐藏文章目录.*/
+  toc_button.onclick=function(){
+  if(toc_div.style.display=="none"){
+  toc_div.style.display="block";
+  toc_button.value="隐藏目录";
+  document.getElementById("switch-btn").style.display="none";
+  document.getElementById("switch-area").style.display="none";
+  }
+  else{
+  toc_div.style.display="none";
+  toc_button.value="显示目录";
+  document.getElementById("switch-btn").style.display="block";
+  document.getElementById("switch-area").style.display="block";
+  }
+  }
+    if ($(".toc").length < 1) {
+        $("#toc").css("display","none");
+        $("#tocButton").css("display","none");
+        $(".switch-btn").css("display","block");
+        $(".switch-area").css("display","block");
+    }
+</script>
+
+
+    <style>
+        .toc {
+            white-space: nowrap;
+            overflow-x: hidden;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $(".toc li a").mouseover(function() {
+                var title = $(this).attr('href');
+                $(this).attr("title", title);
+            });
+        })
+    </script>
+
+
+
+
+<div class="share">
+	<div class="bdsharebuttonbox">
+	<a href="#" class="bds_more" data-cmd="more"></a>
+	<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+	<a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+	<a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+	<a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+	</div>
+	<script>
+	window._bd_share_config={
+		"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+	</script>
+</div>
+
+
+
+<div class="duoshuo" id="comments">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2017/10/18/Midd-RocketMQ/" data-title="深入解析中间件之-RocketMQ" data-url="http://github.com/zqhxuyuan/2017/10/18/Midd-RocketMQ/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"zqhxuyuan"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+
+
+    <style type="text/css">
+    #scroll {
+      display: none;
+    }
+    </style>
+    <div class="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    </div>
+
+
+  
+  
+    
+    <div  class="post-nav-button">
+    <a href="/2017/12/31/Kafka-Book-Appendix/" title="上一篇: Kafka技术内幕附录">
+    <i class="fa fa-angle-left"></i>
+    </a>
+    <a href="/2017/10/11/Midd-Canal/" title="下一篇: 深入解析中间件之-Canal">
+    <i class="fa fa-angle-right"></i>
+    </a>
+    </div>
+  
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2017 任何忧伤,都抵不过世界的美丽
+      </div>
+        <div class="footer-right">
+          <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+        </div>
+    </div>
+    <div class="visit">
+      <span id="busuanzi_container_site_pv" style='display:none'>
+        <span id="site-visit" >本站到访数: 
+        <span id="busuanzi_value_site_uv"></span>
+        </span>
+      </span>
+      <span id="busuanzi_container_page_pv" style='display:none'>
+        <span id="page-visit">, 本页阅读量: 
+        <span id="busuanzi_value_page_pv"></span>
+        </span>
+      </span>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+<script>
+  var backgroundnum = 5;
+  var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+
+  $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+</script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-80646710-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+<a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+<a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
