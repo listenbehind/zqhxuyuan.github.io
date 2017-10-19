@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://github.com/zqhxuyuan/2017/10/18/Midd-RocketMQ/index.html">
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Apache RocketMQ">
-<meta property="og:updated_time" content="2017-10-19T01:44:30.000Z">
+<meta property="og:updated_time" content="2017-10-19T05:43:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入解析中间件之-RocketMQ">
 <meta name="twitter:description" content="Apache RocketMQ">
@@ -370,6 +370,8 @@
 <p>消费者还需要提交偏移量，对应ConsumerOffsetManager的commitOffset()方法。</p>
 <figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function">RemotingCommand <span class="title">processRequest</span><span class="params">(<span class="keyword">final</span> Channel channel, RemotingCommand request, <span class="keyword">boolean</span> brokerAllowSuspend)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> GetMessageResult getMessageResult = <span class="keyword">this</span>.brokerController.getMessageStore().getMessage(</span><br><span class="line">            requestHeader.getConsumerGroup(),   <span class="comment">// 消费组</span></span><br><span class="line">            requestHeader.getTopic(),           <span class="comment">// 主题</span></span><br><span class="line">            requestHeader.getQueueId(),         <span class="comment">// 队列编号</span></span><br><span class="line">            requestHeader.getQueueOffset(),     <span class="comment">// 队列的偏移量</span></span><br><span class="line">            requestHeader.getMaxMsgNums(),      <span class="comment">// 最大的消息数量</span></span><br><span class="line">            messageFilter);                     <span class="comment">// 过滤器</span></span><br><span class="line">    <span class="comment">// .......................................................</span></span><br><span class="line">    <span class="keyword">if</span> (storeOffsetEnable) &#123;</span><br><span class="line">        <span class="keyword">this</span>.brokerController.getConsumerOffsetManager().commitOffset(</span><br><span class="line">            RemotingHelper.parseChannelRemoteAddr(channel),</span><br><span class="line">            requestHeader.getConsumerGroup(), </span><br><span class="line">            requestHeader.getTopic(), </span><br><span class="line">            requestHeader.getQueueId(), </span><br><span class="line">            requestHeader.getCommitOffset());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>存储层设计到文件操作时，生产消息会写到CommitLog，消费消息则会调用getMessage方法，给定偏移量和大小。</p>
+<h1 id="设计">设计</h1><h2 id="事务">事务</h2><p>分布式事务涉及到两阶段提交问题,在数据存储方面的方面必然需要 KV 存储的支持,<br>因为第二阶段的提交回滚需要修改消息状态,一定涉及到根据 Key 去查找 Message 的动作。<br>RocketMQ 在第二阶段绕过了根据 Key 去查找 Message 的问题,<br>采用第一阶段发送 Prepared 消息时,拿到了消息的 Offset,<br>第二阶段通过 Offset 去访问消息, 并修改状态,Offset 就是数据的地址。</p>
+<p>RocketMQ 这种实现事务方式,没有通过 KV 存储做,而是通过 Offset 方式,<br>存在一个显著缺陷,即通过 Offset 更改数据,会令系统的脏页过多,需要特别关注。</p>
 
       
     </div>
@@ -381,7 +383,7 @@
   <p><span>本文标题:</span><a href="/2017/10/18/Midd-RocketMQ/">深入解析中间件之-RocketMQ</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2017年10月18日 - 00时00分</p>
-  <p><span>最后更新:</span>2017年10月19日 - 09时44分</p>
+  <p><span>最后更新:</span>2017年10月19日 - 13时43分</p>
   <p>
     <span>原始链接:</span><a href="/2017/10/18/Midd-RocketMQ/" title="深入解析中间件之-RocketMQ">http://github.com/zqhxuyuan/2017/10/18/Midd-RocketMQ/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2017/10/18/Midd-RocketMQ/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -427,11 +429,13 @@
   
   
     <div class ="post-donate">
+	<br/>
+	<p>
     <div id="donate_board" class="donate_bar center">
         <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏"></a>
         <span class="donate_txt">
            &uarr;<br>
-		   赏点酒钱
+		   这么长的文章我都读完了，看起来作者写的很辛苦哇！给作者赏杯咖啡喝，支持作者继续写作😁
         </span>
         <br>
     </div>  
@@ -453,7 +457,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基本流程"><span class="toc-number">1.</span> <span class="toc-text">基本流程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Remoting_RPC示例"><span class="toc-number">1.1.</span> <span class="toc-text">Remoting RPC示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Netty_RPC"><span class="toc-number">1.2.</span> <span class="toc-text">Netty RPC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#生产者发送消息"><span class="toc-number">1.3.</span> <span class="toc-text">生产者发送消息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pull_Consumer"><span class="toc-number">1.4.</span> <span class="toc-text">Pull Consumer</span></a></li></ol></li></ol>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基本流程"><span class="toc-number">1.</span> <span class="toc-text">基本流程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Remoting_RPC示例"><span class="toc-number">1.1.</span> <span class="toc-text">Remoting RPC示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Netty_RPC"><span class="toc-number">1.2.</span> <span class="toc-text">Netty RPC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#生产者发送消息"><span class="toc-number">1.3.</span> <span class="toc-text">生产者发送消息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pull_Consumer"><span class="toc-number">1.4.</span> <span class="toc-text">Pull Consumer</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#设计"><span class="toc-number">2.</span> <span class="toc-text">设计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#事务"><span class="toc-number">2.1.</span> <span class="toc-text">事务</span></a></li></ol></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
