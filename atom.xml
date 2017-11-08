@@ -101,7 +101,7 @@
     <link href="http://github.com/zqhxuyuan/2017/12/31/Kafka-Book-Resources/"/>
     <id>http://github.com/zqhxuyuan/2017/12/31/Kafka-Book-Resources/</id>
     <published>2017-12-30T16:00:00.000Z</published>
-    <updated>2017-10-19T05:28:09.000Z</updated>
+    <updated>2017-11-06T08:10:03.000Z</updated>
     
     <content type="html"><![CDATA[<p>Kafka技术内幕拾遗</p>
 <ul>
@@ -156,7 +156,13 @@
 </ol>
 <p><img src="http://img.blog.csdn.net/20170507223930619" alt="7"></p>
 <p>图1 生产者发送消息与更新元数据的过程</p>
-<h3 id="即席查询（Interactive_Query）">即席查询（Interactive Query）</h3><h3 id="EOS事务（Transaction）">EOS事务（Transaction）</h3>]]></content>
+<h3 id="即席查询（Interactive_Query）">即席查询（Interactive Query）</h3><h3 id="EOS事务（Transaction）">EOS事务（Transaction）</h3><p>参考文档</p>
+<ul>
+<li><a href="https://cwiki.apache.org/confluence/display/KAFKA/KIP-98+-+Exactly+Once+Delivery+and+Transactional+Messaging" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/KIP-98+-+Exactly+Once+Delivery+and+Transactional+Messaging</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/KAFKA/Transactional+Messaging+in+Kafka" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Transactional+Messaging+in+Kafka</a></li>
+</ul>
+<p><img src="" alt=""></p>
+]]></content>
     
     <summary type="html">
     
@@ -758,7 +764,7 @@
     <link href="http://github.com/zqhxuyuan/2017/10/18/Midd-RocketMQ/"/>
     <id>http://github.com/zqhxuyuan/2017/10/18/Midd-RocketMQ/</id>
     <published>2017-10-17T16:00:00.000Z</published>
-    <updated>2017-10-21T07:15:43.000Z</updated>
+    <updated>2017-11-02T10:27:43.000Z</updated>
     
     <content type="html"><![CDATA[<p>Apache RocketMQ: <a href="http://rocketmq.apache.org/" target="_blank" rel="external">http://rocketmq.apache.org/</a><br><a id="more"></a></p>
 <h1 id="QuickStart">QuickStart</h1><p>分别启动NameServer、Broker、生产者、消费者</p>
@@ -1122,9 +1128,17 @@
 <p><img src="http://img.blog.csdn.net/20171021151527711" alt="trans"></p>
 <h3 id="Producer_Group">Producer Group</h3><p>Producers of the same role are grouped together.<br>A different producer instance of the same producer group<br>may be contacted by a broker to commit or roll back a transaction<br>in case the original producer crashed after the transaction.</p>
 <p>Warning: Considering the provided producer is sufficiently powerful at sending messages,<br>only one instance is allowed per producer group to avoid unnecessary initialization of producer instances.</p>
+<h2 id="扩容">扩容</h2><p>扩容是整个系统中的很重要的一个环节。在保证顺序的情况下进行扩容的难度会更大。<br>基本的策略是让向一个队列写入数据的消息发送者能够知道应该把消息写入迁移到新的队列中，<br>并且需要让消息的订阅者知道，当前的队列消费完数据后需要迁移到新队列去消费消息。关键点如下:</p>
+<ul>
+<li>原队列在开始扩容后需要有一个标志，即便有新消息过来，也不再接收。</li>
+<li>通知消息发送端新的队列的位置。</li>
+<li>对于消息接受端，对原来队列的定位会收到新旧两个位置，当旧队列的数据接受完毕后，则会只关心新队列的位置，完成切换。</li>
+</ul>
+<p>那么对于Metaq顺序消息，如何做到不停写扩容呢？我说说自己的看法：<br>在队列扩容的时候考虑到需要处理最新的消息服务，为了不丢失这部分消息，<br>可以采取让Producer暂存消息在本地磁盘设备中，<br>等扩容完成后再与Broker交互。这是我目前能想到的不停写扩容方式。</p>
 <h1 id="参考文档">参考文档</h1><ul>
 <li>RocketMQ原理简介</li>
 <li>RocketMQ开发指南</li>
+<li><pull类型消息中间件-消息服务端(三)>(<a href="http://www.cnblogs.com/zhulongchao/p/5792770.html" target="_blank" rel="external">http://www.cnblogs.com/zhulongchao/p/5792770.html</a>)</pull类型消息中间件-消息服务端(三)></li>
 </ul>
 ]]></content>
     
