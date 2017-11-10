@@ -12,7 +12,7 @@
 <meta property="og:site_name" content="zqhxuyuan">
 <meta property="og:description" content="Meet HBase Again, also Phoenix.">
 <meta property="og:image" content="http://img.blog.csdn.net/20151216161855376">
-<meta property="og:updated_time" content="2017-06-08T08:33:38.000Z">
+<meta property="og:updated_time" content="2017-11-09T04:05:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hello HBase">
 <meta name="twitter:description" content="Meet HBase Again, also Phoenix.">
@@ -330,7 +330,7 @@
 <blockquote>
 <p>什么是redo bootstrap?重启节点吗？</p>
 </blockquote>
-
+<h2 id="HBase版本号的一个坑">HBase版本号的一个坑</h2>
       
     </div>
     
@@ -341,7 +341,7 @@
   <p><span>本文标题:</span><a href="/2015/12/16/2015-12-16-Apache-HBase/">Hello HBase</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2015年12月16日 - 00时00分</p>
-  <p><span>最后更新:</span>2017年06月08日 - 16时33分</p>
+  <p><span>最后更新:</span>2017年11月09日 - 12时05分</p>
   <p>
     <span>原始链接:</span><a href="/2015/12/16/2015-12-16-Apache-HBase/" title="Hello HBase">http://github.com/zqhxuyuan/2015/12/16/2015-12-16-Apache-HBase/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2015/12/16/2015-12-16-Apache-HBase/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -415,7 +415,7 @@
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_HBase"><span class="toc-number">1.</span> <span class="toc-text">Install HBase</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_Phoenix"><span class="toc-number">2.</span> <span class="toc-text">Install Phoenix</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CRUD"><span class="toc-number">2.1.</span> <span class="toc-text">CRUD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell创建的表在Phoenix中看不见"><span class="toc-number">2.2.</span> <span class="toc-text">shell创建的表在Phoenix中看不见</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">3.</span> <span class="toc-text">其他</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Snapshot"><span class="toc-number">4.</span> <span class="toc-text">Snapshot</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_HBase"><span class="toc-number">1.</span> <span class="toc-text">Install HBase</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_Phoenix"><span class="toc-number">2.</span> <span class="toc-text">Install Phoenix</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CRUD"><span class="toc-number">2.1.</span> <span class="toc-text">CRUD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell创建的表在Phoenix中看不见"><span class="toc-number">2.2.</span> <span class="toc-text">shell创建的表在Phoenix中看不见</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">3.</span> <span class="toc-text">其他</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Snapshot"><span class="toc-number">4.</span> <span class="toc-text">Snapshot</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HBase版本号的一个坑"><span class="toc-number">5.</span> <span class="toc-text">HBase版本号的一个坑</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
