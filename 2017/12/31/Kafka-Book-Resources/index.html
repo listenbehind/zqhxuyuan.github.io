@@ -8,6 +8,7 @@
   <meta name="description" content="Kafka技术内幕拾遗
 
 ✅ 客户端元数据（Metadata）
+✅ 客户端线程模型（ThreadModel）
 即席查询（Interactive Query）
 EOS事务（Transaction）">
 <meta property="og:type" content="article">
@@ -17,15 +18,23 @@ EOS事务（Transaction）">
 <meta property="og:description" content="Kafka技术内幕拾遗
 
 ✅ 客户端元数据（Metadata）
+✅ 客户端线程模型（ThreadModel）
 即席查询（Interactive Query）
 EOS事务（Transaction）">
 <meta property="og:image" content="http://img.blog.csdn.net/20170507223930619">
-<meta property="og:updated_time" content="2017-11-06T08:10:03.000Z">
+<meta property="og:image" content="http://img.blog.csdn.net/20170514212056357">
+<meta property="og:image" content="http://img.blog.csdn.net/20170515130348447">
+<meta property="og:image" content="http://img.blog.csdn.net/20170526103919908">
+<meta property="og:image" content="http://img.blog.csdn.net/20170614142554625">
+<meta property="og:image" content="http://img.blog.csdn.net/20170530171408924">
+<meta property="og:image" content="http://img.blog.csdn.net/20170530171420377">
+<meta property="og:updated_time" content="2017-12-18T03:28:36.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka技术内幕拾遗">
 <meta name="twitter:description" content="Kafka技术内幕拾遗
 
 ✅ 客户端元数据（Metadata）
+✅ 客户端线程模型（ThreadModel）
 即席查询（Interactive Query）
 EOS事务（Transaction）">
   
@@ -232,6 +241,7 @@ EOS事务（Transaction）">
         <p>Kafka技术内幕拾遗</p>
 <ul>
 <li>✅ 客户端元数据（Metadata）</li>
+<li>✅ 客户端线程模型（ThreadModel）</li>
 <li>即席查询（Interactive Query）</li>
 <li>EOS事务（Transaction）<a id="more"></a>
 </li>
@@ -282,6 +292,46 @@ EOS事务（Transaction）">
 </ol>
 <p><img src="http://img.blog.csdn.net/20170507223930619" alt="7"></p>
 <p>图1 生产者发送消息与更新元数据的过程</p>
+<h3 id="客户端线程模型（Thread_Model）">客户端线程模型（Thread Model）</h3><p>Kafka作为一个流式数据平台，对开发者提供了三种客户端：生产者/消费者、连接器、流处理。本文着重分析这三种客户端的线程模型。</p>
+<h4 id="消费者的线程模型">消费者的线程模型</h4><p>0.8版本以前的消费者客户端会创建一个基于ZK的消费者连接器，一个消费者客户端是一个Java进程，消费者可以订阅多个主题，每个主题也可以多个线程。为了让消息在多个节点被分布式地消费，提高消息处理的吞吐量，Kafka允许多个消费者订阅同一个主题，这些消费者需要满足“一个分区只能被一个消费者中的一个线程处理”的限制条件。通常，我们会将同一份相同业务处理逻辑的应用程序部署在不同机器上，并且指定一个消费组编号。当不同机器上的消费者进程启动后，所有这些消费者进程就组成了一个逻辑意义上的消费组。</p>
+<p>消费组中的消费者数量是动态变化的，当有新消费者加入消费组，或者旧消费者离开消费组，都会触发基于ZK的消费组“再平衡”操作。当“再平衡”操作发生时，每个消费者都会在客户端执行分区分配算法，然后从全局的分配结果中获取属于自己的分区。它的缺点是消费者会和ZK产生频繁的交互，造成ZK集群的压力过大，并且容易产生羊群效应和脑裂等问题。</p>
+<p>在0.8版本以后，Kafka重新设计了客户端，并且引入了“协调者”和“消费组管理协议”。新的消费者将“消费组管理协议”和“分区分配策略”进行了分离。协调者负责消费组的管理，而分区分配则会在消费组的一个主消费者中完成。采用这种方式，每个消费者都需要发送下面两种请求给协调者。</p>
+<ul>
+<li><strong>加入组请求：</strong>协调者收集消费组的所有消费者，并选举一个主消费者执行分区分配工作。</li>
+<li><strong>同步组请求：</strong>主消费者完成分区分配，由协调者将分区的分配结果传播给每个消费者。</li>
+</ul>
+<p>新版本的消费者客户端引入了一个客户端协调者的抽象类，它的实现除了消费者的协调者，还有一个连接器的实现。</p>
+<h4 id="连接器的线程模型">连接器的线程模型</h4><p>Kafka连接器的出现标准化了Kafka与各种外部存储系统的数据同步。用户开发和使用连接器就变得非常简单，只需要在配置文件中定义连接器，就可以将外部系统的数据导入Kafka或将Kafka数据导出到外部系统。如图1所示，中间部分都是Kafka连接器的内部组件，包括源连接器（Source Connector）和目标连接器（Sink Connector）。</p>
+<p><img src="http://img.blog.csdn.net/20170514212056357" alt="1"></p>
+<p><strong>图1 Kafka连接器的源连接器与目标连接器</strong></p>
+<p>Kafka连接器的单机模式会在一个进程内启动一个Worker以及所有的连接器和任务。分布式模式的每个进程都有一个Worker，而连接器和任务则分别运行在各个节点上。图2列举了连接器和任务在不同Worker上的四种分布方式：</p>
+<ol>
+<li>一个Worker，一个源任务、一个目标任务</li>
+<li>一个Worker，两个源任务、两个目标任务</li>
+<li>两个Worker，两个源任务、两个目标任务</li>
+<li>三个Worker，两个源任务、两个目标任务</li>
+</ol>
+<p><img src="http://img.blog.csdn.net/20170515130348447" alt="2"></p>
+<p><strong>图2 分布式模式的Kafka连接器集群</strong></p>
+<p>分布式模式下，不同Worker进程之间的协调工作类似于消费者的协调。消费者通过协调者获取分配的分区，Worker也会通过协调者获取分配的连接器与任务。如图3所示，消费者客户端和Worker客户端为了加入到组管理中，分别通过客户端的协调者对象来和服务端的消费组协调者（GroupCoordinator）通信。</p>
+<p><img src="http://img.blog.csdn.net/20170526103919908" alt="8"></p>
+<p><strong>图3 消费者和Worker的工作都是通过协调者分配的</strong></p>
+<h4 id="流处理的线程模型">流处理的线程模型</h4><p>Kafka流处理的工作流程简单来看分成三个步骤：消费者读取输入分区的数据、流式地处理每条数据、生产者将处理结果写入输出分区，这里面步骤1也充分利用了“消费组管理协议”。Kafka流处理的输入数据源基于具有分布式分区模型的Kafka主题，它的线程模型主要由下面三个类组成：</p>
+<ul>
+<li><strong>流实例（KafkaStreams）：</strong>通常一个节点（一台机器）只运行一个流实例。</li>
+<li><strong>流线程（StreamThread）：</strong>一个流实例可以配置多个流线程。</li>
+<li><strong>流任务（StreamTask）：</strong>一个流线程可以运行多个流任务，根据输入主题的分区数确定任务数。</li>
+</ul>
+<p>如图4所示，输入主题有六个分区，Kafka流处理总共就会产生六个流任务。流实例可以动态扩展，流线程的个数也可以动态配置。图中一共有三个流线程，则每个流线程会有两个流任务，每个流任务都对应输入主题的一个分区。</p>
+<p><img src="http://img.blog.csdn.net/20170614142554625" alt="4"></p>
+<p><strong>图4 Kafka流处理的线程模型</strong> </p>
+<p>Kafka的流处理框架使用并行的线程模型处理输入主题的数据集，这种设计思路和Kafka的消费者线程模型非常类似。消费者分配到订阅主题的不同分区，流处理框架的流任务也分配到输入主题的不同分区。如图5所示，输入主题1的分区P1和输入主题2的分区P1分配给流线程1的流任务，输入主题1的分区P2和输入主题2的分区P2分配给流线程2的流任务。流处理相比消费者，还会将拓扑的计算结果写到输出主题。</p>
+<p><img src="http://img.blog.csdn.net/20170530171408924" alt="5"></p>
+<p><strong>图5 消费者模型与流处理的线程模型</strong> </p>
+<p>消费者和流处理的故障容错机制也是类似的。如图6所示，假设消费者2进程挂掉，它所持有的分区会被分配给同一个消费组中的消费者1，这样消费者1会分配到订阅主题的所有分区。对于流处理而言，如果流线程2挂掉了，流线程2中的流任务会分配给流线程1。即流线程1会运行两个流任务，每个流任务分配的分区仍然保持不变。</p>
+<p><img src="http://img.blog.csdn.net/20170530171420377" alt="6">·</p>
+<p><strong>图6 消费者与流处理的故障容错机制</strong> </p>
+<h4 id="小结">小结</h4><p>Kafka客户端抽象出来的的“组管理协议”充分运用在消费者、连接器、流处理三个使用场景中。客户端中的消费者、连接器中的工作者、流处理中的流进程都可以看做“组”的一个成员。当增加或减少组成员时，在这个协议的约束下，每个组成员都可以获取到最新的任务，从而做到无缝的任务迁移。一旦理解了“组管理协议”，对于理解Kafka的架构设计是很有帮助的。</p>
 <h3 id="即席查询（Interactive_Query）">即席查询（Interactive Query）</h3><h3 id="EOS事务（Transaction）">EOS事务（Transaction）</h3><p>参考文档</p>
 <ul>
 <li><a href="https://cwiki.apache.org/confluence/display/KAFKA/KIP-98+-+Exactly+Once+Delivery+and+Transactional+Messaging" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/KIP-98+-+Exactly+Once+Delivery+and+Transactional+Messaging</a></li>
@@ -299,7 +349,7 @@ EOS事务（Transaction）">
   <p><span>本文标题:</span><a href="/2017/12/31/Kafka-Book-Resources/">Kafka技术内幕拾遗</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2017年12月31日 - 00时00分</p>
-  <p><span>最后更新:</span>2017年11月06日 - 16时10分</p>
+  <p><span>最后更新:</span>2017年12月18日 - 11时28分</p>
   <p>
     <span>原始链接:</span><a href="/2017/12/31/Kafka-Book-Resources/" title="Kafka技术内幕拾遗">http://github.com/zqhxuyuan/2017/12/31/Kafka-Book-Resources/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2017/12/31/Kafka-Book-Resources/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -373,7 +423,7 @@ EOS事务（Transaction）">
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端的元数据对象"><span class="toc-number">1.</span> <span class="toc-text">客户端的元数据对象</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-_客户端轮询与元数据更新器"><span class="toc-number">1.1.</span> <span class="toc-text">1. 客户端轮询与元数据更新器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-_元数据对象"><span class="toc-number">1.2.</span> <span class="toc-text">2. 元数据对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_元数据更新的日志与实例"><span class="toc-number">1.3.</span> <span class="toc-text">3. 元数据更新的日志与实例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#即席查询（Interactive_Query）"><span class="toc-number">2.</span> <span class="toc-text">即席查询（Interactive Query）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EOS事务（Transaction）"><span class="toc-number">3.</span> <span class="toc-text">EOS事务（Transaction）</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端的元数据对象"><span class="toc-number">1.</span> <span class="toc-text">客户端的元数据对象</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-_客户端轮询与元数据更新器"><span class="toc-number">1.1.</span> <span class="toc-text">1. 客户端轮询与元数据更新器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-_元数据对象"><span class="toc-number">1.2.</span> <span class="toc-text">2. 元数据对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_元数据更新的日志与实例"><span class="toc-number">1.3.</span> <span class="toc-text">3. 元数据更新的日志与实例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端线程模型（Thread_Model）"><span class="toc-number">2.</span> <span class="toc-text">客户端线程模型（Thread Model）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#消费者的线程模型"><span class="toc-number">2.1.</span> <span class="toc-text">消费者的线程模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#连接器的线程模型"><span class="toc-number">2.2.</span> <span class="toc-text">连接器的线程模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#流处理的线程模型"><span class="toc-number">2.3.</span> <span class="toc-text">流处理的线程模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#小结"><span class="toc-number">2.4.</span> <span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#即席查询（Interactive_Query）"><span class="toc-number">3.</span> <span class="toc-text">即席查询（Interactive Query）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EOS事务（Transaction）"><span class="toc-number">4.</span> <span class="toc-text">EOS事务（Transaction）</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {

@@ -175,6 +175,90 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-2015-12-12-Apache-Geode" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/12/2015-12-12-Apache-Geode/" class="article-date">
+  	<time datetime="2015-12-11T16:00:00.000Z" itemprop="datePublished">2015-12-12</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/12/2015-12-12-Apache-Geode/">Apache GEODE 一致性数据库</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Apache Geode provides a database-like consistency model, reliable transaction processing and a shared-nothing architecture to maintain very low latency performance with high concurrency processing. <a href="http://geode.incubator.apache.org/">http://geode.incubator.apache.org/</a></p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/bigdata/">bigdata</a>
+	</div>
+
+
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/geode/">geode</a></li></ul>
+	</div>
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/12/12/2015-12-12-Apache-Geode/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+        var yiliaConfig = {
+        fancybox: true,
+        mathjax: true,
+        animate: true,
+        isHome: true,
+        isPost: false,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        open_in_new: false
+        }
+        </script>
+        
+
+  
     <article id="post-2015-12-11-Apache-Ignite" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -1352,146 +1436,6 @@
       
         <p class="article-more-link">
           <a  href="/2015/10/16/Cassandra-query/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-        var yiliaConfig = {
-        fancybox: true,
-        mathjax: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        open_in_new: false
-        }
-        </script>
-        
-
-  
-    <article id="post-Cassandra-Operation" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/10/15/Cassandra-Operation/" class="article-date">
-  	<time datetime="2015-10-14T16:00:00.000Z" itemprop="datePublished">2015-10-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/15/Cassandra-Operation/">Cassandra操作</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <!-- MarkdownTOC -->
-<ul>
-<li>优雅关闭节点</li>
-<li>不同集群数据同步<ul>
-<li>增量备份</li>
-<li>准备工作：新集群搭建和建表</li>
-<li>开始：先测试一张表的迁移</li>
-<li>整个集群做一次完整的快照迁移</li>
-<li>增量备份（需要多次执行）</li>
-<li>机房迁移<ul>
-<li>直接从当前集群同步到上海集群</li>
-<li>新集群安装</li>
-<li><ol>
-<li>表结构</li>
-</ol>
-</li>
-<li><ol>
-<li>数据迁移</li>
-</ol>
-</li>
-<li><ol>
-<li>增量数据迁移</li>
-</ol>
-</li>
-<li><ol>
-<li>数据验证</li>
-</ol>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>nodetool工具<ul>
-<li>集群状态: nodetool decribecluster</li>
-<li>删除节点: removenode</li>
-<li>替换节点: replace_address</li>
-<li>重新加入</li>
-<li>网络状态netstats: 显示一个节点的Active Stream</li>
-<li>节点信息: nodetool info</li>
-<li>Gossip信息: nodetool gossipinfo</li>
-<li>表相关的信息:nodetool cfstats forseti.velocity</li>
-<li>compactionhistory</li>
-<li>节点sstable数量异常</li>
-</ul>
-</li>
-<li>tpstats</li>
-<li>sstable writer<ul>
-<li>文件数过多</li>
-<li>导入数据后，用refresh</li>
-<li>通过增大内存来增大sstable大小（内存不足）</li>
-<li>分表？</li>
-</ul>
-</li>
-<li>sstableloader</li>
-<li>jHiccup</li>
-</ul>
-<!-- /MarkdownTOC -->
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/categories/work/">work</a>
-	</div>
-
-
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cassandra/">cassandra</a></li></ul>
-	</div>
-
-      
-        <p class="article-more-link">
-          <a  href="/2015/10/15/Cassandra-Operation/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
