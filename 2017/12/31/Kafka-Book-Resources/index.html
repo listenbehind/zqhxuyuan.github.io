@@ -28,7 +28,7 @@ EOS事务（Transaction）">
 <meta property="og:image" content="http://img.blog.csdn.net/20170614142554625">
 <meta property="og:image" content="http://img.blog.csdn.net/20170530171408924">
 <meta property="og:image" content="http://img.blog.csdn.net/20170530171420377">
-<meta property="og:updated_time" content="2017-12-18T03:28:36.000Z">
+<meta property="og:updated_time" content="2017-12-19T07:18:28.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kafka技术内幕拾遗">
 <meta name="twitter:description" content="Kafka技术内幕拾遗
@@ -134,7 +134,7 @@ EOS事务（Transaction）">
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/akka/" style="font-size: 10px;">akka</a> <a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/book/" style="font-size: 10px;">book</a> <a href="/tags/cassandra/" style="font-size: 18.75px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.25px;">drill</a> <a href="/tags/druid/" style="font-size: 13.75px;">druid</a> <a href="/tags/dubbo/" style="font-size: 10px;">dubbo</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.75px;">graph</a> <a href="/tags/hadoop/" style="font-size: 11.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/midd/" style="font-size: 10px;">midd</a> <a href="/tags/ops/" style="font-size: 13.75px;">ops</a> <a href="/tags/redis/" style="font-size: 11.25px;">redis</a> <a href="/tags/rocketmq/" style="font-size: 10px;">rocketmq</a> <a href="/tags/scala/" style="font-size: 13.75px;">scala</a> <a href="/tags/spark/" style="font-size: 17.5px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.5px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.75px;">work</a> <a href="/tags/流处理/" style="font-size: 11.25px;">流处理</a>
+						<a href="/tags/akka/" style="font-size: 10px;">akka</a> <a href="/tags/apex/" style="font-size: 10px;">apex</a> <a href="/tags/bigdata/" style="font-size: 10px;">bigdata</a> <a href="/tags/book/" style="font-size: 10px;">book</a> <a href="/tags/cassandra/" style="font-size: 18.75px;">cassandra</a> <a href="/tags/clojure/" style="font-size: 10px;">clojure</a> <a href="/tags/drill/" style="font-size: 16.25px;">drill</a> <a href="/tags/druid/" style="font-size: 13.75px;">druid</a> <a href="/tags/dubbo/" style="font-size: 10px;">dubbo</a> <a href="/tags/elasticsearch/" style="font-size: 10px;">elasticsearch</a> <a href="/tags/etl/" style="font-size: 10px;">etl</a> <a href="/tags/geode/" style="font-size: 10px;">geode</a> <a href="/tags/graph/" style="font-size: 13.75px;">graph</a> <a href="/tags/hadoop/" style="font-size: 11.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/ignite/" style="font-size: 10px;">ignite</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jvm/" style="font-size: 10px;">jvm</a> <a href="/tags/kafka/" style="font-size: 20px;">kafka</a> <a href="/tags/midd/" style="font-size: 11.25px;">midd</a> <a href="/tags/ops/" style="font-size: 13.75px;">ops</a> <a href="/tags/redis/" style="font-size: 11.25px;">redis</a> <a href="/tags/rocketmq/" style="font-size: 10px;">rocketmq</a> <a href="/tags/scala/" style="font-size: 13.75px;">scala</a> <a href="/tags/spark/" style="font-size: 17.5px;">spark</a> <a href="/tags/storm/" style="font-size: 17.5px;">storm</a> <a href="/tags/timeseries/" style="font-size: 12.5px;">timeseries</a> <a href="/tags/work/" style="font-size: 13.75px;">work</a> <a href="/tags/流处理/" style="font-size: 11.25px;">流处理</a>
 					</div>
 				</section>
 				
@@ -332,7 +332,20 @@ EOS事务（Transaction）">
 <p><img src="http://img.blog.csdn.net/20170530171420377" alt="6">·</p>
 <p><strong>图6 消费者与流处理的故障容错机制</strong> </p>
 <h4 id="小结">小结</h4><p>Kafka客户端抽象出来的的“组管理协议”充分运用在消费者、连接器、流处理三个使用场景中。客户端中的消费者、连接器中的工作者、流处理中的流进程都可以看做“组”的一个成员。当增加或减少组成员时，在这个协议的约束下，每个组成员都可以获取到最新的任务，从而做到无缝的任务迁移。一旦理解了“组管理协议”，对于理解Kafka的架构设计是很有帮助的。</p>
-<h3 id="即席查询（Interactive_Query）">即席查询（Interactive Query）</h3><h3 id="EOS事务（Transaction）">EOS事务（Transaction）</h3><p>参考文档</p>
+<p>参考文档</p>
+<ul>
+<li>《Kafka技术内幕》</li>
+</ul>
+<h3 id="即席查询（Interactive_Query）">即席查询（Interactive Query）</h3><p>参考文档：</p>
+<ul>
+<li><a href="https://cwiki.apache.org/confluence/display/KAFKA/KIP-67%3A+Queryable+state+for+Kafka+Streams" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/KIP-67%3A+Queryable+state+for+Kafka+Streams</a></li>
+<li><a href="https://docs.confluent.io/current/streams/developer-guide/interactive-queries.html" target="_blank" rel="external">https://docs.confluent.io/current/streams/developer-guide/interactive-queries.html</a></li>
+<li><a href="http://kafka.apache.org/10/documentation/streams/developer-guide#streams_interactive_queries" target="_blank" rel="external">http://kafka.apache.org/10/documentation/streams/developer-guide#streams_interactive_queries</a></li>
+</ul>
+<h3 id="全局表（Global_Tables）">全局表（Global Tables）</h3><ul>
+<li><a href="https://cwiki.apache.org/confluence/display/KAFKA/KIP-99%3A+Add+Global+Tables+to+Kafka+Streams" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/KIP-99%3A+Add+Global+Tables+to+Kafka+Streams</a></li>
+</ul>
+<h3 id="EOS事务（Transaction）">EOS事务（Transaction）</h3><p>参考文档</p>
 <ul>
 <li><a href="https://cwiki.apache.org/confluence/display/KAFKA/KIP-98+-+Exactly+Once+Delivery+and+Transactional+Messaging" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/KIP-98+-+Exactly+Once+Delivery+and+Transactional+Messaging</a></li>
 <li><a href="https://cwiki.apache.org/confluence/display/KAFKA/Transactional+Messaging+in+Kafka" target="_blank" rel="external">https://cwiki.apache.org/confluence/display/KAFKA/Transactional+Messaging+in+Kafka</a></li>
@@ -349,7 +362,7 @@ EOS事务（Transaction）">
   <p><span>本文标题:</span><a href="/2017/12/31/Kafka-Book-Resources/">Kafka技术内幕拾遗</a></p>
   <p><span>文章作者:</span><a href="/" title="访问 任何忧伤,都抵不过世界的美丽 的个人博客">任何忧伤,都抵不过世界的美丽</a></p>
   <p><span>发布时间:</span>2017年12月31日 - 00时00分</p>
-  <p><span>最后更新:</span>2017年12月18日 - 11时28分</p>
+  <p><span>最后更新:</span>2017年12月19日 - 15时18分</p>
   <p>
     <span>原始链接:</span><a href="/2017/12/31/Kafka-Book-Resources/" title="Kafka技术内幕拾遗">http://github.com/zqhxuyuan/2017/12/31/Kafka-Book-Resources/</a>
     <span class="btn" data-clipboard-text="原文: http://github.com/zqhxuyuan/2017/12/31/Kafka-Book-Resources/　　作者: 任何忧伤,都抵不过世界的美丽" title="点击复制文章链接">
@@ -423,7 +436,7 @@ EOS事务（Transaction）">
 <!-- Show TOC and tocButton in default, Hide TOC via putting "toc: false" before "---" at [post].md -->
 <div id="toc" class="toc-article">
 <strong class="toc-title">文章目录</strong>
-<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端的元数据对象"><span class="toc-number">1.</span> <span class="toc-text">客户端的元数据对象</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-_客户端轮询与元数据更新器"><span class="toc-number">1.1.</span> <span class="toc-text">1. 客户端轮询与元数据更新器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-_元数据对象"><span class="toc-number">1.2.</span> <span class="toc-text">2. 元数据对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_元数据更新的日志与实例"><span class="toc-number">1.3.</span> <span class="toc-text">3. 元数据更新的日志与实例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端线程模型（Thread_Model）"><span class="toc-number">2.</span> <span class="toc-text">客户端线程模型（Thread Model）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#消费者的线程模型"><span class="toc-number">2.1.</span> <span class="toc-text">消费者的线程模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#连接器的线程模型"><span class="toc-number">2.2.</span> <span class="toc-text">连接器的线程模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#流处理的线程模型"><span class="toc-number">2.3.</span> <span class="toc-text">流处理的线程模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#小结"><span class="toc-number">2.4.</span> <span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#即席查询（Interactive_Query）"><span class="toc-number">3.</span> <span class="toc-text">即席查询（Interactive Query）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EOS事务（Transaction）"><span class="toc-number">4.</span> <span class="toc-text">EOS事务（Transaction）</span></a></li></ol>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端的元数据对象"><span class="toc-number">1.</span> <span class="toc-text">客户端的元数据对象</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-_客户端轮询与元数据更新器"><span class="toc-number">1.1.</span> <span class="toc-text">1. 客户端轮询与元数据更新器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-_元数据对象"><span class="toc-number">1.2.</span> <span class="toc-text">2. 元数据对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-_元数据更新的日志与实例"><span class="toc-number">1.3.</span> <span class="toc-text">3. 元数据更新的日志与实例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端线程模型（Thread_Model）"><span class="toc-number">2.</span> <span class="toc-text">客户端线程模型（Thread Model）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#消费者的线程模型"><span class="toc-number">2.1.</span> <span class="toc-text">消费者的线程模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#连接器的线程模型"><span class="toc-number">2.2.</span> <span class="toc-text">连接器的线程模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#流处理的线程模型"><span class="toc-number">2.3.</span> <span class="toc-text">流处理的线程模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#小结"><span class="toc-number">2.4.</span> <span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#即席查询（Interactive_Query）"><span class="toc-number">3.</span> <span class="toc-text">即席查询（Interactive Query）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#全局表（Global_Tables）"><span class="toc-number">4.</span> <span class="toc-text">全局表（Global Tables）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#EOS事务（Transaction）"><span class="toc-number">5.</span> <span class="toc-text">EOS事务（Transaction）</span></a></li></ol>
 </div>
 <style type="text/css">
   .left-col .switch-btn {
